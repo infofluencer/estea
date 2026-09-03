@@ -27,8 +27,51 @@ function safeFile(urlPath) {
   const decoded = decodeURIComponent(urlPath.split('?')[0] || '/')
   const relative = decoded === '/' ? 'index.html' : decoded.replace(/^\/+/, '')
   const file = path.normalize(path.join(root, relative))
-  if (!file.startsWith(root)) return null
+  if (!file.startsWith(root + path.sep) && file !== root) return null
   return file
+}
+
+function sendFile(req, res, file, stat) {
+  const type = mime[path.extname(file)] || 'application/octet-stream'
+  const size = stat.size
+  const range = req.headers.range
+
+  if (range) {
+    const match = /bytes=(\d*)-(\d*)/.exec(range)
+    if (!match) {
+      res.writeHead(416, { 'Content-Range': `bytes */${size}` })
+      res.end()
+      return
+    }
+
+    const start = match[1] ? Number(match[1]) : 0
+    const end = match[2] ? Number(match[2]) : size - 1
+    if (start >= size || end >= size || start > end) {
+      res.writeHead(416, { 'Content-Range': `bytes */${size}` })
+      res.end()
+      return
+    }
+
+    res.writeHead(206, {
+      'Content-Type': type,
+      'Content-Length': end - start + 1,
+      'Content-Range': `bytes ${start}-${end}/${size}`,
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    })
+    fs.createReadStream(file, { start, end }).pipe(res)
+    return
+  }
+
+  res.writeHead(200, {
+    'Content-Type': type,
+    'Content-Length': size,
+    'Accept-Ranges': 'bytes',
+    'Cache-Control': path.extname(file) === '.html'
+      ? 'no-cache'
+      : 'public, max-age=31536000, immutable',
+  })
+  fs.createReadStream(file).pipe(res)
 }
 
 const server = http.createServer((req, res) => {
@@ -40,16 +83,26 @@ const server = http.createServer((req, res) => {
   }
 
   fs.stat(file, (err, stat) => {
-    const target = !err && stat.isFile() ? file : path.join(root, 'index.html')
-    fs.readFile(target, (readErr, data) => {
-      if (readErr) {
+    if (!err && stat.isFile()) {
+      sendFile(req, res, file, stat)
+      return
+    }
+
+    const ext = path.extname(file)
+    if (ext && ext !== '.html') {
+      res.writeHead(404)
+      res.end('Not found')
+      return
+    }
+
+    const index = path.join(root, 'index.html')
+    fs.stat(index, (indexErr, indexStat) => {
+      if (indexErr) {
         res.writeHead(404)
         res.end('Not found')
         return
       }
-      const type = mime[path.extname(target)] || 'application/octet-stream'
-      res.writeHead(200, { 'Content-Type': type })
-      res.end(data)
+      sendFile(req, res, index, indexStat)
     })
   })
 })
