@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #c8102e;
+  --color-garden: #2f5233;
+  --color-cream: #f6f1e7;
+  --color-ink: #1a1512;
+  --color-amber: #c9822b;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
+  --font-display: "Passion One", Impact, ui-sans-serif, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-brand);
+  color: var(--color-cream);
+}
+
+@keyframes pack-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pack-enter {
+  opacity: 0;
+  animation: pack-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.pack-enter-1 {
+  animation-delay: 0.05s;
+}
+
+.pack-enter-2 {
+  animation-delay: 0.14s;
+}
+
+.pack-enter-3 {
+  animation-delay: 0.24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .pack-enter,
+  .pack-enter-1,
+  .pack-enter-2,
+  .pack-enter-3 {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}

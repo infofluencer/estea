@@ -1,0 +1,15 @@
+[variables]
+NIXPACKS_NODE_VERSION = "22"
+PORT = "3020"
+
+[phases.setup]
+nixPkgs = ["nodejs_22"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm start"
