@@ -10,21 +10,15 @@ function heroTextOpacity(progress: number) {
   return Math.max(0, 1 - (progress - 0.08) / 0.12)
 }
 
-function titleOpacity(progress: number) {
-  if (progress < 0.35) return 0
-  if (progress < 0.5) return (progress - 0.35) / 0.15
-  if (progress > 0.78) return Math.max(0, 1 - (progress - 0.78) / 0.22)
-  return 1
-}
+/** Only seek when the target moved by ~2 frames at 30fps. */
+const SEEK_EPSILON = 1 / 15
 
 export default function VideoShowcase() {
   const wrapperRef = useRef<HTMLElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const heroTextRef = useRef<HTMLDivElement>(null)
-  const titleRef = useRef<HTMLHeadingElement>(null)
   const targetTimeRef = useRef(0)
-  const rafRef = useRef(0)
   const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
@@ -37,24 +31,38 @@ export default function VideoShowcase() {
 
     let cancelled = false
     let isSeeking = false
-    let onSeeked: (() => void) | undefined
+    let trigger: ScrollTrigger | undefined
 
-    const tick = () => {
+    const applySeek = () => {
+      if (cancelled || isSeeking) return
+      if (video.readyState < 2) return
+
       const target = targetTimeRef.current
-      if (video.readyState >= 2 && !isSeeking) {
-        const diff = target - video.currentTime
-        if (Math.abs(diff) > 0.033) {
-          isSeeking = true
-          onSeeked = () => {
-            isSeeking = false
-            if (onSeeked) video.removeEventListener('seeked', onSeeked)
-            onSeeked = undefined
-          }
-          video.addEventListener('seeked', onSeeked)
-          video.currentTime = target
+      if (Math.abs(target - video.currentTime) < SEEK_EPSILON) return
+
+      isSeeking = true
+
+      const onSeeked = () => {
+        video.removeEventListener('seeked', onSeeked)
+        isSeeking = false
+        if (cancelled) return
+        // Catch up if scroll moved during the seek.
+        if (Math.abs(targetTimeRef.current - video.currentTime) >= SEEK_EPSILON) {
+          applySeek()
         }
       }
-      rafRef.current = requestAnimationFrame(tick)
+
+      video.addEventListener('seeked', onSeeked)
+      try {
+        video.currentTime = target
+      } catch {
+        isSeeking = false
+        video.removeEventListener('seeked', onSeeked)
+      }
+    }
+
+    const queueSeek = () => {
+      applySeek()
     }
 
     const setupScrub = () => {
@@ -63,19 +71,25 @@ export default function VideoShowcase() {
       if (!Number.isFinite(duration) || duration <= 0) return
 
       targetTimeRef.current = 0
-      video.currentTime = 0
+      try {
+        video.currentTime = 0
+      } catch {
+        /* ignore */
+      }
 
-      ScrollTrigger.create({
+      trigger = ScrollTrigger.create({
         trigger: wrapper,
         start: 'top top',
         end: 'bottom bottom',
         pin,
         pinSpacing: false,
-        scrub: 1,
+        scrub: 0.6,
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           targetTimeRef.current = self.progress * duration
+          queueSeek()
+
           const heroOp = heroTextOpacity(self.progress)
           if (heroTextRef.current) {
             heroTextRef.current.style.opacity = String(heroOp)
@@ -85,20 +99,17 @@ export default function VideoShowcase() {
             nav.style.opacity = String(heroOp)
             nav.style.pointerEvents = heroOp < 0.05 ? 'none' : ''
           }
-          if (titleRef.current) {
-            titleRef.current.style.opacity = String(titleOpacity(self.progress))
-          }
         },
       })
 
       ScrollTrigger.refresh()
-      rafRef.current = requestAnimationFrame(tick)
     }
 
     const onReady = () => {
       const duration = video.duration
       if (!Number.isFinite(duration) || duration <= 0) return
 
+      // Decode first frame so scrubbing starts from a warm decoder.
       void video
         .play()
         .then(() => {
@@ -118,11 +129,9 @@ export default function VideoShowcase() {
 
     return () => {
       cancelled = true
-      cancelAnimationFrame(rafRef.current)
       video.removeEventListener('loadedmetadata', onReady)
-      if (onSeeked) video.removeEventListener('seeked', onSeeked)
       video.pause()
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+      trigger?.kill()
     }
   }, [reducedMotion])
 
@@ -162,7 +171,7 @@ export default function VideoShowcase() {
             className="absolute inset-0 h-full w-full object-cover"
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             aria-hidden="true"
             tabIndex={-1}
           >
@@ -184,7 +193,7 @@ export default function VideoShowcase() {
     <section
       ref={wrapperRef}
       id="video"
-      className="relative h-[300vh] bg-ink"
+      className="relative h-[240vh] bg-ink"
     >
       <div ref={pinRef} className="relative h-screen overflow-hidden">
         <video
@@ -193,6 +202,7 @@ export default function VideoShowcase() {
           muted
           playsInline
           preload="auto"
+          disablePictureInPicture
           aria-hidden="true"
           tabIndex={-1}
         >
@@ -210,7 +220,6 @@ export default function VideoShowcase() {
         >
           {heroContent}
         </div>
-
       </div>
     </section>
   )
