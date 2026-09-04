@@ -1,21 +1,20 @@
-import Navbar from './components/Navbar'
-import VideoShowcase from './components/VideoShowcase'
-import ProductShowcase from './components/ProductShowcase'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import LandingPage from './pages/LandingPage'
+import ShopLayout from './pages/ShopLayout'
+import ShopProductsPage from './components/shop/ShopProductsPage'
+import ProductDetailPage from './components/shop/ProductDetailPage'
 
 export default function App() {
   return (
-    <>
-      <a
-        href="#icerik"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-sm focus:bg-cream focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
-      >
-        İçeriğe geç
-      </a>
-      <Navbar />
-      <main id="icerik">
-        <VideoShowcase />
-        <ProductShowcase />
-      </main>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/urunler" element={<ShopLayout />}>
+          <Route index element={<ShopProductsPage />} />
+          <Route path=":id" element={<ProductDetailPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }

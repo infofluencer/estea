@@ -138,15 +138,13 @@ export default function VideoShowcase() {
         </p>
         <div className="mt-8 flex flex-col items-start gap-3 sm:mt-10 sm:flex-row">
           <a
-            href="#urunler"
+            href="/urunler"
             className="inline-flex min-h-12 items-center justify-center rounded-sm bg-[#6B8E23] px-8 text-[0.8rem] font-bold tracking-[0.16em] text-cream uppercase transition-colors hover:bg-[#5A7A1C] focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             Ürünlerimiz
           </a>
           <a
-            href="https://market.esteacay.com/"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/urunler"
             className="inline-flex min-h-12 items-center justify-center rounded-sm border border-cream/50 bg-transparent px-8 text-[0.8rem] font-medium tracking-[0.16em] text-cream uppercase transition-colors hover:border-cream hover:bg-cream/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             Alışveriş
