@@ -1,0 +1,56 @@
+/*
+ * Esçay design tokens shared by every app.
+ * Usage (after `@import "tailwindcss";`): @import "@estea/ui/theme.css";
+ * Font variables come from `@estea/ui/fonts` (next/font).
+ */
+
+@theme {
+  --color-brand: #b43317;
+  --color-brand-dark: #8f2812;
+  --color-gold: #e9ba3c;
+  --color-amber: #d05a20;
+  --color-leaf: #92c700;
+  --color-olive: #759f11;
+  --color-garden: #467910;
+  --color-garden-dark: #355c0c;
+  --color-cream: #f8f8f8;
+  --color-ink: #000000;
+}
+
+@theme inline {
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-brand);
+  color: var(--color-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

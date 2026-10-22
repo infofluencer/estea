@@ -1,0 +1,3129 @@
+{
+ "url": "http://localhost:3020",
+ "at": "2026-10-22T08:47:40.834Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 9,
+   "filled": [
+    0.94,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "motion": {
+    "elements": 52,
+    "css": 4,
+    "transitions": 17,
+    "scripted": 31,
+    "videos": 1,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 7212,
+     "screens": 8,
+     "words": 341,
+     "img": 10,
+     "video": 1,
+     "canvas": 0,
+     "svg": 43,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 7,
+     "videoCount": 1,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fshowcase.jpg&w=1080&q=75",
+      "image?url=%2Flogo.png&w=384&q=75",
+      "image?url=%2Festea-gold-cay-1000-gr.png&w=640&q=",
+      "image?url=%2Festea-hasat-cay-1000-gr.png&w=640&q",
+      "image?url=%2Festea-gold-cay-5000-gr.png&w=640&q=",
+      "image?url=%2Festea-gold-cay-1000-gr.png&w=640&q="
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Karadeniz çayı",
+     "words": 2,
+     "chars": 14,
+     "lines": 1,
+     "size": 146.9,
+     "vw": 10.2,
+     "font": "Bricolage Grotesque",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "center",
+     "position": "center",
+     "widthRatio": 0.96,
+     "top": 601,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Karadeniz çayı",
+     "words": 2,
+     "lines": 1,
+     "size": 146.9,
+     "font": "Bricolage Grotesque"
+    },
+    "headings": [
+     {
+      "text": "Karadeniz çayı",
+      "words": 2,
+      "chars": 14,
+      "lines": 1,
+      "size": 146.9,
+      "vw": 10.2,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 601,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Çayın lezzetine inandık.",
+      "words": 3,
+      "chars": 24,
+      "lines": 2,
+      "size": 66.2,
+      "vw": 4.6,
+      "font": "Archivo",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 2092,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Yüksek bahçelerin altın harmanı.",
+      "words": 4,
+      "chars": 32,
+      "lines": 2,
+      "size": 57.6,
+      "vw": 4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.53,
+      "top": 2991,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Bahçeden bardağa",
+      "words": 2,
+      "chars": 16,
+      "lines": 2,
+      "size": 106.6,
+      "vw": 7.4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.49,
+      "top": 3819,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Topla",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 2.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 4139,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Kıvır",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 2.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.14,
+      "top": 4139,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Kurut",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 2.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "right",
+      "widthRatio": 0.14,
+      "top": 4139,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Soldur",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 2.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 4502,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Beklet",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 2.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.14,
+      "top": 4502,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Demle",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 2.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "right",
+      "widthRatio": 0.14,
+      "top": 4502,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Aceleye gelmez.",
+      "words": 2,
+      "chars": 15,
+      "lines": 2,
+      "size": 86.4,
+      "vw": 6,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.47,
+      "top": 4866,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "1",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 88,
+      "vw": 6.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.02,
+      "top": 5182,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "90",
+      "words": 1,
+      "chars": 2,
+      "lines": 1,
+      "size": 88,
+      "vw": 6.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.08,
+      "top": 5182,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "15",
+      "words": 1,
+      "chars": 2,
+      "lines": 1,
+      "size": 88,
+      "vw": 6.1,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.06,
+      "top": 5182,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Demliği bir kez Esçay’la kuran geri dönmüyor.",
+      "words": 7,
+      "chars": 45,
+      "lines": 3,
+      "size": 72,
+      "vw": 5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 5619,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Demliği ateşe koy",
+      "words": 3,
+      "chars": 17,
+      "lines": 2,
+      "size": 115.2,
+      "vw": 8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.48,
+      "top": 6309,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 16,
+     "maxLines": 3,
+     "over2Lines": 1,
+     "statements": 3,
+     "centered": 8,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo",
+       "share": 0.91,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque",
+       "share": 0.09,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      20,
+      21,
+      23,
+      27,
+      30,
+      58,
+      66,
+      72,
+      86,
+      88,
+      107,
+      115,
+      147
+     ],
+     "sizeCount": 20,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo",
+      "size": 18.4,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17.7
+     },
+     "measureChars": 46,
+     "max": {
+      "size": 146.9,
+      "vw": 10.2,
+      "font": "Bricolage Grotesque",
+      "text": "Karadeniz çayı"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 3,
+     "microLabelShare": 0.01,
+     "microSamples": [
+      "Keşfet",
+      "Kurumsal",
+      "İletişim"
+     ],
+     "upperShare": 0.04,
+     "centerShare": 0.18,
+     "smallText": 4
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f8f8f8",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 0.97
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#355c0c",
+       "top": 1980,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      },
+      {
+       "color": "#fbf5e4",
+       "top": 2853,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#1b3321",
+       "top": 3723,
+       "hsl": {
+        "h": 135,
+        "s": 0.31,
+        "l": 0.15
+       }
+      },
+      {
+       "color": "#f1ebdf",
+       "top": 5491,
+       "hsl": {
+        "h": 40,
+        "s": 0.39,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#b43317",
+       "top": 6134,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#f8f8f8",
+       "share": 0.65
+      },
+      {
+       "color": "#000000",
+       "share": 0.18
+      },
+      {
+       "color": "#b43317",
+       "share": 0.11
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.02
+      },
+      {
+       "color": "#3b2f14",
+       "share": 0.02
+      }
+     ],
+     "button": null,
+     "lowContrast": [
+      {
+       "text": "Katkısız, yüzde yüz Karadeniz",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Rize ve Artvin bahçelerinden",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Tavşan kanı demlik çayı",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Rize ve Artvin bahçelerinden",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Tavşan kanı demlik çayı",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Üç sürgün, beş karakter",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 4,
+     "radius": "pill",
+     "height": 40,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Harmanlar",
+      "Yolculuk",
+      "Demleme",
+      "Blog"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 2,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 3,
+     "hairlineSamples": [
+      "div.relative.z-20 1440px",
+      "ol.mt-16.grid 1216px",
+      "div.grid.gap-12 1216px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 7,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 5880
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "video",
+      "ratio": 1
+     }
+    ],
+    "nav": {
+     "links": 6,
+     "fixed": false,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo",
+     "archivo fallback",
+     "bricolage grotesque"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 7212,
+    "margins": {
+     "left": 82,
+     "right": 32
+    },
+    "sections": [
+     {
+      "sel": "section#hero.relative.h-[220vh]",
+      "tag": "section",
+      "top": 0,
+      "height": 1980,
+      "words": 0,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": true
+     },
+     {
+      "sel": "section#hakkimizda.relative.z-10",
+      "tag": "section",
+      "top": 1980,
+      "height": 901,
+      "words": 56,
+      "media": 3,
+      "middle": 67,
+      "heading": {
+       "text": "Çayın lezzetine inandık.",
+       "size": 66,
+       "tag": "h2"
+      },
+      "left": 82,
+      "right": 0,
+      "textLeft": 112,
+      "textRight": 32,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#harmanlar.relative.overflow-x-clip",
+      "tag": "section",
+      "top": 2853,
+      "height": 870,
+      "words": 57,
+      "media": 5,
+      "middle": 1028,
+      "heading": {
+       "text": "Yüksek bahçelerin altın harmanı.",
+       "size": 58,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -336,
+      "textRight": -1165,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#yolculuk.relative.z-10",
+      "tag": "section",
+      "top": 3723,
+      "height": 1014,
+      "words": 55,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Bahçeden bardağa",
+       "size": 107,
+       "tag": "h2"
+      },
+      "left": 112,
+      "right": 112,
+      "textLeft": 112,
+      "textRight": 135,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#rituel.relative.z-10",
+      "tag": "section",
+      "top": 4738,
+      "height": 753,
+      "words": 54,
+      "media": 0,
+      "middle": 130,
+      "heading": {
+       "text": "90",
+       "size": 88,
+       "tag": "span"
+      },
+      "left": 112,
+      "right": 203,
+      "textLeft": 112,
+      "textRight": 203,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#tiryakiler.relative.z-10",
+      "tag": "section",
+      "top": 5491,
+      "height": 643,
+      "words": 52,
+      "media": 0,
+      "middle": 63,
+      "heading": {
+       "text": "Demliği bir kez Esçay’la kuran geri dönmüyor.",
+       "size": 72,
+       "tag": "h2"
+      },
+      "left": 112,
+      "right": 125,
+      "textLeft": 112,
+      "textRight": 125,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#magaza.relative.z-10",
+      "tag": "section",
+      "top": 6134,
+      "height": 704,
+      "words": 18,
+      "media": 3,
+      "middle": 189,
+      "heading": {
+       "text": "Demliği ateşe koy",
+       "size": 115,
+       "tag": "h2"
+      },
+      "left": 82,
+      "right": 112,
+      "textLeft": 112,
+      "textRight": 781,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.bg-ink.text-cream",
+      "tag": "footer",
+      "top": 6838,
+      "height": 374,
+      "words": 36,
+      "media": 0,
+      "middle": 302,
+      "heading": null,
+      "left": 112,
+      "right": 112,
+      "textLeft": 112,
+      "textRight": 112,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Karadeniz çayı",
+      "size": 147,
+      "top": 601,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 112,
+      "n": 7
+     },
+     {
+      "x": 525,
+      "n": 1
+     },
+     {
+      "x": 915,
+      "n": 1
+     },
+     {
+      "x": 939,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 10,
+    "bodySize": 15,
+    "stage": true,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 8,
+   "filled": [
+    0.96,
+    1,
+    1,
+    1,
+    0.84,
+    0.96,
+    1,
+    1
+   ],
+   "motion": {
+    "elements": 52,
+    "css": 4,
+    "transitions": 17,
+    "scripted": 31,
+    "videos": 1,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 7799,
+     "screens": 7.6,
+     "words": 341,
+     "img": 10,
+     "video": 1,
+     "canvas": 0,
+     "svg": 43,
+     "sections": 7,
+     "horizontalOverflow": 34,
+     "overflowCulprits": [
+      "a.transition-colors.hover:text-brand (+34px)"
+     ],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 7,
+     "videoCount": 1,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fshowcase.jpg&w=828&q=75",
+      "image?url=%2Flogo.png&w=384&q=75",
+      "image?url=%2Festea-gold-cay-1000-gr.png&w=640&q=",
+      "image?url=%2Festea-hasat-cay-1000-gr.png&w=640&q",
+      "image?url=%2Festea-gold-cay-5000-gr.png&w=640&q=",
+      "image?url=%2Festea-gold-cay-1000-gr.png&w=640&q="
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Karadeniz çayı",
+     "words": 2,
+     "chars": 14,
+     "lines": 2,
+     "size": 122.9,
+     "vw": 16,
+     "font": "Bricolage Grotesque",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "center",
+     "position": "center",
+     "widthRatio": 0.92,
+     "top": 631,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Karadeniz çayı",
+     "words": 2,
+     "lines": 2,
+     "size": 122.9,
+     "font": "Bricolage Grotesque"
+    },
+    "headings": [
+     {
+      "text": "Karadeniz çayı",
+      "words": 2,
+      "chars": 14,
+      "lines": 2,
+      "size": 122.9,
+      "vw": 16,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 631,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Çayın lezzetine inandık.",
+      "words": 3,
+      "chars": 24,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Archivo",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 2813,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Yüksek bahçelerin altın harmanı.",
+      "words": 4,
+      "chars": 32,
+      "lines": 1,
+      "size": 33.8,
+      "vw": 4.4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 3532,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Gold Karadeniz, 1000 g",
+      "words": 4,
+      "chars": 22,
+      "lines": 1,
+      "size": 27.2,
+      "vw": 3.5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.58,
+      "top": 3910,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Bahçeden bardağa",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 56.8,
+      "vw": 7.4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 4254,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Topla",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 4490,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Soldur",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 4618,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Kıvır",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 4746,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Beklet",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 4874,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Kurut",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 5002,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Demle",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 4,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 5130,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Aceleye gelmez.",
+      "words": 2,
+      "chars": 15,
+      "lines": 1,
+      "size": 46.1,
+      "vw": 6,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 5427,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "1",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 88,
+      "vw": 11.5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.04,
+      "top": 5623,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "90",
+      "words": 1,
+      "chars": 2,
+      "lines": 1,
+      "size": 88,
+      "vw": 11.5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.15,
+      "top": 5623,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "15",
+      "words": 1,
+      "chars": 2,
+      "lines": 1,
+      "size": 88,
+      "vw": 11.5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.11,
+      "top": 5623,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Demliği bir kez Esçay’la kuran geri dönmüyor.",
+      "words": 7,
+      "chars": 45,
+      "lines": 2,
+      "size": 38.4,
+      "vw": 5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 6085,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Demliği ateşe koy",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 61.4,
+      "vw": 8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 6608,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 17,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 3,
+     "centered": 3,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo",
+       "share": 0.91,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque",
+       "share": 0.09,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      27,
+      30,
+      34,
+      38,
+      42,
+      46,
+      57,
+      61,
+      88,
+      123
+     ],
+     "sizeCount": 20,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo",
+      "size": 18.4,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17.7
+     },
+     "measureChars": 46,
+     "max": {
+      "size": 122.9,
+      "vw": 16,
+      "font": "Bricolage Grotesque",
+      "text": "Karadeniz çayı"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 3,
+     "microLabelShare": 0.01,
+     "microSamples": [
+      "Keşfet",
+      "Kurumsal",
+      "İletişim"
+     ],
+     "upperShare": 0.04,
+     "centerShare": 0.07,
+     "smallText": 4
+    },
+    "eyebrows": [
+     {
+      "text": "Katkısız, yüzde yüz Karadeniz",
+      "above": "Yüksek bahçelerin altın harmanı.",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.2,
+      "top": 3431
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f8f8f8",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 0.97
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#355c0c",
+       "top": 2253,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      },
+      {
+       "color": "#fbf5e4",
+       "top": 3418,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#1b3321",
+       "top": 4158,
+       "hsl": {
+        "h": 135,
+        "s": 0.31,
+        "l": 0.15
+       }
+      },
+      {
+       "color": "#f1ebdf",
+       "top": 5957,
+       "hsl": {
+        "h": 40,
+        "s": 0.39,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#b43317",
+       "top": 6528,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#f8f8f8",
+       "share": 0.65
+      },
+      {
+       "color": "#000000",
+       "share": 0.18
+      },
+      {
+       "color": "#b43317",
+       "share": 0.11
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.02
+      },
+      {
+       "color": "#3b2f14",
+       "share": 0.02
+      }
+     ],
+     "button": null,
+     "lowContrast": [
+      {
+       "text": "Katkısız, yüzde yüz Karadeniz",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Rize ve Artvin bahçelerinden",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Tavşan kanı demlik çayı",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Üç sürgün, beş karakter",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Yapraktan bardağa",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Katkısız, yüzde yüz Karadeniz",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 4,
+     "radius": "pill",
+     "height": 40,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Harmanlar",
+      "Yolculuk",
+      "Demleme",
+      "Blog"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 2,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 3,
+     "hairlineSamples": [
+      "div.relative.z-20 768px",
+      "ol.mt-16.grid 704px",
+      "div.grid.gap-12 704px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 4,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 6214
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "video",
+      "ratio": 1
+     }
+    ],
+    "nav": {
+     "links": 6,
+     "fixed": false,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo",
+     "archivo fallback",
+     "bricolage grotesque"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 7799,
+    "margins": {
+     "left": 27,
+     "right": 18
+    },
+    "sections": [
+     {
+      "sel": "section#hero.relative.h-[220vh]",
+      "tag": "section",
+      "top": 0,
+      "height": 2253,
+      "words": 0,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": true
+     },
+     {
+      "sel": "section#hakkimizda.relative.z-10",
+      "tag": "section",
+      "top": 2253,
+      "height": 1193,
+      "words": 56,
+      "media": 3,
+      "middle": 79,
+      "heading": null,
+      "left": 2,
+      "right": 18,
+      "textLeft": 32,
+      "textRight": 301,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#harmanlar.relative.overflow-x-clip",
+      "tag": "section",
+      "top": 3418,
+      "height": 740,
+      "words": 57,
+      "media": 5,
+      "middle": 1723,
+      "heading": {
+       "text": "Yüksek bahçelerin altın harmanı.",
+       "size": 34,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -314,
+      "textRight": -1859,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#yolculuk.relative.z-10",
+      "tag": "section",
+      "top": 4158,
+      "height": 1141,
+      "words": 55,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Bahçeden bardağa",
+       "size": 57,
+       "tag": "h2"
+      },
+      "left": 32,
+      "right": 208,
+      "textLeft": 32,
+      "textRight": 208,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#rituel.relative.z-10",
+      "tag": "section",
+      "top": 5299,
+      "height": 657,
+      "words": 54,
+      "media": 0,
+      "middle": 84,
+      "heading": {
+       "text": "90",
+       "size": 88,
+       "tag": "span"
+      },
+      "left": 32,
+      "right": 44,
+      "textLeft": 32,
+      "textRight": 44,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#tiryakiler.relative.z-10",
+      "tag": "section",
+      "top": 5957,
+      "height": 571,
+      "words": 52,
+      "media": 0,
+      "middle": 26,
+      "heading": {
+       "text": "Demliği bir kez Esçay’la kuran geri dönmüyor.",
+       "size": 38,
+       "tag": "h2"
+      },
+      "left": 32,
+      "right": 59,
+      "textLeft": 32,
+      "textRight": 59,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#magaza.relative.z-10",
+      "tag": "section",
+      "top": 6528,
+      "height": 874,
+      "words": 18,
+      "media": 3,
+      "middle": 0,
+      "heading": {
+       "text": "Demliği ateşe koy",
+       "size": 61,
+       "tag": "h2"
+      },
+      "left": 2,
+      "right": 144,
+      "textLeft": 32,
+      "textRight": 203,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.bg-ink.text-cream",
+      "tag": "footer",
+      "top": 7401,
+      "height": 398,
+      "words": 36,
+      "media": 0,
+      "middle": 130,
+      "heading": null,
+      "left": 32,
+      "right": 0,
+      "textLeft": 32,
+      "textRight": -34,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Karadeniz çayı",
+      "size": 123,
+      "top": 631,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 32,
+      "n": 8
+     },
+     {
+      "x": 275,
+      "n": 1
+     },
+     {
+      "x": 517,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 10,
+    "bodySize": 15,
+    "stage": true,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 11,
+   "filled": [
+    0.92,
+    0.99,
+    0.99,
+    1,
+    0.9,
+    0.94,
+    0.99,
+    0.99,
+    0.99,
+    0.99,
+    1
+   ],
+   "motion": {
+    "elements": 49,
+    "css": 4,
+    "transitions": 16,
+    "scripted": 29,
+    "videos": 1,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 8466,
+     "screens": 10,
+     "words": 342,
+     "img": 10,
+     "video": 1,
+     "canvas": 0,
+     "svg": 43,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 6,
+     "videoCount": 1,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fshowcase.jpg&w=640&q=75",
+      "image?url=%2Festea-gold-cay-1000-gr.png&w=640&q=",
+      "image?url=%2Festea-hasat-cay-1000-gr.png&w=640&q",
+      "image?url=%2Festea-gold-cay-5000-gr.png&w=640&q=",
+      "image?url=%2Festea-gold-cay-1000-gr.png&w=384&q="
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Karadeniz çayı",
+     "words": 2,
+     "chars": 14,
+     "lines": 2,
+     "size": 62.4,
+     "vw": 16,
+     "font": "Bricolage Grotesque",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "center",
+     "position": "center",
+     "widthRatio": 0.92,
+     "top": 561,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Karadeniz çayı",
+     "words": 2,
+     "lines": 2,
+     "size": 62.4,
+     "font": "Bricolage Grotesque"
+    },
+    "headings": [
+     {
+      "text": "Harmanlar",
+      "words": 1,
+      "chars": 9,
+      "lines": 1,
+      "size": 35.2,
+      "vw": 9,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 96,
+      "tag": "li",
+      "kind": "statement"
+     },
+     {
+      "text": "Yolculuk",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 35.2,
+      "vw": 9,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 176,
+      "tag": "li",
+      "kind": "statement"
+     },
+     {
+      "text": "Demleme",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 35.2,
+      "vw": 9,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 256,
+      "tag": "li",
+      "kind": "statement"
+     },
+     {
+      "text": "Blog",
+      "words": 1,
+      "chars": 4,
+      "lines": 1,
+      "size": 35.2,
+      "vw": 9,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 336,
+      "tag": "li",
+      "kind": "statement"
+     },
+     {
+      "text": "Karadeniz çayı",
+      "words": 2,
+      "chars": 14,
+      "lines": 2,
+      "size": 62.4,
+      "vw": 16,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 561,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Çayın lezzetine inandık.",
+      "words": 3,
+      "chars": 24,
+      "lines": 2,
+      "size": 41.6,
+      "vw": 10.7,
+      "font": "Archivo",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 2297,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Yüksek bahçelerin altın harmanı.",
+      "words": 4,
+      "chars": 32,
+      "lines": 2,
+      "size": 32,
+      "vw": 8.2,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3058,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Gold Karadeniz, 1000 g",
+      "words": 4,
+      "chars": 22,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3392,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Bahçeden bardağa",
+      "words": 2,
+      "chars": 16,
+      "lines": 2,
+      "size": 48,
+      "vw": 12.3,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3697,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Topla",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.62,
+      "top": 3948,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Soldur",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.62,
+      "top": 4076,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Kıvır",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.62,
+      "top": 4204,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Beklet",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.62,
+      "top": 4332,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Kurut",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.62,
+      "top": 4460,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Demle",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.62,
+      "top": 4600,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Aceleye gelmez.",
+      "words": 2,
+      "chars": 15,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 10.7,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 4865,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "1",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 72,
+      "vw": 18.5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.06,
+      "top": 5084,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "90",
+      "words": 1,
+      "chars": 2,
+      "lines": 1,
+      "size": 72,
+      "vw": 18.5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.25,
+      "top": 5289,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "15",
+      "words": 1,
+      "chars": 2,
+      "lines": 1,
+      "size": 72,
+      "vw": 18.5,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.18,
+      "top": 5495,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Demliği bir kez Esçay’la kuran geri dönmüyor.",
+      "words": 7,
+      "chars": 45,
+      "lines": 3,
+      "size": 38.4,
+      "vw": 9.8,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 5852,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Demliği ateşe koy",
+      "words": 3,
+      "chars": 17,
+      "lines": 2,
+      "size": 48,
+      "vw": 12.3,
+      "font": "Bricolage Grotesque",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 6670,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 21,
+     "maxLines": 3,
+     "over2Lines": 1,
+     "statements": 7,
+     "centered": 3,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo",
+       "share": 0.9,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque",
+       "share": 0.1,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      24,
+      30,
+      32,
+      35,
+      38,
+      42,
+      48,
+      62,
+      72
+     ],
+     "sizeCount": 17,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo",
+      "size": 17.6,
+      "leading": 1.4,
+      "weight": 600,
+      "tracking": 0,
+      "contrast": null
+     },
+     "measureChars": 41,
+     "max": {
+      "size": 72,
+      "vw": 18.5,
+      "font": "Bricolage Grotesque",
+      "text": "1"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 3,
+     "microLabelShare": 0.009,
+     "microSamples": [
+      "Keşfet",
+      "Kurumsal",
+      "İletişim"
+     ],
+     "upperShare": 0.04,
+     "centerShare": 0.07,
+     "smallText": 4
+    },
+    "eyebrows": [
+     {
+      "text": "Rize ve Artvin bahçelerinden",
+      "above": "Yüksek bahçelerin altın harmanı.",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.2,
+      "top": 2957
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f8f8f8",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 0.97
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#355c0c",
+       "top": 0,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      },
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#fbf5e4",
+       "top": 2944,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#1b3321",
+       "top": 3617,
+       "hsl": {
+        "h": 135,
+        "s": 0.31,
+        "l": 0.15
+       }
+      },
+      {
+       "color": "#f1ebdf",
+       "top": 5756,
+       "hsl": {
+        "h": 40,
+        "s": 0.39,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#b43317",
+       "top": 6570,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#f8f8f8",
+       "share": 0.65
+      },
+      {
+       "color": "#000000",
+       "share": 0.18
+      },
+      {
+       "color": "#b43317",
+       "share": 0.11
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.02
+      },
+      {
+       "color": "#3b2f14",
+       "share": 0.02
+      }
+     ],
+     "button": null,
+     "lowContrast": [
+      {
+       "text": "Katkısız, yüzde yüz Karadeniz",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Rize ve Artvin bahçelerinden",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Tavşan kanı demlik çayı",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Üç sürgün, beş karakter",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Yapraktan bardağa",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      },
+      {
+       "text": "Katkısız, yüzde yüz Karadeniz",
+       "ratio": 3.4,
+       "need": 4.5,
+       "size": 15.2,
+       "fg": "#b43317",
+       "bg": "#e9ba3c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 0,
+     "inHero": 0,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": []
+    },
+    "surfaces": {
+     "shadowStatic": 2,
+     "shadowOverlay": 0,
+     "shadowSamples": [
+      "button.pointer-events-auto.inline-flex → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0",
+      "button.pointer-events-auto.inline-flex → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+     ],
+     "gradients": 0,
+     "scrims": 2,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 3,
+     "hairlineSamples": [
+      "div.relative.z-20 390px",
+      "ol.mt-16.grid 350px",
+      "div.grid.gap-12 350px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 4,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 6018
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "video",
+      "ratio": 1
+     },
+     {
+      "type": "svg",
+      "ratio": 0.14
+     }
+    ],
+    "nav": {
+     "links": 2,
+     "fixed": false,
+     "height": 80,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo",
+     "archivo fallback",
+     "bricolage grotesque"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 8466,
+    "margins": {
+     "left": 20,
+     "right": 20
+    },
+    "sections": [
+     {
+      "sel": "section#hero.relative.h-[220vh]",
+      "tag": "section",
+      "top": 0,
+      "height": 1857,
+      "words": 0,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": true
+     },
+     {
+      "sel": "section#hakkimizda.relative.z-10",
+      "tag": "section",
+      "top": 1857,
+      "height": 1115,
+      "words": 56,
+      "media": 2,
+      "middle": 0,
+      "heading": {
+       "text": "Çayın lezzetine inandık.",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 19,
+      "textLeft": 20,
+      "textRight": 32,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#harmanlar.relative.overflow-x-clip",
+      "tag": "section",
+      "top": 2944,
+      "height": 674,
+      "words": 57,
+      "media": 4,
+      "middle": 2018,
+      "heading": {
+       "text": "Yüksek bahçelerin altın harmanı.",
+       "size": 32,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -397,
+      "textRight": -2154,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#yolculuk.relative.z-10",
+      "tag": "section",
+      "top": 3617,
+      "height": 1152,
+      "words": 55,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Bahçeden bardağa",
+       "size": 48,
+       "tag": "h2"
+      },
+      "left": 20,
+      "right": 36,
+      "textLeft": 20,
+      "textRight": 36,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#rituel.relative.z-10",
+      "tag": "section",
+      "top": 4769,
+      "height": 987,
+      "words": 54,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "90",
+       "size": 72,
+       "tag": "span"
+      },
+      "left": 20,
+      "right": 40,
+      "textLeft": 20,
+      "textRight": 40,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#tiryakiler.relative.z-10",
+      "tag": "section",
+      "top": 5756,
+      "height": 814,
+      "words": 52,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Demliği bir kez Esçay’la kuran geri dönmüyor.",
+       "size": 38,
+       "tag": "h2"
+      },
+      "left": 20,
+      "right": 47,
+      "textLeft": 20,
+      "textRight": 47,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#magaza.relative.z-10",
+      "tag": "section",
+      "top": 6570,
+      "height": 918,
+      "words": 15,
+      "media": 3,
+      "middle": 0,
+      "heading": null,
+      "left": 0,
+      "right": 0,
+      "textLeft": 20,
+      "textRight": 36,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.bg-ink.text-cream",
+      "tag": "footer",
+      "top": 7488,
+      "height": 978,
+      "words": 36,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 20,
+      "right": 40,
+      "textLeft": 20,
+      "textRight": 40,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [
+     {
+      "top": 6472,
+      "height": 296
+     }
+    ],
+    "h1s": [
+     {
+      "text": "Karadeniz çayı",
+      "size": 62,
+      "top": 561,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 20,
+      "n": 9
+     }
+    ],
+    "leftBlocks": 9,
+    "bodySize": 18,
+    "stage": true,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "headline-lines",
+   "width": 1440,
+   "message": "1 headline(s) wrap past two lines at 1440px: \"Demliği bir kez Esçay’la kuran geri dönmüyor.\" → 3 lines (7 words, 72px)",
+   "fix": "Cut words first (a headline is a title, not a sentence). Then give it a wider measure. Lower the size only as a last resort and never below the scale you chose. A real statement paragraph belongs in a <p> or <blockquote> at 36px or less."
+  },
+  {
+   "level": "FAIL",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "3 tiny uppercase letter-spaced labels (e.g. \"Keşfet\", \"Kurumsal\", \"İletişim\").",
+   "fix": "Use sentence-case text at a readable size, or delete the label.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "3 thin rule(s)/divider line(s): div.relative.z-20 1440px | ol.mt-16.grid 1216px | div.grid.gap-12 1216px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (section #fbf5e4, section #f1ebdf).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "contrast",
+   "width": 1440,
+   "message": "Low-contrast text: \"Katkısız, yüzde yüz Karadeniz\" 3.4:1 needs 4.5:1; \"Rize ve Artvin bahçelerinden\" 3.4:1 needs 4.5:1; \"Tavşan kanı demlik çayı\" 3.4:1 needs 4.5:1; \"Rize ve Artvin bahçelerinden\" 3.4:1 needs 4.5:1",
+   "fix": "Darken or lighten the text colour.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "20 different font sizes (12, 13, 14, 15, 16, 17, 18, 20, 21, 23, 27, 30, 58, 66, 72, 86, 88, 107, 115, 147).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "small-text",
+   "width": 1440,
+   "message": "4 text blocks under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "off-centre",
+   "width": 1440,
+   "message": "The margins differ: 82px on the left, 32px on the right, at 1440px.",
+   "fix": "Put the navigation and the content on one pair of margins; check for padding on one side only, a scrollbar gutter, or a header on another inset than the page."
+  },
+  {
+   "level": "WARN",
+   "id": "name-only-title",
+   "width": 1440,
+   "message": "The h1 is a bare name (\"Karadeniz çayı\") and nothing else on the first screen says what this is.",
+   "fix": "Keep the name if it leads, and give the line under it (18px or more) the plain words: what it is, for whom, where or when. In the study of 97 Sites of the Day, first screens that named nothing lost usability and content points.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "covered-text",
+   "width": 1440,
+   "message": "Large text lies under another element at some scroll position: \"Yüksek bahçelerin altın harmanı.\" (screen 4, 25% hidden); \"Gold Karadeniz, 1000 g\" (screen 4, 50% hidden)",
+   "fix": "Nothing may sit on top of a headline or statement. Move the picture, shorten the pinned run, or raise the text above it (z-index) and give it a ground.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "pinned-over-picture",
+   "width": 1440,
+   "message": "Pinned large text slides across pictures while the page scrolls: \"Karadeniz çayı\" (screen 2, 100% over a picture)",
+   "fix": "Jurors read a pinned title crossing drawings or photographs as a collision. Keep the pictures in the column the title does not occupy, or unpin it.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "eyebrow",
+   "width": 768,
+   "message": "1 eyebrow/kicker label(s) above headings: \"Katkısız, yüzde yüz Karadeniz\" above \"Yüksek bahçelerin altın harmanı.\"",
+   "fix": "Delete them. If the label carried real information, fold it into the headline or the supporting sentence.",
+   "alsoAt": [
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "overflow",
+   "width": 768,
+   "message": "Page scrolls sideways by 34px at 768px. Widest offenders: a.transition-colors.hover:text-brand (+34px).",
+   "fix": "Constrain the element that is wider than the viewport (max-width: 100%, or overflow: clip on its section)."
+  },
+  {
+   "level": "FAIL",
+   "id": "headline-lines",
+   "width": 390,
+   "message": "1 headline(s) wrap past two lines at 390px: \"Demliği bir kez Esçay’la kuran geri dönmüyor.\" → 3 lines (7 words, 38.4px)",
+   "fix": "Cut words first (a headline is a title, not a sentence). Then give it a wider measure. Lower the size only as a last resort and never below the scale you chose. A real statement paragraph belongs in a <p> or <blockquote> at 24px or less."
+  },
+  {
+   "level": "FAIL",
+   "id": "shadow",
+   "width": 390,
+   "message": "2 box-shadow(s) on elements at rest: button.pointer-events-auto.inline-flex → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0 | button.pointer-events-auto.inline-flex → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0",
+   "fix": "Remove. Separate surfaces with a tone step or space. Shadows are for things that really float (menus, dialogs, sticky bars)."
+  },
+  {
+   "level": "WARN",
+   "id": "first-action",
+   "width": 390,
+   "message": "No visible button in the first phone screen.",
+   "fix": "On a phone the first screen still holds the headline, the supporting sentence and the action; move navigation into one row or a menu so it does not push them down."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/inspect/desktop-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/inspect/desktop-page-01.jpg",
+    "/Users/yusuf/Desktop/estea/.taste-skill/inspect/desktop-page-02.jpg",
+    "/Users/yusuf/Desktop/estea/.taste-skill/inspect/desktop-page-03.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/inspect/tablet-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/inspect/tablet-page-01.jpg",
+    "/Users/yusuf/Desktop/estea/.taste-skill/inspect/tablet-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/inspect/mobile-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/inspect/mobile-page-01.jpg",
+    "/Users/yusuf/Desktop/estea/.taste-skill/inspect/mobile-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

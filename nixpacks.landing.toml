@@ -1,0 +1,16 @@
+# Landing deploy: set NIXPACKS_CONFIG_FILE=nixpacks.landing.toml on the service.
+[variables]
+NIXPACKS_NODE_VERSION = "22"
+PORT = "3020"
+
+[phases.setup]
+nixPkgs = ["nodejs_22"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["npm run build:landing"]
+
+[start]
+cmd = "npm run start:landing"
