@@ -16,3 +16,23 @@ next-env.d.ts
 .idea
 .DS_Store
 *.sw?
+
+# Es Çay — Medusa backend / storefront (kök seviyesinde, workspace dışı)
+escay-backend/.medusa/
+escay-backend/dist/
+escay-backend/build/
+escay-backend/uploads/
+escay-backend/static/
+escay-backend/.cache/
+escay-backend/medusa-db.sql
+escay-backend/src/scripts/*.js
+escay-storefront/.next/
+escay-storefront/out/
+# shared/ yalnızca .ts tutar; derlenmiş kopyalar üretilmez (blueprint §2.1)
+shared/*.js
+.env
+.env.*
+!.env.template
+!.env.example
+# backend shared/ kopyası build/prepare ile kökten üretilir (scripts/sync-shared.mjs)
+escay-backend/shared/

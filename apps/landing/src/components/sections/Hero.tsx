@@ -150,10 +150,10 @@ export default function Hero() {
   }, [reducedMotion])
 
   return (
-    <section ref={wrapperRef} id="hero" className={`relative bg-garden-dark ${reducedMotion ? '' : 'h-[240vh]'}`}>
+    <section ref={wrapperRef} id="hero" className={`relative bg-linen ${reducedMotion ? '' : 'h-[240vh]'}`}>
       <div
         ref={pinRef}
-        className="relative h-svh min-h-[640px] overflow-hidden bg-garden-dark [--gh:40svh] lg:[--gh:60svh]"
+        className="relative h-svh min-h-[640px] overflow-hidden bg-linen [--gh:40svh] lg:[--gh:60svh]"
       >
         <svg width="0" height="0" className="absolute" aria-hidden="true">
           <defs>
@@ -188,10 +188,10 @@ export default function Hero() {
             {/* A full glass of tavşan kanı tea over the video: empty glass at the rim, the surface line,
                 a reflection down the body and the thick foot. Flat brand colours, drawn like the doodles. */}
             <div ref={teaRef} className="absolute inset-0" aria-hidden="true">
-              <div className="absolute inset-x-0 top-0 h-[15%] bg-[#4f7a2a]" />
-              <div className="absolute inset-x-0 top-[15%] bottom-[5%] bg-[#9e2410]" />
-              <div className="absolute inset-x-0 top-[15%] h-[2.5%] bg-[#c9461d]" />
-              <div className="absolute inset-x-0 bottom-0 h-[5%] bg-[#5b8a31]" />
+              <div className="absolute inset-x-0 top-0 h-[15%] bg-leaf-soft" />
+              <div className="absolute inset-x-0 top-[15%] bottom-[5%] bg-brand" />
+              <div className="absolute inset-x-0 top-[15%] h-[2.5%] bg-amber" />
+              <div className="absolute inset-x-0 bottom-0 h-[5%] bg-olive" />
               <div className="absolute top-[22%] bottom-[14%] left-[24%] w-[5%] rounded-full bg-cream/25" />
               <div className="absolute top-[24%] left-[33%] h-[6%] w-[2.5%] rounded-full bg-cream/20" />
             </div>
@@ -200,7 +200,7 @@ export default function Hero() {
             ref={outlineRef}
             viewBox="0 0 100 160"
             preserveAspectRatio="none"
-            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible text-cream"
+            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible text-olive"
             fill="none"
             stroke="currentColor"
             strokeWidth={3}
@@ -220,7 +220,7 @@ export default function Hero() {
           className="absolute inset-0 z-10 flex flex-col px-5 pt-28 pb-10 sm:px-8 lg:justify-center lg:pt-16 lg:pb-0"
         >
           <div className="mx-auto w-full max-w-7xl">
-            <h1 className="headline text-gold text-[12vw] leading-[0.9] tracking-[-0.03em] lg:grid lg:grid-cols-[1fr_calc(var(--gh)*0.625)_1fr] lg:items-end lg:gap-x-12 lg:text-[clamp(3.5rem,7vw,8rem)]">
+            <h1 className="headline text-olive text-[12vw] leading-[0.9] tracking-[-0.03em] lg:grid lg:grid-cols-[1fr_calc(var(--gh)*0.625)_1fr] lg:items-end lg:gap-x-12 lg:text-[clamp(3.5rem,7vw,8rem)]">
               <span className="block lg:text-right">
                 Çayın <br className="hidden lg:block" />
                 lezzeti
@@ -232,7 +232,7 @@ export default function Hero() {
 
           <div className="mx-auto mt-auto w-full max-w-7xl lg:mt-10 lg:grid lg:grid-cols-[1fr_calc(var(--gh)*0.625)_1fr] lg:gap-x-12">
             <div className="lg:col-start-3">
-              <p className="max-w-[30ch] text-[1.05rem] leading-[1.45] font-medium text-cream sm:text-[1.2rem]">{hero.lead}</p>
+              <p className="max-w-[30ch] text-[1.05rem] leading-[1.45] font-medium text-ink sm:text-[1.2rem]">{hero.lead}</p>
               <div className="mt-6">
                 <Btn href="#harmanlar" variant="gold">
                   {hero.cta}

@@ -8,7 +8,7 @@ const year = new Date().getFullYear()
 
 /* Same pill as the navbar links: outlined in cream, gold when hovered. */
 const pillClass =
-  'inline-flex min-h-11 items-center gap-2 rounded-full border border-cream/45 px-4 text-[0.95rem] font-semibold whitespace-nowrap text-cream transition-colors duration-200 hover:border-gold hover:bg-gold hover:text-ink focus:outline-none focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden-dark'
+  'inline-flex min-h-11 items-center gap-2 rounded-full border border-cream/45 px-4 text-[0.95rem] font-semibold whitespace-nowrap text-cream transition-colors duration-200 hover:border-gold hover:bg-gold hover:text-ink focus:outline-none focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden'
 
 /* Corporate links that the page itself already covers (blog, contact) are left out here. */
 const corporate = corporateLinks.filter((l) => !/blog|iletisim/.test(l.href))
@@ -21,12 +21,12 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' } as const
  */
 export default function Footer() {
   return (
-    <footer className="relative z-20 bg-garden-dark text-cream">
+    <footer className="relative z-20 bg-garden text-cream">
       {/* A soft wave lifts the green over the red contact field, like the wave under the collection. */}
       <svg
         viewBox="0 0 1440 90"
         preserveAspectRatio="none"
-        className="absolute inset-x-0 top-0 block h-[44px] w-full -translate-y-[calc(100%-1px)] text-garden-dark sm:h-[64px]"
+        className="absolute inset-x-0 top-0 block h-[44px] w-full -translate-y-[calc(100%-1px)] text-garden sm:h-[64px]"
         aria-hidden="true"
       >
         <path fill="currentColor" d="M0 58C320 8 760 98 1440 30V90H0Z" />
@@ -41,9 +41,9 @@ export default function Footer() {
             </p>
             <a
               href={shopProductsUrl}
-              className="group relative isolate mt-8 inline-flex min-h-12 items-center rounded-full px-7 text-[0.8rem] font-bold tracking-[0.14em] text-brand-dark uppercase transition-colors duration-200 hover:text-cream focus:outline-none focus-visible:text-cream focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden-dark"
+              className="group relative isolate mt-8 inline-flex min-h-12 items-center rounded-full px-7 text-[0.8rem] font-bold tracking-[0.14em] text-ink uppercase transition-colors duration-200 hover:text-cream focus:outline-none focus-visible:text-cream focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden"
             >
-              <BlobBg className="fill-gold group-hover:fill-brand" />
+              <BlobBg className="fill-gold group-hover:fill-garden" />
               <span className="blob-label">
                 <span className="flex items-center gap-2 whitespace-nowrap">
                   <Glass className="h-5 w-5 shrink-0" />
@@ -56,7 +56,7 @@ export default function Footer() {
           {/* Link groups as rows of pills: name on the left, buttons flowing on the right. */}
           <div className="flex flex-col gap-9 lg:col-span-7 lg:col-start-6">
             <nav aria-label="Sayfa" className="grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-start">
-              <h2 className="text-[1.05rem] font-semibold text-gold sm:pt-2.5">Keşfet</h2>
+              <h2 className="text-[1.05rem] font-semibold text-cream sm:pt-2.5">Keşfet</h2>
               <ul className="flex flex-wrap gap-2">
                 {navLinks.map((link) => {
                   const Icon = doodles[link.icon ?? 'sprig']
@@ -79,7 +79,7 @@ export default function Footer() {
             </nav>
 
             <nav aria-label="Kurumsal" className="grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-start">
-              <h2 className="text-[1.05rem] font-semibold text-gold sm:pt-2.5">Kurumsal</h2>
+              <h2 className="text-[1.05rem] font-semibold text-cream sm:pt-2.5">Kurumsal</h2>
               <ul className="flex flex-wrap gap-2">
                 {corporate.map((link) => (
                   <li key={link.href}>
@@ -93,7 +93,7 @@ export default function Footer() {
             </nav>
 
             <div className="grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-start">
-              <h2 className="text-[1.05rem] font-semibold text-gold sm:pt-2.5">Bize ulaşın</h2>
+              <h2 className="text-[1.05rem] font-semibold text-cream sm:pt-2.5">Bize ulaşın</h2>
               <ul className="flex flex-wrap gap-2">
                 <li>
                   <a href={contact.phone.href} className={pillClass}>
@@ -117,7 +117,7 @@ export default function Footer() {
       {/* The name returns at full width to close the page. */}
       <p
         aria-hidden="true"
-        className="headline mt-16 pb-[0.12em] text-center text-[27vw] leading-[0.9] tracking-[-0.05em] whitespace-nowrap text-gold select-none sm:mt-20"
+        className="headline mt-16 pb-[0.12em] text-center text-[27vw] leading-[0.9] tracking-[-0.05em] whitespace-nowrap text-cream select-none sm:mt-20"
       >
         esçay
       </p>

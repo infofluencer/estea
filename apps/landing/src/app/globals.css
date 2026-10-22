@@ -6,6 +6,8 @@
   --color-moss: #1b3321;
   --color-paper: #f1ebdf;
   --color-linen: #fbf5e4;
+  --color-leaf-soft: #eef6dc;
+  --color-gold-soft: #fbf0cf;
   --color-line: rgba(0, 0, 0, 0.12);
 }
 
@@ -15,7 +17,7 @@
   }
 
   body {
-    background: var(--color-paper);
+    background: var(--color-linen);
     overflow-x: clip;
   }
 

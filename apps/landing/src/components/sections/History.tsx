@@ -9,14 +9,16 @@ import { Teapot } from '@/components/ui/Doodles'
  */
 export default function History() {
   return (
-    <section id="tarihce" aria-labelledby="tarihce-baslik" className="relative z-10 bg-gold py-24 text-ink sm:py-32">
+    <section id="tarihce" aria-labelledby="tarihce-baslik" className="relative z-10 bg-linen py-24 text-ink sm:py-32">
       <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-24">
-            <Teapot className="h-20 w-20 text-brand-dark" />
+            <span className="flex h-24 w-24 items-center justify-center rounded-full bg-gold text-ink">
+              <Teapot className="h-16 w-16" />
+            </span>
             <h2
               id="tarihce-baslik"
-              className="headline mt-6 max-w-[11ch] text-[clamp(2.8rem,5.6vw,5.4rem)] leading-[0.92] tracking-[-0.03em] text-brand-dark"
+              className="headline mt-6 max-w-[11ch] text-[clamp(2.8rem,5.6vw,5.4rem)] leading-[0.92] tracking-[-0.03em] text-olive"
             >
               {history.title}
             </h2>
@@ -29,7 +31,7 @@ export default function History() {
             const last = i === history.entries.length - 1
             return (
               <li key={e.when} className="grid gap-x-8 gap-y-3 sm:grid-cols-[17rem_1fr] lg:grid-cols-[15rem_1fr] xl:grid-cols-[17rem_1fr] sm:items-baseline">
-                <p className="headline text-[clamp(3.4rem,5.6vw,5.2rem)] whitespace-nowrap leading-[0.85] tracking-[-0.03em] text-brand">{e.when}</p>
+                <p className="headline text-[clamp(3.4rem,5.6vw,5.2rem)] whitespace-nowrap leading-[0.85] tracking-[-0.03em] text-amber">{e.when}</p>
                 <div>
                   <h3 className="text-[1.35rem] font-bold">{e.title}</h3>
                   <p className="mt-2 max-w-[38ch] text-[1.05rem] leading-[1.5]">{e.body}</p>

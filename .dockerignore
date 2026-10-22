@@ -1,0 +1,19 @@
+# Üç Dockerfile da kökten build alır; ağır/gizli dosyalar context'e girmesin.
+.git
+**/node_modules
+**/.next
+**/.medusa
+**/.cache
+**/dist
+**/out
+**/.env
+**/.env.*
+!**/.env.template
+# backend shared/ kopyası build'de kökten COPY edilir
+escay-backend/shared
+escay-backend/static
+escay-backend/uploads
+escay-storefront/e2e/playwright-report
+docs
+*.pdf
+.DS_Store

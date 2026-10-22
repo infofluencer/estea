@@ -1,0 +1,425 @@
+/* Order confirmation — centered header, items/delivery left, summary card right. */
+.wrap {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+  width: 100%;
+  max-width: 68rem;
+  margin: 0 auto;
+}
+
+.head {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  text-align: center;
+}
+
+.check {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.35rem;
+  border-radius: 50%;
+  border: 1px solid var(--brand-gold);
+  color: var(--brand-deep);
+  background: color-mix(in srgb, var(--brand-cream) 70%, white);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-logo);
+  font-size: clamp(1.55rem, 3.2vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand-deep);
+  line-height: 1.2;
+}
+
+.meta {
+  margin: 0.2rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--brand-deep) 70%, transparent);
+}
+
+.orderNo {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--brand-deep);
+}
+
+.metaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.lead {
+  max-width: 34rem;
+  margin: 0.4rem 0 0;
+  font-family: var(--font-garamond);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--brand-deep) 80%, transparent);
+}
+
+.lead strong {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  color: var(--brand-deep);
+}
+
+.statusBadge {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand-deep);
+  border: 1px solid color-mix(in srgb, var(--brand-deep) 28%, transparent);
+  border-radius: var(--radius-button);
+  padding: 0.2rem 0.55rem;
+  opacity: 1;
+}
+
+.status_pending {
+  opacity: 0.75;
+}
+
+.status_paid {
+  border-color: color-mix(in srgb, var(--brand-gold) 55%, transparent);
+}
+
+.status_preparing {
+  border-color: color-mix(in srgb, var(--brand-deep) 40%, transparent);
+}
+
+.status_shipped {
+  background: color-mix(in srgb, var(--brand-cream) 80%, white);
+  border-color: var(--brand-gold);
+}
+
+.status_delivered {
+  background: color-mix(in srgb, var(--brand-deep) 8%, white);
+  border-color: var(--brand-deep);
+}
+
+.status_canceled {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+.grid {
+  display: grid;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.main {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.card {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.25rem, 2.5vw, 1.85rem);
+  border: 1px solid rgba(67, 18, 18, 0.14);
+  background: var(--surface);
+}
+
+.sectionTitle {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(67, 18, 18, 0.1);
+  font-family: var(--font-logo);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-deep);
+}
+
+.sectionCount {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  opacity: 0.6;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 4.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(67, 18, 18, 0.08);
+}
+
+.item:first-child {
+  padding-top: 0;
+}
+
+.item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.thumb {
+  display: block;
+  width: 4.25rem;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--brand-cream) 60%, white);
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.itemMain {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.itemName {
+  margin: 0;
+  font-family: var(--font-garamond);
+  font-size: 1.1rem;
+  line-height: 1.35;
+  color: var(--brand-deep);
+}
+
+.itemLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.itemLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.itemSub {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--brand-deep) 62%, transparent);
+}
+
+.itemPrice {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--brand-deep);
+  white-space: nowrap;
+}
+
+.shipGrid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.label {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--brand-deep) 55%, transparent);
+}
+
+.address {
+  margin: 0;
+  font-family: var(--font-garamond);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--brand-deep);
+}
+
+.shipMethods {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+  font-family: var(--font-garamond);
+  font-size: 1.05rem;
+  color: var(--brand-deep);
+}
+
+.shipMethods li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.shipMethods span {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+}
+
+.summary {
+  gap: 1.25rem;
+}
+
+.totals {
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: var(--brand-deep);
+}
+
+.totalsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.totalsRow dt {
+  margin: 0;
+  opacity: 0.7;
+}
+
+.totalsRow dd {
+  margin: 0;
+  text-align: right;
+}
+
+.totalsDivider {
+  height: 1px;
+  margin: 0.35rem 0;
+  background: rgba(67, 18, 18, 0.12);
+}
+
+.totalsRowStrong {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.totalsRowStrong dt {
+  opacity: 1;
+}
+
+.totalsTotal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.vatNote {
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* In the summary card: primary full width, the two secondary side by side. */
+.summary .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  padding-top: 0.25rem;
+}
+
+.summary .actions :global(.cart-cta) {
+  min-height: 3rem;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+}
+
+.summary .actions :global(.cart-cta--primary) {
+  grid-column: 1 / -1;
+  min-height: 3.25rem;
+}
+
+@media (min-width: 640px) {
+  .shipGrid {
+    grid-template-columns: 1.3fr 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) 24rem;
+    gap: 1.5rem;
+  }
+
+  .side {
+    position: sticky;
+    top: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .item {
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    gap: 0.75rem;
+  }
+
+  .thumb {
+    width: 3.5rem;
+  }
+
+  .itemName {
+    font-size: 1rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions :global(.cart-cta) {
+    width: 100%;
+  }
+}

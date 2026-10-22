@@ -24,8 +24,6 @@ function trail(pts: { x: number; y: number }[]) {
 }
 
 const desktopTrail = trail(points)
-/* Phone: a gentle wave running down beside the discs. */
-const phoneTrail = 'M10,0 C18,10 2,20 10,30 S18,50 10,60 S2,80 10,90 S14,98 10,100'
 
 /* Always fully drawn: the section shows complete on arrival, nothing waits for the scroll. */
 const trailProps = {
@@ -41,13 +39,13 @@ export default function Journey() {
     <section
       id="yolculuk"
       aria-labelledby="yolculuk-baslik"
-      className="relative z-10 bg-moss pt-20 pb-24 text-cream sm:pt-24 lg:pb-28"
+      className="relative z-10 bg-linen pt-20 pb-24 text-ink sm:pt-24 lg:pb-28"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <h2
             id="yolculuk-baslik"
-            className="headline text-gold text-[clamp(3rem,7.4vw,7rem)] leading-[0.9] tracking-[-0.03em] lg:col-span-7"
+            className="headline text-amber text-[clamp(3rem,7.4vw,7rem)] leading-[0.9] tracking-[-0.03em] lg:col-span-7"
           >
             {journey.title}
           </h2>
@@ -61,21 +59,13 @@ export default function Journey() {
           <svg
             viewBox="0 0 1000 600"
             preserveAspectRatio="none"
-            className="pointer-events-none absolute inset-0 hidden h-full w-full text-cream/70 lg:block"
+            className="pointer-events-none absolute inset-0 hidden h-full w-full text-olive lg:block"
             aria-hidden="true"
           >
             <path d={desktopTrail} {...trailProps} />
           </svg>
-          <svg
-            viewBox="0 0 20 100"
-            preserveAspectRatio="none"
-            className="pointer-events-none absolute top-2 bottom-10 left-[34px] w-5 text-cream/70 lg:hidden"
-            aria-hidden="true"
-          >
-            <path d={phoneTrail} {...trailProps} />
-          </svg>
 
-          <ol className="relative flex flex-col gap-10 lg:absolute lg:inset-0 lg:block">
+          <ol className="relative flex flex-col gap-9 lg:absolute lg:inset-0 lg:block">
             {journey.stops.map((stop, i) => {
               const Icon = doodles[stop.icon]
               const pt = points[i]
@@ -95,8 +85,8 @@ export default function Journey() {
                     <Icon className="h-14 w-14" />
                   </span>
                   <div className={`lg:absolute lg:left-0 lg:w-52 lg:-translate-x-1/2 lg:text-center ${high ? 'lg:bottom-[60px]' : 'lg:top-[60px]'}`}>
-                    <h3 className="headline text-[1.9rem] text-cream">{stop.verb}</h3>
-                    <p className="mt-1.5 text-[1rem] leading-[1.45] text-cream">{stop.body}</p>
+                    <h3 className="headline text-[1.9rem] text-ink">{stop.verb}</h3>
+                    <p className="mt-1.5 text-[1rem] leading-[1.45] text-ink/80">{stop.body}</p>
                   </div>
                 </li>
               )

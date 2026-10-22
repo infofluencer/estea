@@ -1,0 +1,81 @@
+# Dokploy / CI: repo kökünden build (Build Path: /, Docker File: Dockerfile.storefront)
+# Lokal: docker build -f Dockerfile.storefront .
+
+# syntax=docker/dockerfile:1
+FROM node:20-bookworm-slim AS deps
+WORKDIR /app
+COPY escay-storefront/package.json escay-storefront/package-lock.json* ./
+RUN npm ci
+
+FROM node:20-bookworm-slim AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY escay-storefront/ .
+COPY shared ./shared
+ENV NEXT_TELEMETRY_DISABLED=1
+# Dokploy Build-time Arguments (her deploy'da güncelleyin):
+#   GIT_COMMIT=<commit-sha>
+#   CACHE_BUST=<commit-sha veya timestamp>  — aynı commit'i yeniden build ederken değiştirin
+#   BUILD_TIMESTAMP=<utc timestamp>
+ARG GIT_COMMIT=unknown
+ARG CACHE_BUST=unknown
+ARG BUILD_TIMESTAMP=unknown
+ARG MEDUSA_BACKEND_URL
+ARG NEXT_PUBLIC_MEDUSA_BACKEND_URL
+ARG NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
+ARG NEXT_PUBLIC_MEDUSA_REGION_ID
+ARG NEXT_PUBLIC_S3_FILE_URL
+ARG NEXT_PUBLIC_OMNISEND_BRAND_ID
+# Takip / onay ID'leri build'e gömülür (blueprint §5.8: kodda fallback yok)
+ARG NEXT_PUBLIC_SITE_HOST
+ARG NEXT_PUBLIC_VAT_RATE
+ARG NEXT_PUBLIC_COOKIEYES_ID
+ARG NEXT_PUBLIC_GA4_ID
+ARG NEXT_PUBLIC_GOOGLE_ADS_ID
+ARG NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL
+ARG NEXT_PUBLIC_META_PIXEL_ID
+ARG NEXT_PUBLIC_CLARITY_ID
+ENV MEDUSA_BACKEND_URL=$MEDUSA_BACKEND_URL
+ENV NEXT_PUBLIC_MEDUSA_BACKEND_URL=$NEXT_PUBLIC_MEDUSA_BACKEND_URL
+ENV NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=$NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_MEDUSA_REGION_ID=$NEXT_PUBLIC_MEDUSA_REGION_ID
+ENV NEXT_PUBLIC_S3_FILE_URL=$NEXT_PUBLIC_S3_FILE_URL
+ENV NEXT_PUBLIC_OMNISEND_BRAND_ID=$NEXT_PUBLIC_OMNISEND_BRAND_ID
+ENV NEXT_PUBLIC_SITE_HOST=$NEXT_PUBLIC_SITE_HOST
+ENV NEXT_PUBLIC_VAT_RATE=$NEXT_PUBLIC_VAT_RATE
+ENV NEXT_PUBLIC_COOKIEYES_ID=$NEXT_PUBLIC_COOKIEYES_ID
+ENV NEXT_PUBLIC_GA4_ID=$NEXT_PUBLIC_GA4_ID
+ENV NEXT_PUBLIC_GOOGLE_ADS_ID=$NEXT_PUBLIC_GOOGLE_ADS_ID
+ENV NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL=$NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL
+ENV NEXT_PUBLIC_META_PIXEL_ID=$NEXT_PUBLIC_META_PIXEL_ID
+ENV NEXT_PUBLIC_CLARITY_ID=$NEXT_PUBLIC_CLARITY_ID
+RUN printf 'commit=%s\ncache_bust=%s\nbuilt=%s\nrevision=%s@%s\n' \
+    "$GIT_COMMIT" "$CACHE_BUST" "$BUILD_TIMESTAMP" "$GIT_COMMIT" "$BUILD_TIMESTAMP" \
+    > .build-meta && \
+    echo "escay-storefront build ${GIT_COMMIT}@${BUILD_TIMESTAMP} (cache_bust=${CACHE_BUST})"
+RUN npm run build
+
+FROM node:20-bookworm-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3015
+ENV HOSTNAME=0.0.0.0
+ARG GIT_COMMIT=unknown
+ARG CACHE_BUST=unknown
+ARG BUILD_TIMESTAMP=unknown
+ENV GIT_COMMIT=$GIT_COMMIT
+ENV CACHE_BUST=$CACHE_BUST
+ENV BUILD_TIMESTAMP=$BUILD_TIMESTAMP
+ENV SOURCE_REVISION="${GIT_COMMIT}@${BUILD_TIMESTAMP}"
+
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.build-meta ./.build-meta
+COPY escay-storefront/docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 3015
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["node", "server.js"]

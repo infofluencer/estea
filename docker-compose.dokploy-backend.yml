@@ -1,0 +1,53 @@
+# Dokploy backend — host port publish YOK (Ingress/Domain).
+# Host 9001:9000 eski container'ı portta tutuyordu; deploy Done görünüp
+# runtime eski kalıyordu. Frontend gibi Domain kullan.
+#
+# Dokploy: Compose file olarak bunu seç VEYA Advanced'te aynı update_config uygula.
+# Build Path: /   Docker File: Dockerfile.backend (veya bu compose'un build'i)
+
+services:
+  escay-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+      args:
+        GIT_COMMIT: ${GIT_COMMIT:-unknown}
+        CACHE_BUST: ${CACHE_BUST:-unknown}
+        BUILD_TIMESTAMP: ${BUILD_TIMESTAMP:-unknown}
+    # Host ports YOK — yalnızca overlay/Traefik
+    expose:
+      - "9000"
+    environment:
+      MEDUSA_WORKER_MODE: ${MEDUSA_WORKER_MODE:-shared}
+    networks:
+      - dokploy-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:9000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 90s
+    stop_grace_period: 20s
+    deploy:
+      update_config:
+        parallelism: 1
+        # Önce eski task'ı durdur → port/slot serbest → yeni image trafiği alır
+        order: stop-first
+        failure_action: pause
+        monitor: 30s
+      rollback_config:
+        parallelism: 1
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+
+networks:
+  dokploy-network:
+    external: true

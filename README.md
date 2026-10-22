@@ -1,14 +1,32 @@
 # Es Çay
 
-İki bağımsız Next.js uygulamasından oluşan npm workspaces monorepo.
+Tanıtım sitesi (npm workspaces) + Mareen altyapısından türetilen e-ticaret sistemi (Medusa v2 + Next.js 15).
+Teknik kılavuz: [ES-CAY-BLUEPRINT.md](ES-CAY-BLUEPRINT.md) · kararlar: [docs/ESCAY-KARARLAR.md](docs/ESCAY-KARARLAR.md) · durum: [docs/UYARLAMA-DURUMU.md](docs/UYARLAMA-DURUMU.md)
 
 ```
 apps/
-  landing/   Tanıtım sitesi (port 3020)
-  shop/      E-ticaret sitesi + Node.js API (port 3021)
+  landing/           Tanıtım sitesi (Next 16, port 3020, output: standalone) — workspace
+  shop/              Eski basit mağaza prototipi (port 3021) — escay-storefront ile değiştirilecek
 packages/
-  ui/        Ortak tema (Tailwind token'ları) ve fontlar
+  ui/                Ortak tema (Tailwind token'ları) ve fontlar — workspace
+shared/              @escay/shared — backend + storefront ortak TS (adres, sipariş no, zaman çizelgesi, sözleşme)
+escay-backend/       Medusa v2.18 backend + Admin (port 9000) — bağımsız npm projesi (--legacy-peer-deps)
+escay-storefront/    Next.js 15 storefront (port 3015) — bağımsız npm projesi
+Dockerfile.backend / Dockerfile.storefront / Dockerfile.landing   Dokploy (Build Path: /), env'ler: docs/DOKPLOY-ENV.md
+docker-compose.dev.yml                        Lokal Postgres 5433 / Redis 6380 / Mailpit 8025
 ```
+
+## E-ticaret (escay-backend + escay-storefront)
+
+```bash
+docker compose -f docker-compose.dev.yml up -d
+(cd escay-backend && cp .env.template .env && npm install --legacy-peer-deps && npm run dev)
+(cd escay-backend && npm run setup:turkey && npx medusa user -e admin@example.com -p sifre)
+(cd escay-storefront && cp .env.template .env.local && npm install && npm run dev)
+```
+
+`shared/` her iki tarafa kopyalanmaz: backend build'de `scripts/sync-shared.mjs` + `link-shared-module.mjs`,
+storefront `experimental.externalDir` ile `../shared`. Yeni shared dosyası → `shared/package.json` exports (§2.1).
 
 ## Komutlar
 

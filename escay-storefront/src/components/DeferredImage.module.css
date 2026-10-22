@@ -1,0 +1,33 @@
+.image {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.loaded {
+  opacity: 1;
+}
+
+.spinner {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.spinner::after {
+  content: "";
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1.5px solid color-mix(in srgb, var(--brand-deep) 18%, transparent);
+  border-top-color: var(--brand-deep);
+  border-radius: 50%;
+  animation: deferredSpin 0.7s linear infinite;
+}
+
+@keyframes deferredSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

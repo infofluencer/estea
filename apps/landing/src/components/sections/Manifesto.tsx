@@ -55,7 +55,7 @@ export default function Manifesto() {
   }, [reduced])
 
   return (
-    <section ref={ref} id="hakkimizda" aria-labelledby="hakkimizda-baslik" className="relative z-10 overflow-hidden bg-garden-dark text-cream">
+    <section ref={ref} id="hakkimizda" aria-labelledby="hakkimizda-baslik" className="relative z-10 overflow-hidden bg-linen text-ink">
       <svg width="0" height="0" className="absolute" aria-hidden="true">
         <defs>
           <clipPath id="tear-front" clipPathUnits="objectBoundingBox">
@@ -67,22 +67,22 @@ export default function Manifesto() {
         </defs>
       </svg>
 
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-20 sm:px-8 lg:min-h-[700px] lg:grid-cols-12 lg:items-center lg:gap-8 lg:py-28 lg:pb-28">
-        <div className="order-2 lg:order-none lg:col-span-5">
+      <div className="mx-auto grid max-w-7xl gap-12 px-5 pt-20 pb-20 sm:px-8 sm:pt-24 lg:min-h-[700px] lg:pt-28 lg:grid-cols-12 lg:items-center lg:gap-8 lg:py-28 lg:pb-28">
+        <div className="order-1 lg:order-none lg:col-span-5">
           <h2
             id="hakkimizda-baslik"
-            className="text-[clamp(2.6rem,4.6vw,4.2rem)] leading-[1] font-bold tracking-[-0.03em] text-gold"
+            className="text-[clamp(2.6rem,4.6vw,4.2rem)] leading-[1] font-bold tracking-[-0.03em] text-olive"
           >
             {about.title}
           </h2>
-          <p className="about-lead mt-7 max-w-[30ch] text-[clamp(1.2rem,1.6vw,1.45rem)] leading-[1.45] font-medium text-cream">
+          <p className="about-lead mt-7 max-w-[30ch] text-[clamp(1.2rem,1.6vw,1.45rem)] leading-[1.45] font-medium text-ink">
             {words.map((w, i) => (
               <span key={`${w}-${i}`} className="w inline-block">
                 {w}&nbsp;
               </span>
             ))}
           </p>
-          <p className="mt-5 max-w-[42ch] text-[1rem] leading-relaxed text-cream/75">{about.body}</p>
+          <p className="mt-5 max-w-[42ch] text-[1rem] leading-relaxed text-ink/75">{about.body}</p>
 
           <ul className="mt-10 grid max-w-md grid-cols-3 gap-4">
             {about.points.map((pt) => {
@@ -102,14 +102,14 @@ export default function Manifesto() {
             href={corporateLinks[0].href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative isolate mt-10 inline-flex min-h-12 items-center rounded-full px-8 text-[0.8rem] font-bold tracking-[0.14em] text-brand-dark uppercase transition-colors duration-200 hover:text-cream focus-visible:text-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden-dark"
+            className="group relative isolate mt-10 inline-flex min-h-12 items-center rounded-full px-8 text-[0.8rem] font-bold tracking-[0.14em] text-ink uppercase transition-colors duration-200 hover:text-cream focus-visible:text-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
           >
-            <BlobBg className="fill-gold group-hover:fill-brand" />
+            <BlobBg className="fill-gold group-hover:fill-garden" />
             <span className="blob-label">{about.link}</span>
           </a>
         </div>
 
-        <div className="relative order-1 -mx-5 h-[400px] sm:-mx-8 sm:h-[520px] lg:order-none lg:col-span-7 lg:mx-0 lg:h-auto lg:self-stretch" data-reveal>
+        <div className="relative order-2 -mx-5 h-[400px] sm:-mx-8 sm:h-[520px] lg:order-none lg:col-span-7 lg:mx-0 lg:h-auto lg:self-stretch" data-reveal>
           <div className="absolute inset-0 lg:-inset-y-28 lg:right-[min(-2rem,calc((80rem-100vw)/2-2rem))]">
             <div className="absolute inset-0 [clip-path:url(#tear-bottom)] lg:[clip-path:url(#tear-front)]">
               <Image

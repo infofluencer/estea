@@ -1,0 +1,191 @@
+/* Havale / EFT — onay ve sipariş takip sayfası (editoryal).
+   Yazı: başlık/tutar --font-logo (sayfa başlığıyla aynı), veri --font-sans,
+   açıklama --font-garamond. Renk: bordo metin, altın etiket/çizgi, beyaz kart. */
+.card {
+  display: grid;
+  gap: 1.5rem;
+  padding: clamp(1.25rem, 2.5vw, 1.85rem);
+  border: 1px solid rgba(67, 18, 18, 0.14);
+  background: var(--surface);
+  color: var(--brand-deep);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--brand-gold) 60%, transparent);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-logo);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.bank {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
+
+/* Masaüstünde Tutar + Açıklama yan yana. */
+.fields {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.field {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(67, 18, 18, 0.1);
+}
+
+.fieldHalf {
+  grid-column: auto;
+}
+
+.fieldHalf + .fieldHalf {
+  padding-left: 1.15rem;
+  border-left: 1px solid rgba(67, 18, 18, 0.1);
+}
+
+.label {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
+
+.valueRow {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.value {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.iban {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 2.3vw, 1.15rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  overflow-wrap: anywhere;
+}
+
+.amount {
+  font-family: var(--font-logo);
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.copy {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding: 0 0.5rem;
+  border: 0;
+  border-radius: var(--radius-button);
+  background: none;
+  color: inherit;
+  opacity: 0.65;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.copy:hover,
+.copy:focus-visible {
+  opacity: 1;
+  background: var(--surface-muted);
+}
+
+.copied {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+/* Sonra ne olacak — 3 adım */
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.steps li {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  font-family: var(--font-garamond);
+  font-size: 1rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--brand-deep) 85%, transparent);
+}
+
+.stepNo {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--brand-gold);
+}
+
+.stepNo::before {
+  content: "0";
+}
+
+@media (max-width: 640px) {
+  .fieldHalf {
+    grid-column: 1 / -1;
+  }
+
+  .fieldHalf + .fieldHalf {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .steps li {
+    grid-template-columns: 1.75rem 1fr;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+}

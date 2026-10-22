@@ -1,0 +1,86 @@
+# Dokploy / CI: repo kökünden build (Build Path: /, Docker File: Dockerfile.backend)
+# Lokal: docker build -f Dockerfile.backend .
+#
+# ── Deploy / container güncelleme (staging dersi) ─────────────────────────
+# Host port publish (ör. 9001:9000) kullanma: Swarm/Dokploy yeni task'ı
+# ayağa kaldırır ama ESKİ container host portunu tutmaya devam eder →
+# UI "Done" görünür, trafik eski image'e gider. Frontend gibi Domain/Ingress
+# (Traefik) kullan; host Ports boş bırak.
+# Swarm rolling update için: docker-compose.dokploy-backend.yml
+#   deploy.update_config.order=stop-first
+# ───────────────────────────────────────────────────────────────────────
+
+# syntax=docker/dockerfile:1
+
+# Full install for medusa build (cached unless lockfile changes)
+FROM node:20-bookworm-slim AS deps
+WORKDIR /app
+COPY escay-backend/package.json escay-backend/package-lock.json* ./
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --legacy-peer-deps
+
+# Prod modules = prune build-only deps from the same install (no second npm ci)
+FROM deps AS prod-deps
+RUN npm prune --omit=dev --legacy-peer-deps
+
+FROM node:20-bookworm-slim AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+# CACHE_BUST COPY'dan ÖNCE olmalı — aksi halde Dokploy "Done" deyip eski
+# source layer'ını yeniden kullanabiliyor (staging'de 19cc589 UI'da Done,
+# runtime'da yoktu).
+ARG GIT_COMMIT=unknown
+ARG CACHE_BUST=unknown
+ARG BUILD_TIMESTAMP=unknown
+RUN echo "cache_bust=${CACHE_BUST} commit=${GIT_COMMIT} built=${BUILD_TIMESTAMP}"
+COPY escay-backend/ .
+COPY shared ./shared
+RUN printf 'commit=%s\ncache_bust=%s\nbuilt=%s\nrevision=%s@%s\n' \
+    "$GIT_COMMIT" "$CACHE_BUST" "$BUILD_TIMESTAMP" "$GIT_COMMIT" "$BUILD_TIMESTAMP" \
+    > .build-meta && \
+    echo "escay-backend build ${GIT_COMMIT}@${BUILD_TIMESTAMP} (cache_bust=${CACHE_BUST})"
+RUN npm run build && node scripts/compile-exec-scripts.mjs
+
+FROM node:20-bookworm-slim AS runner
+# Medusa prod runs from .medusa/server (includes public/admin/index.html)
+WORKDIR /server
+ENV NODE_ENV=production
+ENV MEDUSA_WORKER_MODE=shared
+ARG GIT_COMMIT=unknown
+ARG CACHE_BUST=unknown
+ARG BUILD_TIMESTAMP=unknown
+ENV GIT_COMMIT=$GIT_COMMIT
+ENV CACHE_BUST=$CACHE_BUST
+ENV BUILD_TIMESTAMP=$BUILD_TIMESTAMP
+ENV SOURCE_REVISION="${GIT_COMMIT}@${BUILD_TIMESTAMP}"
+
+COPY --from=builder /app/.medusa/server ./
+# Reuse pruned node_modules (do NOT npm ci in runner)
+COPY --from=prod-deps /app/node_modules ./node_modules
+RUN mkdir -p node_modules/@escay && \
+    ln -sfn ../../shared node_modules/@escay/shared
+
+COPY --from=builder /app/src/scripts ./src/scripts
+COPY --from=builder /app/data ./data
+COPY --from=builder /app/medusa-config.ts ./medusa-config.ts
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/.build-meta ./.build-meta
+
+COPY escay-backend/docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Hızlı replace: eski task SIGTERM ile insin, host/port tutmasın
+STOPSIGNAL SIGTERM
+
+# Traefik / Dokploy Domain (Ingress) — host Ports yerine bunu kullan.
+# Dokploy Domain ekleyince kendi label'larını da yazar; bu varsayılan ipucu.
+LABEL traefik.enable="true"
+LABEL traefik.docker.network="dokploy-network"
+LABEL traefik.http.services.escay-backend.loadbalancer.server.port="9000"
+
+# Orchestrator yeni task'a kesmeden önce health beklesin (stop-first ile birlikte)
+HEALTHCHECK --interval=15s --timeout=5s --start-period=90s --retries=5 \
+  CMD node -e "fetch('http://127.0.0.1:9000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+EXPOSE 9000
+ENTRYPOINT ["/entrypoint.sh"]

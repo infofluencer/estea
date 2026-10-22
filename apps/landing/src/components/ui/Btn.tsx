@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import BlobBg from '@/components/ui/BlobBg'
 
-type Variant = 'cream' | 'ink' | 'brand' | 'gold' | 'outline-cream' | 'outline-ink'
+type Variant = 'cream' | 'ink' | 'brand' | 'gold' | 'garden' | 'outline-cream' | 'outline-ink'
 
 const base =
   'group relative isolate inline-flex min-h-12 items-center justify-center rounded-full px-8 text-[0.8rem] font-bold tracking-[0.14em] uppercase transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
@@ -12,9 +12,10 @@ const variants: Record<Variant, { text: string; blob: string }> = {
   ink: { text: 'text-cream focus-visible:ring-ink focus-visible:ring-offset-paper', blob: 'fill-ink group-hover:fill-moss' },
   brand: { text: 'text-cream focus-visible:ring-brand focus-visible:ring-offset-paper', blob: 'fill-brand group-hover:fill-brand-dark' },
   gold: {
-    text: 'text-brand-dark hover:text-cream focus-visible:text-cream focus-visible:ring-gold focus-visible:ring-offset-ink',
-    blob: 'fill-gold group-hover:fill-brand',
+    text: 'text-ink hover:text-cream focus-visible:text-cream focus-visible:ring-gold focus-visible:ring-offset-ink',
+    blob: 'fill-gold group-hover:fill-garden',
   },
+  garden: { text: 'text-cream focus-visible:ring-garden focus-visible:ring-offset-linen', blob: 'fill-garden group-hover:fill-olive' },
   'outline-cream': {
     text: 'text-cream focus-visible:ring-cream focus-visible:ring-offset-ink',
     blob: 'fill-cream/0 stroke-cream/50 [stroke-width:1.25] group-hover:fill-cream/10 group-hover:stroke-cream',

@@ -1,0 +1,48 @@
+.wrap {
+  padding-top: 1.25rem;
+  padding-bottom: 3.5rem;
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+.head {
+  margin-bottom: 2rem;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-logo);
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-deep);
+}
+
+.lead {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-garamond);
+  font-size: 1.08rem;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+.empty {
+  margin: 2rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  opacity: 0.65;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

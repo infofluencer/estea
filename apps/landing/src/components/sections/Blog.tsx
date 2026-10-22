@@ -8,13 +8,13 @@ import Btn from '@/components/ui/Btn'
  */
 export default function Blog() {
   return (
-    <section id="blog" aria-labelledby="blog-baslik" className="relative z-10 bg-paper py-24 text-ink sm:py-32">
+    <section id="blog" aria-labelledby="blog-baslik" className="relative z-10 bg-linen py-24 text-ink sm:py-32">
       <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-24">
             <h2
               id="blog-baslik"
-              className="headline text-[clamp(2.8rem,5.6vw,5.4rem)] leading-[0.92] tracking-[-0.03em] text-garden-dark"
+              className="headline text-[clamp(2.8rem,5.6vw,5.4rem)] leading-[0.92] tracking-[-0.03em] text-olive"
             >
               {blog.title}
             </h2>
@@ -36,7 +36,7 @@ export default function Blog() {
                   href={post.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group grid grid-cols-[64px_1fr] items-center gap-5 rounded-[2rem] px-3 py-4 transition-colors duration-200 hover:bg-gold focus:outline-none focus-visible:bg-gold focus-visible:ring-2 focus-visible:ring-ink sm:grid-cols-[80px_1fr_auto] sm:gap-7 sm:px-4"
+                  className="group grid grid-cols-[64px_1fr] items-center gap-5 rounded-[2rem] px-3 py-4 transition-colors duration-200 hover:bg-leaf-soft focus:outline-none focus-visible:bg-leaf-soft focus-visible:ring-2 focus-visible:ring-ink sm:grid-cols-[80px_1fr_auto] sm:gap-7 sm:px-4"
                 >
                   <span
                     className={`flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 group-hover:-rotate-12 sm:h-20 sm:w-20 ${post.disc}`}
@@ -44,7 +44,7 @@ export default function Blog() {
                     <Icon className="h-10 w-10 sm:h-12 sm:w-12" />
                   </span>
                   <span>
-                    <span className="headline block text-[clamp(1.5rem,2.6vw,2.3rem)] leading-[1.02] transition-colors group-hover:text-brand-dark">
+                    <span className="headline block text-[clamp(1.5rem,2.6vw,2.3rem)] leading-[1.02] transition-colors group-hover:text-garden">
                       {post.title}
                     </span>
                     {post.date && <span className="mt-1.5 block text-[0.95rem] text-ink/65 transition-colors group-hover:text-ink sm:hidden">{post.date}</span>}

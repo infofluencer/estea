@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log*
+.git
+.gitignore
+.env
+.env.*
+!.env.template
+.medusa
+dist
+coverage
+.DS_Store
+*.md
+integration-tests

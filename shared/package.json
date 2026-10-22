@@ -1,0 +1,11 @@
+{
+  "name": "@escay/shared",
+  "version": "1.0.0",
+  "exports": {
+    "./tr-address": "./tr-address.js",
+    "./order-number": "./order-number.js",
+    "./tr-districts": "./tr-districts.js",
+    "./order-timeline": "./order-timeline.js",
+    "./legal-contracts": "./legal-contracts.js"
+  }
+}

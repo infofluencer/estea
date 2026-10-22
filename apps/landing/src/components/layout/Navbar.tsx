@@ -10,10 +10,10 @@ import { Glass, doodles } from '@/components/ui/Doodles'
 /* Every link is a button: an outlined pill over the video, gold when hovered,
    like the outline/gold pair the sections below already use. */
 const pillClass =
-  'inline-flex min-h-10 items-center gap-2 rounded-full border border-cream/45 px-4 text-[0.92rem] font-semibold whitespace-nowrap text-cream transition-colors duration-200 hover:border-gold hover:bg-gold hover:text-ink focus:outline-none focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink'
+  'inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/20 px-4 text-[0.92rem] font-semibold whitespace-nowrap text-ink transition-colors duration-200 hover:border-gold hover:bg-gold hover:text-ink focus:outline-none focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen'
 
 /* Mobile rows carry the same coloured discs as the manifesto facts. */
-const discs = ['bg-leaf text-ink', 'bg-gold text-ink', 'bg-brand text-cream', 'bg-cream text-ink']
+const discs = ['bg-leaf text-ink', 'bg-gold text-ink', 'bg-brand text-cream', 'bg-garden text-cream']
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
@@ -34,7 +34,7 @@ export default function Navbar() {
   return (
     <header
       id="main-nav"
-      className={`absolute inset-x-0 top-0 z-50 text-cream transition-colors duration-300 ${open ? 'bg-garden-dark' : 'bg-transparent'}`}
+      className={`absolute inset-x-0 top-0 z-50 text-ink transition-colors duration-300 ${open ? 'bg-linen' : 'bg-transparent'}`}
     >
       <div className="relative z-10 mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:h-[5.5rem] sm:px-8">
         <Link
@@ -73,9 +73,9 @@ export default function Navbar() {
             <li className="ml-2">
               <a
                 href={shopProductsUrl}
-                className="group relative isolate inline-flex min-h-10 items-center rounded-full px-5 text-[0.74rem] font-bold tracking-[0.12em] text-brand-dark uppercase transition-colors duration-200 hover:text-cream focus:outline-none focus-visible:text-cream focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+                className="group relative isolate inline-flex min-h-10 items-center rounded-full px-5 text-[0.74rem] font-bold tracking-[0.12em] text-ink uppercase transition-colors duration-200 hover:text-cream focus:outline-none focus-visible:text-cream focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
               >
-                <BlobBg className="fill-gold group-hover:fill-brand" />
+                <BlobBg className="fill-gold group-hover:fill-garden" />
                 <span className="blob-label">
                   <span className="flex items-center gap-2 whitespace-nowrap">
                     <Glass className="h-5 w-5 shrink-0" />
@@ -89,7 +89,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gold text-ink transition-colors md:hidden hover:bg-brand hover:text-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gold text-ink transition-colors md:hidden hover:bg-garden hover:text-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
           aria-expanded={open}
           aria-controls="mobil-menu"
           aria-label={open ? 'Menüyü kapat' : 'Menüyü aç'}
@@ -105,7 +105,7 @@ export default function Navbar() {
 
       <nav
         id="mobil-menu"
-        className={`fixed inset-0 z-0 bg-garden-dark pt-24 transition-opacity duration-200 md:hidden ${
+        className={`fixed inset-0 z-0 bg-linen pt-24 transition-opacity duration-200 md:hidden ${
           open ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         aria-label="Mobil menü"
@@ -119,7 +119,7 @@ export default function Navbar() {
                 <a
                   href={link.href}
                   {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="group flex items-center gap-5 py-3 text-cream focus:outline-none focus-visible:text-gold"
+                  className="group flex items-center gap-5 py-3 text-ink focus:outline-none focus-visible:text-brand"
                   onClick={() => setOpen(false)}
                   tabIndex={open ? 0 : -1}
                 >
@@ -128,7 +128,7 @@ export default function Navbar() {
                   >
                     <Icon className="h-9 w-9" />
                   </span>
-                  <span className="headline text-[2.2rem] transition-colors group-hover:text-gold">{link.label}</span>
+                  <span className="headline text-[2.2rem] transition-colors group-hover:text-brand">{link.label}</span>
                 </a>
               </li>
             )
@@ -136,7 +136,7 @@ export default function Navbar() {
           <li className="mt-auto pt-8">
             <a
               href={shopProductsUrl}
-              className="group relative isolate inline-flex min-h-14 w-full items-center justify-center rounded-full px-6 text-[0.84rem] font-bold tracking-[0.14em] text-brand-dark uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden-dark"
+              className="group relative isolate inline-flex min-h-14 w-full items-center justify-center rounded-full px-6 text-[0.84rem] font-bold tracking-[0.14em] text-ink uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
               tabIndex={open ? 0 : -1}
             >
               <BlobBg className="fill-gold" />

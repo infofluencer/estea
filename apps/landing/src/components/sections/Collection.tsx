@@ -9,10 +9,10 @@ import BlobBg from '@/components/ui/BlobBg'
 /* The whole section recolours after the active pack: headline, caption,
    arrows, doodles and the CTA all read from --accent. */
 const tones: Record<Tone, { accent: string; btn: string; btnFg: string }> = {
-  gold: { accent: '#3b2f14', btn: '#e9ba3c', btnFg: '#111111' },
-  leaf: { accent: '#467910', btn: '#467910', btnFg: '#f8f8f8' },
+  gold: { accent: '#9a6a0a', btn: '#e9ba3c', btnFg: '#111111' },
+  leaf: { accent: '#759f11', btn: '#92c700', btnFg: '#111111' },
   brand: { accent: '#b43317', btn: '#b43317', btnFg: '#f8f8f8' },
-  sun: { accent: '#c4511a', btn: '#d05a20', btnFg: '#f8f8f8' },
+  sun: { accent: '#d05a20', btn: '#d05a20', btnFg: '#f8f8f8' },
 }
 
 /* Scale by distance from the active slot; |2| is parked out of view. */
@@ -75,7 +75,7 @@ export default function Collection() {
         } as CSSProperties
       }
     >
-      <div className="relative z-20 -mt-7 overflow-hidden border-y border-brand/25 bg-gold py-3 text-brand">
+      <div className="relative z-20 -mt-7 overflow-hidden border-y border-ink/15 bg-gold py-3 text-ink">
         <ul className="marquee flex w-max motion-reduce:animate-none" aria-label="Esçay">
           {band.map((t, i) => {
             const Icon = bandIcons[i % bandIcons.length]
@@ -104,7 +104,7 @@ export default function Collection() {
         </div>
 
         <div
-          className="relative mx-auto mt-2 h-[250px] max-w-5xl touch-pan-y select-none sm:h-[290px] lg:h-[340px]"
+          className="relative mx-auto mt-2 h-[210px] max-w-5xl touch-pan-y select-none sm:h-[290px] lg:h-[340px]"
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
           onPointerCancel={() => (dragX.current = null)}
@@ -146,7 +146,7 @@ export default function Collection() {
                     zIndex: 10 - Math.abs(off),
                   } as CSSProperties
                 }
-                className={`absolute top-1/2 left-1/2 aspect-square h-full [--gap:150px] transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:[--gap:min(30vw,300px)] lg:[--gap:min(28vw,400px)] ${isActive ? 'cursor-pointer' : 'cursor-w-resize'} ${s.opacity === 0 ? 'pointer-events-none' : ''}`}
+                className={`absolute top-1/2 left-1/2 aspect-square h-full [--gap:128px] transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:[--gap:min(30vw,300px)] lg:[--gap:min(28vw,400px)] ${isActive ? 'cursor-pointer' : 'cursor-w-resize'} ${s.opacity === 0 ? 'pointer-events-none' : ''}`}
               >
                 <Image
                   src={p.image}
@@ -161,27 +161,38 @@ export default function Collection() {
             )
           })}
 
-          {/* On phones the arrows sit in the stage's lower corners, under the side packs; swiping works too. */}
-          <div className="pointer-events-none absolute inset-x-1 bottom-0 z-20 flex justify-between md:hidden">
-            {arrows.map((b) => (
-              <button
-                key={b.d}
-                type="button"
-                onClick={() => step(b.d)}
-                aria-label={b.label}
-                className="pointer-events-auto inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg shadow-[0_6px_14px_rgba(0,0,0,0.18)] [background:var(--btn)] [color:var(--btn-fg)] transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
-              >
-                {b.glyph}
-              </button>
-            ))}
-          </div>
         </div>
 
-        <div className="relative mx-auto mt-3 max-w-md">
+        <div className="relative mx-auto mt-5 max-w-md">
           <div key={current.slug} className="caption-in [color:var(--accent)] transition-colors duration-500 motion-reduce:animate-none">
-            <h3 className="headline text-[1.5rem] sm:text-[1.7rem]">
-              {current.name}, {current.weight}
-            </h3>
+            {/* On phones the arrows flank the name; swiping the packs works too. */}
+            <div className="flex items-center justify-between gap-3 md:block">
+              {arrows.slice(0, 1).map((b) => (
+                <button
+                  key={b.d}
+                  type="button"
+                  onClick={() => step(b.d)}
+                  aria-label={b.label}
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg [background:var(--btn)] [color:var(--btn-fg)] transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-linen md:hidden"
+                >
+                  {b.glyph}
+                </button>
+              ))}
+              <h3 className="headline text-[1.4rem] sm:text-[1.7rem]">
+                {current.name}, {current.weight}
+              </h3>
+              {arrows.slice(1).map((b) => (
+                <button
+                  key={b.d}
+                  type="button"
+                  onClick={() => step(b.d)}
+                  aria-label={b.label}
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg [background:var(--btn)] [color:var(--btn-fg)] transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-linen md:hidden"
+                >
+                  {b.glyph}
+                </button>
+              ))}
+            </div>
             <p className="mx-auto mt-2 min-h-[3.25em] max-w-sm text-[0.98rem] leading-relaxed text-ink/70">{current.note}</p>
             <a
               href={current.href}
@@ -210,14 +221,7 @@ export default function Collection() {
         </div>
       </div>
 
-      <svg
-        viewBox="0 0 1440 90"
-        preserveAspectRatio="none"
-        className="mt-8 block h-[44px] w-full text-moss sm:h-[64px] lg:mt-10"
-        aria-hidden="true"
-      >
-        <path fill="currentColor" d="M0 58C320 8 760 98 1440 30V90H0Z" />
-      </svg>
+      <div className="h-8 lg:h-10" aria-hidden="true" />
     </section>
   )
 }

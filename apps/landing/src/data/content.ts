@@ -130,8 +130,8 @@ export const journey = {
     { icon: 'wilted', verb: 'Soldur', body: 'Yaprak serilir, nemini bırakıp yumuşar.', disc: '#759f11', ink: '#111111' },
     { icon: 'curl', verb: 'Kıvır', body: 'Kıvrılan yaprağın öz suyu yüzeye çıkar.', disc: '#e9ba3c', ink: '#111111' },
     { icon: 'leaf', verb: 'Beklet', body: 'Havayla buluşan yaprak bakıra döner.', disc: '#d05a20', ink: '#f8f8f8' },
-    { icon: 'heat', verb: 'Kurut', body: 'Sıcak havada koyulaşır, aroması içinde kalır.', disc: '#8f2812', ink: '#f8f8f8' },
-    { icon: 'glass', verb: 'Demle', body: 'Bardakta tavşan kanı rengini alır.', disc: '#b43317', ink: '#f8f8f8' },
+    { icon: 'heat', verb: 'Kurut', body: 'Sıcak havada koyulaşır, aroması içinde kalır.', disc: '#b43317', ink: '#f8f8f8' },
+    { icon: 'glass', verb: 'Demle', body: 'Bardakta tavşan kanı rengini alır.', disc: '#eef6dc', ink: '#b43317' },
   ] as const,
 }
 
@@ -161,10 +161,10 @@ export const blog = {
   posts: [
     { title: 'Karadeniz Usulü Çay Nasıl Demlenir?', href: 'https://esteacay.com/elementor-3218/', date: '25 Ocak 2022', icon: 'teapot', disc: 'bg-brand text-cream' },
     { title: 'Türkiye’de Yerli İlk Çay Üretimi', href: 'https://esteacay.com/turkiye-de-yerli-ilk-cay-uretimi/', date: '17 Şubat 2022', icon: 'hills', disc: 'bg-leaf text-ink' },
-    { title: 'Dökme Çayın Püf Noktaları Nelerdir?', href: 'https://esteacay.com/dokme-cayin-puf-notlari-nelerdir/', date: '10 Şubat 2022', icon: 'leaf', disc: 'bg-brand-dark text-cream' },
-    { title: 'Sütlü Çay Nedir? Nasıl Yapılır?', href: 'https://esteacay.com/sutlu-cay-nedir-nasil-yapilir/', date: '30 Kasım 2021', icon: 'glass', disc: 'bg-amber text-cream' },
+    { title: 'Dökme Çayın Püf Noktaları Nelerdir?', href: 'https://esteacay.com/dokme-cayin-puf-notlari-nelerdir/', date: '10 Şubat 2022', icon: 'leaf', disc: 'bg-amber text-cream' },
+    { title: 'Sütlü Çay Nedir? Nasıl Yapılır?', href: 'https://esteacay.com/sutlu-cay-nedir-nasil-yapilir/', date: '30 Kasım 2021', icon: 'glass', disc: 'bg-brand text-cream' },
     { title: 'Earl Grey Çay Nedir?', href: 'https://esteacay.com/earl-grey-cay-nedir/', date: '10 Aralık 2021', icon: 'curl', disc: 'bg-olive text-ink' },
-    { title: 'Formda Tutan Çaylar: Bitki Çayları', href: 'https://esteacay.com/formda-tutan-caylar-bitki-caylari/', date: null, icon: 'sprig', disc: 'bg-garden text-cream' },
+    { title: 'Formda Tutan Çaylar: Bitki Çayları', href: 'https://esteacay.com/formda-tutan-caylar-bitki-caylari/', date: null, icon: 'sprig', disc: 'bg-leaf text-ink' },
   ] as const,
 }
 
