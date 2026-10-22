@@ -17,6 +17,7 @@
     "build:shop": "npm run build -w @estea/shop",
     "start:landing": "npm run start -w @estea/landing",
     "start:shop": "npm run start -w @estea/shop",
+    "start": "npm run start -w @estea/${APP:-landing}",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "oxlint apps packages"
   },

@@ -61,3 +61,5 @@ Her uygulama ayrı servis olarak deploy edilir. Servise `NIXPACKS_CONFIG_FILE` o
 
 - Landing: `nixpacks.landing.toml`
 - Shop: `nixpacks.shop.toml`
+
+Değişken verilmezse Nixpacks kökteki `npm run build` (iki uygulama) ve `npm start` komutlarını kullanır. `npm start` varsayılan olarak landing'i başlatır; shop servisi için `APP=shop` ortam değişkenini verin. Yine de doğru yol `NIXPACKS_CONFIG_FILE`'dır: Node 22 ve yalnızca ilgili uygulamanın build'i onunla gelir.
