@@ -112,7 +112,8 @@ async function findFulfillment(
     const { data: orders } = await query.graph({
       entity: "order",
       fields: ["id", "fulfillments.id", "fulfillments.canceled_at", "fulfillments.data"],
-      filters: { display_id: displayId },
+      // Medusa query graph types display_id as string filter (bkz. store/orders/lookup)
+      filters: { display_id: String(displayId) },
     })
     for (const o of orders as { id: string; fulfillments?: { id: string; canceled_at?: unknown; data?: Record<string, unknown> | null }[] }[]) {
       const f = (o.fulfillments || []).find((x) => !x.canceled_at && matches(x.data))
