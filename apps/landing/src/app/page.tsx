@@ -7,9 +7,9 @@ import Hero from '@/components/sections/Hero'
 import Manifesto from '@/components/sections/Manifesto'
 import Collection from '@/components/sections/Collection'
 import Journey from '@/components/sections/Journey'
-import History from '@/components/sections/History'
+import Faq from '@/components/sections/Faq'
 import Blog from '@/components/sections/Blog'
-import Contact from '@/components/sections/Contact'
+import SectionRule from '@/components/ui/SectionRule'
 
 export default function LandingPage() {
   return (
@@ -21,9 +21,9 @@ export default function LandingPage() {
         <Manifesto />
         <Collection />
         <Journey />
-        <History />
+        <SectionRule />
+        <Faq />
         <Blog />
-        <Contact />
       </main>
       <Footer />
       <RevealInit />

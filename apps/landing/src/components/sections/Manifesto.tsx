@@ -55,7 +55,7 @@ export default function Manifesto() {
   }, [reduced])
 
   return (
-    <section ref={ref} id="hakkimizda" aria-labelledby="hakkimizda-baslik" className="relative z-10 overflow-hidden bg-linen text-ink">
+    <section ref={ref} id="hakkimizda" aria-labelledby="hakkimizda-baslik" className="relative z-10 overflow-hidden bg-linen text-ink shadow-[0_-24px_60px_rgba(0,0,0,0.3)]">
       <svg width="0" height="0" className="absolute" aria-hidden="true">
         <defs>
           <clipPath id="tear-front" clipPathUnits="objectBoundingBox">
@@ -113,11 +113,11 @@ export default function Manifesto() {
           <div className="absolute inset-0 lg:-inset-y-28 lg:right-[min(-2rem,calc((80rem-100vw)/2-2rem))]">
             <div className="absolute inset-0 [clip-path:url(#tear-bottom)] lg:[clip-path:url(#tear-front)]">
               <Image
-                src="/showcase.jpg"
-                alt="Karadeniz çay bahçeleri, sisli yamaçlar"
+                src="/fabrika/fabrika-bahceler.jpg"
+                alt="Çay bahçelerinin ortasındaki Esçay fabrikası"
                 fill
                 sizes="(min-width: 1024px) 60vw, 100vw"
-                className="object-cover object-[55%_50%]"
+                className="object-cover object-[60%_50%]"
               />
               <div
                 className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.35),transparent_35%)]"

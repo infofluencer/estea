@@ -7,10 +7,10 @@ import { navLinks, shopProductsUrl } from '@/lib/site'
 import BlobBg from '@/components/ui/BlobBg'
 import { Glass, doodles } from '@/components/ui/Doodles'
 
-/* Every link is a button: an outlined pill over the video, gold when hovered,
-   like the outline/gold pair the sections below already use. */
+/* The header only ever sits over the hero video (it fades out on scroll), so every
+   link reads in cream: an outlined cream pill that fills cream on hover. */
 const pillClass =
-  'inline-flex min-h-10 items-center gap-2 rounded-full border border-ink/20 px-4 text-[0.92rem] font-semibold whitespace-nowrap text-ink transition-colors duration-200 hover:border-gold hover:bg-gold hover:text-ink focus:outline-none focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen'
+  'inline-flex min-h-10 items-center gap-2 rounded-full border border-cream/45 px-4 text-[0.92rem] font-semibold whitespace-nowrap text-cream transition-colors duration-200 hover:border-cream hover:bg-cream hover:text-ink focus:outline-none focus-visible:border-cream focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink'
 
 /* Mobile rows carry the same coloured discs as the manifesto facts. */
 const discs = ['bg-leaf text-ink', 'bg-gold text-ink', 'bg-brand text-cream', 'bg-garden text-cream']
@@ -34,9 +34,9 @@ export default function Navbar() {
   return (
     <header
       id="main-nav"
-      className={`absolute inset-x-0 top-0 z-50 text-ink transition-colors duration-300 ${open ? 'bg-linen' : 'bg-transparent'}`}
+      className={`absolute inset-x-0 top-0 z-50 transition-colors duration-300 ${open ? 'bg-linen text-ink' : 'bg-transparent text-cream'}`}
     >
-      <div className="relative z-10 mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:h-[5.5rem] sm:px-8">
+      <div className="relative z-10 mx-auto flex h-20 max-w-[90rem] items-center justify-between px-5 sm:h-[5.5rem] sm:px-8 lg:px-10">
         <Link
           href="/"
           className="flex shrink-0 items-center rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
@@ -73,9 +73,9 @@ export default function Navbar() {
             <li className="ml-2">
               <a
                 href={shopProductsUrl}
-                className="group relative isolate inline-flex min-h-10 items-center rounded-full px-5 text-[0.74rem] font-bold tracking-[0.12em] text-ink uppercase transition-colors duration-200 hover:text-cream focus:outline-none focus-visible:text-cream focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
+                className="group relative isolate inline-flex min-h-10 items-center rounded-full px-5 text-[0.74rem] font-bold tracking-[0.12em] text-ink uppercase transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               >
-                <BlobBg className="fill-gold group-hover:fill-garden" />
+                <BlobBg className="fill-gold group-hover:fill-cream" />
                 <span className="blob-label">
                   <span className="flex items-center gap-2 whitespace-nowrap">
                     <Glass className="h-5 w-5 shrink-0" />
@@ -89,7 +89,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gold text-ink transition-colors md:hidden hover:bg-garden hover:text-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-cream text-ink transition-colors md:hidden hover:bg-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           aria-expanded={open}
           aria-controls="mobil-menu"
           aria-label={open ? 'Menüyü kapat' : 'Menüyü aç'}

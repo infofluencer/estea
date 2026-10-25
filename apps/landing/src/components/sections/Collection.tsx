@@ -75,6 +75,19 @@ export default function Collection() {
         } as CSSProperties
       }
     >
+      {/* Photo stage: the gardens behind the packs; headline on top, packs on the table. */}
+      <div className="relative bg-ink text-cream lg:min-h-[56.25vw]">
+      <div className="absolute inset-0" aria-hidden="true">
+        <Image
+          src="/showcase.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-[55%_50%]"
+        />
+        <div className="absolute inset-0 bg-ink/40" />
+      </div>
+
       <div className="relative z-20 -mt-7 overflow-hidden border-y border-ink/15 bg-gold py-3 text-ink">
         <ul className="marquee flex w-max motion-reduce:animate-none" aria-label="Esçay">
           {band.map((t, i) => {
@@ -93,18 +106,18 @@ export default function Collection() {
         </ul>
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-5 pt-14 text-center sm:px-8 lg:pt-20">
+      <div className="relative mx-auto w-full max-w-7xl px-5 pt-14 text-center [text-shadow:0_2px_16px_rgba(0,0,0,0.45)] sm:px-8 lg:static lg:pt-[4.5vw]">
         <div data-reveal>
           <h2
             key={current.slug}
-            className="caption-in headline mx-auto flex min-h-[2em] max-w-3xl items-center justify-center text-[clamp(2rem,4.4vw,3.6rem)] [color:var(--accent)] transition-colors duration-500 motion-reduce:animate-none"
+            className="caption-in headline mx-auto flex min-h-[2em] max-w-3xl items-center justify-center text-[clamp(2rem,4.4vw,3.6rem)] text-cream transition-colors duration-500 motion-reduce:animate-none"
           >
             {current.headline}
           </h2>
         </div>
 
         <div
-          className="relative mx-auto mt-2 h-[210px] max-w-5xl touch-pan-y select-none sm:h-[290px] lg:h-[340px]"
+          className="relative mx-auto mt-2 h-[210px] max-w-5xl touch-pan-y select-none sm:h-[290px] lg:absolute lg:top-[57%] lg:left-1/2 lg:mt-0 lg:h-[20vw] lg:w-full lg:-translate-x-1/2 lg:-translate-y-1/2"
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
           onPointerCancel={() => (dragX.current = null)}
@@ -112,7 +125,7 @@ export default function Collection() {
         >
           <div
             key={current.slug}
-            className="caption-in [color:var(--accent)] transition-colors duration-500 motion-reduce:animate-none"
+            className="caption-in text-cream/90 transition-colors duration-500 motion-reduce:animate-none"
             aria-hidden="true"
           >
             <Left className="pointer-events-none absolute top-[30%] left-[calc(50%-260px)] hidden h-24 w-24 -rotate-12 md:block" />
@@ -163,37 +176,41 @@ export default function Collection() {
 
         </div>
 
-        <div className="relative mx-auto mt-5 max-w-md">
-          <div key={current.slug} className="caption-in [color:var(--accent)] transition-colors duration-500 motion-reduce:animate-none">
-            {/* On phones the arrows flank the name; swiping the packs works too. */}
-            <div className="flex items-center justify-between gap-3 md:block">
+      </div>
+
+      {/* Caption at the foot of the photo, under the packs on the table. */}
+      <div className="relative mx-auto w-full max-w-7xl px-5 pt-8 pb-10 text-center [text-shadow:0_2px_16px_rgba(0,0,0,0.5)] sm:px-8 lg:absolute lg:inset-x-0 lg:bottom-[4%] lg:pt-0 lg:pb-0">
+        <div className="relative mx-auto max-w-md">
+          <div key={current.slug} className="caption-in text-cream transition-colors duration-500 motion-reduce:animate-none">
+            <h3 className="headline text-[1.4rem] sm:text-[1.7rem]">
+              {current.name}, {current.weight}
+            </h3>
+            {/* The arrows flank the note with a little air; swiping the packs works too. */}
+            <div className="mt-3 flex items-center justify-center gap-6 sm:gap-8">
               {arrows.slice(0, 1).map((b) => (
                 <button
                   key={b.d}
                   type="button"
                   onClick={() => step(b.d)}
                   aria-label={b.label}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg [background:var(--btn)] [color:var(--btn-fg)] transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-linen md:hidden"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg [background:var(--btn)] [color:var(--btn-fg)] shadow-[0_6px_18px_rgba(0,0,0,0.3)] transition-[background-color,color,transform] duration-500 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                 >
                   {b.glyph}
                 </button>
               ))}
-              <h3 className="headline text-[1.4rem] sm:text-[1.7rem]">
-                {current.name}, {current.weight}
-              </h3>
+              <p className="min-h-[3.25em] max-w-sm text-[0.98rem] leading-relaxed text-cream/85">{current.note}</p>
               {arrows.slice(1).map((b) => (
                 <button
                   key={b.d}
                   type="button"
                   onClick={() => step(b.d)}
                   aria-label={b.label}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg [background:var(--btn)] [color:var(--btn-fg)] transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-linen md:hidden"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg [background:var(--btn)] [color:var(--btn-fg)] shadow-[0_6px_18px_rgba(0,0,0,0.3)] transition-[background-color,color,transform] duration-500 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                 >
                   {b.glyph}
                 </button>
               ))}
             </div>
-            <p className="mx-auto mt-2 min-h-[3.25em] max-w-sm text-[0.98rem] leading-relaxed text-ink/70">{current.note}</p>
             <a
               href={current.href}
               target="_blank"
@@ -204,24 +221,9 @@ export default function Collection() {
               <span className="blob-label">{collection.cta}</span>
             </a>
           </div>
-
-          <div className="pointer-events-none absolute inset-x-[-4.5rem] top-[58%] hidden -translate-y-1/2 items-center justify-between md:flex">
-            {arrows.map((b) => (
-              <button
-                key={b.d}
-                type="button"
-                onClick={() => step(b.d)}
-                aria-label={b.label}
-                className="pointer-events-auto inline-flex h-12 w-12 items-center justify-center rounded-full text-lg [background:var(--btn)] [color:var(--btn-fg)] transition-[background-color,color,transform] duration-500 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
-              >
-                {b.glyph}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
-
-      <div className="h-8 lg:h-10" aria-hidden="true" />
+      </div>
     </section>
   )
 }

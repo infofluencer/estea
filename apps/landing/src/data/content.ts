@@ -4,15 +4,17 @@
  */
 
 export const hero = {
-  title: 'Çayın lezzeti doğadan',
+  /** Başlık: "<brand> <title>" tek akışta; marka altın renkte. */
+  brand: 'Esçay’ın',
+  title: 'lezzeti doğadan',
   /* Claims as esteacay.com states them: high-altitude gardens, snow in winter, sun in summer, leaves picked with care. */
-  lead: 'Kışı kar altında, yazı güneşte geçen yüksek rakımlı Karadeniz bahçelerinden özenle seçilip toplanan yaprak.',
+  lead: 'Esçay, kışı kar altında yazı güneşte geçen yüksek rakımlı Karadeniz bahçelerinden özenle seçilip toplanan yaprağı katkısız harmanlar. Her yudumda Karadeniz.',
   cta: 'Harmanları keşfet',
 }
 
 export const about = {
   title: 'Çayın lezzetine inandık.',
-  lead: 'Rize ve Artvin’in yüksek bahçelerinden gelen yaprağı katkısız harmanlıyoruz. Sisin geç kalktığı yamaçlarda yavaş büyüyen yaprak, aceleye getirilmeden demlenince kendini gösterir.',
+  lead: 'Karadeniz’in yüksek rakımlı bahçelerinden gelen yaprağı katkısız harmanlıyoruz. Sisin geç kalktığı yamaçlarda yavaş büyüyen yaprak, aceleye getirilmeden demlenince kendini gösterir.',
   body: 'Boya yok, aroma yok; yalnızca yaprak, ustalık ve zaman. Çünkü iyi çay, bekleyeni ödüllendirir.',
   link: 'Esçay’ı yakından tanıyın',
   /** Three plain facts under the copy, each with a brand doodle. */
@@ -21,7 +23,7 @@ export const about = {
     { icon: 'teapot', label: 'Katkısız harman' },
     { icon: 'glass', label: 'Tavşan kanı demleme' },
   ] as const,
-  photoCaption: 'Rize, mayıs. İlk sürgün toplanıyor.',
+  photoCaption: 'Esçay fabrikası, çay bahçelerinin içinde.',
 }
 
 export const collection = {
@@ -30,7 +32,7 @@ export const collection = {
   /** Running band above the collection. */
   taglines: [
     'Katkısız, yüzde yüz Karadeniz',
-    'Rize ve Artvin bahçelerinden',
+    'Karadeniz’in yüksek bahçelerinden',
     'Tavşan kanı demlik çayı',
     'Üç sürgün, beş karakter',
     'Yapraktan bardağa',
@@ -118,20 +120,96 @@ export const products: Product[] = [
 ]
 
 /**
- * The journey as a drawn path from the garden to the glass. Each stop's disc
- * takes the colour the leaf has at that step: fresh green to tavşan kanı.
+ * The journey from garden to glass. Each stop carries the colour the leaf has
+ * at that step, fresh green through gold to tavşan kanı, each dark enough to
+ * read as a heading on linen.
+ * `icon` names a brand doodle for the overview row; `facts` are the two
+ * short entries under each spread's note.
  * General black-tea making; brand claims only as esteacay.com states them.
  */
 export const journey = {
   title: 'Bahçeden bardağa',
-  lead: 'Kışı kar altında geçen yüksek bahçeden demliğe: bir yaprağın yeşilden tavşan kanına yolculuğu.',
+  lead: 'Kışı kar altında geçen yüksek bahçeden demliğe: yaprağın Esçay fabrikasından geçerek bardağa gelen yolu.',
+  /** Fotoğraflar: Esçay bahçe ve fabrika çekimleri (public/fabrika). */
   stops: [
-    { icon: 'sprig', verb: 'Topla', body: 'Taze sürgün, özenle seçilip toplanır.', disc: '#92c700', ink: '#111111' },
-    { icon: 'wilted', verb: 'Soldur', body: 'Yaprak serilir, nemini bırakıp yumuşar.', disc: '#759f11', ink: '#111111' },
-    { icon: 'curl', verb: 'Kıvır', body: 'Kıvrılan yaprağın öz suyu yüzeye çıkar.', disc: '#e9ba3c', ink: '#111111' },
-    { icon: 'leaf', verb: 'Beklet', body: 'Havayla buluşan yaprak bakıra döner.', disc: '#d05a20', ink: '#f8f8f8' },
-    { icon: 'heat', verb: 'Kurut', body: 'Sıcak havada koyulaşır, aroması içinde kalır.', disc: '#b43317', ink: '#f8f8f8' },
-    { icon: 'glass', verb: 'Demle', body: 'Bardakta tavşan kanı rengini alır.', disc: '#eef6dc', ink: '#b43317' },
+    {
+      verb: 'Yetiştir',
+      icon: 'hills',
+      body: 'Yüksek rakımlı Karadeniz bahçelerinde yaprak yavaş büyür.',
+      detail:
+        'Bol yağış, serin hava ve asitli toprak çay bitkisinin aradığı her şeyi verir. Kışı kar altında dinlenerek geçiren bahçeler ilkbaharda yavaş ama dolgun sürgün verir; yaprağın karakteri burada oluşur.',
+      facts: [
+        { term: 'Bölge', value: 'Doğu Karadeniz yamaçları' },
+        { term: 'Kış', value: 'Kar altında doğal dinlenme' },
+      ],
+      color: '#3f6f0e',
+      image: '/fabrika/cay-bahceleri.jpg',
+    },
+    {
+      verb: 'Topla',
+      icon: 'sprig',
+      body: 'Taze sürgün, mevsiminde özenle seçilip toplanır.',
+      detail:
+        'Çay bitkisi yılda üç kez sürgün verir. Yaprak en körpe hâlindeyken toplanır ve tazeliğini kaybetmeden, bekletilmeden fabrikaya ulaştırılır.',
+      facts: [
+        { term: 'Hasat', value: 'Mayıs – Ekim' },
+        { term: 'Sürgün', value: 'Yılda üç dönem' },
+      ],
+      color: '#557f10',
+      image: '/fabrika/cay-hasadi.jpg',
+    },
+    {
+      verb: 'İşle',
+      icon: 'curl',
+      body: 'Yaprak fabrikada soldurulur, kıvrılır ve kurutulur.',
+      detail:
+        'Soldurma yaprağın nemini azaltır, kıvırma özsuyunu açığa çıkarır. Havayla buluşan yaprak oksitlenip koyulaşır; kurutma bu rengi ve aromayı yaprağa sabitler.',
+      facts: [
+        { term: 'Aşamalar', value: 'Soldurma, kıvırma, oksidasyon, kurutma' },
+        { term: 'Yer', value: 'Esçay fabrikası' },
+      ],
+      color: '#86700f',
+      image: '/fabrika/taze-yapraklar.jpg',
+    },
+    {
+      verb: 'Denetle',
+      icon: 'bowl',
+      body: 'Her parti tat ve kalite kontrolünden geçer.',
+      detail:
+        'Kurutulan çay elenerek boylarına ayrılır, sap ve lifler ayıklanır. Tadımcılar her partiyi demleyip rengine, kokusuna ve tadına bakar; ölçüyü tutmayan parti harmana girmez.',
+      facts: [
+        { term: 'Ayıklama', value: 'Eleme, sap ve lif ayırma' },
+        { term: 'Tadım', value: 'Renk, koku ve tat' },
+      ],
+      color: '#a5630f',
+      image: '/fabrika/kalite-kontrol.jpg',
+    },
+    {
+      verb: 'Paketle',
+      icon: 'pack',
+      body: 'Harman, aromasını koruyacak şekilde paketlenir.',
+      detail:
+        'Onaylanan harman ışık, hava ve nemden koruyan ambalajlara konur. Böylece çay, fabrikadan çıktığı günkü aromasıyla rafa ve oradan mutfağa ulaşır.',
+      facts: [
+        { term: 'Ambalaj', value: 'Işık, hava ve neme karşı' },
+        { term: 'Amaç', value: 'Aromanın korunması' },
+      ],
+      color: '#bb4f1b',
+      image: '/fabrika/paketleme.jpg',
+    },
+    {
+      verb: 'Demle',
+      icon: 'glass',
+      body: 'Bardakta tavşan kanı rengini alır.',
+      detail:
+        'Alttaki çaydanlıkta su kaynar, üstteki demlikte çay kısık ateşte demlenir. İnce belli bardakta beliren tavşan kanı rengi, demin kıvamını bulduğunu gösterir.',
+      facts: [
+        { term: 'Usul', value: 'Çift katlı çaydanlık' },
+        { term: 'Demlenme', value: '10 – 15 dakika' },
+      ],
+      color: '#a32e18',
+      image: '/fabrika/demle.jpg',
+    },
   ] as const,
 }
 
@@ -142,15 +220,56 @@ export const journey = {
  * Esçay's own founding year is not published, so its line says "Bugün".
  */
 export const history = {
-  title: 'Rize’de bir asırlık çay',
+  title: 'Karadeniz’de bir asırlık çay',
   lead: 'Karadeniz’in yamaçlarına çay yüz yıl önce geldi. Esçay bu yamaçlarda büyüyen yaprakla demleniyor.',
+  /** Başlığın altındaki fotoğraf: çay bahçelerinin içindeki Esçay fabrikası. */
+  image: { src: '/fabrika/cay-hasadi.jpg', alt: 'Karadeniz bahçelerinde çay hasadı', caption: 'Karadeniz bahçelerinde hasat.' },
+  /** Son maddenin (Bugün) fotoğrafı. */
+  todayImage: { src: '/fabrika/fabrika-sevkiyat.jpg', alt: 'Esçay paketleriyle yüklü sevkiyat aracı fabrika önünde' },
   entries: [
-    { when: '1924', title: 'İlk adım', body: 'Rize ve Borçka’da çay yetiştirilmesi için ilk kanun çıkar.' },
+    { when: '1924', title: 'İlk adım', body: 'Doğu Karadeniz’de çay yetiştirilmesi için ilk kanun çıkar.' },
     { when: '1940', title: 'Bahçeler büyür', body: 'Çay Kanunu ile üretici desteklenir, yamaçlar çay bahçesine döner.' },
-    { when: '1947', title: 'İlk fabrika', body: 'Rize’de ilk çay fabrikası açılır; yaprak artık bahçenin yanında işlenir.' },
+    { when: '1947', title: 'İlk fabrika', body: 'Karadeniz’de ilk çay fabrikası açılır; yaprak artık bahçenin yanında işlenir.' },
     { when: '1984', title: 'Yeni harmanlar', body: 'Çay işlemek özel sektöre açılır; Karadeniz’de yeni markalar doğar.' },
     { when: 'Bugün', title: 'Esçay', body: 'Rakımı yüksek Karadeniz bahçelerinden özenle seçilen yaprak, Esçay harmanında bardağa gelir.' },
   ],
+}
+
+/**
+ * Landing FAQ: brand and product questions. Shop questions (kargo, iade,
+ * ödeme) live in the storefront FAQ; the link under the heading goes there.
+ * Brewing and storage advice matches the storefront's own wording.
+ */
+export const faq = {
+  title: 'Sıkça sorulan sorular',
+  lead: 'Harmanlar, demleme ve sipariş üzerine en çok gelen sorular.',
+  all: { label: 'Tüm sorular' },
+  items: [
+    {
+      q: 'Esçay çayları nerede yetişiyor?',
+      a: 'Doğu Karadeniz’in yüksek rakımlı bahçelerinde. Kışı kar altında, yazı güneşte geçiren bu bahçelerde yaprak yavaş büyür; harmanlarımızın tamamı bu yaprakla hazırlanır.',
+    },
+    {
+      q: 'Çaylarınızda katkı maddesi var mı?',
+      a: 'Hayır. Boya, aroma ya da başka bir katkı kullanmıyoruz; paketlerde yalnızca işlenmiş çay yaprağı bulunur. Rengini ve kokusunu yaprağın kendisi verir.',
+    },
+    {
+      q: 'Harmanlar arasındaki fark nedir?',
+      a: 'Her harman farklı bir sürgün ve demlik alışkanlığı için hazırlanır: İlk Hasat mayıs sürgünüyle daha açık ve çiçeksi, Tiryaki koyu ve gövdeli, Gold Karadeniz yuvarlak ve tatlı bitişlidir. Ürün sayfalarında her harmanın tadım notu ve demleme önerisi yer alır.',
+    },
+    {
+      q: 'Karadeniz usulü nasıl demlenir?',
+      a: 'Çift katlı çaydanlık kullanın. Alttaki çaydanlıkta su kaynarken üstteki demliğe bardak başına bir tatlı kaşığı çay koyun, kaynar suyu dökün ve kısık ateşte 15–20 dakika demleyin. Bardakta tavşan kanı rengi belirince dem hazırdır.',
+    },
+    {
+      q: 'Çayı nasıl saklamalıyım?',
+      a: 'Serin, kuru ve kokusuz bir yerde, ağzı kapalı bir kapta. Çay yaprağı çevresindeki kokuyu çeker; baharat ve kahve gibi ürünlerden uzak tutun. Açılan paketi mümkünse birkaç hafta içinde tüketin.',
+    },
+    {
+      q: 'Nereden satın alabilirim?',
+      a: 'Tüm harmanlar market.esteacay.com üzerinden Türkiye’nin her yerine kargoyla gönderilir. Toptan ve kurumsal siparişler için bize telefonla ulaşabilirsiniz.',
+    },
+  ] as const,
 }
 
 /** Posts from esteacay.com/blog (titles, links and dates as published there). */
@@ -158,13 +277,14 @@ export const blog = {
   title: 'Çay üzerine',
   lead: 'Karadeniz çayı, demleme ve harmanlar üzerine yazılar.',
   all: { label: 'Tüm yazılar', href: 'https://esteacay.com/blog/' },
+  /** Görseller esteacay.com'daki öne çıkan görsellerden (public/blog). */
   posts: [
-    { title: 'Karadeniz Usulü Çay Nasıl Demlenir?', href: 'https://esteacay.com/elementor-3218/', date: '25 Ocak 2022', icon: 'teapot', disc: 'bg-brand text-cream' },
-    { title: 'Türkiye’de Yerli İlk Çay Üretimi', href: 'https://esteacay.com/turkiye-de-yerli-ilk-cay-uretimi/', date: '17 Şubat 2022', icon: 'hills', disc: 'bg-leaf text-ink' },
-    { title: 'Dökme Çayın Püf Noktaları Nelerdir?', href: 'https://esteacay.com/dokme-cayin-puf-notlari-nelerdir/', date: '10 Şubat 2022', icon: 'leaf', disc: 'bg-amber text-cream' },
-    { title: 'Sütlü Çay Nedir? Nasıl Yapılır?', href: 'https://esteacay.com/sutlu-cay-nedir-nasil-yapilir/', date: '30 Kasım 2021', icon: 'glass', disc: 'bg-brand text-cream' },
-    { title: 'Earl Grey Çay Nedir?', href: 'https://esteacay.com/earl-grey-cay-nedir/', date: '10 Aralık 2021', icon: 'curl', disc: 'bg-olive text-ink' },
-    { title: 'Formda Tutan Çaylar: Bitki Çayları', href: 'https://esteacay.com/formda-tutan-caylar-bitki-caylari/', date: null, icon: 'sprig', disc: 'bg-leaf text-ink' },
+    { title: 'Karadeniz Usulü Çay Nasıl Demlenir?', href: 'https://esteacay.com/elementor-3218/', date: '25 Ocak 2022', image: '/blog/karadeniz-usulu-cay-nasil-demlenir.jpg' },
+    { title: 'Türkiye’de Yerli İlk Çay Üretimi', href: 'https://esteacay.com/turkiye-de-yerli-ilk-cay-uretimi/', date: '17 Şubat 2022', image: '/blog/turkiyede-yerli-ilk-cay-uretimi.jpg' },
+    { title: 'Dökme Çayın Püf Noktaları Nelerdir?', href: 'https://esteacay.com/dokme-cayin-puf-notlari-nelerdir/', date: '10 Şubat 2022', image: '/blog/dokme-cayin-puf-noktalari.jpg' },
+    { title: 'Sütlü Çay Nedir? Nasıl Yapılır?', href: 'https://esteacay.com/sutlu-cay-nedir-nasil-yapilir/', date: '30 Kasım 2021', image: '/blog/sutlu-cay-nedir.jpg' },
+    { title: 'Earl Grey Çay Nedir?', href: 'https://esteacay.com/earl-grey-cay-nedir/', date: '10 Aralık 2021', image: '/blog/earl-grey-cay-nedir.jpg' },
+    { title: 'Formda Tutan Çaylar: Bitki Çayları', href: 'https://esteacay.com/formda-tutan-caylar-bitki-caylari/', date: '17 Ocak 2022', image: '/blog/formda-tutan-caylar.jpg' },
   ] as const,
 }
 

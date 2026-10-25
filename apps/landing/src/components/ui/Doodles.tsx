@@ -63,8 +63,6 @@ export const Quill: Doodle = ({ className }) => (
   </svg>
 )
 
-/** Lookup by name, so data files can reference doodles as plain strings. */
-
 /* Tek yaprak, ortasında damar. */
 export const Leaf: Doodle = ({ className }) => (
   <svg viewBox="0 0 100 100" {...svgProps} className={className} aria-hidden="true">
@@ -99,6 +97,27 @@ export const Heat: Doodle = ({ className }) => (
   </svg>
 )
 
+/* Tadım kâsesi, üstünde buhar: kalite kontrol. */
+export const Bowl: Doodle = ({ className }) => (
+  <svg viewBox="0 0 100 100" {...svgProps} className={className} aria-hidden="true">
+    <path d="M18 48h64c0 22-14 34-32 34S18 70 18 48Z" />
+    <path d="M82 52c10 2 10 14 0 16" />
+    <path d="M26 90h48" />
+    <path d="M40 36c-2-4 2-8 0-12M52 36c-2-4 2-8 0-12M64 36c-2-4 2-8 0-12" strokeWidth="2.5" />
+    <path d="M40 60l8 8 14-14" strokeWidth="2.5" />
+  </svg>
+)
+
+/* Üstü katlanmış çay paketi, ortasında yaprak: paketleme. */
+export const Pack: Doodle = ({ className }) => (
+  <svg viewBox="0 0 100 100" {...svgProps} className={className} aria-hidden="true">
+    <path d="M28 34h44v54H28Z" />
+    <path d="M28 34l6-14h32l6 14M34 20v14M66 20v14" strokeWidth="2.5" />
+    <path d="M50 76c-10-8-10-24 0-32 10 8 10 24 0 32Z" strokeWidth="2" />
+    <path d="M50 76V54" strokeWidth="2" />
+  </svg>
+)
+
 /** Lookup by name, so data files can reference doodles as plain strings. */
 export const doodles = {
   glass: Glass,
@@ -110,5 +129,7 @@ export const doodles = {
   wilted: Wilted,
   curl: Curl,
   heat: Heat,
+  bowl: Bowl,
+  pack: Pack,
 } satisfies Record<string, Doodle>
 export type DoodleName = keyof typeof doodles

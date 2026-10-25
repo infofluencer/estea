@@ -36,3 +36,10 @@ shared/*.js
 !.env.example
 # backend shared/ kopyası build/prepare ile kökten üretilir (scripts/sync-shared.mjs)
 escay-backend/shared/
+# ham hero videosu (public/hero_scrub.mp4 bundan üretilir, repoya girmez)
+/escay_web.mp4
+# ham fotoğraf klasörleri (işlenmiş kopyalar apps/landing/public/fabrika)
+/escay-site-fotograflari/
+/escay-site-fotograflari-2/
+/çayhero.png
+/çayhero.webp

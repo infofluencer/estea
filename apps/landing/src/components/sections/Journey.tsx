@@ -1,98 +1,92 @@
-import type { CSSProperties } from 'react'
+import Image from 'next/image'
 import { journey } from '@/data/content'
 import { doodles } from '@/components/ui/Doodles'
 
-/* Stop positions on the desktop stage, in % of its width and height:
-   a zigzag from the garden on the left to the glass on the right. */
-const points = journey.stops.map((_, i, all) => ({
-  x: 8 + (i * 84) / (all.length - 1),
-  y: i % 2 === 0 ? 36 : 66,
-}))
+/* Disc colour per step, fresh leaf to tavşan kanı, as in the Manifesto facts. */
+const discs = ['bg-leaf text-ink', 'bg-olive text-cream', 'bg-gold text-ink', 'bg-amber text-cream', 'bg-brand text-cream', 'bg-brand-dark text-cream']
 
-/** Smooth path through the stops (Catmull-Rom as cubic Béziers) in a 1000×600 box. */
-function trail(pts: { x: number; y: number }[]) {
-  const p = [{ x: 0, y: 40 }, ...pts, { x: 100, y: 46 }].map((q) => [q.x * 10, q.y * 6] as const)
-  let d = `M${p[0][0]},${p[0][1]}`
-  for (let i = 0; i < p.length - 1; i++) {
-    const p0 = p[i - 1] ?? p[i]
-    const p1 = p[i]
-    const p2 = p[i + 1]
-    const p3 = p[i + 2] ?? p2
-    d += ` C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`
-  }
-  return d
-}
-
-const desktopTrail = trail(points)
-
-/* Always fully drawn: the section shows complete on arrival, nothing waits for the scroll. */
-const trailProps = {
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeWidth: 3,
-  strokeLinecap: 'round',
-  vectorEffect: 'non-scaling-stroke',
-} as const
-
+/**
+ * From garden to glass: the six steps as doodle discs under the heading,
+ * then six even spreads, photograph on one half and text on the other, sides
+ * alternating down the page. Every spread shares the same proportions so the
+ * sequence reads as one piece; each verb takes the colour the leaf has at
+ * that step, fresh green through gold to tavşan kanı.
+ */
 export default function Journey() {
   return (
-    <section
-      id="yolculuk"
-      aria-labelledby="yolculuk-baslik"
-      className="relative z-10 bg-linen pt-20 pb-24 text-ink sm:pt-24 lg:pb-28"
-    >
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
+    <section id="yolculuk" aria-labelledby="yolculuk-baslik" className="relative z-10 overflow-hidden bg-linen pt-24 pb-28 text-ink sm:pt-32 sm:pb-36">
+      {/* Esçay line pattern (teapots, glasses, sprigs) tiled faintly across the section, fading in at the top and out toward the seal at the bottom. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[url(/pattern/escay-vector.png)] bg-[length:520px_auto] opacity-[0.12] [mask-image:linear-gradient(to_bottom,transparent,#000_160px,#000_calc(100%-260px),transparent)]"
+      />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+        <header className="text-center">
+          {/* The seal above the title, as on the pack. */}
+          <Image src="/logo.png" alt="" width={341} height={182} className="mx-auto mb-6 h-16 w-auto drop-shadow-[0_8px_12px_rgba(0,0,0,0.2)] sm:h-20" />
           <h2
             id="yolculuk-baslik"
-            className="headline text-amber text-[clamp(3rem,7.4vw,7rem)] leading-[0.9] tracking-[-0.03em] lg:col-span-7"
+            className="headline text-amber text-[clamp(2.6rem,6.4vw,5.4rem)] leading-[0.95] tracking-[-0.03em] lg:whitespace-nowrap"
           >
             {journey.title}
           </h2>
-          <p className="max-w-[36ch] text-[1.1rem] leading-[1.45] font-medium sm:text-[1.25rem] lg:col-span-5 lg:justify-self-end">
-            {journey.lead}
-          </p>
-        </div>
+          <p className="mx-auto mt-5 max-w-[60ch] text-[1.1rem] leading-[1.55] text-ink/75 sm:text-[1.2rem]">{journey.lead}</p>
+        </header>
 
-        <div data-stage className="relative mt-14 lg:mt-16 lg:h-[540px]">
-          {/* The trail: one hand-drawn line, cream like the doodles. */}
-          <svg
-            viewBox="0 0 1000 600"
-            preserveAspectRatio="none"
-            className="pointer-events-none absolute inset-0 hidden h-full w-full text-olive lg:block"
-            aria-hidden="true"
-          >
-            <path d={desktopTrail} {...trailProps} />
-          </svg>
-
-          <ol className="relative flex flex-col gap-9 lg:absolute lg:inset-0 lg:block">
+        {/* The six steps at a glance in the site's own idiom: a brand-coloured disc with a line doodle, the verb and its sentence. The discs run the leaf's colours in order. */}
+        <nav aria-label="Üretim adımları" className="mt-14 lg:mt-20">
+          <ol className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-8">
             {journey.stops.map((stop, i) => {
               const Icon = doodles[stop.icon]
-              const pt = points[i]
-              const high = i % 2 === 0
               return (
-                // On wide screens the li is a zero-size anchor at its point on the trail;
-                // the disc centres on it and the words sit above (high stops) or below (low stops), clear of the line.
-                <li
-                  key={stop.verb}
-                  style={{ '--x': `${pt.x}%`, '--y': `${pt.y}%` } as CSSProperties}
-                  className="grid grid-cols-[88px_1fr] items-center gap-5 lg:absolute lg:top-[var(--y)] lg:left-[var(--x)] lg:block lg:h-0 lg:w-0"
-                >
-                  <span
-                    className="flex h-[88px] w-[88px] items-center justify-center rounded-full transition-transform duration-300 hover:-rotate-6 lg:absolute lg:top-0 lg:left-0 lg:-mt-[44px] lg:-ml-[44px]"
-                    style={{ background: stop.disc, color: stop.ink }}
-                  >
-                    <Icon className="h-14 w-14" />
-                  </span>
-                  <div className={`lg:absolute lg:left-0 lg:w-52 lg:-translate-x-1/2 lg:text-center ${high ? 'lg:bottom-[60px]' : 'lg:top-[60px]'}`}>
-                    <h3 className="headline text-[1.9rem] text-ink">{stop.verb}</h3>
-                    <p className="mt-1.5 text-[1rem] leading-[1.45] text-ink/80">{stop.body}</p>
-                  </div>
+                <li key={stop.verb}>
+                  <a href={`#yolculuk-${i}`} className="group flex flex-col items-start gap-4">
+                    <span
+                      className={`flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 group-hover:-rotate-6 ${discs[i]}`}
+                    >
+                      <Icon className="h-10 w-10" />
+                    </span>
+                    <span className="headline block text-[1.5rem] leading-none" style={{ color: stop.color }}>
+                      {stop.verb}
+                    </span>
+                    <span className="-mt-1 block max-w-[24ch] text-[0.95rem] leading-[1.45] text-ink/70">{stop.body}</span>
+                  </a>
                 </li>
               )
             })}
           </ol>
-        </div>
+        </nav>
+
+        {/* Each spread sits between two hairlines so every step has a clear start and end. */}
+        <ol className="mt-20 border-t border-line lg:mt-28">
+          {journey.stops.map((stop, i) => {
+            const photoLeft = i % 2 === 0
+            return (
+              <li key={stop.verb} data-reveal className="grid gap-8 border-b border-line py-14 last:border-b-0 last:pb-0 lg:grid-cols-12 lg:items-center lg:gap-8 lg:py-20">
+                <div
+                  className={`relative aspect-[4/3] overflow-hidden rounded-2xl bg-paper lg:col-span-6 lg:row-start-1 ${photoLeft ? 'lg:col-start-1' : 'lg:col-start-7'}`}
+                >
+                  <Image src={stop.image} alt="" fill sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw" className="object-cover" />
+                </div>
+                <div className={`lg:col-span-5 lg:row-start-1 ${photoLeft ? 'lg:col-start-8' : 'lg:col-start-1'}`}>
+                  <h3 id={`yolculuk-${i}`} className="headline text-[clamp(2.6rem,5vw,4.8rem)] leading-[0.95] tracking-[-0.02em]" style={{ color: stop.color }}>
+                    {stop.verb}
+                  </h3>
+                  <p className="mt-6 text-[clamp(1.25rem,1.7vw,1.5rem)] leading-[1.4] font-medium">{stop.body}</p>
+                  <p className="mt-5 text-[1.125rem] leading-[1.65] text-ink/75">{stop.detail}</p>
+                  <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-5">
+                    {stop.facts.map((f) => (
+                      <div key={f.term} className="border-t border-ink/20 pt-3">
+                        <dt className="text-[0.9rem] text-ink/55">{f.term}</dt>
+                        <dd className="mt-1 text-[1.05rem] leading-[1.35] font-semibold">{f.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </li>
+            )
+          })}
+        </ol>
       </div>
     </section>
   )

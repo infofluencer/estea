@@ -6,7 +6,7 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Esçay — Yapraktan bardağa, gerçek çay',
   description:
-    "Rize ve Artvin'in yüksek bahçelerinden, katkısız harmanlanan Karadeniz çayı. Her yudumda Karadeniz.",
+    "Karadeniz'in yüksek rakımlı bahçelerinden, katkısız harmanlanan çay. Her yudumda Karadeniz.",
   icons: { icon: '/favicon.svg' },
   openGraph: {
     title: 'Esçay — Yapraktan bardağa, gerçek çay',

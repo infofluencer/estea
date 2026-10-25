@@ -1,132 +1,147 @@
 import Image from 'next/image'
 import { contact } from '@/data/content'
-import { corporateLinks, navLinks, shopProductsUrl } from '@/lib/site'
-import BlobBg from '@/components/ui/BlobBg'
-import { Glass, Leaf, doodles } from '@/components/ui/Doodles'
+import { corporateLinks, legalLinks, navLinks, shopLinks, shopProductsUrl, type NavLink } from '@/lib/site'
+import Btn from '@/components/ui/Btn'
+import { socialIcon } from '@/components/ui/SocialIcons'
 
 const year = new Date().getFullYear()
 
-/* Same pill as the navbar links: outlined in cream, gold when hovered. */
-const pillClass =
-  'inline-flex min-h-11 items-center gap-2 rounded-full border border-cream/45 px-4 text-[0.95rem] font-semibold whitespace-nowrap text-cream transition-colors duration-200 hover:border-gold hover:bg-gold hover:text-ink focus:outline-none focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden'
-
-/* Corporate links that the page itself already covers (blog, contact) are left out here. */
-const corporate = corporateLinks.filter((l) => !/blog|iletisim/.test(l.href))
-
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const
 
+const labelClass = 'text-[0.78rem] font-bold tracking-[0.14em] text-gold uppercase'
+const linkClass =
+  'underline-offset-4 transition-colors hover:text-cream hover:underline focus:outline-none focus-visible:text-cream focus-visible:underline'
+
+function LinkColumn({ title, links }: { title: string; links: NavLink[] }) {
+  return (
+    <nav aria-label={title}>
+      <h2 className={labelClass}>{title}</h2>
+      <ul className="mt-4 flex flex-col gap-1">
+        {links.map((link) => (
+          <li key={link.href}>
+            <a href={link.href} {...(link.external ? ext : {})} className={`inline-block py-1 text-[0.95rem] text-cream/80 ${linkClass}`}>
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
 /**
- * A designed close: links in three short groups, then the name set across
- * the full width in gold, then the legal line. No rules; groups are separated by space.
+ * Corporate close in three bands: contact (heading + details), then identity
+ * and link columns, then the legal strip. The footer is also the contact section.
  */
 export default function Footer() {
-  return (
-    <footer className="relative z-20 bg-garden text-cream">
-      {/* A soft wave lifts the green over the red contact field, like the wave under the collection. */}
-      <svg
-        viewBox="0 0 1440 90"
-        preserveAspectRatio="none"
-        className="absolute inset-x-0 top-0 block h-[44px] w-full -translate-y-[calc(100%-1px)] text-garden sm:h-[64px]"
-        aria-hidden="true"
-      >
-        <path fill="currentColor" d="M0 58C320 8 760 98 1440 30V90H0Z" />
-      </svg>
+  const corporate = corporateLinks.filter((l) => !/iletisim/.test(l.href))
 
-      <div className="mx-auto max-w-7xl px-5 pt-16 sm:px-8 sm:pt-20">
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-4">
-            <Image src="/logo.png" alt="Esçay" width={180} height={96} className="h-16 w-auto" />
-            <p className="mt-6 max-w-[30ch] text-[1.1rem] leading-[1.5] font-medium">
-              Rakımı yüksek Karadeniz bahçelerinden toplanmış özel Karadeniz çayı.
-            </p>
-            <a
-              href={shopProductsUrl}
-              className="group relative isolate mt-8 inline-flex min-h-12 items-center rounded-full px-7 text-[0.8rem] font-bold tracking-[0.14em] text-ink uppercase transition-colors duration-200 hover:text-cream focus:outline-none focus-visible:text-cream focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden"
-            >
-              <BlobBg className="fill-gold group-hover:fill-garden" />
-              <span className="blob-label">
-                <span className="flex items-center gap-2 whitespace-nowrap">
-                  <Glass className="h-5 w-5 shrink-0" />
-                  Online mağaza
-                </span>
-              </span>
-            </a>
+  return (
+    <footer id="iletisim" aria-labelledby="iletisim-baslik" className="relative z-20 bg-garden-dark text-cream">
+      {/* Band 1 — contact */}
+      <div className="mx-auto max-w-7xl px-5 pt-16 pb-14 sm:px-8 sm:pt-24 sm:pb-20">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-5">
+            <h2 id="iletisim-baslik" className="headline text-[clamp(2.6rem,4.8vw,4.4rem)] leading-[0.95] tracking-[-0.03em] text-cream">
+              {contact.title}
+            </h2>
+            <p className="mt-5 max-w-[38ch] text-[1.1rem] leading-[1.55] text-cream/80">{contact.lead}</p>
+            <div className="mt-8">
+              <Btn href={shopProductsUrl} variant="gold">
+                Mağazaya git
+              </Btn>
+            </div>
           </div>
 
-          {/* Link groups as rows of pills: name on the left, buttons flowing on the right. */}
-          <div className="flex flex-col gap-9 lg:col-span-7 lg:col-start-6">
-            <nav aria-label="Sayfa" className="grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-start">
-              <h2 className="text-[1.05rem] font-semibold text-cream sm:pt-2.5">Keşfet</h2>
-              <ul className="flex flex-wrap gap-2">
-                {navLinks.map((link) => {
-                  const Icon = doodles[link.icon ?? 'sprig']
+          <dl className="grid gap-x-10 gap-y-8 rounded-2xl border border-cream/15 p-8 sm:grid-cols-2 sm:p-10 lg:col-span-7">
+            <div>
+              <dt className={labelClass}>Telefon</dt>
+              <dd className="mt-2">
+                <a href={contact.phone.href} className={`text-[1.6rem] leading-none font-semibold text-cream ${linkClass}`}>
+                  {contact.phone.label}
+                </a>
+                <p className="mt-2 text-[0.95rem] text-cream/70">{contact.hours}</p>
+              </dd>
+            </div>
+
+            <div>
+              <dt className={labelClass}>Adres</dt>
+              <dd className="mt-2 text-[1.05rem] leading-[1.55] text-cream/90">
+                <address className="not-italic">
+                  {contact.address.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </address>
+                <a href={contact.mapHref} {...ext} className={`mt-2 inline-block text-[0.95rem] font-semibold text-cream ${linkClass}`}>
+                  Haritada aç
+                </a>
+              </dd>
+            </div>
+
+            <div>
+              <dt className={labelClass}>Şirket</dt>
+              <dd className="mt-2 text-[1.05rem] leading-[1.55] text-cream/90">{contact.company}</dd>
+            </div>
+
+            <div>
+              <dt className={labelClass}>Sosyal medya</dt>
+              <dd className="mt-3 flex flex-wrap gap-3">
+                {contact.socials.map((s) => {
+                  const Icon = socialIcon(s.label)
                   return (
-                    <li key={link.href}>
-                      <a href={link.href} className={pillClass}>
-                        <Icon className="h-[18px] w-[18px] shrink-0" />
-                        {link.label}
-                      </a>
-                    </li>
+                    <a
+                      key={s.href}
+                      href={s.href}
+                      {...ext}
+                      aria-label={s.label}
+                      title={s.label}
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream/30 text-cream transition-colors hover:border-gold hover:bg-gold hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-garden-dark"
+                    >
+                      {Icon ? <Icon className="h-5 w-5" /> : <span className="text-[0.8rem] font-bold">{s.label}</span>}
+                    </a>
                   )
                 })}
-                <li>
-                  <a href="#iletisim" className={pillClass}>
-                    <Leaf className="h-[18px] w-[18px] shrink-0" />
-                    İletişim
-                  </a>
-                </li>
-              </ul>
-            </nav>
-
-            <nav aria-label="Kurumsal" className="grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-start">
-              <h2 className="text-[1.05rem] font-semibold text-cream sm:pt-2.5">Kurumsal</h2>
-              <ul className="flex flex-wrap gap-2">
-                {corporate.map((link) => (
-                  <li key={link.href}>
-                    <a href={link.href} {...ext} className={pillClass}>
-                      {link.label}
-                      <span aria-hidden="true">↗</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <div className="grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-start">
-              <h2 className="text-[1.05rem] font-semibold text-cream sm:pt-2.5">Bize ulaşın</h2>
-              <ul className="flex flex-wrap gap-2">
-                <li>
-                  <a href={contact.phone.href} className={pillClass}>
-                    {contact.phone.label}
-                  </a>
-                </li>
-                {contact.socials.map((s) => (
-                  <li key={s.href}>
-                    <a href={s.href} {...ext} className={pillClass}>
-                      {s.label}
-                      <span aria-hidden="true">↗</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              </dd>
             </div>
+          </dl>
+        </div>
+      </div>
+
+      {/* Band 2 — identity and links */}
+      <div className="border-t border-cream/15">
+        <div className="mx-auto grid max-w-7xl gap-12 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-4">
+            <Image src="/logo.png" alt="Esçay" width={180} height={96} className="h-14 w-auto" />
+            <p className="mt-6 max-w-[32ch] text-[1rem] leading-[1.55] text-cream/80">
+              Karadeniz’in yüksek rakımlı bahçelerinden, katkısız harmanlanan çay.
+            </p>
+          </div>
+          <div className="grid gap-10 sm:grid-cols-3 lg:col-span-7 lg:col-start-6">
+            <LinkColumn title="Keşfet" links={navLinks} />
+            <LinkColumn title="Kurumsal" links={corporate} />
+            <LinkColumn title="Mağaza" links={shopLinks} />
           </div>
         </div>
       </div>
 
-      {/* The name returns at full width to close the page. */}
-      <p
-        aria-hidden="true"
-        className="headline mt-16 pb-[0.12em] text-center text-[27vw] leading-[0.9] tracking-[-0.05em] whitespace-nowrap text-cream select-none sm:mt-20"
-      >
-        esçay
-      </p>
-
-      <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-8 text-[0.9rem] text-cream/80 sm:flex-row sm:justify-between sm:px-8">
-        <p>
-          © {year} {contact.company}
-        </p>
-        <p>Karadeniz’in özel havzalarından.</p>
+      {/* Band 3 — legal */}
+      <div className="border-t border-cream/15">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-6 text-[0.85rem] text-cream/70 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <p>
+            © {year} {contact.company} Tüm hakları saklıdır.
+          </p>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            {legalLinks.map((link) => (
+              <li key={link.href}>
+                <a href={link.href} {...ext} className={linkClass}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </footer>
   )

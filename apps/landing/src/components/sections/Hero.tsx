@@ -1,10 +1,12 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 import { hero } from '@/data/content'
+import { shopUrl } from '@/lib/site'
 import Btn from '@/components/ui/Btn'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -12,27 +14,26 @@ gsap.registerPlugin(ScrollTrigger)
 /** Only seek when the target moved by ~2 frames at 30fps. */
 const SEEK_EPSILON = 1 / 15
 
-/* İnce belli çay bardağı, drawn in a 100×160 box: wide rim, narrow waist, flared foot.
-   The same outline clips the video (normalised to 0–1) and is drawn over it as a doodle. */
-const GLASS_D =
-  'M12,2 L88,2 C87,42 70,66 70,94 C70,118 82,130 82,150 Q82,158 74,158 L26,158 Q18,158 18,150 C18,130 30,118 30,94 C30,66 13,42 12,2 Z'
-const GLASS_CLIP = GLASS_D.replace(/-?\d+(\.\d+)?,-?\d+(\.\d+)?/g, (pair) => {
-  const [x, y] = pair.split(',').map(Number)
-  return `${(x / 100).toFixed(4)},${(y / 160).toFixed(4)}`
-})
-/** The waist is the narrowest part: 40% of the glass width. */
-const WAIST = 0.4
+/** Hero copy and nav fade out over the first stretch of the scroll, then the video has the screen. */
+function heroTextOpacity(progress: number) {
+  if (progress < 0.06) return 1
+  return Math.max(0, 1 - (progress - 0.06) / 0.08)
+}
 
+/** The still photo fades into the video over the first stretch of scroll. */
+const POSTER_FADE_END = 0.05
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
-const grow = gsap.parseEase('power2.inOut')
 
+/**
+ * Full-screen hero. On load it is a photograph (the video's first frame as a
+ * separate image layer); scrolling fades that image out while the video under
+ * it is scrubbed frame by frame, so the hand-off from photo to motion is invisible.
+ */
 export default function Hero() {
   const wrapperRef = useRef<HTMLElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
-  const glassRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const outlineRef = useRef<SVGSVGElement>(null)
-  const teaRef = useRef<HTMLDivElement>(null)
+  const posterRef = useRef<HTMLImageElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const targetTimeRef = useRef(0)
   const reducedMotion = usePrefersReducedMotion()
@@ -41,37 +42,14 @@ export default function Hero() {
     if (reducedMotion) return
     const wrapper = wrapperRef.current
     const pin = pinRef.current
-    const glass = glassRef.current
     const video = videoRef.current
-    if (!wrapper || !pin || !glass || !video) return
+    const poster = posterRef.current
+    if (!wrapper || !pin || !video) return
 
     let cancelled = false
     let isSeeking = false
     let trigger: ScrollTrigger | undefined
-    let maxScale = 1
-
-    // Scale at which the glass, opened from its waist, covers the whole screen.
-    const measure = () => {
-      const w = glass.offsetWidth
-      const h = glass.offsetHeight
-      if (!w || !h) return
-      maxScale = 1.15 * Math.max(window.innerWidth / (w * WAIST), window.innerHeight / (h * 0.8))
-    }
-
-    const render = (progress: number) => {
-      const open = grow(clamp01((progress - 0.04) / 0.38))
-      const s = 1 + (maxScale - 1) * open
-      gsap.set(glass, { scale: s })
-      gsap.set(video, { scale: 1 / s })
-      if (outlineRef.current) outlineRef.current.style.opacity = String(1 - clamp01((progress - 0.02) / 0.1))
-      // The tea drains away as the glass opens, and the video underneath takes over.
-      if (teaRef.current) teaRef.current.style.opacity = String(1 - clamp01((progress - 0.03) / 0.14))
-      if (textRef.current) {
-        const op = 1 - clamp01(progress / 0.1)
-        textRef.current.style.opacity = String(op)
-        textRef.current.style.pointerEvents = op < 0.05 ? 'none' : ''
-      }
-    }
+    const nav = document.getElementById('main-nav')
 
     const applySeek = () => {
       if (cancelled || isSeeking || video.readyState < 2) return
@@ -82,6 +60,7 @@ export default function Hero() {
         video.removeEventListener('seeked', onSeeked)
         isSeeking = false
         if (cancelled) return
+        // Catch up if scroll moved during the seek.
         if (Math.abs(targetTimeRef.current - video.currentTime) >= SEEK_EPSILON) applySeek()
       }
       video.addEventListener('seeked', onSeeked)
@@ -90,6 +69,19 @@ export default function Hero() {
       } catch {
         isSeeking = false
         video.removeEventListener('seeked', onSeeked)
+      }
+    }
+
+    const render = (progress: number) => {
+      if (poster) poster.style.opacity = String(1 - clamp01(progress / POSTER_FADE_END))
+      const op = heroTextOpacity(progress)
+      if (textRef.current) {
+        textRef.current.style.opacity = String(op)
+        textRef.current.style.pointerEvents = op < 0.05 ? 'none' : ''
+      }
+      if (nav) {
+        nav.style.opacity = String(op)
+        nav.style.pointerEvents = op < 0.05 ? 'none' : ''
       }
     }
 
@@ -103,19 +95,18 @@ export default function Hero() {
       } catch {
         /* ignore */
       }
+      // Pinned until the wrapper has scrolled fully past, so the section after
+      // the hero slides up over the still-scrubbing video and covers it.
       trigger = ScrollTrigger.create({
         trigger: wrapper,
         start: 'top top',
-        end: 'bottom bottom',
+        end: 'bottom top',
         pin,
         pinSpacing: false,
         scrub: 0.6,
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        onRefresh: (self) => {
-          measure()
-          render(self.progress)
-        },
+        onRefresh: (self) => render(self.progress),
         onUpdate: (self) => {
           targetTimeRef.current = self.progress * duration
           applySeek()
@@ -127,6 +118,7 @@ export default function Hero() {
 
     const onReady = () => {
       if (!Number.isFinite(video.duration) || video.duration <= 0) return
+      // Decode the first frame so scrubbing starts from a warm decoder; the poster stays visible meanwhile.
       void video
         .play()
         .then(() => {
@@ -136,7 +128,6 @@ export default function Hero() {
         .catch(setupScrub)
     }
 
-    measure()
     if (video.readyState >= 1) onReady()
     else video.addEventListener('loadedmetadata', onReady)
 
@@ -145,101 +136,90 @@ export default function Hero() {
       video.removeEventListener('loadedmetadata', onReady)
       video.pause()
       trigger?.kill()
-      gsap.set([glass, video], { clearProps: 'transform' })
+      if (poster) poster.style.opacity = ''
+      if (nav) {
+        nav.style.opacity = ''
+        nav.style.pointerEvents = ''
+      }
     }
   }, [reducedMotion])
 
-  return (
-    <section ref={wrapperRef} id="hero" className={`relative bg-linen ${reducedMotion ? '' : 'h-[240vh]'}`}>
-      <div
-        ref={pinRef}
-        className="relative h-svh min-h-[640px] overflow-hidden bg-linen [--gh:40svh] lg:[--gh:60svh]"
-      >
-        <svg width="0" height="0" className="absolute" aria-hidden="true">
-          <defs>
-            <clipPath id="hero-glass" clipPathUnits="objectBoundingBox">
-              <path d={GLASS_CLIP} />
-            </clipPath>
-          </defs>
-        </svg>
-
-        {/* The glass: a window the video plays through, centred on the screen. It opens to full screen on scroll. */}
+  const copy = (
+    <div className="pointer-events-auto mx-auto w-full max-w-[90rem] px-5 sm:px-8 lg:px-10">
+      <div className="relative max-w-2xl">
+        {/* A soft dark pool behind the copy only; the rest of the picture stays untouched. */}
         <div
-          ref={glassRef}
-          className="absolute top-1/2 left-1/2 h-[var(--gh)] w-[calc(var(--gh)*0.625)] will-change-transform"
-          style={{ marginTop: 'calc(var(--gh) / -2)', marginLeft: 'calc(var(--gh) * -0.3125)' }}
-        >
-          <div className="absolute inset-0 overflow-hidden [clip-path:url(#hero-glass)]">
-            <video
-              ref={videoRef}
-              className="absolute top-1/2 left-1/2 h-svh w-screen max-w-none object-cover will-change-transform"
-              style={{ marginTop: '-50svh', marginLeft: '-50vw' }}
-              poster="/hero_poster.jpg"
-              muted
-              playsInline
-              preload={reducedMotion ? 'metadata' : 'auto'}
-              disablePictureInPicture
-              aria-hidden="true"
-              tabIndex={-1}
-            >
-              <source src="/hero_scrub.mp4" type="video/mp4" />
-            </video>
-
-            {/* A full glass of tavşan kanı tea over the video: empty glass at the rim, the surface line,
-                a reflection down the body and the thick foot. Flat brand colours, drawn like the doodles. */}
-            <div ref={teaRef} className="absolute inset-0" aria-hidden="true">
-              <div className="absolute inset-x-0 top-0 h-[15%] bg-leaf-soft" />
-              <div className="absolute inset-x-0 top-[15%] bottom-[5%] bg-brand" />
-              <div className="absolute inset-x-0 top-[15%] h-[2.5%] bg-amber" />
-              <div className="absolute inset-x-0 bottom-0 h-[5%] bg-olive" />
-              <div className="absolute top-[22%] bottom-[14%] left-[24%] w-[5%] rounded-full bg-cream/25" />
-              <div className="absolute top-[24%] left-[33%] h-[6%] w-[2.5%] rounded-full bg-cream/20" />
-            </div>
-          </div>
-          <svg
-            ref={outlineRef}
-            viewBox="0 0 100 160"
-            preserveAspectRatio="none"
-            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible text-olive"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={3}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d={GLASS_D} vectorEffect="non-scaling-stroke" />
-            <path d="M-4,160 C14,172 86,172 104,160" vectorEffect="non-scaling-stroke" />
-            <path className="hidden lg:block" d="M38,-6 c-4,-6 4,-10 0,-16 M50,-6 c-4,-6 4,-10 0,-16 M62,-6 c-4,-6 4,-10 0,-16" vectorEffect="non-scaling-stroke" />
-          </svg>
+          aria-hidden="true"
+          className="absolute -inset-x-12 -inset-y-10 -z-10 rounded-[4rem] bg-ink/45 blur-3xl sm:-inset-x-20 sm:-inset-y-14"
+        />
+        <h1 className="headline text-cream text-[12vw] leading-[0.95] tracking-[-0.03em] sm:text-[clamp(3rem,5.8vw,5.75rem)]">
+          <span className="text-gold">{hero.brand}</span> {hero.title}
+        </h1>
+        <p className="mt-6 max-w-[34ch] text-[1.05rem] leading-[1.45] font-medium text-cream/85 sm:mt-8 sm:text-[1.2rem]">
+          {hero.lead}
+        </p>
+        <div className="mt-8 flex flex-col items-start gap-3 sm:mt-10 sm:flex-row">
+          <Btn href="#harmanlar" variant="brand">
+            {hero.cta}
+          </Btn>
+          <Btn href={shopUrl} variant="outline-cream">
+            Alışveriş
+          </Btn>
         </div>
+      </div>
+    </div>
+  )
 
-        {/* The title splits around the glass: "Çayın lezzeti" on the left, "doğadan" on the right. */}
-        <div
-          ref={textRef}
-          className="absolute inset-0 z-10 flex flex-col px-5 pt-28 pb-10 sm:px-8 lg:justify-center lg:pt-16 lg:pb-0"
-        >
-          <div className="mx-auto w-full max-w-7xl">
-            <h1 className="headline text-olive text-[12vw] leading-[0.9] tracking-[-0.03em] lg:grid lg:grid-cols-[1fr_calc(var(--gh)*0.625)_1fr] lg:items-end lg:gap-x-12 lg:text-[clamp(3.5rem,7vw,8rem)]">
-              <span className="block lg:text-right">
-                Çayın <br className="hidden lg:block" />
-                lezzeti
-              </span>
-              <span className="hidden lg:block" aria-hidden="true" />
-              <span className="block">doğadan</span>
-            </h1>
-          </div>
+  const media = (
+    <>
+      <video
+        ref={videoRef}
+        className="absolute inset-0 h-full w-full object-cover"
+        poster="/hero_poster.jpg"
+        muted
+        playsInline
+        preload={reducedMotion ? 'metadata' : 'auto'}
+        disablePictureInPicture
+        aria-hidden="true"
+        tabIndex={-1}
+      >
+        <source src="/hero_scrub.mp4" type="video/mp4" />
+      </video>
+      {/* The opening photograph sits over the video and is faded out by the scroll. */}
+      <Image
+        ref={posterRef}
+        src="/hero_poster.png"
+        alt=""
+        aria-hidden="true"
+        fill
+        priority
+        sizes="100vw"
+        // PNG olduğu gibi gitsin; Next'in optimizer'ı yeniden sıkıştırmasın.
+        unoptimized
+        className="object-cover will-change-[opacity]"
+      />
+    </>
+  )
 
-          <div className="mx-auto mt-auto w-full max-w-7xl lg:mt-10 lg:grid lg:grid-cols-[1fr_calc(var(--gh)*0.625)_1fr] lg:gap-x-12">
-            <div className="lg:col-start-3">
-              <p className="max-w-[30ch] text-[1.05rem] leading-[1.45] font-medium text-ink sm:text-[1.2rem]">{hero.lead}</p>
-              <div className="mt-6">
-                <Btn href="#harmanlar" variant="gold">
-                  {hero.cta}
-                </Btn>
-              </div>
-            </div>
-          </div>
+  if (reducedMotion) {
+    return (
+      <section id="hero" className="relative bg-ink">
+        <div className="relative min-h-svh overflow-hidden">
+          {media}
+          <div className="relative z-10 flex min-h-svh items-center py-28">{copy}</div>
+        </div>
+      </section>
+    )
+  }
+
+  // Scroll length sets the scrub speed: the 10 s video is spread over 2.4 screens.
+  // The next section starts sliding over the video for the last screen of that.
+  return (
+    <section ref={wrapperRef} id="hero" className="relative h-[240vh] bg-ink">
+      <div ref={pinRef} className="relative h-svh min-h-[640px] overflow-hidden">
+        {media}
+        <div ref={textRef} className="absolute inset-0 z-10 flex items-center pt-20 sm:pt-[5.5rem]">
+          {copy}
         </div>
       </div>
     </section>

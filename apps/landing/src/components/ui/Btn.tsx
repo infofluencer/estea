@@ -13,7 +13,7 @@ const variants: Record<Variant, { text: string; blob: string }> = {
   brand: { text: 'text-cream focus-visible:ring-brand focus-visible:ring-offset-paper', blob: 'fill-brand group-hover:fill-brand-dark' },
   gold: {
     text: 'text-ink hover:text-cream focus-visible:text-cream focus-visible:ring-gold focus-visible:ring-offset-ink',
-    blob: 'fill-gold group-hover:fill-garden',
+    blob: 'fill-gold group-hover:fill-amber',
   },
   garden: { text: 'text-cream focus-visible:ring-garden focus-visible:ring-offset-linen', blob: 'fill-garden group-hover:fill-olive' },
   'outline-cream': {
