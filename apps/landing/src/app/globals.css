@@ -129,3 +129,31 @@
     transition: none;
   }
 }
+
+/* Gallery view controls (Journey PhotoSet): the VerbMark pill as a button, in the step's colour. */
+.gallery-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 2px solid var(--color-ink);
+  background: var(--step, var(--color-brand));
+  color: var(--color-cream);
+  font-size: 1.15rem;
+  line-height: 1;
+  box-shadow: 0.12em 0.12em 0 var(--color-ink);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.gallery-btn:hover {
+  transform: translateY(-2px);
+}
+.gallery-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+.gallery-btn:focus-visible {
+  outline: 2px solid var(--color-cream);
+  outline-offset: 2px;
+}

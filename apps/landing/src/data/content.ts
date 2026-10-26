@@ -130,7 +130,7 @@ export const products: Product[] = [
 export const journey = {
   title: 'Bahçeden bardağa',
   lead: 'Kışı kar altında geçen yüksek bahçeden demliğe: yaprağın Esçay fabrikasından geçerek bardağa gelen yolu.',
-  /** Fotoğraflar: Esçay bahçe ve fabrika çekimleri (public/fabrika). */
+  /** Fotoğraflar: Esçay bahçe ve fabrika çekimleri (public/fabrika). Her adımda birden çok kare; galeri sırayla gösterir. */
   stops: [
     {
       verb: 'Yetiştir',
@@ -143,7 +143,7 @@ export const journey = {
         { term: 'Kış', value: 'Kar altında doğal dinlenme' },
       ],
       color: '#3f6f0e',
-      image: '/fabrika/cay-bahceleri.jpg',
+      images: ['/fabrika/cay-bahceleri.jpg', '/fabrika/cay-bahceleri-2.jpg', '/fabrika/cay-bahceleri-3.jpg'],
     },
     {
       verb: 'Topla',
@@ -156,7 +156,7 @@ export const journey = {
         { term: 'Sürgün', value: 'Yılda üç dönem' },
       ],
       color: '#557f10',
-      image: '/fabrika/cay-hasadi.jpg',
+      images: ['/fabrika/cay-hasadi.jpg', '/fabrika/cay-hasadi-2.jpg', '/fabrika/cay-hasadi-3.jpg'],
     },
     {
       verb: 'İşle',
@@ -169,7 +169,7 @@ export const journey = {
         { term: 'Yer', value: 'Esçay fabrikası' },
       ],
       color: '#86700f',
-      image: '/fabrika/taze-yapraklar.jpg',
+      images: ['/fabrika/taze-yapraklar.jpg', '/fabrika/isleme-2.jpg', '/fabrika/isleme-3.jpg'],
     },
     {
       verb: 'Denetle',
@@ -182,7 +182,7 @@ export const journey = {
         { term: 'Tadım', value: 'Renk, koku ve tat' },
       ],
       color: '#a5630f',
-      image: '/fabrika/kalite-kontrol.jpg',
+      images: ['/fabrika/kalite-kontrol.jpg', '/fabrika/kalite-kontrol-2.jpg'],
     },
     {
       verb: 'Paketle',
@@ -195,7 +195,7 @@ export const journey = {
         { term: 'Amaç', value: 'Aromanın korunması' },
       ],
       color: '#bb4f1b',
-      image: '/fabrika/paketleme.jpg',
+      images: ['/fabrika/paketleme.jpg', '/fabrika/paketleme-2.jpg', '/fabrika/paketleme-3.jpg', '/fabrika/paketleme-4.jpg'],
     },
     {
       verb: 'Demle',
@@ -208,7 +208,7 @@ export const journey = {
         { term: 'Demlenme', value: '10 – 15 dakika' },
       ],
       color: '#a32e18',
-      image: '/fabrika/demle.jpg',
+      images: ['/fabrika/demle.jpg'],
     },
   ] as const,
 }

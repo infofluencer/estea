@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { journey } from '@/data/content'
+import PhotoSet from '@/components/ui/PhotoSet'
 import { doodles } from '@/components/ui/Doodles'
 import VerbMark from '@/components/ui/VerbMark'
 import FactList from '@/components/ui/FactList'
@@ -65,11 +66,14 @@ export default function Journey() {
             const photoLeft = i % 2 === 0
             return (
               <li key={stop.verb} data-reveal className="grid gap-8 border-b border-line py-14 last:border-b-0 last:pb-0 lg:grid-cols-12 lg:items-center lg:gap-8 lg:py-20">
-                <div
-                  className={`relative aspect-[4/3] overflow-hidden rounded-2xl bg-paper lg:col-span-6 lg:row-start-1 ${photoLeft ? 'lg:col-start-1' : 'lg:col-start-7'}`}
-                >
-                  <Image src={stop.image} alt="" fill sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw" className="object-cover" />
-                </div>
+                {/* All of the step's photographs at once; any one opens the set large, arrows in the step colour. */}
+                <PhotoSet
+                  images={stop.images}
+                  color={stop.color}
+                  label={stop.verb}
+                  sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw"
+                  className={`lg:col-span-6 lg:row-start-1 ${photoLeft ? 'lg:col-start-1' : 'lg:col-start-7'}`}
+                />
                 <div className={`lg:col-span-5 lg:row-start-1 ${photoLeft ? 'lg:col-start-8' : 'lg:col-start-1'}`}>
                   {/* The verb as a pack label in the colour the leaf has at this step; the lean alternates with the photo side. */}
                   <h3 id={`yolculuk-${i}`} className="headline text-[clamp(2.6rem,5vw,4.8rem)] leading-[0.95] tracking-[-0.02em]">
