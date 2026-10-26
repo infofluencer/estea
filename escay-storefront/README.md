@@ -16,3 +16,5 @@ npm run build                 # standalone çıktı (Dockerfile.storefront kökt
 - Ürün feed'leri: `/feeds/google.xml`, `/feeds/meta.xml`.
 - E2E (yalnızca staging): `npm run test:staging:e2e` (`e2e/utils/env.ts` prod host'u reddeder).
 - Açık kararlar `TODO(K…)` ile işaretli (K2 KDV, K4 kargo ücreti, K5 iade/gıda, K6 varyant/özellik, K7 takip hesapları, K8 domain).
+
+<!-- Deploy kontrolü: Dokploy watch paths (2026-10-26). -->
