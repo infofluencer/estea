@@ -9,7 +9,6 @@ import Collection from '@/components/sections/Collection'
 import Journey from '@/components/sections/Journey'
 import Faq from '@/components/sections/Faq'
 import Blog from '@/components/sections/Blog'
-import SectionRule from '@/components/ui/SectionRule'
 
 export default function LandingPage() {
   return (
@@ -21,7 +20,6 @@ export default function LandingPage() {
         <Manifesto />
         <Collection />
         <Journey />
-        <SectionRule />
         <Faq />
         <Blog />
       </main>

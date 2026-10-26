@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import { journey } from '@/data/content'
 import { doodles } from '@/components/ui/Doodles'
+import VerbMark from '@/components/ui/VerbMark'
+import FactList from '@/components/ui/FactList'
 
 /* Disc colour per step, fresh leaf to tavşan kanı, as in the Manifesto facts. */
 const discs = ['bg-leaf text-ink', 'bg-olive text-cream', 'bg-gold text-ink', 'bg-amber text-cream', 'bg-brand text-cream', 'bg-brand-dark text-cream']
@@ -46,7 +48,7 @@ export default function Journey() {
                     >
                       <Icon className="h-10 w-10" />
                     </span>
-                    <span className="headline block text-[1.5rem] leading-none" style={{ color: stop.color }}>
+                    <span className="headline block text-[1.5rem] leading-none text-ink">
                       {stop.verb}
                     </span>
                     <span className="-mt-1 block max-w-[24ch] text-[0.95rem] leading-[1.45] text-ink/70">{stop.body}</span>
@@ -69,19 +71,16 @@ export default function Journey() {
                   <Image src={stop.image} alt="" fill sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw" className="object-cover" />
                 </div>
                 <div className={`lg:col-span-5 lg:row-start-1 ${photoLeft ? 'lg:col-start-8' : 'lg:col-start-1'}`}>
-                  <h3 id={`yolculuk-${i}`} className="headline text-[clamp(2.6rem,5vw,4.8rem)] leading-[0.95] tracking-[-0.02em]" style={{ color: stop.color }}>
-                    {stop.verb}
+                  {/* The verb as a pack label in the colour the leaf has at this step; the lean alternates with the photo side. */}
+                  <h3 id={`yolculuk-${i}`} className="headline text-[clamp(2.6rem,5vw,4.8rem)] leading-[0.95] tracking-[-0.02em]">
+                    <VerbMark color={stop.color} tilt={photoLeft ? 1 : -1}>
+                      {stop.verb}
+                    </VerbMark>
                   </h3>
                   <p className="mt-6 text-[clamp(1.25rem,1.7vw,1.5rem)] leading-[1.4] font-medium">{stop.body}</p>
                   <p className="mt-5 text-[1.125rem] leading-[1.65] text-ink/75">{stop.detail}</p>
-                  <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-5">
-                    {stop.facts.map((f) => (
-                      <div key={f.term} className="border-t border-ink/20 pt-3">
-                        <dt className="text-[0.9rem] text-ink/55">{f.term}</dt>
-                        <dd className="mt-1 text-[1.05rem] leading-[1.35] font-semibold">{f.value}</dd>
-                      </div>
-                    ))}
-                  </dl>
+                  {/* The two facts as a ticket stub, terms in the step colour. */}
+                  <FactList color={stop.color} facts={stop.facts} />
                 </div>
               </li>
             )

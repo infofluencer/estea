@@ -8,7 +8,7 @@ export const hero = {
   brand: 'Esçay’ın',
   title: 'lezzeti doğadan',
   /* Claims as esteacay.com states them: high-altitude gardens, snow in winter, sun in summer, leaves picked with care. */
-  lead: 'Esçay, kışı kar altında yazı güneşte geçen yüksek rakımlı Karadeniz bahçelerinden özenle seçilip toplanan yaprağı katkısız harmanlar. Her yudumda Karadeniz.',
+  lead: 'Kışı kar altında, yazı güneşte geçen yüksek Karadeniz bahçelerinden özenle toplanan yaprak. Katkısız harman, her yudumda Karadeniz.',
   cta: 'Harmanları keşfet',
 }
 
@@ -243,7 +243,7 @@ export const history = {
 export const faq = {
   title: 'Sıkça sorulan sorular',
   lead: 'Harmanlar, demleme ve sipariş üzerine en çok gelen sorular.',
-  all: { label: 'Tüm sorular' },
+  all: { label: 'Tüm sorular', note: 'Kargo, iade ve ödeme üzerine sorular mağazanın kendi sayfasında.' },
   items: [
     {
       q: 'Esçay çayları nerede yetişiyor?',

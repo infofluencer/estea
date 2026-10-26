@@ -70,6 +70,26 @@
   cursor: none !important;
 }
 
+/* Hero shade behind the copy: a left-to-right curtain that is fully clear before the
+   packs start (~39% of the width), so the products keep their own colour. On phones the
+   packs fill the frame, so there is no curtain there and the text shadow carries the copy. */
+@media (min-width: 40rem) {
+  .hero-curtain {
+    background: linear-gradient(
+      90deg,
+      rgb(22 12 5 / 0.82) 0,
+      rgb(22 12 5 / 0.68) 16%,
+      rgb(22 12 5 / 0.4) 26%,
+      rgb(22 12 5 / 0.12) 33%,
+      rgb(22 12 5 / 0) 38%
+    );
+  }
+}
+/* Where the curtain is thin or absent (narrow screens, its fading edge) a soft shadow keeps the copy legible. */
+.hero-copy {
+  text-shadow: 0 1px 2px rgb(22 12 5 / 0.35), 0 2px 18px rgb(22 12 5 / 0.45);
+}
+
 /* Button text riding the BlobBg shape; the custom properties are set per frame. */
 .blob-label {
   display: inline-block;

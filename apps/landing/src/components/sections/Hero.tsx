@@ -7,7 +7,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 import { hero } from '@/data/content'
 import { shopUrl } from '@/lib/site'
-import Btn from '@/components/ui/Btn'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -146,29 +145,33 @@ export default function Hero() {
 
   const copy = (
     <div className="pointer-events-auto mx-auto w-full max-w-[90rem] px-5 sm:px-8 lg:px-10">
-      <div className="relative max-w-2xl">
-        {/* A soft dark pool behind the copy only; the rest of the picture stays untouched. */}
-        <div
-          aria-hidden="true"
-          className="absolute -inset-x-12 -inset-y-10 -z-10 rounded-[4rem] bg-ink/45 blur-3xl sm:-inset-x-20 sm:-inset-y-14"
-        />
-        <h1 className="headline text-cream text-[12vw] leading-[0.95] tracking-[-0.03em] sm:text-[clamp(3rem,5.8vw,5.75rem)]">
+      <div className="hero-copy max-w-xl">
+        <h1 className="headline max-w-[10ch] text-cream text-[12vw] leading-[0.9] tracking-[-0.035em] sm:text-[clamp(3rem,5.8vw,5.75rem)]">
           <span className="text-gold">{hero.brand}</span> {hero.title}
         </h1>
-        <p className="mt-6 max-w-[34ch] text-[1.05rem] leading-[1.45] font-medium text-cream/85 sm:mt-8 sm:text-[1.2rem]">
+        <p className="mt-6 max-w-[36ch] text-[1.05rem] leading-[1.5] text-cream/85 sm:mt-7 sm:text-[1.15rem]">
           {hero.lead}
         </p>
-        <div className="mt-8 flex flex-col items-start gap-3 sm:mt-10 sm:flex-row">
-          <Btn href="#harmanlar" variant="brand">
+        <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 sm:mt-10">
+          <a
+            href="#harmanlar"
+            className="inline-flex min-h-13 items-center bg-brand px-7 text-[0.95rem] font-semibold text-cream transition-colors duration-200 hover:bg-brand-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+          >
             {hero.cta}
-          </Btn>
-          <Btn href={shopUrl} variant="outline-cream">
+          </a>
+          <a
+            href={shopUrl}
+            className="py-2 text-[0.95rem] font-semibold text-cream underline decoration-cream/40 decoration-[1.5px] underline-offset-[7px] transition-colors duration-200 hover:decoration-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-cream"
+          >
             Alışveriş
-          </Btn>
+          </a>
         </div>
       </div>
     </div>
   )
+
+  /* Lives in the text layer so it fades out with the copy and leaves the video clean. */
+  const curtain = <div aria-hidden="true" className="hero-curtain pointer-events-none absolute inset-0" />
 
   const media = (
     <>
@@ -206,7 +209,10 @@ export default function Hero() {
       <section id="hero" className="relative bg-ink">
         <div className="relative min-h-svh overflow-hidden">
           {media}
-          <div className="relative z-10 flex min-h-svh items-center py-28">{copy}</div>
+          <div className="relative z-10 flex min-h-svh items-center py-28">
+            {curtain}
+            <div className="relative w-full">{copy}</div>
+          </div>
         </div>
       </section>
     )
@@ -219,7 +225,8 @@ export default function Hero() {
       <div ref={pinRef} className="relative h-svh min-h-[640px] overflow-hidden">
         {media}
         <div ref={textRef} className="absolute inset-0 z-10 flex items-center pt-20 sm:pt-[5.5rem]">
-          {copy}
+          {curtain}
+          <div className="relative w-full">{copy}</div>
         </div>
       </div>
     </section>
