@@ -28,3 +28,5 @@ npm run test:smoke:full            # PAYTR_MOCK=1 uçtan uca
 ```
 
 Env envanteri: `.env.template` ve blueprint §8. Deploy: kök `Dockerfile.backend` (Build Path `/`).
+
+<!-- Deploy kontrolü: Dokploy watch paths (2026-10-26). -->
