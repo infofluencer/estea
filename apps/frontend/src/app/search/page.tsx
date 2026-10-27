@@ -4,7 +4,7 @@ import {
   variantOriginalAmount,
   variantPriceAmount,
 } from "@/lib/medusa"
-import { isVariantInStock } from "@/lib/stock"
+import { isProductSoldOut, isVariantInStock } from "@/lib/stock"
 import {
   displayColor,
   resolveCardImages,
@@ -36,44 +36,40 @@ async function searchProducts(q: string): Promise<SearchProduct[]> {
   try {
     const products = await searchCatalog(q, SEARCH_PAGE_LIMIT)
 
-    return products.flatMap((product) => {
-      const variants = product.variants?.length ? product.variants : [undefined]
-      const sku = product.variants?.[0]?.sku ?? null
-
-      return variants.map((variant) => {
-        const price = variant?.calculated_price
-        const color =
-          variant?.options
-            ?.map((o) => o.value)
-            .find((v): v is string => Boolean(v)) ||
-          (variant?.title && variant.title !== "Default"
-            ? variant.title
-            : null)
-        const { image, hoverImage } = resolveCardImages({
-          thumbnail: product.thumbnail,
-          medusaImages: (product.images || []).map((img) => img.url),
-          sku,
-          color,
-          handle: product.handle,
-        })
-        return {
-          cardKey: variant
-            ? `${product.id}:${variant.id}`
-            : product.id,
-          id: product.id,
-          handle: product.handle || product.id,
-          title: displayColor(color)
-            ? `${product.title || "Ürün"} – ${displayColor(color)}`
-            : product.title || "Ürün",
-          thumbnail: image || product.thumbnail || PRODUCT_IMAGE,
-          hoverImage,
-          variantId: variant?.id ?? null,
-          price: variantPriceAmount(price),
-          originalPrice: variantOriginalAmount(price),
-          subtitle: displayColor(color),
-          soldOut: variant ? !isVariantInStock(variant) : false,
-        }
+    // Çay: ürün başına tek kart; fiyat/sepet için stokta olan ilk varyant.
+    return products.map((product) => {
+      const variants = product.variants || []
+      const variant = variants.find((v) => isVariantInStock(v)) || variants[0]
+      const price = variant?.calculated_price
+      const optionValues = [
+        ...new Set(
+          variants
+            .flatMap((v) => (v.options || []).map((o) => o.value))
+            .filter((v): v is string => Boolean(v))
+        ),
+      ]
+      const { image, hoverImage } = resolveCardImages({
+        thumbnail: product.thumbnail,
+        medusaImages: (product.images || []).map((img) => img.url),
       })
+      return {
+        cardKey: product.id,
+        id: product.id,
+        handle: product.handle || product.id,
+        title: product.title || "Ürün",
+        thumbnail: image || product.thumbnail || PRODUCT_IMAGE,
+        hoverImage,
+        variantId: variant?.id ?? null,
+        price: variantPriceAmount(price),
+        originalPrice: variantOriginalAmount(price),
+        subtitle:
+          optionValues.length === 1
+            ? displayColor(optionValues[0])
+            : optionValues.length > 1
+              ? `${optionValues.length} seçenek`
+              : null,
+        soldOut: variants.length ? isProductSoldOut(variants) : false,
+      }
     })
   } catch {
     return []

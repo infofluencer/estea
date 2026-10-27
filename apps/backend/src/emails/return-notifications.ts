@@ -24,6 +24,12 @@ export type ReturnRequestedCustomerData = {
   trackingUrl?: string | null
   labelUrl?: string | null
   carrierCode?: string | null
+  /**
+   * Etiket/kod yokken akış: "code" = kargo firması iade kodu ayrıca gelecek
+   * (adaptörlü kargo), "address" = müşteri ürünü firma adresine kendi kargolar
+   * (elle kargo, K1). Varsayılan "code".
+   */
+  mode?: "code" | "address"
 }
 
 export type ReturnRequestedSellerData = {
@@ -106,10 +112,13 @@ export function buildReturnRequestedCustomerEmail(
     trackingUrl,
     labelUrl,
     carrierCode,
+    mode = "code",
   } = data
   const hasLabel = Boolean(trackingNumber || labelUrl || trackingUrl)
-  // Otomatik iade etiketi yoksa → kodlu iade elle, kod ayrı mailde.
-  if (!hasLabel) return buildReturnAwaitingCodeCustomerEmail({ orderDisplayId, items, customerNote })
+  // Etiket yok: adaptörlü kargoda kod ayrı mailde gelir; elle kargoda müşteri adrese gönderir.
+  if (!hasLabel && mode !== "address") {
+    return buildReturnAwaitingCodeCustomerEmail({ orderDisplayId, items, customerNote })
+  }
   const subject = trackingNumber
     ? `İade Etiketiniz Hazır — #${orderDisplayId}`
     : `İade Talebiniz Alındı — #${orderDisplayId}`
@@ -150,7 +159,7 @@ export function buildReturnRequestedCustomerEmail(
   const stepsHtml = hasLabel
     ? `
     <ol style="margin:0;padding-left:1.2rem;font-size:14px;line-height:22px;color:${EMAIL_STYLES.mutedColor};">
-      <li style="margin-bottom:8px;">Ürünü kullanılmamış ve etiketli şekilde paketleyin.</li>
+      <li style="margin-bottom:8px;">Ürünü açılmamış orijinal ambalajında, hasarsız şekilde paketleyin.</li>
       <li style="margin-bottom:8px;">${
         trackingNumber
           ? "Kargo şubesinde yukarıdaki kodu verin. Etiketi yazdırdıysanız pakete yapıştırıp teslim edin."
@@ -160,9 +169,9 @@ export function buildReturnRequestedCustomerEmail(
     </ol>`
     : `
     <ol style="margin:0;padding-left:1.2rem;font-size:14px;line-height:22px;color:${EMAIL_STYLES.mutedColor};">
-      <li style="margin-bottom:8px;">Ürünü kullanılmamış ve etiketli şekilde paketleyin.</li>
-      <li style="margin-bottom:8px;">Anlaşmalı kargo ile aşağıdaki adrese gönderin.</li>
-      <li style="margin-bottom:8px;">Kargo takip numaranızı not olarak eklediyseniz işlemi hızlandırır.</li>
+      <li style="margin-bottom:8px;">Ürünü açılmamış orijinal ambalajında, hasarsız şekilde paketleyin.</li>
+      <li style="margin-bottom:8px;">Dilediğiniz kargo firmasıyla aşağıdaki adrese gönderin. Kargo ücreti, ayıplı ürün dışında alıcıya aittir.</li>
+      <li style="margin-bottom:8px;">Kargo takip numaranızı ${escapeHtml(COMPANY.emailOps)} adresine iletirseniz işlem hızlanır.</li>
       <li>Ürün tarafımıza ulaşınca incelenir; onay sonrası ödemeniz iade edilir.</li>
     </ol>`
 
@@ -239,7 +248,7 @@ Tel: ${COMPANY.phone} · ${COMPANY.emailOps}
 
   const stepsText = hasLabel
     ? `Sonraki adımlar:
-1. Ürünü kullanılmamış ve etiketli şekilde paketleyin.
+1. Ürünü açılmamış orijinal ambalajında, hasarsız şekilde paketleyin.
 2. ${
         trackingNumber
           ? "Kargo şubesinde yukarıdaki kodu verin. Etiketi yazdırdıysanız pakete yapıştırıp teslim edin."
@@ -247,9 +256,9 @@ Tel: ${COMPANY.phone} · ${COMPANY.emailOps}
       }
 3. Ürün tarafımıza ulaşınca incelenir; onay sonrası ödemeniz iade edilir.`
     : `Sonraki adımlar:
-1. Ürünü kullanılmamış ve etiketli şekilde paketleyin.
-2. Anlaşmalı kargo ile yukarıdaki adrese gönderin.
-3. Kargo takip numaranız varsa not olarak ekleyin.
+1. Ürünü açılmamış orijinal ambalajında, hasarsız şekilde paketleyin.
+2. Dilediğiniz kargo firmasıyla yukarıdaki adrese gönderin (kargo ücreti, ayıplı ürün dışında alıcıya aittir).
+3. Kargo takip numaranızı ${COMPANY.emailOps} adresine iletirseniz işlem hızlanır.
 4. Ürün tarafımıza ulaşınca incelenir; onay sonrası ödemeniz iade edilir.`
 
   const text = `${subject}

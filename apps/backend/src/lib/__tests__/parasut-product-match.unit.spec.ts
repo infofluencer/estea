@@ -1,6 +1,5 @@
 import {
   matchVariantsToParasut,
-  nameSimilarity,
   normalizeName,
   priceMatches,
   type MedusaVariantRow,
@@ -11,7 +10,7 @@ function pp(p: Partial<ParasutProductRecord> & { id: string; name: string }): Pa
   return {
     code: null,
     barcode: null,
-    vatRate: 10,
+    vatRate: 1,
     listPrice: null,
     currency: "TRL",
     archived: false,
@@ -36,54 +35,33 @@ function mv(
   }
 }
 
-describe("normalizeName / similarity / price", () => {
+describe("normalizeName / price", () => {
   it("folds Turkish chars, case and punctuation", () => {
-    expect(normalizeName("İPEK Şal - Çiçek, Gül")).toBe("ipek sal cicek gul")
+    expect(normalizeName("RİZE Siyah Çay - 500 g, Kutu")).toBe("rize siyah cay 500 g kutu")
     expect(normalizeName("Işıl  Ağaç")).toBe("isil agac")
   })
-  it("scores token overlap", () => {
-    expect(nameSimilarity("Enderun Şal Siyah", "enderun sal siyah")).toBe(1)
-    expect(nameSimilarity("Enderun Şal", "Dersaadet Tablo")).toBe(0)
-  })
   it("accepts net or gross list price within 2%", () => {
-    expect(priceMatches(1100, 1100, 10)).toBe(true)
-    expect(priceMatches(1100, 1000, 10)).toBe(true)
-    expect(priceMatches(1100, 700, 10)).toBe(false)
-    expect(priceMatches(1100, null, 10)).toBeNull()
+    expect(priceMatches(101, 101, 1)).toBe(true)
+    expect(priceMatches(101, 100, 1)).toBe(true)
+    expect(priceMatches(101, 70, 1)).toBe(false)
+    expect(priceMatches(101, null, 1)).toBeNull()
   })
 })
 
 describe("matchVariantsToParasut", () => {
   it("uses code, then barcode, then variant name, then parent name", () => {
     const products = [
-      pp({ id: "1", name: "X", code: "MK2503" }),
-      pp({ id: "2", name: "Y", barcode: "MK2505-2" }),
-      pp({ id: "3", name: "Enderun Şal - Siyah" }),
-      pp({ id: "4", name: "Dersaadet" }),
+      pp({ id: "1", name: "X", code: "ESC-SIYAH-500" }),
+      pp({ id: "2", name: "Y", barcode: "ESC-YESIL-250" }),
+      pp({ id: "3", name: "Bergamot Çay 500 g" }),
+      pp({ id: "4", name: "Hediye Seti" }),
     ]
     const variants = [
-      mv({ variantId: "v1", productTitle: "A", sku: "MK2503" }),
-      mv({ variantId: "v2", productTitle: "B", sku: "MK2505-2" }),
-      mv({
-        variantId: "v3",
-        productTitle: "Enderun Şal",
-        variantTitle: "Siyah",
-        variantCount: 2,
-      }),
-      mv({
-        variantId: "v4",
-        productTitle: "Dersaadet",
-        productId: "p_d",
-        variantTitle: "Lale",
-        variantCount: 2,
-      }),
-      mv({
-        variantId: "v5",
-        productTitle: "Dersaadet",
-        productId: "p_d",
-        variantTitle: "Amber",
-        variantCount: 2,
-      }),
+      mv({ variantId: "v1", productTitle: "Rize Siyah Çay", sku: "ESC-SIYAH-500" }),
+      mv({ variantId: "v2", productTitle: "Yeşil Çay", sku: "esc-yesil-250" }),
+      mv({ variantId: "v3", productTitle: "Bergamot Çay", variantTitle: "500 g", variantCount: 2 }),
+      mv({ variantId: "v4", productTitle: "Hediye Seti", productId: "p_h", variantTitle: "Kutu", variantCount: 2 }),
+      mv({ variantId: "v5", productTitle: "Hediye Seti", productId: "p_h", variantTitle: "Ahşap Kutu", variantCount: 2 }),
     ]
     const r = matchVariantsToParasut(variants, products)
     const by = Object.fromEntries(r.entries.map((e) => [e.variant_id, e]))
@@ -103,27 +81,27 @@ describe("matchVariantsToParasut", () => {
 
   it("single-variant 'Standart' matches by product title", () => {
     const r = matchVariantsToParasut(
-      [mv({ variantId: "v", productTitle: "Tunel Şal", variantTitle: "Standart" })],
-      [pp({ id: "9", name: "TÜNEL ŞAL" })]
+      [mv({ variantId: "v", productTitle: "Rize Siyah Çay", variantTitle: "Standart" })],
+      [pp({ id: "9", name: "RİZE SİYAH ÇAY" })]
     )
     expect(r.entries[0]).toMatchObject({ method: "name_exact", parasut_product_id: "9" })
   })
 
-  it("never maps fuzzy or ambiguous names; lists them as suspicious", () => {
+  it("never guesses: similar names stay unmatched, duplicate names are suspicious", () => {
     const r = matchVariantsToParasut(
       [
-        mv({ variantId: "f", productTitle: "Enderun İpek Şal Siyah Model" }),
+        mv({ variantId: "f", productTitle: "Rize Siyah Çay Özel Harman" }),
         mv({ variantId: "a", productTitle: "Aynı" }),
       ],
       [
-        pp({ id: "1", name: "Enderun İpek Şal Siyah" }),
+        pp({ id: "1", name: "Rize Siyah Çay" }),
         pp({ id: "2", name: "Aynı" }),
         pp({ id: "3", name: "aynı" }),
       ]
     )
     const by = Object.fromEntries(r.entries.map((e) => [e.variant_id, e]))
-    expect(by.f).toMatchObject({ method: "name_fuzzy", tier: "suspicious", parasut_product_id: "1" })
-    expect(by.a).toMatchObject({ tier: "suspicious", parasut_product_id: null })
+    expect(by.f).toMatchObject({ method: "none", tier: "unmatched", parasut_product_id: null })
+    expect(by.a).toMatchObject({ method: "name_exact", tier: "suspicious", parasut_product_id: null })
     expect(by.a.alternatives).toHaveLength(2)
     expect(r.mapping).toEqual({})
   })
@@ -131,73 +109,24 @@ describe("matchVariantsToParasut", () => {
   it("downgrades archived and cross-product duplicate matches", () => {
     const r = matchVariantsToParasut(
       [
-        mv({ variantId: "x", productTitle: "Old", sku: "OLD" }),
+        mv({ variantId: "x", productTitle: "Eski", sku: "OLD" }),
         mv({ variantId: "d1", productTitle: "P1", sku: "DUP", productId: "p1" }),
         mv({ variantId: "d2", productTitle: "P2", sku: "dup", productId: "p2" }),
       ],
-      [pp({ id: "1", name: "Old", code: "OLD", archived: true }), pp({ id: "2", name: "D", code: "DUP" })]
+      [pp({ id: "1", name: "Eski", code: "OLD", archived: true }), pp({ id: "2", name: "D", code: "DUP" })]
     )
     expect(r.entries.every((e) => e.tier === "suspicious")).toBe(true)
     expect(r.mapping).toEqual({})
   })
 
-  it("picks current-name generation over older 'Yün İpek' records (real Parasut names)", () => {
-    const products = [
-      pp({ id: "1057775896", name: "Buhara Yün İpek Omuz Şal Buhara / Vizon", salesInvoiceDetailsCount: 129 }),
-      pp({ id: "1063836605", name: "Buhara Yün İpek Omuz Şal - Vizon Buhara / Vizon", salesInvoiceDetailsCount: 9 }),
-      pp({ id: "1066466419", name: "Buhara   Omuz Şal - Vizon Buhara / Vizon", salesInvoiceDetailsCount: 2 }),
-      pp({ id: "1057776481", name: "Sarmaşık Fureya Eşarp Sarmaşık Fureya / Soft Mercan" }),
-      pp({ id: "1063836786", name: "Sarmaşık Fureya Eşarp - Soft Mercan Sarmaşık Fureya / Soft Mercan" }),
-      pp({ id: "1068678249", name: "Terra Harmonia   Şal - Kül Kahve Terra Harmonia / Kül Kahve" }),
-      pp({ id: "1075355455", name: "Terra Harmonia Şal - Kül Kahve Terra Harmonia / Kül Kahve" }),
-      pp({ id: "1068677594", name: "Düz   Şal - Gri Düz Şal / Gri" }),
-      pp({ id: "1068678685", name: "Düz   Şal - Duman Gri Düz Şal / Duman Gri" }),
-    ]
-    const variants = [
-      mv({ variantId: "buhara", productTitle: "Buhara Omuz Şal", productId: "b", variantTitle: "Vizon", variantCount: 4 }),
-      mv({ variantId: "fureya", productTitle: "Sarmaşık Fureya Eşarp", productId: "f", variantTitle: "Soft Mercan", variantCount: 4 }),
-      mv({ variantId: "terra", productTitle: "Terra Harmonia Şal", productId: "t", variantTitle: "Kül Kahve", variantCount: 8 }),
-      mv({ variantId: "duz-gri", productTitle: "Düz Şal", productId: "d", variantTitle: "Gri", variantCount: 8 }),
-      mv({ variantId: "duz-duman", productTitle: "Düz Şal", productId: "d", variantTitle: "Duman Gri", variantCount: 8 }),
-    ]
-    const r = matchVariantsToParasut(variants, products)
-    expect(r.mapping).toEqual({
-      buhara: "1066466419",
-      fureya: "1063836786",
-      terra: "1075355455",
-      "duz-gri": "1068677594",
-      "duz-duman": "1068678685",
-    })
-    const by = Object.fromEntries(r.entries.map((e) => [e.variant_id, e]))
-    expect(by.buhara).toMatchObject({ method: "name_current", tier: "high" })
-    expect(by.terra.reasons[0]).toMatch(/en yeni id/)
-  })
-
-  it("falls back to most-invoiced old generation as suspicious (not mapped)", () => {
+  it("flags price mismatch but keeps exact code match", () => {
     const r = matchVariantsToParasut(
-      [mv({ variantId: "k", productTitle: "Kamara Omuz Şal", variantTitle: "Vizon", variantCount: 2 })],
-      [
-        pp({ id: "1057777437", name: "Kamara Yün İpek Omuz Şal Kamara / Vizon", salesInvoiceDetailsCount: 50 }),
-        pp({ id: "1066457214", name: "Kamara Yün İpek Omuz Şal - Vizon Kamara / Vizon", salesInvoiceDetailsCount: 5 }),
-        pp({ id: "1066466419", name: "Buhara   Omuz Şal - Vizon Buhara / Vizon" }),
-      ]
+      [mv({ variantId: "v", productTitle: "Yeşil Çay", sku: "ESC-YESIL-250", priceTry: 150 })],
+      [pp({ id: "1", name: "Yeşil Çay", code: "ESC-YESIL-250", listPrice: 90, vatRate: 1 })]
     )
-    expect(r.entries[0]).toMatchObject({
-      method: "name_family",
-      tier: "suspicious",
-      parasut_product_id: "1057777437",
-    })
-    expect(r.mapping).toEqual({})
-  })
-
-  it("does not cross product type when color differs (Ada Sarayı tablo vs şal)", () => {
-    const r = matchVariantsToParasut(
-      [mv({ variantId: "a", productTitle: "Ada Sarayı", variantTitle: "Siyah Tablo" })],
-      [pp({ id: "1063838303", name: "Ada Sarayı Omuz Şal - Siyah Ada Sarayı / Siyah" })]
-    )
-    expect(r.entries[0].method).not.toBe("name_current")
-    expect(r.entries[0].method).not.toBe("name_family")
-    expect(r.mapping).toEqual({})
+    expect(r.entries[0]).toMatchObject({ method: "code", tier: "exact" })
+    expect(r.entries[0].price_check.ok).toBe(false)
+    expect(r.entries[0].reasons.join(" ")).toMatch(/fiyat/)
   })
 
   it("flags shipping candidates and unmatched variants", () => {

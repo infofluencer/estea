@@ -1,5 +1,5 @@
 import { PRODUCT_IMAGE } from "@/lib/medusa"
-import { displayColor, variantImageUrl } from "@/lib/product-images"
+import { displayColor } from "@/lib/product-images"
 import { productPath } from "@/lib/urls"
 
 type CartVariant = {
@@ -44,11 +44,9 @@ export function cartLineTitle(item: CartLineSource): string {
   return `${base} – ${color}`
 }
 
-/** Variant S3 shot when we know SKU + color; never the parent product's other color. */
+/** Sepet satırı görseli: Medusa thumbnail (gramaj/paket için ayrı görsel yok). */
 export function cartLineImage(item: CartLineSource): string {
-  const color = variantLabel(item)
-  const fromVariant = variantImageUrl(null, color, item.product?.handle)
-  return fromVariant || item.thumbnail || PRODUCT_IMAGE
+  return item.thumbnail || PRODUCT_IMAGE
 }
 
 export function cartLineHref(item: CartLineSource): string | null {

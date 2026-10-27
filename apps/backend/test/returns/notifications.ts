@@ -75,6 +75,23 @@ async function main() {
       codeMail.text.includes(COMPANY.legalName) && codeMail.text.includes("IA123456")
   )
 
+  // Elle kargo (mode: address) → adres + adımlar, kod bekleme YOK
+  const manual = buildReturnRequestedCustomerEmail({
+    returnId: "return_test_003",
+    orderDisplayId: "1042",
+    email: "musteri@example.com",
+    items,
+    mode: "address",
+  })
+  assert(
+    "elle kargo: adres var, kod yok",
+    manual.html.includes("Kargolama adresi") &&
+      manual.html.includes(COMPANY.address.split(",")[0]) &&
+      !manual.html.includes("İade kodunuz") &&
+      manual.text.includes(COMPANY.address)
+  )
+  assert("elle kargo: ambalaj adımı", manual.html.includes("açılmamış orijinal ambalajında"))
+
   // Etiketli şablon — takip no + etiket linki
   const labeled = buildReturnRequestedCustomerEmail({
     returnId: "return_test_002",

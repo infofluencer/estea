@@ -106,7 +106,7 @@ export function PromoCodeForm({
             className="checkout-promo__input"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="örn. hosgeldin10"
+            placeholder="Kupon kodunuz"
             autoComplete="off"
             disabled={pending}
           />

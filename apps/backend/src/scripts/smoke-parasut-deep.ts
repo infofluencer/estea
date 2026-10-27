@@ -58,7 +58,7 @@ const REASON_MIND = "rr_01M22XV09PVZT2W627JERSC836" // seller_pays_shipping fals
 const REASON_DEFECT = "rr_01M22XV09PK6PSY9QRC2Y350B0" // seller_pays_shipping true
 const FALLBACK_VARIANT =
   process.env.TEST_VARIANT_ID || "variant_01M25MQGSQQZXRC324EDD7162Y"
-const PROMO_CODE = "hosgeldin10"
+const PROMO_CODE = (process.env.WELCOME_PROMO_CODE || "hosgeldin10").toLowerCase() // seed WELCOME_PROMO_CODE ile aynı olmalı
 
 type Check = { name: string; pass: boolean; detail: string }
 

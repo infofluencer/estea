@@ -15,8 +15,6 @@ export type MappingReportFile = {
 }
 
 export type MappingSelectOptions = {
-  /** name_family (eski nesil, en çok faturalı) şüphelileri de al */
-  includeFamily: boolean
   /** Hariç tutulacak SKU'lar (büyük/küçük harf duyarsız) */
   excludeSkus: string[]
 }
@@ -62,8 +60,7 @@ export function selectMappingToApply(
       continue
     }
     const inMapping = mapping[e.variant_id] === e.parasut_product_id
-    const family = opts.includeFamily && e.method === "name_family"
-    if (!inMapping && !family) {
+    if (!inMapping) {
       skipped.push({ ...base, reason: `onaysız ${e.method}/${e.tier}` })
       continue
     }

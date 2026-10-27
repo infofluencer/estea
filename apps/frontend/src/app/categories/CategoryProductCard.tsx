@@ -36,8 +36,8 @@ export type CategoryListProduct = {
   price: number | null
   originalPrice: number | null
   subtitle: string | null
-  /** İlk seçenek değeri (gramaj/çeşit) — listeleme filtresi bunu kullanır. */
-  optionValue?: string | null
+  /** Ürünün seçenek değerleri (gramaj/paket) — listeleme filtresi bunları kullanır. */
+  optionValues?: string[]
   colorCount: number
   soldOut?: boolean
   /** Product-total low stock (not per-variant); omit when sold out. */

@@ -27,7 +27,7 @@ const FAQ_ITEMS = [
         kargo ücreti satıcıya aittir; diğer iadelerde kargo genellikle alıcıya
         aittir. İade talebini hesabınızdan (Siparişler) veya{" "}
         <Link href="/order-tracking">sipariş takibinden</Link> (order id +
-        e-posta) oluşturun; iade kodu ve kargo bilgisi e-postayla gelir. Çay gıda
+        e-posta) oluşturun; iade adresi ve adımlar e-postayla gelir. Çay gıda
         ürünü olduğundan yalnızca ambalajı açılmamış ürünler iade alınır. İade
         adresi: {COMPANY.address}. Detay:{" "}
         <Link href="/iade-ve-geri-odeme-politikasi">İade ve Cayma</Link> ·{" "}

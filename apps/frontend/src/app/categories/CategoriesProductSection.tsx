@@ -37,10 +37,6 @@ type SearchParams = {
   q?: string
 }
 
-function productSku(product: StoreProduct): string | null {
-  return product.variants?.[0]?.sku ?? null
-}
-
 function productColors(product: StoreProduct): string[] {
   const fromOptions =
     product.options?.flatMap((opt) =>
@@ -90,9 +86,6 @@ function mapProduct(product: StoreProduct): CategoryListProduct {
   const { image, hoverImage } = resolveCardImages({
     thumbnail: product.thumbnail,
     medusaImages: (product.images || []).map((img) => img.url),
-    sku: productSku(product),
-    color: colors[0] || null,
-    handle: product.handle,
   })
 
   return {
@@ -105,8 +98,10 @@ function mapProduct(product: StoreProduct): CategoryListProduct {
     hoverImage,
     price: variantPriceAmount(price),
     originalPrice: variantOriginalAmount(original),
-    subtitle: collectionTitle || displayColor(colors[0]),
-    optionValue: colors[0] || null,
+    // Tek seçenekli üründe seçenek adı alt başlık; çok seçenekte kart "N seçenek" der.
+    subtitle:
+      collectionTitle || (colors.length === 1 ? displayColor(colors[0]) : null),
+    optionValues: colors,
     colorCount: colors.length,
     soldOut: isProductSoldOut(product.variants),
     lowStock: lowStockLabelForProduct(product.variants),
@@ -114,7 +109,6 @@ function mapProduct(product: StoreProduct): CategoryListProduct {
 }
 
 function expandVariantCards(product: StoreProduct): CategoryListProduct[] {
-  const sku = productSku(product)
   const variants = product.variants || []
   if (!variants.length) return [mapProduct(product)]
 
@@ -127,9 +121,6 @@ function expandVariantCards(product: StoreProduct): CategoryListProduct[] {
     const { image, hoverImage } = resolveCardImages({
       thumbnail: product.thumbnail,
       medusaImages: (product.images || []).map((img) => img.url),
-      sku,
-      color,
-      handle: product.handle,
     })
     const soldOut = !isVariantInStock(variant)
 
@@ -144,7 +135,7 @@ function expandVariantCards(product: StoreProduct): CategoryListProduct[] {
       price: variantPriceAmount(calc),
       originalPrice: variantOriginalAmount(calc),
       subtitle: label,
-      optionValue: color,
+      optionValues: color ? [color] : [],
       colorCount: 0,
       soldOut,
       // Total product stock — never a single thin color (avoids misleading "Son 1").
@@ -169,10 +160,9 @@ export async function CategoriesProductSection({
   }
 
   const sort = sp.sort || "newest"
-  const browsingCollection = Boolean(sp.collection)
+  // Çay: koleksiyonda da ürün başına tek kart (gramaj ürün sayfasında seçilir).
   const expandVariants = Boolean(
-    (sp.category && EXPAND_VARIANTS_CATEGORIES.has(sp.category)) ||
-      browsingCollection
+    sp.category && EXPAND_VARIANTS_CATEGORIES.has(sp.category)
   )
 
   const [{ product_categories }, { collections }] = await Promise.all([
@@ -216,7 +206,8 @@ export async function CategoriesProductSection({
   const colorOptions = [
     ...new Set(
       cards
-        .map((c) => displayColor(c.optionValue))
+        .flatMap((c) => c.optionValues ?? [])
+        .map((v) => displayColor(v))
         .filter((c): c is string => Boolean(c && !c.includes(",")))
     ),
   ]
@@ -226,7 +217,10 @@ export async function CategoriesProductSection({
   if (sp.color) {
     const needle = sp.color.toLocaleLowerCase("tr")
     cards = cards.filter(
-      (c) => displayColor(c.optionValue)?.toLocaleLowerCase("tr") === needle
+      (c) =>
+        (c.optionValues ?? []).some(
+          (v) => displayColor(v)?.toLocaleLowerCase("tr") === needle
+        )
     )
   }
 

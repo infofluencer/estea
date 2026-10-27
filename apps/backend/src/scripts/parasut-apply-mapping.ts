@@ -7,7 +7,6 @@
  *
  * Env:
  *   PARASUT_MAPPING_IN=product-mapping.json
- *   PARASUT_APPLY_INCLUDE_FAMILY=1      → name_family şüphelilerini de uygula
  *   PARASUT_APPLY_EXCLUDE_SKUS=MK2513-13 → virgülle ayrılmış SKU listesi
  *   PARASUT_APPLY_CONFIRM=yes           → gerçekten yaz
  */
@@ -32,7 +31,6 @@ export default async function parasutApplyMapping({ container }: ExecArgs) {
   const productModule = container.resolve(Modules.PRODUCT) as any
 
   const confirm = process.env.PARASUT_APPLY_CONFIRM === "yes"
-  const includeFamily = process.env.PARASUT_APPLY_INCLUDE_FAMILY === "1"
   const excludeSkus = parseSkuList(process.env.PARASUT_APPLY_EXCLUDE_SKUS)
   const input = resolve(process.env.PARASUT_MAPPING_IN || "product-mapping.json")
 
@@ -41,10 +39,10 @@ export default async function parasutApplyMapping({ container }: ExecArgs) {
     throw new Error(`REDDEDİLDİ: ${input} geçerli bir eşleştirme raporu değil (entries yok)`)
   }
   logger.info(
-    `[parasut-apply] ${confirm ? "YAZMA" : "DENEME (yazma yok)"} rapor=${input} generated_at=${report.generated_at} company=${report.company_id} include_family=${includeFamily} exclude=${excludeSkus.join(",") || "-"}`
+    `[parasut-apply] ${confirm ? "YAZMA" : "DENEME (yazma yok)"} rapor=${input} generated_at=${report.generated_at} company=${report.company_id} exclude=${excludeSkus.join(",") || "-"}`
   )
 
-  const { selected, skipped } = selectMappingToApply(report, { includeFamily, excludeSkus })
+  const { selected, skipped } = selectMappingToApply(report, { excludeSkus })
 
   const current = new Map<string, { sku: string | null; metadata: Record<string, unknown> | null }>()
   const ids = selected.map((s) => s.variant_id)

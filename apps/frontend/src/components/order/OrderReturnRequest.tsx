@@ -95,15 +95,15 @@ export function OrderReturnRequest({
           {exchange ? "Değişim talebi alındı" : "İade talebi alındı"}
         </h2>
         <p className={styles.returnLead}>
-          Talebiniz oluşturuldu. <strong>İade kodunuz en geç 1 iş günü içinde e-postayla iletilecek</strong>;
-          lütfen kod gelmeden ürünü kargoya vermeyin.
+          Talebiniz oluşturuldu. <strong>İade adımları ve kargo bilgisi e-postayla iletilecek</strong>;
+          lütfen e-posta gelmeden ürünü kargoya vermeyin.
           {exchange ? " Ürün bize ulaşıp kontrol edildikten sonra seçtiğiniz gramaj/çeşit ücretsiz kargoyla gönderilir." : ""}
         </p>
         <ol className={styles.returnSteps}>
           <li>Ürünü açılmamış, orijinal ambalajında ve hasarsız şekilde paketleyin.</li>
           <li>
-            İade kodunuz e-postayla gelince paketi e-postada belirtilen kargo firmasının şubesine
-            götürün; şubede iade kodunuzu söylemeniz yeterli.
+            E-postadaki talimata göre paketi kargoya verin: iade adresi ya da kargo
+            firmasına söyleyeceğiniz iade kodu e-postada yer alır.
           </li>
           <li>
             Sorunuz olursa {COMPANY.emailOps} adresine yazabilirsiniz.

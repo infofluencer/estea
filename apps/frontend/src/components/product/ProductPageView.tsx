@@ -8,11 +8,7 @@ import { ProductGallery } from "@/components/product/ProductGallery"
 import { SpecIcon } from "@/components/product/SpecIcon"
 import { formatTry, variantOriginalAmount, variantPriceAmount } from "@/lib/medusa"
 import { isVariantInStock, lowStockLabelForVariant } from "@/lib/stock"
-import {
-  displayColor,
-  variantGalleryUrls,
-  variantImageUrl,
-} from "@/lib/product-images"
+import { displayColor } from "@/lib/product-images"
 import type { SpecIconName } from "@/lib/spec-labels"
 import styles from "./product.module.css"
 
@@ -190,20 +186,13 @@ export function ProductPageView({
 
   const activeColor = selectedColorName(primaryOption, selected)
 
+  // Çayda varyant = gramaj/paket; galeri ürünün kendi görselleri, seçeneğe göre değişmez.
   const galleryImages = useMemo(() => {
-    const fromColor = variantGalleryUrls(productSku, activeColor, handle)
-    if (fromColor.length) return fromColor
     const urls = images.length ? images : thumbnail ? [thumbnail] : []
     return [...new Set(urls.filter(Boolean))]
-  }, [images, thumbnail, productSku, activeColor, handle])
+  }, [images, thumbnail])
 
-  const variantHeroImage = useMemo(() => {
-    if (!activeColor) return null
-    return variantImageUrl(productSku, activeColor, handle)
-  }, [activeColor, productSku, handle])
-
-  const displayImage =
-    variantHeroImage || galleryImages[0] || thumbnail
+  const displayImage = galleryImages[0] || thumbnail
 
   const displaySku =
     (typeof variant?.sku === "string" && variant.sku.trim()) ||
@@ -296,9 +285,6 @@ export function ProductPageView({
                   )
                   const soldOut = !isVariantInStock(match)
                   const isSelected = selected[primaryOption.id] === val.value
-                  const swatchImage =
-                    variantImageUrl(productSku, val.value, handle) ||
-                    thumbnail
 
                   return (
                     <button
@@ -316,20 +302,9 @@ export function ProductPageView({
                       title={soldOut ? `${val.value} — Tükendi` : val.value}
                     >
                       <span className={styles.swatchMedia}>
-                        {swatchImage ? (
-                          /* eslint-disable-next-line @next/next/no-img-element */
-                          <img
-                            src={swatchImage}
-                            alt=""
-                            className={styles.swatchImg}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        ) : (
-                          <span className={styles.swatchFallback}>
-                            {val.value}
-                          </span>
-                        )}
+                        <span className={styles.swatchFallback}>
+                          {val.value}
+                        </span>
                       </span>
                     </button>
                   )

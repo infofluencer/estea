@@ -86,9 +86,9 @@ export default function IadeVeCaymaPage() {
           kargolama adresi ile kısa adımlar gösterilir.
         </li>
         <li>
-          Talebiniz alındığında size e-postayla bir iade kodu ve kargo firması
-          bilgisi iletilir. Ürünü ambalajı açılmamış ve orijinal haliyle
-          paketleyip bu kodla kargo şubesine teslim edin; kod gelmeden kargoya vermeyin.
+          Talebiniz alındığında size e-postayla iade adresi ve adımlar iletilir.
+          Ürünü ambalajı açılmamış ve orijinal haliyle paketleyip belirtilen
+          adrese kargolayın; kargo takip numaranızı not olarak eklemeniz işlemi hızlandırır.
         </li>
         <li>
           Ürün SATICI’ya ulaştıktan ve iade incelemesi tamamlandıktan sonra

@@ -82,7 +82,9 @@ export default async function returnRequestedEmailHandler({
       title: `İade talebi alındı (${sourceLabel})`,
       detail: returnCode
         ? `İade kodu (${tracking.carrierCode}): ${returnCode}`
-        : "Kargo firmasından kodlu iade açılıp kod müşteriye gönderilmeli (sipariş sayfası → İade → Kodu müşteriye gönder).",
+        : adapter?.createReturn
+          ? "Kargo firmasından kodlu iade açılıp kod müşteriye gönderilmeli (sipariş sayfası → İade → Kodu müşteriye gönder)."
+          : "Elle kargo: müşteri ürünü firma adresine gönderecek; ulaşınca sipariş sayfasındaki İade kutusundan teslim alın.",
       orderId: ctx.orderId,
       data: { return_id: ctx.returnId },
     })
@@ -99,6 +101,8 @@ export default async function returnRequestedEmailHandler({
             email: ctx.email,
             items: ctx.items,
             customerNote: ctx.customerNote,
+            // Adaptörlü kargoda kod ayrıca gelir; elle kargoda (K1) müşteri adrese gönderir.
+            mode: adapter?.createReturn ? "code" : "address",
           })
       await createNotificationIdempotent(notificationService, {
         to: ctx.email,

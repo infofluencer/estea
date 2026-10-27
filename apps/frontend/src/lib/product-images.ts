@@ -19,25 +19,10 @@ export function normalizeProductSku(sku: unknown): string | null {
   return s || null
 }
 
-/** Varyanta özel görsel: Medusa'da varyant görseli yok → null (çağıran thumbnail'e düşer). */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function variantImageUrl(...args: [string | null, string | null, (string | null)?]): string | null {
-  return null
-}
-
-/** Varyanta özel galeri yok; PDP ürün galerisini kullanır. */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function variantGalleryUrls(...args: [string | null, string | null, (string | null)?]): string[] {
-  return []
-}
-
 /** Kart görseli + hover görseli: thumbnail, ardından ürün görselleri. */
 export function resolveCardImages(input: {
   thumbnail?: string | null
   medusaImages?: string[] | null
-  sku?: string | null
-  color?: string | null
-  handle?: string | null
 }): { image: string; hoverImage: string | null } {
   const images = (input.medusaImages || []).filter(Boolean)
   const image = input.thumbnail || images[0] || PRODUCT_IMAGE

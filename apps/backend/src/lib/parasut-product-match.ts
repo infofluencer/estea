@@ -1,9 +1,10 @@
 /**
  * Medusa varyant → Parasut ürün eşleştirmesi (salt hesap; I/O yok).
  *
- * Sıra: code = sku → barcode = sku → güncel "Ürün - Renk" (en yeni id) → normalize isim
- * (varyant / ana ürün) → aynı renk eski nesil (en çok faturalı, şüpheli) → benzer isim
- * (şüpheli). Parasut'ta dış referans yok; code/barcode canlıda boş olabilir.
+ * Sıra: code = sku → barcode = sku → normalize isim birebir (varyant adı /
+ * ana ürün adı). Benzer isim veya eski nesil kayıt tahmini YOK: Es Çay'ın
+ * Parasut hesabı temiz kurulur, her varyantın SKU'su Parasut ürün koduna yazılır.
+ * Eşleşmeyen varyant "unmatched" olarak raporlanır, insan karar verir.
  */
 
 import type { ParasutProductRecord } from "../modules/parasut/types"
@@ -21,15 +22,7 @@ export type MedusaVariantRow = {
   variantCount: number
 }
 
-export type MatchMethod =
-  | "code"
-  | "barcode"
-  | "name_current"
-  | "name_family"
-  | "name_exact"
-  | "name_parent"
-  | "name_fuzzy"
-  | "none"
+export type MatchMethod = "code" | "barcode" | "name_exact" | "name_parent" | "none"
 
 export type MatchTier = "exact" | "high" | "suspicious" | "unmatched"
 
@@ -56,8 +49,6 @@ export type MatchEntry = {
   alternatives?: { id: string; name: string; score: number }[]
 }
 
-const FUZZY_MIN = 0.6
-const FUZZY_MARGIN = 0.1
 const PRICE_TOLERANCE = 0.02
 const PLACEHOLDER_VARIANT_TITLES = new Set(["standart", "default", "default title", "varsayilan"])
 const SHIPPING_WORDS = ["kargo", "nakliye", "gonderim", "teslimat", "shipping"]
@@ -72,20 +63,6 @@ function normalizeCode(value: string | null | undefined): string {
   return (value || "").trim().toLowerCase()
 }
 
-function tokens(s: string): Set<string> {
-  return new Set(s.split(" ").filter(Boolean))
-}
-
-/** Token Dice benzerliği 0..1 */
-export function nameSimilarity(a: string, b: string): number {
-  const A = tokens(normalizeName(a))
-  const B = tokens(normalizeName(b))
-  if (!A.size || !B.size) return 0
-  let inter = 0
-  for (const t of A) if (B.has(t)) inter += 1
-  return (2 * inter) / (A.size + B.size)
-}
-
 function isPlaceholderVariant(title: string | null): boolean {
   return PLACEHOLDER_VARIANT_TITLES.has(normalizeName(title))
 }
@@ -98,69 +75,6 @@ export function variantNameCandidates(v: MedusaVariantRow): string[] {
   if (vt && !isPlaceholderVariant(vt)) out.push(`${title} ${vt}`)
   if (v.variantCount <= 1 || !vt || isPlaceholderVariant(vt)) out.push(title)
   return [...new Set(out.map(normalizeName))].filter(Boolean)
-}
-
-/**
- * Parasut ürün adı deseni: "<ürün adı>[ - Seçenek] <kısa ad> / <Seçenek>".
- * Renk son " / " sonrası; prefix normalize edilmiş ön kısım.
- */
-export function splitParasutName(name: string): {
-  prefix: string
-  color: string | null
-} {
-  const i = name.lastIndexOf(" / ")
-  if (i < 0) return { prefix: normalizeName(name), color: null }
-  return {
-    prefix: normalizeName(name.slice(0, i)),
-    color: normalizeName(name.slice(i + 3)) || null,
-  }
-}
-
-function newerId(a: ParasutProductRecord, b: ParasutProductRecord): number {
-  const na = Number(a.id)
-  const nb = Number(b.id)
-  if (Number.isFinite(na) && Number.isFinite(nb)) return nb - na
-  return b.id.localeCompare(a.id)
-}
-
-/**
- * Aynı seçenekte birden çok nesil kayıt (ürün yeniden adlandırıldıkça yeni kayıt açılmış).
- * current: prefix güncel "Ürün adı - Renk" ile başlıyor → en yeni id.
- * family: renk aynı + ürün adının tüm kelimeleri prefix'te → en çok faturalı (şüpheli).
- */
-function pickByGeneration(
-  v: MedusaVariantRow,
-  products: ParasutProductRecord[]
-): {
-  current: ParasutProductRecord | null
-  currentCount: number
-  family: ParasutProductRecord[]
-} {
-  const color = normalizeName(v.variantTitle)
-  if (!color || isPlaceholderVariant(v.variantTitle)) {
-    return { current: null, currentCount: 0, family: [] }
-  }
-  const expected = normalizeName(`${v.productTitle} ${v.variantTitle}`)
-  const titleTokens = [...tokens(normalizeName(v.productTitle))]
-
-  const sameColor = products.filter((p) => splitParasutName(p.name).color === color)
-  const current = sameColor
-    .filter((p) => {
-      const { prefix } = splitParasutName(p.name)
-      return prefix === expected || prefix.startsWith(`${expected} `)
-    })
-    .sort(newerId)
-  const family = sameColor
-    .filter((p) => {
-      const prefixTokens = tokens(splitParasutName(p.name).prefix)
-      return titleTokens.length > 0 && titleTokens.every((t) => prefixTokens.has(t))
-    })
-    .sort(
-      (a, b) =>
-        (b.salesInvoiceDetailsCount || 0) - (a.salesInvoiceDetailsCount || 0) ||
-        newerId(a, b)
-    )
-  return { current: current[0] ?? null, currentCount: current.length, family }
 }
 
 export function priceMatches(
@@ -240,8 +154,6 @@ export function matchVariantsToParasut(
     pushIndex(byName, normalizeName(p.name), p)
   }
   const skuSet = new Set(variants.map((v) => normalizeCode(v.sku)).filter(Boolean))
-  const fuzzyPool = products.filter((p) => !p.archived && normalizeName(p.name))
-  const activeProducts = products.filter((p) => !p.archived)
 
   const entries: MatchEntry[] = variants.map((v) => {
     const base = {
@@ -308,25 +220,6 @@ export function matchVariantsToParasut(
       }
     }
 
-    const generation = pickByGeneration(v, activeProducts)
-    if (generation.current) {
-      const others = generation.family.filter((p) => p.id !== generation.current!.id)
-      return make(
-        generation.current,
-        "name_current",
-        "high",
-        0.95,
-        [
-          generation.currentCount > 1
-            ? `güncel adla ${generation.currentCount} kayıt — en yeni id seçildi`
-            : "güncel ürün adı + renk birebir",
-        ],
-        others.length
-          ? others.map((p) => ({ id: p.id, name: p.name, score: 1 }))
-          : undefined
-      )
-    }
-
     for (const cand of variantNameCandidates(v)) {
       const { product, ambiguous } = pickOne(byName.get(cand))
       if (product) return make(product, "name_exact", "high", 0.9, ["normalize isim birebir"])
@@ -349,47 +242,6 @@ export function matchVariantsToParasut(
           "varyant seviyesinde ürün yok — ana ürüne bağlandı",
         ])
       }
-    }
-
-    if (generation.family.length) {
-      const [best, ...rest] = generation.family
-      return make(
-        best,
-        "name_family",
-        "suspicious",
-        0.7,
-        [
-          `güncel adla kayıt yok — aynı renkte ${generation.family.length} eski kayıttan en çok faturalı seçildi (${best.salesInvoiceDetailsCount ?? 0} fatura)`,
-        ],
-        rest.length ? rest.map((p) => ({ id: p.id, name: p.name, score: 1 })) : undefined
-      )
-    }
-
-    const candidates = variantNameCandidates(v)
-    const scored = fuzzyPool
-      .map((p) => ({
-        p,
-        score: Math.max(...candidates.map((c) => nameSimilarity(c, p.name)), 0),
-      }))
-      .filter((x) => x.score >= FUZZY_MIN)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3)
-    const alternatives = scored.map((x) => ({
-      id: x.p.id,
-      name: x.p.name,
-      score: Math.round(x.score * 100) / 100,
-    }))
-    if (scored.length) {
-      const [best, second] = scored
-      const clear = !second || best.score - second.score >= FUZZY_MARGIN
-      return make(
-        clear ? best.p : null,
-        "name_fuzzy",
-        "suspicious",
-        Math.round(best.score * 100) / 100,
-        [clear ? "benzer isim — insan onayı gerekli" : "birden fazla yakın aday"],
-        alternatives
-      )
     }
 
     return make(null, "none", "unmatched", 0, ["eşleşme yok"])
@@ -419,11 +271,8 @@ export function matchVariantsToParasut(
   const byMethod: Record<MatchMethod, number> = {
     code: 0,
     barcode: 0,
-    name_current: 0,
-    name_family: 0,
     name_exact: 0,
     name_parent: 0,
-    name_fuzzy: 0,
     none: 0,
   }
   const count = { exact: 0, high: 0, suspicious: 0, unmatched: 0 }

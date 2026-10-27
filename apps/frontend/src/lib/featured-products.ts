@@ -7,11 +7,7 @@ import {
   variantPriceAmount,
 } from "@/lib/medusa"
 import { isProductSoldOut, isVariantInStock } from "@/lib/stock"
-import {
-  displayColor,
-  normalizeProductSku,
-  resolveCardImages,
-} from "@/lib/product-images"
+import { resolveCardImages } from "@/lib/product-images"
 
 export type StoreProduct = Awaited<
   ReturnType<typeof sdk.store.product.list>
@@ -20,57 +16,39 @@ export type StoreProduct = Awaited<
 export const FEATURED_FIELDS =
   "*variants.calculated_price,*variants.options,*images,*categories,*collection,+metadata,+variants.inventory_quantity,+variants.manage_inventory,+variants.allow_backorder"
 
-function variantColor(
-  variant: NonNullable<StoreProduct["variants"]>[number] | undefined
-): string | null {
-  if (!variant) return null
-  const fromOptions = (variant.options || [])
-    .map((o) => o.value)
-    .filter((v): v is string => Boolean(v))
-  if (fromOptions.length) return fromOptions[0]
-  const title = variant.title?.trim()
-  return title && title !== "Default" ? title : null
-}
-
-/** One card per color/variant — same merchandising rule as category grids. */
+/**
+ * Ürün başına tek kart (çay: varyantlar gramaj/paket, ayrı kart olmaz).
+ * Fiyat ve sepete ekle için stokta olan ilk varyant, yoksa ilk varyant.
+ */
 export function mapFeaturedProducts(products: StoreProduct[]): FeaturedProduct[] {
-  return products.flatMap((p) => {
-    const variants = p.variants?.length ? p.variants : [undefined]
-    const sku = normalizeProductSku(p.variants?.[0]?.sku)
-
-    return variants.map((variant) => {
-      const price = variant?.calculated_price
-      const color = variantColor(variant)
-      const { image, hoverImage } = resolveCardImages({
-        thumbnail: p.thumbnail,
-        medusaImages: (p.images || []).map((img) => img.url),
-        sku,
-        color,
-        handle: p.handle,
-      })
-
-      return {
-        id: variant ? `${p.id}:${variant.id}` : p.id,
-        handle: p.handle,
-        title: displayColor(color) ? `${p.title} – ${displayColor(color)}` : p.title,
-        variantId: variant?.id ?? null,
-        thumbnail: image || p.thumbnail || PRODUCT_IMAGE,
-        image,
-        hoverImage,
-        images: hoverImage ? [image, hoverImage] : [image],
-        price: variantPriceAmount(price),
-        originalPrice: variantOriginalAmount(price),
-        soldOut: variant
-          ? !isVariantInStock(variant)
-          : isProductSoldOut(p.variants),
-      }
+  return products.map((p) => {
+    const variants = p.variants || []
+    const variant = variants.find((v) => isVariantInStock(v)) || variants[0]
+    const price = variant?.calculated_price
+    const { image, hoverImage } = resolveCardImages({
+      thumbnail: p.thumbnail,
+      medusaImages: (p.images || []).map((img) => img.url),
     })
+
+    return {
+      id: p.id,
+      handle: p.handle,
+      title: p.title,
+      variantId: variant?.id ?? null,
+      thumbnail: image || p.thumbnail || PRODUCT_IMAGE,
+      image,
+      hoverImage,
+      images: hoverImage ? [image, hoverImage] : [image],
+      price: variantPriceAmount(price),
+      originalPrice: variantOriginalAmount(price),
+      soldOut: isProductSoldOut(variants),
+    }
   })
 }
 
 /**
- * Merchandising buckets that span unrelated product lines ("Yeni" holds scarves,
- * shawls and art prints alike) — they say nothing about similarity.
+ * Benzerlik söylemeyen geniş vitrin kategorileri ("Yeni" siyah, yeşil ve bitki
+ * çayını birlikte tutar).
  */
 const BROAD_CATEGORY_HANDLES = new Set(["yeni", "koleksiyon", "hediye", "indirim"])
 
@@ -166,22 +144,5 @@ export async function listRelatedProducts(
     return a.title.localeCompare(b.title, "tr")
   })
 
-  // One card per product first (in-stock color preferred) so a single
-  // many-color scarf can't fill the whole row; extra colors only top it up.
-  const perProduct = pool.map((p) => {
-    const cards = mapFeaturedProducts([p])
-    return [...cards.filter((c) => !c.soldOut), ...cards.filter((c) => c.soldOut)]
-  })
-  const out: FeaturedProduct[] = []
-  for (let round = 0; out.length < limit; round++) {
-    let added = false
-    for (const cards of perProduct) {
-      if (round < cards.length && out.length < limit) {
-        out.push(cards[round])
-        added = true
-      }
-    }
-    if (!added || round >= 1) break
-  }
-  return out
+  return pool.slice(0, limit).map((p) => mapFeaturedProducts([p])[0])
 }

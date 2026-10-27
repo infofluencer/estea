@@ -95,9 +95,14 @@ const RETURN_REASONS = [
   },
 ] as const
 
-/** Hoş geldin kuponu — TODO(karar): pazarlama onaylayınca aç/kapat. */
+/**
+ * Hoş geldin kuponu — yalnız WELCOME_PROMO_CODE env doluysa oluşturulur
+ * (ör. WELCOME_PROMO_CODE=hosgeldin10 WELCOME_PROMO_PERCENT=10). Boşsa kupon yok.
+ */
+const WELCOME_PROMO_CODE = (process.env.WELCOME_PROMO_CODE || "").trim().toLowerCase()
+const WELCOME_PROMO_PERCENT = Number(process.env.WELCOME_PROMO_PERCENT || 10)
 const WELCOME_PROMO = {
-  code: "hosgeldin10",
+  code: WELCOME_PROMO_CODE,
   type: "standard" as const,
   status: "active" as const,
   is_automatic: false,
@@ -106,7 +111,7 @@ const WELCOME_PROMO = {
     type: "percentage" as const,
     target_type: "items" as const,
     allocation: "across" as const,
-    value: 10,
+    value: WELCOME_PROMO_PERCENT,
     currency_code: "try",
   },
 }
@@ -116,6 +121,10 @@ async function ensurePromotions(
   query: any,
   logger: any
 ) {
+  if (!WELCOME_PROMO_CODE || !(WELCOME_PROMO_PERCENT > 0)) {
+    logger.info("WELCOME_PROMO_CODE boş — hoş geldin kuponu oluşturulmadı")
+    return
+  }
   const { data: existing } = await query.graph({
     entity: "promotion",
     fields: ["id", "code", "status"],

@@ -241,7 +241,7 @@ export function mesafeliSatisSozlesmesi(d: ContractOrderData | null): ContractSe
       blocks: [
         {
           type: "p",
-          text: "ALICI’nın isteği veya açıkça kişisel ihtiyaçları doğrultusunda hazırlanan, iç giyim alt parçaları, makyaj malzemeleri, tek kullanımlık ürünler gibi ürünler cayma hakkı kapsamı dışında kalmaktadır.",
+          text: "Çay ve diğer gıda ürünleri, tesliminden sonra ambalaj, bant, mühür, paket gibi koruyucu unsurları açılmış ise iadesi sağlık ve hijyen açısından uygun olmadığından (Mesafeli Sözleşmeler Yönetmeliği md. 15/1-ç) cayma hakkı kapsamı dışındadır. Çabuk bozulabilen veya son kullanma tarihi geçebilecek ürünler (md. 15/1-c) ile ALICI’nın isteği veya açıkça kişisel ihtiyaçları doğrultusunda hazırlanan ürünler (ör. kişiye özel hediye paketi) de cayma hakkı kapsamı dışında kalmaktadır. Ambalajı açılmamış ürünlerde cayma hakkı saklıdır; ayıplı ürünlerde bu kısıt uygulanmaz.",
         },
       ],
     },
