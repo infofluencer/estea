@@ -1,5 +1,5 @@
 # Dokploy: Build Path: /, Docker File: Dockerfile.landing, container port 3020.
-# Lokal: docker build -f Dockerfile.landing --build-arg NEXT_PUBLIC_SHOP_URL=http://localhost:3015 .
+# Lokal: docker build -f Dockerfile.landing --build-arg NEXT_PUBLIC_SHOP_URL=http://localhost:3025 .
 # Nixpacks alternatifi: nixpacks.landing.toml (artık tercih edilmiyor; Dockerfile üçlüyle aynı akış).
 
 # syntax=docker/dockerfile:1

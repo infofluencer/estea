@@ -99,7 +99,7 @@ export const EMAIL_STYLES = {
 }
 
 /** Logo (şeffaf PNG) — storefront public/email/escay-logo.png. STOREFRONT_URL her zaman set edilmeli. */
-const EMAIL_LOGO_URL = `${(process.env.STOREFRONT_URL || "http://localhost:3015").replace(/\/$/, "")}/email/escay-logo.png`
+const EMAIL_LOGO_URL = `${(process.env.STOREFRONT_URL || "http://localhost:3025").replace(/\/$/, "")}/email/escay-logo.png`
 
 export function emailLayout(content: string): string {
   const { brandColor, borderColor, bgColor } = EMAIL_STYLES

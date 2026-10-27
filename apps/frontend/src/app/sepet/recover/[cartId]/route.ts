@@ -28,7 +28,7 @@ export async function GET(
   { params }: { params: Promise<{ cartId: string }> }
 ) {
   const { cartId } = await params
-  // Göreli Location: standalone'da req.nextUrl host'u 0.0.0.0:3015 (container) olur
+  // Göreli Location: standalone'da req.nextUrl host'u 0.0.0.0:3025 (container) olur
   const to = (pathname: string) =>
     new NextResponse(null, { status: 307, headers: { Location: pathname } })
 

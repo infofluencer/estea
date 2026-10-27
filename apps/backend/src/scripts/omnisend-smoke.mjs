@@ -13,8 +13,8 @@
  * Abandoned Checkout otomasyonu ~1 saat sonra bu adrese gerçek mail atar (beklenen).
  *
  * Ayarlar (apps/backend/.env.cutover veya ortam):
- *   OMNISEND_SMOKE_BACKEND_URL=http://187.127.86.214:9001   (staging backend)
- *   OMNISEND_SMOKE_STOREFRONT_URL=http://187.127.86.214:3016
+ *   OMNISEND_SMOKE_BACKEND_URL=http://187.77.69.91:9001   (staging backend)
+ *   OMNISEND_SMOKE_STOREFRONT_URL=http://187.77.69.91:3016
  *   OMNISEND_SMOKE_PUBLISHABLE_KEY=pk_...                    (staging)
  *   OMNISEND_TEST_EMAIL=senin@adresin.com
  *   OMNISEND_API_KEY=...                                     (doğrulama için; yoksa 3. adım atlanır)
@@ -38,7 +38,7 @@ if (existsSync(envFile)) {
 
 // Staging backend container'ı içinde çalışınca: localhost:9000 + container env'i
 const BACKEND = (process.env.OMNISEND_SMOKE_BACKEND_URL || "http://localhost:9000").replace(/\/$/, "")
-const STOREFRONT = (process.env.OMNISEND_SMOKE_STOREFRONT_URL || "http://187.127.86.214:3016").replace(/\/$/, "")
+const STOREFRONT = (process.env.OMNISEND_SMOKE_STOREFRONT_URL || "http://187.77.69.91:3016").replace(/\/$/, "")
 const PK = process.env.OMNISEND_SMOKE_PUBLISHABLE_KEY || process.argv[2] || ""
 const EMAIL = (
   process.env.OMNISEND_TEST_EMAIL ||
@@ -61,8 +61,8 @@ if (missing.length) {
   console.error(`✗ Eksik ayar: ${missing.join(", ")} (apps/backend/.env.cutover)`)
   process.exit(1)
 }
-// Prod: domain veya prod storefront portu (187.127.86.214:3015)
-if (/esteacay\.com/.test(STOREFRONT + BACKEND) || /187\.127\.86\.214:3015\b/.test(STOREFRONT)) {
+// Prod: domain veya prod storefront portu (187.77.69.91:3025)
+if (/esteacay\.com/.test(STOREFRONT + BACKEND) || /187\.127\.86\.214:3025\b/.test(STOREFRONT)) {
   console.error("✗ REFUSE: bu test staging içindir, prod adresleri kullanılamaz.")
   process.exit(1)
 }

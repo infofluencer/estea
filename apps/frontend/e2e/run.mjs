@@ -11,7 +11,7 @@ const url = process.env.STAGING_FRONTEND_URL?.trim()
 if (!url) {
   console.error(
     "STAGING_FRONTEND_URL gerekli (örn. http://STAGING_IP:3016).\n" +
-      "Prod (:3015 / canlı domain) yasak.\n\n" +
+      "Prod (:3025 / canlı domain) yasak.\n\n" +
       "Örnek:\n" +
       "  STAGING_FRONTEND_URL=http://HOST:3016 \\\n" +
       "  STAGING_BACKEND_URL=http://HOST:9000 \\\n" +

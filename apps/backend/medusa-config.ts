@@ -44,7 +44,7 @@ module.exports = defineConfig({
   },
   admin: {
     disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
-    storefrontUrl: process.env.STOREFRONT_URL || "http://localhost:3015",
+    storefrontUrl: process.env.STOREFRONT_URL || "http://localhost:3025",
   },
   modules: [
     {
@@ -90,7 +90,7 @@ module.exports = defineConfig({
               merchantKey: process.env.PAYTR_MERCHANT_KEY,
               merchantSalt: process.env.PAYTR_MERCHANT_SALT,
               testMode: process.env.PAYTR_TEST_MODE ?? "1",
-              storefrontUrl: process.env.STOREFRONT_URL ?? "http://localhost:3015",
+              storefrontUrl: process.env.STOREFRONT_URL ?? "http://localhost:3025",
             },
           },
           {

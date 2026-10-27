@@ -8,8 +8,8 @@ const PROD_HOSTS = new Set([
   "api.esteacay.com",
 ])
 
-/** Prod storefront port (user convention: prod 3015, staging 3016). */
-const PROD_STOREFRONT_PORT = "3015"
+/** Prod storefront port (user convention: prod 3025, staging 3016). */
+const PROD_STOREFRONT_PORT = "3025"
 
 export type StagingEnv = {
   backendUrl: string

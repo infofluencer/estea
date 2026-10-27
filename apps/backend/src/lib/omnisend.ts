@@ -92,7 +92,7 @@ async function post(
 }
 
 export function storefrontBaseUrl(): string {
-  return (process.env.STOREFRONT_URL || "http://localhost:3015").replace(
+  return (process.env.STOREFRONT_URL || "http://localhost:3025").replace(
     /\/$/,
     ""
   )

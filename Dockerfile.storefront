@@ -59,7 +59,7 @@ FROM node:20-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3015
+ENV PORT=3025
 ENV HOSTNAME=0.0.0.0
 ARG GIT_COMMIT=unknown
 ARG CACHE_BUST=unknown
@@ -76,6 +76,6 @@ COPY --from=builder /app/.build-meta ./.build-meta
 COPY apps/frontend/docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 3015
+EXPOSE 3025
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["node", "server.js"]

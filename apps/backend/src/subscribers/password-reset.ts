@@ -23,7 +23,7 @@ export default async function passwordResetHandler({
     }
 
     const storefrontUrl =
-      process.env.STOREFRONT_URL || "http://localhost:3015"
+      process.env.STOREFRONT_URL || "http://localhost:3025"
     const configModule = container.resolve("configModule")
 
     let urlPrefix: string

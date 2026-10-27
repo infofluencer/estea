@@ -117,7 +117,7 @@ async function main() {
   const noInstallment = "0"
   const maxInstallment = "0"
   const currency = "TL"
-  const storefront = (process.env.STOREFRONT_URL || "http://localhost:3015").replace(/\/$/, "")
+  const storefront = (process.env.STOREFRONT_URL || "http://localhost:3025").replace(/\/$/, "")
 
   const paytrToken = computeTokenHash({
     merchantId,

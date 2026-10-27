@@ -53,7 +53,7 @@ export async function sendOrderConfirmationEmail(
     String(order.custom_display_id ?? order.display_id ?? order.id)
 
   const storefrontUrl = (
-    process.env.STOREFRONT_URL || "http://localhost:3015"
+    process.env.STOREFRONT_URL || "http://localhost:3025"
   ).replace(/\/$/, "")
   const trackingUrl = `${storefrontUrl}/order-tracking/${encodeURIComponent(order.id)}?email=${encodeURIComponent(email)}`
   const trackingFormUrl = `${storefrontUrl}/order-tracking`

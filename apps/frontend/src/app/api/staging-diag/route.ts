@@ -20,7 +20,7 @@ export async function GET() {
     backendHost = u.host
     const host = u.hostname.toLowerCase()
     backendLooksProd =
-      isProductionHostname(host) || host === `api.${SITE_HOST}` || u.port === "3015"
+      isProductionHostname(host) || host === `api.${SITE_HOST}` || u.port === "3025"
   } catch {
     backendHost = ""
   }

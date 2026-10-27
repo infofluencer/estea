@@ -168,12 +168,12 @@ describe("buildParasutInternetSale (canlı şablon)", () => {
       sale: process.env.PARASUT_INTERNET_SALE_URL,
       storefront: process.env.STOREFRONT_URL,
     }
-    process.env.STOREFRONT_URL = "http://187.127.86.214:3015"
+    process.env.STOREFRONT_URL = "http://187.77.69.91:3025"
     process.env.PARASUT_INTERNET_SALE_URL = "https://market.esteacay.com/"
     try {
       expect(buildParasutInternetSale("2026-10-06").url).toBe("https://market.esteacay.com")
       delete process.env.PARASUT_INTERNET_SALE_URL
-      expect(buildParasutInternetSale("2026-10-06").url).toBe("http://187.127.86.214:3015")
+      expect(buildParasutInternetSale("2026-10-06").url).toBe("http://187.77.69.91:3025")
     } finally {
       if (prev.sale === undefined) delete process.env.PARASUT_INTERNET_SALE_URL
       else process.env.PARASUT_INTERNET_SALE_URL = prev.sale

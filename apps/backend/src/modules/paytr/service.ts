@@ -128,7 +128,7 @@ class PaytrProviderService extends AbstractPaymentProvider<PaytrOptions> {
     return this.options_.testMode ?? "1"
   }
   private get storefrontUrl(): string {
-    return (this.options_.storefrontUrl || "http://localhost:3015").replace(/\/$/, "")
+    return (this.options_.storefrontUrl || "http://localhost:3025").replace(/\/$/, "")
   }
 
   /** PayTR get-token debug_on — prod'da 0; test_mode / staging öneki / PAYTR_DEBUG_ON=1 iken 1. */

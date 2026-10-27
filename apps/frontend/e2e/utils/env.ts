@@ -13,7 +13,7 @@ export function stagingFrontendUrl(): string {
     ""
   if (!raw) {
     throw new Error(
-      "STAGING_FRONTEND_URL gerekli (örn. http://STAGING_IP:3016). Prod (:3015 / canlı domain) yasak."
+      "STAGING_FRONTEND_URL gerekli (örn. http://STAGING_IP:3016). Prod (:3025 / canlı domain) yasak."
     )
   }
   return assertStagingFrontendUrl(raw)
@@ -33,9 +33,9 @@ export function assertStagingFrontendUrl(raw?: string): string {
     throw new Error(`REFUSE: prod host ${host}`)
   }
   const port = parsed.port || (parsed.protocol === "https:" ? "443" : "80")
-  if (port === "3015") {
+  if (port === "3025") {
     throw new Error(
-      "REFUSE: port 3015 = prod storefront. Staging için 3016 kullanın."
+      "REFUSE: port 3025 = prod storefront. Staging için 3016 kullanın."
     )
   }
   return url.replace(/\/$/, "")
@@ -48,8 +48,8 @@ export function stagingBackendUrl(): string | null {
   if (PROD_HOSTS.has(parsed.hostname.toLowerCase())) {
     throw new Error("REFUSE: STAGING_BACKEND_URL prod host")
   }
-  if ((parsed.port || "") === "3015") {
-    throw new Error("REFUSE: STAGING_BACKEND_URL port 3015")
+  if ((parsed.port || "") === "3025") {
+    throw new Error("REFUSE: STAGING_BACKEND_URL port 3025")
   }
   return raw.replace(/\/$/, "")
 }

@@ -30,7 +30,7 @@ export default async function testOrderEmail({ container, args }: ExecArgs) {
 
   const displayId = String(order.custom_display_id ?? order.display_id ?? order.id)
   const storefrontUrl = (
-    process.env.STOREFRONT_URL || "http://localhost:3015"
+    process.env.STOREFRONT_URL || "http://localhost:3025"
   ).replace(/\/$/, "")
   const content = buildOrderConfirmationEmail({
     displayId,

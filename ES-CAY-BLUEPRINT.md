@@ -50,7 +50,7 @@ Tablolardaki "Es Çay" sütunu: **Aynen** = değiştirmeden kopyala · **Yeni de
  ┌─────────▼─────────┐  ┌─────▼──────────────────────────┐
  │ storefront        │  │ backend (Medusa v2.18)         │
  │ Next.js 15 stand- │  │ + yerleşik Admin  /app         │
- │ alone, port 3015  │──│ port 9000                      │
+ │ alone, port 3025  │──│ port 9000                      │
  │ (SSR → iç ağ)     │  │ entrypoint: db:migrate → start │
  └───────────────────┘  └──┬───────────┬─────────────────┘
                            │           │
@@ -66,7 +66,7 @@ Tablolardaki "Es Çay" sütunu: **Aynen** = değiştirmeden kopyala · **Yeni de
 | Katman | Teknoloji | Not |
 |---|---|---|
 | Backend | Medusa v2.18 (`@medusajs/medusa` 2.18.0), Node 20 | Tek container; `MEDUSA_WORKER_MODE=shared`. Admin ayrı container değil, `api.<domain>/app` |
-| Storefront | Next.js 15.5 App Router, React 19, Tailwind v4, `output: "standalone"` | Port 3015. Tarayıcı backend'i **doğrudan çağırmaz**; tüm Medusa çağrıları Server Component / Server Action'da (BFF modeli) |
+| Storefront | Next.js 15.5 App Router, React 19, Tailwind v4, `output: "standalone"` | Port 3025. Tarayıcı backend'i **doğrudan çağırmaz**; tüm Medusa çağrıları Server Component / Server Action'da (BFF modeli) |
 | Veri | Postgres 16 (Dokploy'da 17 image'ı kullanıldı), Redis 7 | Dokploy iç servis adlarıyla bağlanılır (`postgres:5432`, `redis:6379`), IP hardcode yok |
 | Hosting | Hostinger VPS, Dokploy (Docker Swarm + Traefik) | Staging ve prod aynı VPS'te ayrı Dokploy projeleri |
 | Dosya | AWS S3 (eu-north-1), Medusa file-s3 provider, `files/` prefix public, diğer prefix'ler private | Yerel disk Swarm'da kullanılmaz |
@@ -329,7 +329,7 @@ Kurulum: env → redeploy → `npm run enable:bank-transfer:prod` (provider'ı T
 
 Tasarım notu: kart siparişinde `order.placed` ödeme öncesi tetiklendiği için onay maili `payment.captured`'a bağlı; ödenmemiş/başarısız siparişe "sipariş alındı" gitmez.
 
-`STOREFRONT_URL` fallback'i dosyadan dosyaya farklı (8000 vs 3015) → **her zaman açıkça set et.**
+`STOREFRONT_URL` fallback'i dosyadan dosyaya farklı (8000 vs 3025) → **her zaman açıkça set et.**
 
 ### 4.5 Pazarlama: Omnisend + Meta CAPI — aynen kopyalanır (hesaplar yeni)
 
@@ -670,10 +670,10 @@ Metadata sözleşmesi (store API'den yazılabilen): cart `payment_method`, `mark
 | Build Path | `/` | `/` |
 | Docker File | `Dockerfile.backend` | `Dockerfile.storefront` |
 | Docker Context | `.` | `.` |
-| Container port | 9000 | 3015 |
+| Container port | 9000 | 3025 |
 | Host port publish | **YAPMA** (Domain/Ingress kullan) | YAPMA |
 | Build args (zorunlu) | `GIT_COMMIT`, `CACHE_BUST`, `BUILD_TIMESTAMP` | aynı + `MEDUSA_BACKEND_URL`, tüm `NEXT_PUBLIC_*` |
-| Domain | `api.<domain>` → 9000 | `<domain>`, `www.<domain>` → 3015 |
+| Domain | `api.<domain>` → 9000 | `<domain>`, `www.<domain>` → 3025 |
 | Deploy tetikleyici | `main` push → otomatik prod deploy (~10 dk) | aynı |
 
 **Neden host port publish yok:** Swarm yeni task'ı kaldırırken eski container host portunu tutmaya devam eder; Dokploy "Done" der ama trafik eski image'a gider. Çözüm Traefik Ingress + `update_config.order: stop-first` (bkz. `docker-compose.dokploy-backend.yml`).
@@ -688,7 +688,7 @@ Backend (multi-stage):
 3. `builder`: `COPY mareen-backend/ .`, `COPY shared ./shared`, `.build-meta` yaz, `npm run build`
 4. `runner`: `/server` = `.medusa/server`; `node_modules` prod-deps'ten; `src/scripts`, `data`, `medusa-config.ts`, `tsconfig.json` kopyalanır; `HEALTHCHECK` `/health`; `STOPSIGNAL SIGTERM`; Traefik label'ları
 
-Storefront: `deps` → `builder` (`next build`, `.build-meta`) → `runner` (`.next/standalone` + `.next/static` + `public`, `PORT=3015`, `HOSTNAME=0.0.0.0`).
+Storefront: `deps` → `builder` (`next build`, `.build-meta`) → `runner` (`.next/standalone` + `.next/static` + `public`, `PORT=3025`, `HOSTNAME=0.0.0.0`).
 
 Entrypoint'ler `SOURCE_REVISION`, `GIT_COMMIT` ve kritik env'lerin set olup olmadığını loglar (değerleri değil).
 
@@ -696,7 +696,7 @@ Entrypoint'ler `SOURCE_REVISION`, `GIT_COMMIT` ve kritik env'lerin set olup olma
 
 | Ortam | Storefront | Backend | DB |
 |---|---|---|---|
-| Lokal | `localhost:3015` | `localhost:9000` (+ `/app`) | docker-compose.dev: Postgres 5433, Redis 6380, Mailpit 1025/8025 |
+| Lokal | `localhost:3025` | `localhost:9000` (+ `/app`) | docker-compose.dev: Postgres 5433, Redis 6380, Mailpit 1025/8025 |
 | Staging | `IP:3016` | `IP:9001` | Ayrı Dokploy projesi, ayrı Postgres/Redis |
 | Prod | `https://<domain>` | `https://api.<domain>` | Ayrı Dokploy projesi |
 
@@ -708,7 +708,7 @@ Kural: staging ve prod aynı VPS'te; **test komutları prod host/portunu reddede
 - CORS üçlüsü prod domain'leriyle; localhost bırakma.
 - `COOKIE_SECURE=false` yalnızca HTTP/IP döneminde; HTTPS'e geçince sil.
 - Storefront `next.config.ts` başlıkları: HSTS, nosniff, Referrer-Policy, Permissions-Policy, `frame-ancestors 'self' https://<domain> https://www.<domain>` (PayTR iframe dönüşü için), `poweredByHeader: false`. Tam CSP yok (takip/ödeme script'leri test edilmeden açılmamalı).
-- Dokploy paneli `:3000` ve doğrudan `:9000/:3015` host portları internete açık **olmamalı** (firewall / yalnızca Traefik).
+- Dokploy paneli `:3000` ve doğrudan `:9000/:3025` host portları internete açık **olmamalı** (firewall / yalnızca Traefik).
 - Postgres/Redis dışarı kapalı.
 - Admin API yetkisiz → 401; `/store/*` publishable key'siz → 400; webhook'lar imza/token doğrular.
 - Next.js'i güncel tut (Mareen'de 15.5.23 kritik RCE → 15.5.27).
@@ -887,7 +887,7 @@ Diğer: `enable-bank-transfer` (`pp_havale_havale` region'a), `npx medusa user -
 | Returns suite | `npm run test:returns` (`PAYTR_MOCK=1`) | offline: PayTR iade hash/TL string/idempotency, tutar hesabı, mail builder'ları; canlı: enumeration, rate-limit, lifecycle; `MANUAL-CHECKLIST.md` |
 | Smoke (medusa exec) | `test:smoke:full`, `test:contracts`, `test:bank-transfer`, `test:paytr:callback`, `test:emails`, `test:parasut:draft` | uçtan uca mock akışlar |
 | Staging smoke (HTTP, tsx) | `test:staging:backend` (health, catalog, config/CORS, auth, cart, checkout, orders, order-tracking) | prod URL'yi reddeder |
-| E2E (Playwright) | `npm run test:staging:e2e` (`STAGING_FRONTEND_URL` şart; prod host/3015 reddedilir; chromium + iPhone 13 projesi) | homepage, pdp-cart, account, auth-flows, checkout (3 spec), order-tracking, responsive, config, guest (journey/register/return/tracking/member-comparison); page object'ler `e2e/fixtures/page-objects/` |
+| E2E (Playwright) | `npm run test:staging:e2e` (`STAGING_FRONTEND_URL` şart; prod host/3025 reddedilir; chromium + iPhone 13 projesi) | homepage, pdp-cart, account, auth-flows, checkout (3 spec), order-tracking, responsive, config, guest (journey/register/return/tracking/member-comparison); page object'ler `e2e/fixtures/page-objects/` |
 
 Lokal mail: Mailpit (`SMTP_HOST=localhost:1025`, UI 8025). PayTR lokal: `PAYTR_MOCK=1` ya da test mode + `PAYTR_USER_IP`; callback simülasyonu `test:paytr:callback`.
 

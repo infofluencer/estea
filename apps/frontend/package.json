@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3015",
+    "dev": "next dev -p 3025",
     "build": "next build",
-    "start": "next start -p 3015",
+    "start": "next start -p 3025",
     "lint": "eslint",
     "test:e2e": "node e2e/run.mjs",
     "test:staging:e2e": "node e2e/run.mjs",

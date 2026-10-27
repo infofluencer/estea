@@ -12,7 +12,7 @@ Aşağıda `<backend>`, `<frontend>`, `<landing>` = üretilen hostname (ör. `es
 | Servis | Docker File | Port | Build args (her deploy) |
 |---|---|---|---|
 | backend | `Dockerfile.backend` | 9000 | `GIT_COMMIT`, `CACHE_BUST`, `BUILD_TIMESTAMP` |
-| frontend | `Dockerfile.storefront` | 3015 | aynı + tüm `NEXT_PUBLIC_*` + `MEDUSA_BACKEND_URL` |
+| frontend | `Dockerfile.storefront` | 3025 | aynı + tüm `NEXT_PUBLIC_*` + `MEDUSA_BACKEND_URL` |
 | landing | `Dockerfile.landing` | 3020 | aynı + `NEXT_PUBLIC_SHOP_URL` |
 | postgres | Database → PostgreSQL 17 | iç | — |
 | redis | Database → Redis 7 | iç | — |

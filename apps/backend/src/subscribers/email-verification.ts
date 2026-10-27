@@ -36,7 +36,7 @@ export default async function emailVerificationHandler({
     }
 
     const storefrontUrl =
-      process.env.STOREFRONT_URL || "http://localhost:3015"
+      process.env.STOREFRONT_URL || "http://localhost:3025"
     const configModule = container.resolve("configModule")
     const urlPrefix =
       configModule.admin?.storefrontUrl || storefrontUrl

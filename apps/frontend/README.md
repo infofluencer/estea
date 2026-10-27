@@ -5,7 +5,7 @@ Es Çay mağazası — Next.js 15 App Router storefront (Medusa v2 BFF). Mimari 
 ```bash
 cp .env.template .env.local   # değerleri doldur
 npm install
-npm run dev                   # http://localhost:3015
+npm run dev                   # http://localhost:3025
 npm run lint && npx tsc --noEmit
 npm run build                 # standalone çıktı (Dockerfile.storefront kökte)
 ```

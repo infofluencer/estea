@@ -6,7 +6,7 @@ Teknik kılavuz: [ES-CAY-BLUEPRINT.md](ES-CAY-BLUEPRINT.md) · kararlar: [docs/E
 ```
 apps/
   landing/     Tanıtım sitesi (Next 16, port 3020, output: standalone) — npm workspace
-  frontend/    Mağaza storefront (Next 15, port 3015) — bağımsız npm projesi, workspace DIŞI
+  frontend/    Mağaza storefront (Next 15, port 3025) — bağımsız npm projesi, workspace DIŞI
   backend/     Medusa v2.18 backend + Admin (port 9000) — bağımsız npm projesi (--legacy-peer-deps), workspace DIŞI
 packages/
   ui/          Landing teması (Tailwind token'ları) ve fontlar — workspace
@@ -34,7 +34,7 @@ frontend `experimental.externalDir` ile `../../shared`. Yeni shared dosyası →
 ```bash
 npm install                 # yalnız landing + packages/ui (workspace)
 npm run dev:landing         # landing (3020)
-npm run dev:frontend        # mağaza (3015) — önce apps/frontend içinde npm install
+npm run dev:frontend        # mağaza (3025) — önce apps/frontend içinde npm install
 npm run dev:backend         # Medusa (9000) — önce apps/backend içinde npm install --legacy-peer-deps
 npm run dev                 # üçü birlikte
 npm run typecheck && npm run lint

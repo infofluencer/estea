@@ -16,7 +16,7 @@ export default async function testEmails({ container }: ExecArgs) {
   const testTo = process.env.SMTP_TEST_TO || "test@example.com"
 
   const storefrontUrl = (
-    process.env.STOREFRONT_URL || "http://localhost:3015"
+    process.env.STOREFRONT_URL || "http://localhost:3025"
   ).replace(/\/$/, "")
   const orderEmail = buildOrderConfirmationEmail({
     displayId: "10042",
@@ -63,7 +63,7 @@ export default async function testEmails({ container }: ExecArgs) {
 
   const resetEmail = buildPasswordResetEmail({
     email: testTo,
-    resetUrl: `${process.env.STOREFRONT_URL || "http://localhost:3015"}/reset-password?token=sample-token&email=${encodeURIComponent(testTo)}`,
+    resetUrl: `${process.env.STOREFRONT_URL || "http://localhost:3025"}/reset-password?token=sample-token&email=${encodeURIComponent(testTo)}`,
   })
 
   await notificationService.createNotifications({

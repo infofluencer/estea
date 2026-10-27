@@ -13,7 +13,7 @@
  *   STAGING_VERIFIED_EMAIL / STAGING_VERIFIED_PASSWORD
  *   STAGING_REDIS_URL, STAGING_PRODUCT_HANDLE
  *
- * PROD URL'lerine (market.esteacay.com, :3015) istek ATILMAZ.
+ * PROD URL'lerine (market.esteacay.com, :3025) istek ATILMAZ.
  */
 
 import {
