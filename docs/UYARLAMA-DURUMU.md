@@ -3,7 +3,7 @@
 | Aşama | Durum | Not |
 |---|---|---|
 | 0 — Kararlar | Açık | `docs/ESCAY-KARARLAR.md` |
-| 1 — Klonla ve buda | **Yapıldı** | `shared/`, `escay-backend/`, `escay-storefront/`; WP, Trendyol, palimpsest, Geliver/DHL kaldırıldı; `@escay/shared`; cookie/olay/metadata adları `escay_*` |
+| 1 — Klonla ve buda | **Yapıldı** | `shared/`, `apps/backend/`, `apps/frontend/`; WP, Trendyol, palimpsest, Geliver/DHL kaldırıldı; `@escay/shared`; cookie/olay/metadata adları `escay_*` |
 | 2 — Marka ve içerik | Kısmen | Künye, logo, palet/font token'ları, mail şablonları, ana sayfa iskeleti, kategori yer tutucuları yapıldı. Yasal metinler, hakkımızda/SSS kopyası ve ürün içerikleri **taslak** |
 | 3 — Kargo katmanı | Sözleşme hazır, adaptör yok | `src/modules/carrier` (provider + registry + webhook + polling job); K1 verilince `adapters/<kod>.ts` |
 | 4 — Çaya özgü | Kısmen | Seed kategorileri/iade sebepleri, koli profili, etiket "Gramaj/Paket", storefront spec etiketleri; KDV env (K2) |

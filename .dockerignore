@@ -10,10 +10,11 @@
 **/.env.*
 !**/.env.template
 # backend shared/ kopyası build'de kökten COPY edilir
-escay-backend/shared
-escay-backend/static
-escay-backend/uploads
-escay-storefront/e2e/playwright-report
+apps/backend/shared
+apps/backend/static
+apps/backend/uploads
+apps/frontend/e2e/playwright-report
 docs
+assets
 *.pdf
 .DS_Store

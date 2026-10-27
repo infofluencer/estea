@@ -15,7 +15,7 @@
 # Full install for medusa build (cached unless lockfile changes)
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
-COPY escay-backend/package.json escay-backend/package-lock.json* ./
+COPY apps/backend/package.json escay-backend/package-lock.json* ./
 RUN --mount=type=cache,target=/root/.npm \
     npm ci --legacy-peer-deps
 
@@ -33,12 +33,12 @@ ARG GIT_COMMIT=unknown
 ARG CACHE_BUST=unknown
 ARG BUILD_TIMESTAMP=unknown
 RUN echo "cache_bust=${CACHE_BUST} commit=${GIT_COMMIT} built=${BUILD_TIMESTAMP}"
-COPY escay-backend/ .
+COPY apps/backend/ .
 COPY shared ./shared
 RUN printf 'commit=%s\ncache_bust=%s\nbuilt=%s\nrevision=%s@%s\n' \
     "$GIT_COMMIT" "$CACHE_BUST" "$BUILD_TIMESTAMP" "$GIT_COMMIT" "$BUILD_TIMESTAMP" \
     > .build-meta && \
-    echo "escay-backend build ${GIT_COMMIT}@${BUILD_TIMESTAMP} (cache_bust=${CACHE_BUST})"
+    echo "backend build ${GIT_COMMIT}@${BUILD_TIMESTAMP} (cache_bust=${CACHE_BUST})"
 RUN npm run build && node scripts/compile-exec-scripts.mjs
 
 FROM node:20-bookworm-slim AS runner
@@ -66,7 +66,7 @@ COPY --from=builder /app/medusa-config.ts ./medusa-config.ts
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/.build-meta ./.build-meta
 
-COPY escay-backend/docker/entrypoint.sh /entrypoint.sh
+COPY apps/backend/docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Hızlı replace: eski task SIGTERM ile insin, host/port tutmasın

@@ -1,4 +1,4 @@
-export const shopUrl = (process.env.NEXT_PUBLIC_SHOP_URL ?? 'http://localhost:3021').replace(/\/+$/, '')
+export const shopUrl = (process.env.NEXT_PUBLIC_SHOP_URL ?? 'http://localhost:3015').replace(/\/+$/, '')
 
 export const shopProductsUrl = `${shopUrl}/urun-kategori`
 

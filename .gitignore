@@ -17,17 +17,17 @@ next-env.d.ts
 .DS_Store
 *.sw?
 
-# Es Çay — Medusa backend / storefront (kök seviyesinde, workspace dışı)
-escay-backend/.medusa/
-escay-backend/dist/
-escay-backend/build/
-escay-backend/uploads/
-escay-backend/static/
-escay-backend/.cache/
-escay-backend/medusa-db.sql
-escay-backend/src/scripts/*.js
-escay-storefront/.next/
-escay-storefront/out/
+# Es Çay — Medusa backend / storefront (apps/ altında, npm workspace DIŞI)
+apps/backend/.medusa/
+apps/backend/dist/
+apps/backend/build/
+apps/backend/uploads/
+apps/backend/static/
+apps/backend/.cache/
+apps/backend/medusa-db.sql
+apps/backend/src/scripts/*.js
+apps/frontend/.next/
+apps/frontend/out/
 # shared/ yalnızca .ts tutar; derlenmiş kopyalar üretilmez (blueprint §2.1)
 shared/*.js
 .env
@@ -35,11 +35,11 @@ shared/*.js
 !.env.template
 !.env.example
 # backend shared/ kopyası build/prepare ile kökten üretilir (scripts/sync-shared.mjs)
-escay-backend/shared/
+apps/backend/shared/
 # ham hero videosu (public/hero_scrub.mp4 bundan üretilir, repoya girmez)
-/escay_web.mp4
+/assets/escay_web.mp4
 # ham fotoğraf klasörleri (işlenmiş kopyalar apps/landing/public/fabrika)
-/escay-site-fotograflari/
-/escay-site-fotograflari-2/
-/çayhero.png
-/çayhero.webp
+/assets/escay-site-fotograflari/
+/assets/escay-site-fotograflari-2/
+/assets/çayhero.png
+/assets/çayhero.webp

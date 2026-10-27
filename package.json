@@ -2,24 +2,23 @@
   "name": "estea",
   "private": true,
   "workspaces": [
-    "apps/*",
+    "apps/landing",
     "packages/*"
   ],
   "engines": {
     "node": ">=20.9"
   },
   "scripts": {
-    "dev": "concurrently -n landing,shop -c green,yellow \"npm:dev:landing\" \"npm:dev:shop\"",
+    "dev": "concurrently -n landing,frontend,backend -c green,yellow,blue \"npm:dev:landing\" \"npm:dev:frontend\" \"npm:dev:backend\"",
     "dev:landing": "npm run dev -w @estea/landing",
-    "dev:shop": "npm run dev -w @estea/shop",
-    "build": "npm run build --workspaces --if-present",
+    "dev:frontend": "npm run dev --prefix apps/frontend",
+    "dev:backend": "npm run dev --prefix apps/backend",
     "build:landing": "npm run build -w @estea/landing",
-    "build:shop": "npm run build -w @estea/shop",
+    "build:frontend": "npm run build --prefix apps/frontend",
+    "build:backend": "npm run build --prefix apps/backend",
     "start:landing": "npm run start -w @estea/landing",
-    "start:shop": "npm run start -w @estea/shop",
-    "start": "npm run start -w @estea/${APP:-landing}",
-    "typecheck": "npm run typecheck --workspaces --if-present",
-    "lint": "oxlint apps packages"
+    "typecheck": "npm run typecheck -w @estea/landing && (cd apps/frontend && npx tsc --noEmit) && (cd apps/backend && npx tsc --noEmit -p tsconfig.json)",
+    "lint": "oxlint apps/landing packages"
   },
   "devDependencies": {
     "concurrently": "^9.2.5",

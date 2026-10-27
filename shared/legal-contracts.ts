@@ -1,7 +1,7 @@
 /**
  * Ön bilgilendirme formu + mesafeli satış sözleşmesi metni — tek kaynak.
  *
- * ⚠ Es Çay: Metin Mareen'in (tekstil) hukukçu onaylı sözleşmesinden devralındı.
+ * ⚠ Es Çay: Metin tekstil e-ticareti için hazırlanmış hukukçu onaylı bir sözleşmeden devralındı.
  * Çay = gıda ürünü → cayma hakkı istisnaları (ambalajı açılmış ürün vb.) için
  * hukukçu incelemesi şart (bkz. docs/ESCAY-KARARLAR.md K5). Onay tarihini
  * CONTRACT_TEXT_VERSION'a yaz.

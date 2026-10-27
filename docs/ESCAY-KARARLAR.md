@@ -5,7 +5,7 @@ karar verilince ilgili dosyalar güncellenir. Son güncelleme: 2026-10-22.
 
 | # | Karar | Geçici değer (kodda) | Nerede değişir |
 |---|---|---|---|
-| K1 | Kargo firması ve API durumu | **Elle kargo** (`SHIPPING_CARRIER` boş → `manual_manual`; admin "Kargoya ver (takip no)" → mailler). Adaptör sözleşmesi hazır. | `escay-backend/src/modules/carrier/README.md`, `.env.template` (SHIPPING_*), `emails/company.ts` (`returnCarrierName`, `returnCustomerNumber`), koli profili `SHIPPING_PACKAGE_DEFAULT` |
+| K1 | Kargo firması ve API durumu | **Elle kargo** (`SHIPPING_CARRIER` boş → `manual_manual`; admin "Kargoya ver (takip no)" → mailler). Adaptör sözleşmesi hazır. | `apps/backend/src/modules/carrier/README.md`, `.env.template` (SHIPPING_*), `emails/company.ts` (`returnCarrierName`, `returnCustomerNumber`), koli profili `SHIPPING_PACKAGE_DEFAULT` |
 | K2 | Çay KDV oranı | `KDV_RATE=1` (%1, gıda listesi varsayımı — **mali müşavir teyidi şart**) | `.env.template` (KDV_RATE, PARASUT_DEFAULT_VAT_RATE), storefront `NEXT_PUBLIC_VAT_RATE`, seed region tax rate |
 | K3 | Havale/EFT açık mı, banka bilgileri | Kapalı (`BANK_TRANSFER_ENABLED=0`) | `.env.template` BANK_TRANSFER_* → `npm run enable:bank-transfer:prod` |
 | K4 | Sabit kargo ücreti / ücretsiz eşik | 149,90 TL sabit, eşik yok (`FREE_SHIPPING_THRESHOLD=0`) | `.env.template` SHIPPING_FLAT_PRICE / FREE_SHIPPING_THRESHOLD → `npm run seed` iki seçeneği kurallarla kurar |

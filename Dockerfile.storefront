@@ -4,13 +4,13 @@
 # syntax=docker/dockerfile:1
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
-COPY escay-storefront/package.json escay-storefront/package-lock.json* ./
+COPY apps/frontend/package.json escay-storefront/package-lock.json* ./
 RUN npm ci
 
 FROM node:20-bookworm-slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY escay-storefront/ .
+COPY apps/frontend/ .
 COPY shared ./shared
 ENV NEXT_TELEMETRY_DISABLED=1
 # Dokploy Build-time Arguments (her deploy'da güncelleyin):
@@ -52,7 +52,7 @@ ENV NEXT_PUBLIC_CLARITY_ID=$NEXT_PUBLIC_CLARITY_ID
 RUN printf 'commit=%s\ncache_bust=%s\nbuilt=%s\nrevision=%s@%s\n' \
     "$GIT_COMMIT" "$CACHE_BUST" "$BUILD_TIMESTAMP" "$GIT_COMMIT" "$BUILD_TIMESTAMP" \
     > .build-meta && \
-    echo "escay-storefront build ${GIT_COMMIT}@${BUILD_TIMESTAMP} (cache_bust=${CACHE_BUST})"
+    echo "frontend build ${GIT_COMMIT}@${BUILD_TIMESTAMP} (cache_bust=${CACHE_BUST})"
 RUN npm run build
 
 FROM node:20-bookworm-slim AS runner
@@ -73,7 +73,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/.build-meta ./.build-meta
-COPY escay-storefront/docker-entrypoint.sh /entrypoint.sh
+COPY apps/frontend/docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 3015
