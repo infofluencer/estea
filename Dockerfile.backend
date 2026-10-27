@@ -15,7 +15,7 @@
 # Full install for medusa build (cached unless lockfile changes)
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
-COPY apps/backend/package.json escay-backend/package-lock.json* ./
+COPY apps/backend/package.json apps/backend/package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm \
     npm ci --legacy-peer-deps
 

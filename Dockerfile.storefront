@@ -4,7 +4,7 @@
 # syntax=docker/dockerfile:1
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
-COPY apps/frontend/package.json escay-storefront/package-lock.json* ./
+COPY apps/frontend/package.json apps/frontend/package-lock.json ./
 RUN npm ci
 
 FROM node:20-bookworm-slim AS builder
