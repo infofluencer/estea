@@ -339,7 +339,9 @@ export default async function cleanupMedusaDefaults({ container }: ExecArgs) {
     )
     // Ignore soft-deleted Medusa demo products still linked
     const liveNonDemo = live.filter(
-      (p: any) => !DEFAULT_PRODUCT_IDS.includes(p.id)
+      (p: any) =>
+        !DEFAULT_PRODUCT_IDS.includes(p.id) &&
+        !demoProducts.some((d) => d.id === p.id)
     )
     if (liveNonDemo.length) {
       logger.warn(
