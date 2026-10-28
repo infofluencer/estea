@@ -133,7 +133,7 @@ export async function findOrderIdForPaymentSession(
   container: MedusaContainer,
   session: PaymentSessionLike
 ): Promise<string | null> {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY) as {
+  const query = container.resolve(ContainerRegistrationKeys.QUERY) as unknown as {
     graph: (args: Record<string, unknown>) => Promise<{ data: unknown }>
   }
 
@@ -174,7 +174,7 @@ export async function retrieveOrderForCancelGuard(
   container: MedusaContainer,
   orderId: string
 ): Promise<OrderCancelGuard | null> {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY) as {
+  const query = container.resolve(ContainerRegistrationKeys.QUERY) as unknown as {
     graph: (args: Record<string, unknown>) => Promise<{ data: unknown }>
   }
   const { data } = await query.graph({

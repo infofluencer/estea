@@ -35,7 +35,7 @@ export default async function cancelUnpaidPaytrOrdersJob(
     `[unpaid-paytr-cleanup] start — timeout=${timeoutMinutes}m cutoff=${cutoff.toISOString()}`
   )
 
-  const query = container.resolve(ContainerRegistrationKeys.QUERY) as {
+  const query = container.resolve(ContainerRegistrationKeys.QUERY) as unknown as {
     graph: (args: Record<string, unknown>) => Promise<{ data: unknown }>
   }
 

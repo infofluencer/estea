@@ -18,7 +18,7 @@
     "resolveJsonModule": true,
     "checkJs": false,
     "strictNullChecks": true,
-    "baseUrl": ".",
+    "types": ["node", "jest"],
     "paths": {
       "@escay/shared/*": ["./shared/*"]
     }
