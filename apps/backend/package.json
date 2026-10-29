@@ -27,6 +27,8 @@
     "ensure:publishable-key": "medusa exec ./src/scripts/ensure-publishable-key.ts",
     "ensure:publishable-key:prod": "medusa exec ./src/scripts/ensure-publishable-key.js",
     "cleanup:medusa-defaults": "medusa exec ./src/scripts/cleanup-medusa-defaults.ts",
+    "import:wc": "medusa exec ./src/scripts/import-wc-products.ts",
+    "import:wc:prod": "medusa exec ./src/scripts/import-wc-products.js",
     "auth:create-verified": "medusa exec ./src/scripts/create-verified-customer.ts",
     "auth:create-staging-remote": "npx tsx src/scripts/create-staging-customer-remote.ts",
     "seed:order-statuses": "medusa exec ./src/scripts/seed-order-status-demos.ts",

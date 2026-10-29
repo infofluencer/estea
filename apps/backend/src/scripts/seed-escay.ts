@@ -700,6 +700,7 @@ export default async function seedEscay({ container }: ExecArgs) {
     { name: "Bitki Çayı", handle: "bitki-cayi" },
     { name: "Harmanlar", handle: "harmanlar" },
     { name: "Hediye", handle: "hediye" },
+    { name: "Şeker", handle: "seker" },
   ]) {
     await ensureCategory(container, query, logger, c)
   }
