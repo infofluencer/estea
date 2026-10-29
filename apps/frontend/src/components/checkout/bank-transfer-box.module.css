@@ -1,13 +1,13 @@
-/* Havale / EFT — onay ve sipariş takip sayfası (editoryal).
-   Yazı: başlık/tutar --font-logo (sayfa başlığıyla aynı), veri --font-sans,
-   açıklama --font-garamond. Renk: bordo metin, altın etiket/çizgi, beyaz kart. */
+/* Havale / EFT kutusu — onay ve sipariş takip sayfası.
+   Mağaza dili: beyaz kart, kıl çizgi, Figtree rolleri; veriler tabular. */
 .card {
   display: grid;
   gap: 1.5rem;
   padding: clamp(1.25rem, 2.5vw, 1.85rem);
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  background: var(--surface);
-  color: var(--brand-deep);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  color: var(--color-ink);
 }
 
 .head {
@@ -16,25 +16,20 @@
   align-items: baseline;
   gap: 1rem;
   padding-bottom: 0.85rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--brand-gold) 60%, transparent);
+  border-bottom: 1px solid var(--color-line);
 }
 
 .title {
   margin: 0;
-  font-family: var(--font-logo);
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .bank {
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--brand-gold);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink-soft);
 }
 
 /* Masaüstünde Tutar + Açıklama yan yana. */
@@ -48,7 +43,7 @@
   grid-column: 1 / -1;
   min-width: 0;
   padding: 0.9rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--color-line);
 }
 
 .fieldHalf {
@@ -57,17 +52,14 @@
 
 .fieldHalf + .fieldHalf {
   padding-left: 1.15rem;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid var(--color-line);
 }
 
 .label {
   margin: 0 0 0.4rem;
-  font-family: var(--font-sans);
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--brand-gold);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-ink-soft);
 }
 
 .valueRow {
@@ -81,27 +73,22 @@
 
 .value {
   min-width: 0;
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 0.9375rem;
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 
 .iban {
   min-width: 0;
-  font-family: var(--font-sans);
   font-size: clamp(1rem, 2.3vw, 1.15rem);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
   overflow-wrap: anywhere;
 }
 
 .amount {
-  font-family: var(--font-logo);
   font-size: 1.6rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-weight: 700;
   line-height: 1.2;
   font-variant-numeric: lining-nums tabular-nums;
 }
@@ -118,22 +105,20 @@
   border: 0;
   border-radius: var(--radius-button);
   background: none;
-  color: inherit;
-  opacity: 0.65;
+  color: var(--color-ink-soft);
   cursor: pointer;
-  transition: opacity 0.15s ease, background-color 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .copy:hover,
 .copy:focus-visible {
-  opacity: 1;
-  background: var(--surface-muted);
+  color: var(--color-ink);
+  background: var(--color-surface);
 }
 
 .copied {
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
+  font-size: 0.8125rem;
+  color: var(--color-brand-dark);
 }
 
 /* Sonra ne olacak — 3 adım */
@@ -150,22 +135,22 @@
   display: grid;
   align-content: start;
   gap: 0.35rem;
-  font-family: var(--font-garamond);
-  font-size: 1rem;
-  line-height: 1.45;
-  color: color-mix(in srgb, var(--brand-deep) 85%, transparent);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-ink-soft);
 }
 
 .stepNo {
-  font-family: var(--font-sans);
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: var(--brand-gold);
-}
-
-.stepNo::before {
-  content: "0";
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-brand);
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 640px) {

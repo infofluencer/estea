@@ -2,11 +2,20 @@ import { SiteHeaderBar } from "@/components/SiteHeaderBar"
 import { getLoggedInCustomer } from "@/lib/auth/customer"
 import { getCart } from "@/lib/cart"
 import { countCartItems } from "@/lib/cart-events"
+import { getStoreCategories } from "@/lib/store-categories"
 
 export async function SiteHeader() {
-  const cart = await getCart()
-  const cartCount = countCartItems(cart)
-  const customer = await getLoggedInCustomer()
+  const [cart, customer, categories] = await Promise.all([
+    getCart(),
+    getLoggedInCustomer(),
+    getStoreCategories(),
+  ])
 
-  return <SiteHeaderBar cartCount={cartCount} isLoggedIn={Boolean(customer)} />
+  return (
+    <SiteHeaderBar
+      cartCount={countCartItems(cart)}
+      isLoggedIn={Boolean(customer)}
+      categories={categories.map(({ handle, name }) => ({ handle, name }))}
+    />
+  )
 }

@@ -104,6 +104,7 @@ NEXT_PUBLIC_MEDUSA_REGION_ID=reg_…
 # Geçici adres: SITE_URL ≠ SITE_HOST olduğu için site noindex kalır (istenen).
 SITE_URL=http://<frontend>
 NEXT_PUBLIC_SITE_HOST=market.esteacay.com
+NEXT_PUBLIC_LANDING_URL=https://esteacay.com
 COOKIE_SECURE=false
 NEXT_PUBLIC_VAT_RATE=1
 NEXT_PUBLIC_S3_FILE_URL=

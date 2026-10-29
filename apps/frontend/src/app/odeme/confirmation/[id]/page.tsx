@@ -78,7 +78,6 @@ function ConfirmationActions({ trackHref }: { trackHref: string }) {
   )
 }
 
-
 export default async function CheckoutConfirmationPage({
   params,
 }: {
@@ -93,34 +92,19 @@ export default async function CheckoutConfirmationPage({
     const trackHref =
       guestEmail && id ? trackingHref(id, guestEmail) : "/order-tracking"
     return (
-      <div className="page-shell" style={{ paddingBottom: "3rem" }}>
-        <FinalizePaidCheckoutOnMount />
-        <CheckoutProgress current="confirmation" />
-        <h1
-          style={{
-            fontFamily: "var(--font-logo)",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: "var(--brand-deep)",
-            margin: "0 0 0.75rem",
-          }}
-        >
-          Siparişiniz alındı
-        </h1>
-        <p
-          style={{
-            margin: "0 0 1.5rem",
-            fontFamily: "var(--font-garamond)",
-            fontSize: "1.05rem",
-            lineHeight: 1.55,
-            opacity: 0.75,
-            maxWidth: "32rem",
-          }}
-        >
-          Siparişiniz alındı. Detaylar yüklenemedi — sipariş numarası ve e-posta
-          ile takip edebilirsiniz.
-        </p>
-        <ConfirmationActions trackHref={trackHref} />
+      <div className="checkout-page-wrap">
+        <div className="page-shell checkout-page">
+          <FinalizePaidCheckoutOnMount />
+          <CheckoutProgress current="confirmation" />
+          <div className="checkout-empty checkout-empty--center">
+            <h1 className="checkout-empty__title">Siparişiniz alındı</h1>
+            <p className="checkout-empty__text">
+              Detaylar yüklenemedi — sipariş numarası ve e-posta ile takip
+              edebilirsiniz.
+            </p>
+            <ConfirmationActions trackHref={trackHref} />
+          </div>
+        </div>
       </div>
     )
   }
@@ -131,22 +115,26 @@ export default async function CheckoutConfirmationPage({
     : "/order-tracking"
 
   return (
-    <div className="page-shell" style={{ paddingBottom: "3.5rem" }}>
-      <FinalizePaidCheckoutOnMount />
-      <CheckoutProgress current="confirmation" />
-      <TrackPurchase
-        order={{
-          id: order.id,
-          total: Number(order.total ?? 0),
-          items: (order.items || []).map((i) =>
-            analyticsItemFromLine(i as Parameters<typeof analyticsItemFromLine>[0])
-          ),
-        }}
-      />
-      <CheckoutConfirmationView
-        order={order}
-        actions={<ConfirmationActions trackHref={trackHref} />}
-      />
+    <div className="checkout-page-wrap">
+      <div className="page-shell checkout-page">
+        <FinalizePaidCheckoutOnMount />
+        <CheckoutProgress current="confirmation" />
+        <TrackPurchase
+          order={{
+            id: order.id,
+            total: Number(order.total ?? 0),
+            items: (order.items || []).map((i) =>
+              analyticsItemFromLine(
+                i as Parameters<typeof analyticsItemFromLine>[0]
+              )
+            ),
+          }}
+        />
+        <CheckoutConfirmationView
+          order={order}
+          actions={<ConfirmationActions trackHref={trackHref} />}
+        />
+      </div>
     </div>
   )
 }

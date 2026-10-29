@@ -222,7 +222,18 @@ export function LoginPanel({
             aria-label="Kapat"
             onClick={onClose}
           >
-            ×
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
           </button>
         </div>
 
@@ -281,9 +292,18 @@ export function LoginPanel({
               </div>
 
               <div className={styles.field}>
-                <label className={styles.label} htmlFor="login-password">
-                  Şifre
-                </label>
+                <div className={styles.labelRow}>
+                  <label className={styles.label} htmlFor="login-password">
+                    Şifre
+                  </label>
+                  <Link
+                    href="/forgot-password"
+                    className={styles.forgot}
+                    onClick={onClose}
+                  >
+                    Şifreni mi unuttun?
+                  </Link>
+                </div>
                 <input
                   id="login-password"
                   type="password"
@@ -306,22 +326,16 @@ export function LoginPanel({
                 {pending ? "Giriş yapılıyor…" : "Giriş Yap"}
               </button>
 
-              <div className={styles.footerLinks}>
-                <Link
-                  href="/forgot-password"
-                  className={styles.forgot}
-                  onClick={onClose}
-                >
-                  Şifreni mi unuttun?
-                </Link>
+              <p className={styles.switchRow}>
+                Hesabın yok mu?{" "}
                 <button
                   type="button"
                   className={styles.modeSwitch}
                   onClick={() => switchMode("register")}
                 >
-                  Hesabın yok mu? Kayıt Ol
+                  Kayıt Ol
                 </button>
-              </div>
+              </p>
             </form>
           ) : null}
 
@@ -447,13 +461,16 @@ export function LoginPanel({
                 {pending ? "Kayıt oluşturuluyor…" : "Kayıt Ol"}
               </button>
 
-              <button
-                type="button"
-                className={styles.modeSwitch}
-                onClick={() => switchMode("login")}
-              >
-                Zaten hesabın var mı? Giriş Yap
-              </button>
+              <p className={styles.switchRow}>
+                Zaten hesabın var mı?{" "}
+                <button
+                  type="button"
+                  className={styles.modeSwitch}
+                  onClick={() => switchMode("login")}
+                >
+                  Giriş Yap
+                </button>
+              </p>
             </form>
           ) : null}
         </div>

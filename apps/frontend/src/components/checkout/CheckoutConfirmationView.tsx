@@ -87,16 +87,17 @@ export function CheckoutConfirmationView({
         <span className={styles.check} aria-hidden>
           <svg viewBox="0 0 24 24" width="22" height="22">
             <path
+              className={styles.checkPath}
+              pathLength={1}
               d="M5 12.5l4.2 4.2L19 7"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
         </span>
-        <p className={styles.eyebrow}>Teşekkürler</p>
         <h1 className={styles.title}>
           {order.bank_transfer ? "Siparişiniz oluşturuldu" : "Siparişiniz alındı"}
         </h1>
@@ -107,12 +108,7 @@ export function CheckoutConfirmationView({
           >
             #{displayNo}
           </span>
-          {dateLabel ? (
-            <>
-              <span className={styles.metaDot} aria-hidden />
-              <span>{dateLabel}</span>
-            </>
-          ) : null}
+          {dateLabel ? <span>{dateLabel}</span> : null}
           <span className={`${styles.statusBadge} ${STATUS_CLASS[statusKey]}`}>
             {statusLabel}
           </span>

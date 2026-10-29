@@ -29,3 +29,16 @@ export function isIndexableSite(): boolean {
 export function isProductionHostname(hostname: string): boolean {
   return hostname === SITE_HOST || hostname === `www.${SITE_HOST}`
 }
+
+/**
+ * Kurumsal site (apps/landing). Hakkımızda / SSS / İletişim landing'deki
+ * bölümlere gider. İstemcide de okunur → build anında gömülür (Dockerfile ARG).
+ */
+export const LANDING_URL = (process.env.NEXT_PUBLIC_LANDING_URL || "https://esteacay.com").replace(/\/+$/, "")
+
+export const LANDING_LINKS = {
+  home: LANDING_URL,
+  about: `${LANDING_URL}/#hakkimizda`,
+  faq: `${LANDING_URL}/#sss`,
+  contact: `${LANDING_URL}/#iletisim`,
+} as const

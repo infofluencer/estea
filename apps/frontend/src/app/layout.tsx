@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from "next"
 import Script from "next/script"
 // Fontlar npm'den (Fontsource): build Google Fonts'a bağlı değil, latin-ext (ş, ğ, ı) dahil.
 // Aileler globals.css :root'ta --font-* değişkenleriyle tanımlı.
-import "@fontsource-variable/archivo/wght.css"
-import "@fontsource-variable/bricolage-grotesque/wght.css"
+import "@fontsource-variable/figtree/wght.css"
 import { Analytics } from "@/components/Analytics"
 import { BackToTop } from "@/components/BackToTop"
 import RevealInit from "@/components/brand/RevealInit"
@@ -14,6 +13,8 @@ import { SiteHeader } from "@/components/SiteHeader"
 import { getLoggedInCustomer } from "@/lib/auth/customer"
 import { COOKIEYES_SITE_ID } from "@/lib/consent"
 import "./globals.css"
+import "@/components/site-header.css"
+import "@/components/site-footer.css"
 
 export const viewport: Viewport = {
   width: "device-width",

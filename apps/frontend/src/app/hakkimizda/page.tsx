@@ -1,17 +1,12 @@
 import Image from "next/image"
 import { Btn } from "@/components/brand/Btn"
-import { Glass, Sprig, Teapot } from "@/components/brand/Doodles"
 import { COMPANY } from "@/lib/company"
 
 export const metadata = {
   title: "Hakkımızda | Es Çay",
 }
 
-const POINTS = [
-  { Icon: Sprig, circle: "bg-leaf text-ink", label: "Yüksek bahçe yaprağı" },
-  { Icon: Teapot, circle: "bg-gold text-ink", label: "Katkısız harman" },
-  { Icon: Glass, circle: "bg-brand text-cream", label: "Tavşan kanı demleme" },
-]
+const POINTS = ["Yüksek bahçe yaprağı", "Katkısız harman", "Tavşan kanı demleme"]
 
 const PHOTOS = [
   { src: "/fabrika/cay-hasadi.jpg", alt: "Çay hasadı: yaprak elle toplanıyor", caption: "Hasat" },
@@ -19,13 +14,13 @@ const PHOTOS = [
   { src: "/fabrika/paketleme-3.jpg", alt: "Paketleme hattı", caption: "Paketleme" },
 ]
 
-/** Landing Manifesto idiomu: zeytin yeşili başlık, orta boy giriş, üç disk, fotoğraf sağda. */
+/** Kurumsal düzen: solda metin ve üç ilke, sağda fabrika fotoğrafı; altta süreç ve künye. */
 export default function AboutPage() {
   return (
-    <div className="bg-linen text-ink">
+    <div className="bg-white text-ink">
       <section className="mx-auto grid max-w-7xl gap-12 px-5 pt-16 pb-16 sm:px-8 sm:pt-24 lg:grid-cols-12 lg:items-center lg:gap-8 lg:pb-24" aria-labelledby="hakkimizda-baslik">
         <div className="lg:col-span-5" data-reveal>
-          <h1 id="hakkimizda-baslik" className="text-[clamp(2.6rem,4.6vw,4.2rem)] leading-[1] font-bold tracking-[-0.03em] text-garden">
+          <h1 id="hakkimizda-baslik" className="text-[clamp(2.2rem,3.8vw,3.25rem)] leading-[1.08] font-bold tracking-[-0.025em] text-ink">
             Çayın lezzetine inandık.
           </h1>
           <p className="mt-7 max-w-[30ch] text-[clamp(1.2rem,1.6vw,1.45rem)] leading-[1.45] font-medium text-ink">
@@ -36,18 +31,18 @@ export default function AboutPage() {
             Kışı kar altında, yazı güneşte geçen yüksek rakımlı Karadeniz bahçelerinden özenle seçilip toplanan yaprak; boya
             yok, aroma yok. Yalnızca yaprak, ustalık ve zaman. Çünkü iyi çay, bekleyeni ödüllendirir.
           </p>
-          <ul className="mt-10 grid max-w-md grid-cols-3 gap-4">
-            {POINTS.map(({ Icon, circle, label }) => (
-              <li key={label} className="flex flex-col items-start gap-3">
-                <span className={`flex h-16 w-16 items-center justify-center rounded-full ${circle}`}>
-                  <Icon className="h-10 w-10" />
-                </span>
-                <span className="text-[0.92rem] leading-snug font-semibold">{label}</span>
+          <ul className="mt-8 grid gap-3 border-t border-line pt-6">
+            {POINTS.map((label) => (
+              <li key={label} className="flex items-center gap-3 text-[1rem] font-semibold">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden className="shrink-0 text-brand">
+                  <path d="M4 10.5 8 14.5 16 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {label}
               </li>
             ))}
           </ul>
         </div>
-        <div className="relative aspect-square overflow-hidden rounded-2xl bg-paper lg:col-span-7" data-reveal>
+        <div className="relative aspect-square overflow-hidden rounded-lg bg-paper lg:col-span-7" data-reveal>
           <Image
             src="/fabrika/fabrika-bahceler.jpg"
             alt="Çay bahçelerinin ortasındaki Es Çay fabrikası"
@@ -71,7 +66,7 @@ export default function AboutPage() {
           {PHOTOS.map((p, i) => (
             <li key={p.src} data-reveal style={{ "--reveal-delay": `${i * 80}ms` } as React.CSSProperties}>
               <figure className="m-0">
-                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-paper">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-paper">
                   <Image src={p.src} alt={p.alt} fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
                 </div>
                 <figcaption className="headline mt-4 text-[1.3rem]">{p.caption}</figcaption>
@@ -82,7 +77,7 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 pb-20 sm:px-8 lg:pb-28" aria-labelledby="fabrika-baslik">
-        <div className="grid gap-8 rounded-2xl bg-paper p-8 sm:p-10 lg:grid-cols-12 lg:items-center">
+        <div className="grid gap-8 rounded-lg border border-line bg-surface p-8 sm:p-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-7">
             <h2 id="fabrika-baslik" className="headline text-[clamp(1.8rem,3vw,2.6rem)] tracking-[-0.02em]">
               Fabrika ve iletişim

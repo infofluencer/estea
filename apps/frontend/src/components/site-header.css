@@ -1,0 +1,852 @@
+/*
+ * Site header — kurumsal, tam genişlik, üç kat:
+ * yeşil iletişim şeridi (kaydırınca çıkar) → beyaz ana satır (logo, arama, hesap/favori/sepet)
+ * → kategori menüsü. Şerit ve kategori satırı ekran boyunca uzanır; içerik --page-max'ta hizalanır.
+ */
+
+:root {
+  --strip-h: 2.25rem;
+  --compact-h: 3.75rem;
+}
+
+.site-chrome {
+  display: contents;
+}
+
+/*
+ * Tam header sayfayla kayar; ekrandan çıkınca kompakt satır üste sabitlenir.
+ * .site-top yuvası tam yüksekliği tutar (JS ölçer), geçişte içerik zıplamaz.
+ */
+.site-top {
+  position: relative;
+  z-index: 60;
+}
+
+:root:has(.site-header.is-compact) {
+  --site-top-offset: var(--compact-h);
+  scroll-padding-top: calc(var(--compact-h) + 1rem);
+}
+
+.site-header {
+  background: var(--color-white);
+  color: var(--color-ink);
+}
+
+.site-header__inner {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+/* —— Şerit —— */
+.site-header__strip {
+  border-bottom: 2px solid var(--color-gold);
+  background: var(--color-shell);
+  color: var(--color-white);
+  font-size: 0.8125rem;
+}
+
+.site-header__strip .site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: var(--strip-h);
+}
+
+.site-header__strip-note {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.site-header__strip-links {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.site-header__strip-links a {
+  color: var(--color-white);
+  font-weight: 500;
+}
+
+/* —— Ana satır —— */
+.site-header__main {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.site-header__main .site-header__inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "brand search actions";
+  align-items: center;
+  column-gap: clamp(1.5rem, 4vw, 4rem);
+  height: 5.25rem;
+}
+
+.site-header__brand {
+  grid-area: brand;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-header__brand:hover {
+  text-decoration: none;
+}
+
+.site-logo__img {
+  display: block;
+  width: auto;
+  height: 3.6rem;
+}
+
+.site-header__menu-toggle {
+  grid-area: menu;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-left: -0.6rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+/* —— Arama —— */
+.site-header__search {
+  grid-area: search;
+  position: relative;
+  width: 100%;
+  max-width: 44rem;
+  justify-self: center;
+}
+
+.site-header__search input {
+  width: 100%;
+  height: 2.875rem;
+  padding: 0 3.25rem 0 1rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-input);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.95rem;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.site-header__search input::placeholder {
+  color: var(--color-muted);
+}
+
+.site-header__search input:hover {
+  border-color: var(--color-ink-soft);
+}
+
+.site-header__search input:focus {
+  outline: none;
+  border-color: var(--color-brand);
+  background: var(--color-white);
+  box-shadow: 0 0 0 3px rgb(21 24 28 / 0.1);
+}
+
+.site-header__search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.site-header__search-submit {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.375rem;
+  height: 2.375rem;
+  border: 0;
+  border-radius: 4px;
+  background: var(--color-shell);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.site-header__search-submit:hover {
+  background: var(--color-shell-dark);
+}
+
+.site-header__search-results {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: 80;
+  max-height: min(28rem, 70vh);
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow-pop);
+}
+
+.site-header__search-empty {
+  margin: 0;
+  padding: 0.85rem 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.site-header__search-hit {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+}
+
+.site-header__search-hit:hover,
+.site-header__search-hit:focus-visible {
+  background: var(--color-surface);
+  text-decoration: none;
+}
+
+.site-header__search-hit img {
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  object-fit: contain;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  background: var(--color-white);
+}
+
+.site-header__search-hit-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.site-header__search-hit-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.site-header__search-hit-price {
+  font-size: 0.875rem;
+  color: var(--color-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.site-header__search-all {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 0.75rem 0.6rem 0.5rem;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-brand);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* —— Aksiyonlar —— */
+.site-header__actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.site-header__pop {
+  position: relative;
+  display: inline-flex;
+}
+
+.site-header__action {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 4.5rem;
+  padding: 0.35rem 0.5rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-header__action:hover {
+  background: var(--color-surface);
+  text-decoration: none;
+}
+
+.site-header__action-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.site-header__icon {
+  position: relative;
+  display: inline-flex;
+}
+
+.site-header__badge {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.6rem;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--color-brand);
+  color: var(--color-white);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.15rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sepete / favorilere eklendi balonu */
+.site-header__toast {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  z-index: 70;
+  width: 18rem;
+  padding: 1rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-pop);
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header__toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+
+.site-header__toast-label {
+  margin: 0 0 0.75rem;
+  color: var(--color-brand);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.site-header__toast-product {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.site-header__toast-product img {
+  display: block;
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  background: var(--color-white);
+}
+
+.site-header__toast-info {
+  min-width: 0;
+}
+
+.site-header__toast-title {
+  margin: 0 0 0.15rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.site-header__toast-price {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.site-header__toast-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  margin-top: 0.85rem;
+  border-radius: var(--radius-button);
+  background: var(--color-brand);
+  color: var(--color-white);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.site-header__toast-link:hover {
+  background: var(--color-brand-dark);
+  text-decoration: none;
+}
+
+/* —— Kategori menüsü —— */
+.site-header__nav {
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-white);
+}
+
+.site-header__nav .site-header__inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 2rem;
+  height: 3rem;
+}
+
+.site-header__cats,
+.site-header__corp {
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-header__cats {
+  gap: clamp(1rem, 2.4vw, 2.25rem);
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.site-header__cats::-webkit-scrollbar {
+  display: none;
+}
+
+.site-header__cats li,
+.site-header__corp li {
+  display: flex;
+}
+
+.site-header__cat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.site-header__cat::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--color-shell);
+  transform: scaleX(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header__cat:hover {
+  color: var(--color-brand);
+  text-decoration: none;
+}
+
+.site-header__cat:hover::after,
+.site-header__cat[aria-current="page"]::after {
+  transform: none;
+}
+
+.site-header__cat[aria-current="page"] {
+  color: var(--color-brand);
+}
+
+.site-header__corp {
+  gap: 1.5rem;
+}
+
+.site-header__corp a {
+  display: flex;
+  align-items: center;
+  color: var(--color-ink-soft);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.site-header__corp a:hover,
+.site-header__corp a[aria-current="page"] {
+  color: var(--color-ink);
+}
+
+/* —— Kompakt (kaydırınca sabit) —— */
+.site-header.is-compact {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 6px 18px -12px rgb(21 24 28 / 0.35);
+  animation: header-drop 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes header-drop {
+  from {
+    transform: translateY(-100%);
+  }
+}
+
+.is-compact .site-header__strip {
+  display: none;
+}
+
+/* Ana satır menünün üstünde durur; menü altından kayarak iner. */
+.is-compact .site-header__main {
+  position: relative;
+  z-index: 2;
+  background: var(--color-white);
+}
+
+.is-compact .site-header__main .site-header__inner {
+  height: var(--compact-h);
+  column-gap: clamp(1.25rem, 3vw, 3rem);
+}
+
+.is-compact .site-logo__img {
+  height: 2.5rem;
+}
+
+.is-compact .site-header__search input {
+  height: 2.5rem;
+}
+
+.is-compact .site-header__search-submit {
+  top: 0.25rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.is-compact .site-header__action {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  justify-content: center;
+  padding: 0.35rem;
+}
+
+.is-compact .site-header__action-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.is-compact .site-header__nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  box-shadow: 0 6px 18px -12px rgb(21 24 28 / 0.35);
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 0.28s;
+}
+
+.is-compact.is-nav-revealed .site-header__nav {
+  transform: none;
+  visibility: visible;
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s;
+}
+
+.is-compact .site-header__nav .site-header__inner {
+  height: 2.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header.is-compact,
+  .is-compact .site-header__nav {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* —— Mobil çekmece —— */
+.site-nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+
+.site-nav-drawer__scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: rgb(21 24 28 / 0.45);
+  cursor: pointer;
+}
+
+.site-nav-drawer__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(22rem, 86vw);
+  overflow-y: auto;
+  background: var(--color-white);
+  box-shadow: var(--shadow-pop);
+  animation: drawer-in 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+.site-nav-drawer__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.site-nav-drawer__top img {
+  width: auto;
+  height: 2.75rem;
+}
+
+.site-nav-drawer__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.site-nav-drawer__nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+}
+
+.site-nav-drawer__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.25rem;
+  padding: 0 1.25rem;
+  border-bottom: 1px solid var(--color-line);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.site-nav-drawer__link::after {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-top: 1.5px solid var(--color-muted);
+  border-right: 1.5px solid var(--color-muted);
+  transform: rotate(45deg);
+}
+
+.site-nav-drawer__link:hover {
+  background: var(--color-surface);
+  text-decoration: none;
+}
+
+.site-nav-drawer__secondary {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.25rem;
+  gap: 0.25rem;
+}
+
+.site-nav-drawer__secondary a,
+.site-nav-drawer__secondary button {
+  padding: 0.6rem 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink-soft);
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.site-nav-drawer__phone {
+  margin: auto 1.25rem 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-button);
+  background: var(--color-accent-soft);
+  color: var(--color-brand);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* —— Orta ekran: kurumsal bağlantılar şeride sığmazsa gizlenir —— */
+@media (max-width: 1180px) {
+  .site-header__corp {
+    display: none;
+  }
+}
+
+/* —— Dar ekran: menü düğmesi + logo + aksiyonlar; arama tam satır; kategoriler kayar —— */
+@media (max-width: 900px) {
+  :root {
+    --strip-h: 2rem;
+  }
+
+  .site-header__strip-note {
+    display: none;
+  }
+
+  .site-header__strip .site-header__inner {
+    justify-content: center;
+  }
+
+  .site-header__strip-links {
+    gap: 1.25rem;
+  }
+
+  .site-header__strip-links li:last-child {
+    display: none;
+  }
+
+  .site-header__main .site-header__inner {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "menu brand . actions"
+      "search search search search";
+    column-gap: 0.5rem;
+    row-gap: 0.6rem;
+    height: auto;
+    padding-block: 0.6rem 0.75rem;
+  }
+
+  .site-header__menu-toggle {
+    display: inline-flex;
+  }
+
+  .site-logo__img {
+    height: 2.6rem;
+  }
+
+  .site-header__search {
+    max-width: none;
+  }
+
+  .site-header__search input {
+    height: 2.75rem;
+    font-size: 1rem;
+  }
+
+  .site-header__search-submit {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .site-header__action {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    justify-content: center;
+    padding: 0.35rem;
+  }
+
+  .site-header__action-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .site-header__pop--account {
+    display: none;
+  }
+
+  .site-header__toast {
+    width: min(18rem, calc(100vw - 1.5rem));
+  }
+
+  .site-header__nav .site-header__inner {
+    height: 2.75rem;
+    padding-inline: 0;
+  }
+
+  .site-header__cats {
+    padding-inline: var(--page-gutter);
+    gap: 1.25rem;
+  }
+
+  .site-header__cat {
+    font-size: 0.9rem;
+  }
+}
+
+/* Dar ekranda kompakt satır tek sıra: menü düğmesi, arama, favori/sepet. */
+@media (max-width: 900px) {
+  :root {
+    --compact-h: 3.5rem;
+  }
+
+  .is-compact .site-header__main .site-header__inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "menu search actions";
+    column-gap: 0.5rem;
+    padding-block: 0;
+  }
+
+  .is-compact .site-header__brand {
+    display: none;
+  }
+
+  .is-compact .site-header__search input {
+    font-size: 1rem;
+  }
+
+  .is-compact .site-header__actions {
+    gap: 0;
+  }
+}

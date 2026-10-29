@@ -43,8 +43,6 @@ export default async function OrderTrackingResultPage({
         <h1
           style={{
             fontFamily: "var(--font-logo)",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
             color: "var(--brand-deep)",
           }}
         >

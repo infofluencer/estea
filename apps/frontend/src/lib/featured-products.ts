@@ -1,4 +1,3 @@
-import type { FeaturedProduct } from "@/components/FeaturedProductsCarousel"
 import {
   PRODUCT_IMAGE,
   sdk,
@@ -15,36 +14,6 @@ export type StoreProduct = Awaited<
 
 export const FEATURED_FIELDS =
   "*variants.calculated_price,*variants.options,*images,*categories,*collection,+metadata,+variants.inventory_quantity,+variants.manage_inventory,+variants.allow_backorder"
-
-/**
- * Ürün başına tek kart (çay: varyantlar gramaj/paket, ayrı kart olmaz).
- * Fiyat ve sepete ekle için stokta olan ilk varyant, yoksa ilk varyant.
- */
-export function mapFeaturedProducts(products: StoreProduct[]): FeaturedProduct[] {
-  return products.map((p) => {
-    const variants = p.variants || []
-    const variant = variants.find((v) => isVariantInStock(v)) || variants[0]
-    const price = variant?.calculated_price
-    const { image, hoverImage } = resolveCardImages({
-      thumbnail: p.thumbnail,
-      medusaImages: (p.images || []).map((img) => img.url),
-    })
-
-    return {
-      id: p.id,
-      handle: p.handle,
-      title: p.title,
-      variantId: variant?.id ?? null,
-      thumbnail: image || p.thumbnail || PRODUCT_IMAGE,
-      image,
-      hoverImage,
-      images: hoverImage ? [image, hoverImage] : [image],
-      price: variantPriceAmount(price),
-      originalPrice: variantOriginalAmount(price),
-      soldOut: isProductSoldOut(variants),
-    }
-  })
-}
 
 /**
  * Benzerlik söylemeyen geniş vitrin kategorileri ("Yeni" siyah, yeşil ve bitki
@@ -97,7 +66,7 @@ function relatedScore(current: StoreProduct, candidate: StoreProduct): number {
 export async function listRelatedProducts(
   current: StoreProduct,
   limit = 16
-): Promise<FeaturedProduct[]> {
+): Promise<StoreProduct[]> {
   const currentCats = categoriesOf(current)
   const categoryIds = [
     ...new Set([
@@ -144,5 +113,5 @@ export async function listRelatedProducts(
     return a.title.localeCompare(b.title, "tr")
   })
 
-  return pool.slice(0, limit).map((p) => mapFeaturedProducts([p])[0])
+  return pool.slice(0, limit)
 }

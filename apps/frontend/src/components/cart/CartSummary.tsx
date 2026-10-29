@@ -4,6 +4,7 @@ import {
   roundMoney,
 } from "@/lib/cart-pricing"
 import { formatTry } from "@/lib/medusa"
+import { AnimatedAmount } from "./AnimatedAmount"
 
 type CartSummaryProps = {
   /** Pre-discount product subtotal (tax-inclusive TRY). */
@@ -60,7 +61,10 @@ export function CartSummary({
       <div className="cart-totals__row cart-totals__row--total">
         <dt>{shippingPending ? "Toplam (kargo hariç)" : "Toplam"}</dt>
         <dd>
-          <span className="cart-totals__total-amount">{formatTry(total)}</span>
+          <AnimatedAmount
+            className="cart-totals__total-amount"
+            value={formatTry(total)}
+          />
           <span className="cart-totals__vat-note">
             {formatTry(vatNote)} KDV dahil
           </span>

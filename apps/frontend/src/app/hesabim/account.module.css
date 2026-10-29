@@ -11,8 +11,6 @@
   font-family: var(--font-logo);
   font-size: clamp(1.35rem, 2.4vw, 1.75rem);
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--brand-deep);
   line-height: 1.2;
 }
@@ -154,9 +152,7 @@
 .sectionTitle {
   margin: 0;
   font-family: var(--font-logo);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
   color: var(--brand-deep);
   opacity: 0.7;
 }
@@ -172,7 +168,6 @@
   font-size: clamp(1.35rem, 2.4vw, 1.75rem);
   font-weight: 500;
   color: var(--brand-deep);
-  letter-spacing: 0.02em;
 }
 
 .welcomeLead {
@@ -253,8 +248,6 @@
 .dashCardTitle {
   font-family: var(--font-logo);
   font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   font-weight: 500;
 }
 
@@ -367,9 +360,7 @@
   display: inline-block;
   padding: 0.15rem 0.45rem;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
   opacity: 1;
   color: var(--brand-deep);
 }
@@ -417,9 +408,7 @@
 
 .returnBadge {
   display: inline-block;
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
   color: var(--brand-deep);
   border: 1px solid rgba(0, 0, 0, 0.22);
   padding: 0.12rem 0.4rem;
@@ -472,9 +461,7 @@
 }
 
 .addressTag {
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
   opacity: 0.55;
   border: 1px solid rgba(0, 0, 0, 0.16);
   padding: 0.15rem 0.4rem;
@@ -545,9 +532,7 @@
 }
 
 .label {
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
   opacity: 0.55;
 }
 
@@ -560,11 +545,10 @@
 .input,
 .select {
   width: 100%;
-  padding: 0.35rem 0 0.65rem;
-  border: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.28);
-  border-radius: 0;
-  background: transparent;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-input);
+  background: var(--color-white);
   color: var(--foreground);
   font: inherit;
   font-size: 1rem;
@@ -580,7 +564,8 @@
 .input:focus,
 .select:focus {
   outline: none;
-  border-bottom-color: var(--brand-deep);
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgb(21 24 28 / 0.1);
 }
 
 .row2 {
@@ -598,14 +583,12 @@
 .submit {
   justify-self: start;
   padding: 0.85rem 1.75rem;
-  border: 1px solid var(--brand-deep);
+  border: 1px solid var(--brand-fill);
   border-radius: var(--radius-button);
   background: var(--brand-fill);
   color: var(--brand-on-fill);
-  font-family: var(--font-logo);
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.975rem;
   cursor: pointer;
 }
 
@@ -661,9 +644,7 @@
 .subSectionTitle {
   margin: 0;
   font-family: var(--font-logo);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
   color: var(--brand-deep);
   opacity: 0.7;
 }

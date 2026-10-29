@@ -34,6 +34,8 @@ export type CategoryListProduct = {
   /** Second angle shown on card hover. */
   hoverImage?: string | null
   price: number | null
+  /** Gramaj seçenekli üründe en yüksek fiyat; varsa kart aralık gösterir. */
+  priceMax?: number | null
   originalPrice: number | null
   subtitle: string | null
   /** Ürünün seçenek değerleri (gramaj/paket) — listeleme filtresi bunları kullanır. */
@@ -174,24 +176,6 @@ export function CategoryProductCard({
           ) : null}
         </Link>
 
-        {!soldOut ? <div className={styles.hoverVeil} aria-hidden /> : null}
-
-        {canQuickAdd ? (
-          <button
-            type="button"
-            className={styles.quickAdd}
-            onClick={onQuickAdd}
-            disabled={pending}
-          >
-            {pending ? "Ekleniyor…" : "Sepete Ekle"}
-          </button>
-        ) : null}
-
-        {cartError ? (
-          <p className={styles.quickAddError} role="alert">
-            {cartError}
-          </p>
-        ) : null}
 
         <button
           type="button"
@@ -226,14 +210,41 @@ export function CategoryProductCard({
           <p className={styles.variants}>{product.colorCount} seçenek</p>
         ) : null}
         <div className={styles.priceRow}>
-          <span>{formatTry(product.price)}</span>
-          {onSale ? (
+          <span>
+            {formatTry(product.price)}
+            {product.priceMax ? <> – {formatTry(product.priceMax)}</> : null}
+          </span>
+          {onSale && !product.priceMax ? (
             <span className={styles.priceOld}>
               {formatTry(product.originalPrice)}
             </span>
           ) : null}
         </div>
       </Link>
+
+      <div className={styles.cardAction}>
+        {soldOut ? (
+          <span className={`${styles.quickAdd} ${styles.quickAddOff}`}>Tükendi</span>
+        ) : product.colorCount > 1 || !canQuickAdd ? (
+          <Link href={productHref} className={`${styles.quickAdd} ${styles.quickAddGhost}`}>
+            Gramaj seç
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className={styles.quickAdd}
+            onClick={onQuickAdd}
+            disabled={pending}
+          >
+            {pending ? "Ekleniyor…" : "Sepete ekle"}
+          </button>
+        )}
+        {cartError ? (
+          <p className={styles.quickAddError} role="alert">
+            {cartError}
+          </p>
+        ) : null}
+      </div>
     </article>
   )
 }

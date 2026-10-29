@@ -48,8 +48,6 @@ export default async function AccountOrderPage({
             fontFamily: "var(--font-logo)",
             fontSize: "clamp(1.25rem, 2.4vw, 1.55rem)",
             fontWeight: 500,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
             color: "var(--brand-deep)",
           }}
         >

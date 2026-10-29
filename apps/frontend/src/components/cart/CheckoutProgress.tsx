@@ -1,6 +1,14 @@
 import Link from "next/link"
+import type { CSSProperties } from "react"
 
 export type CheckoutProgressStep = "cart" | "address" | "payment" | "confirmation"
+
+const STEP_ORDER: CheckoutProgressStep[] = [
+  "cart",
+  "address",
+  "payment",
+  "confirmation",
+]
 
 export function CheckoutProgress({
   current = "cart",
@@ -12,10 +20,19 @@ export function CheckoutProgress({
   const pastAddress = current === "payment" || current === "confirmation"
   const paymentActive = current === "payment"
   const pastPayment = current === "confirmation"
+  // Adım çizgisi: önceki noktadan geçerli noktaya dolar (0–3 adım arası).
+  const stepIndex = STEP_ORDER.indexOf(current)
+  const progressStyle = {
+    "--progress": stepIndex / 3,
+    "--progress-from": Math.max(0, stepIndex - 1) / 3,
+  } as CSSProperties
 
   return (
     <nav className="cart-progress" aria-label="Sipariş adımları">
-      <ol className="cart-progress__list cart-progress__list--four">
+      <ol
+        className="cart-progress__list cart-progress__list--four"
+        style={progressStyle}
+      >
         <li
           className={`cart-progress__step${current === "cart" ? " is-active" : ""}${pastCart ? " is-complete" : ""}`}
           aria-current={current === "cart" ? "step" : undefined}

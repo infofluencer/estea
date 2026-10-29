@@ -106,7 +106,10 @@ export function CategoryFilterBar({
               aria-label="Geniş görünüm"
               onClick={() => onViewChange("large")}
             >
-              <span className={styles.viewIconLarge} />
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
+                <rect x="2.5" y="2.5" width="5.5" height="13" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                <rect x="10" y="2.5" width="5.5" height="13" rx="1" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
             </button>
             <button
               type="button"
@@ -117,7 +120,11 @@ export function CategoryFilterBar({
               aria-label="Izgara görünümü"
               onClick={() => onViewChange("grid")}
             >
-              <span className={styles.viewIconGrid} />
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
+                <rect x="2" y="2" width="3.5" height="14" rx="0.8" stroke="currentColor" strokeWidth="1.4" />
+                <rect x="7.25" y="2" width="3.5" height="14" rx="0.8" stroke="currentColor" strokeWidth="1.4" />
+                <rect x="12.5" y="2" width="3.5" height="14" rx="0.8" stroke="currentColor" strokeWidth="1.4" />
+              </svg>
             </button>
           </div>
         </div>

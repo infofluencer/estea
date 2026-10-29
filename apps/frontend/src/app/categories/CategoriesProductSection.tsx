@@ -26,7 +26,7 @@ const FETCH_LIMIT = 200
 const EXPAND_VARIANTS_CATEGORIES = new Set<string>([])
 
 /** List view: thumbnail + images for hover second angle. */
-const PRODUCT_LIST_FIELDS =
+export const PRODUCT_LIST_FIELDS =
   "*variants.calculated_price,*variants.options,*options,*options.values,*collection,*images,+metadata,+variants.inventory_quantity,+variants.manage_inventory,+variants.allow_backorder,+thumbnail"
 
 type SearchParams = {
@@ -75,7 +75,7 @@ function productImage(product: StoreProduct): string {
   return product.thumbnail || PRODUCT_IMAGE
 }
 
-function mapProduct(product: StoreProduct): CategoryListProduct {
+export function mapProduct(product: StoreProduct): CategoryListProduct {
   const colors = productColors(product)
   const collectionTitle =
     (product as { collection?: { title?: string | null } | null }).collection
@@ -87,6 +87,12 @@ function mapProduct(product: StoreProduct): CategoryListProduct {
     thumbnail: product.thumbnail,
     medusaImages: (product.images || []).map((img) => img.url),
   })
+  // Gramaj seçenekli üründe kart fiyat aralığını gösterir (500 g – 5 kg).
+  const amounts = (product.variants || [])
+    .map((v) => variantPriceAmount(v.calculated_price))
+    .filter((n): n is number => n != null)
+  const minPrice = amounts.length ? Math.min(...amounts) : null
+  const maxPrice = amounts.length ? Math.max(...amounts) : null
 
   return {
     cardKey: product.id,
@@ -96,7 +102,8 @@ function mapProduct(product: StoreProduct): CategoryListProduct {
     title: product.title,
     image,
     hoverImage,
-    price: variantPriceAmount(price),
+    price: amounts.length > 1 ? minPrice : variantPriceAmount(price),
+    priceMax: maxPrice != null && minPrice != null && maxPrice > minPrice ? maxPrice : null,
     originalPrice: variantOriginalAmount(original),
     // Tek seçenekli üründe seçenek adı alt başlık; çok seçenekte kart "N seçenek" der.
     subtitle:

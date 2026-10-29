@@ -36,8 +36,8 @@ export function CartNavButton({ initialCount = 0 }: { initialCount?: number }) {
       >
         <span className="site-header__icon">
           <svg
-            width="20"
-            height="20"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -53,6 +53,7 @@ export function CartNavButton({ initialCount = 0 }: { initialCount?: number }) {
           </svg>
           <NavCountBadge count={count} />
         </span>
+        <span className="site-header__action-label">Sepetim</span>
       </Link>
       <ProductToast
         visible={toast.visible}

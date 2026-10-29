@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { CartQtyForm, CartRemoveButton } from "@/components/CartQtyForm"
 import { formatTry, PRODUCT_IMAGE } from "@/lib/medusa"
+import { AnimatedAmount } from "./AnimatedAmount"
 
 export type CartLineItemData = {
   id: string
@@ -27,34 +28,33 @@ export function CartLineItem({ item }: { item: CartLineItemData }) {
     <li className="cart-line">
       <div className="cart-line__media">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={thumb} alt={displayTitle} />
+        <img src={thumb} alt={displayTitle} width={240} height={240} />
       </div>
 
-      <div className="cart-line__body">
-        <div className="cart-line__header">
-          <div className="cart-line__headline">
-            {item.productHref ? (
-              <Link
-                href={item.productHref}
-                className="cart-line__title"
-              >
-                {displayTitle}
-              </Link>
-            ) : (
-              <span className="cart-line__title">{displayTitle}</span>
-            )}
-            {item.variant ? (
-              <p className="cart-line__variant">{item.variant}</p>
-            ) : null}
-          </div>
-          <CartRemoveButton lineId={item.id} />
-        </div>
-
-        <div className="cart-line__footer">
-          <CartQtyForm lineId={item.id} quantity={item.quantity} hideRemove />
-          <p className="cart-line__total">{formatTry(lineTotal)}</p>
-        </div>
+      <div className="cart-line__info">
+        {item.productHref ? (
+          <Link href={item.productHref} className="cart-line__title">
+            {displayTitle}
+          </Link>
+        ) : (
+          <span className="cart-line__title">{displayTitle}</span>
+        )}
+        {item.variant ? (
+          <p className="cart-line__variant">{item.variant}</p>
+        ) : null}
+        {item.quantity > 1 && typeof item.unit_price === "number" ? (
+          <p className="cart-line__unit">Adedi {formatTry(item.unit_price)}</p>
+        ) : null}
+        <CartRemoveButton lineId={item.id} />
       </div>
+
+      <div className="cart-line__qty">
+        <CartQtyForm lineId={item.id} quantity={item.quantity} hideRemove />
+      </div>
+
+      <p className="cart-line__total">
+        <AnimatedAmount value={formatTry(lineTotal)} />
+      </p>
     </li>
   )
 }

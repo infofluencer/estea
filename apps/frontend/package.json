@@ -13,8 +13,7 @@
     "test:staging:e2e:install": "playwright install chromium"
   },
   "dependencies": {
-    "@fontsource-variable/archivo": "^5.2.6",
-    "@fontsource-variable/bricolage-grotesque": "^5.2.6",
+    "@fontsource-variable/figtree": "^5.3.0",
     "@medusajs/js-sdk": "^2.18.0",
     "next": "15.5.27",
     "react": "19.1.0",

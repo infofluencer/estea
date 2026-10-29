@@ -37,67 +37,52 @@ export default async function PaymentResultPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="page-shell checkout-page" style={{ paddingBottom: "3.5rem" }}>
-      {isSuccess ? <FinalizePaidCheckoutOnMount /> : <RestorePendingCheckoutOnMount />}
-      <div
-        className="checkout-empty"
-        style={{
-          maxWidth: "32rem",
-          margin: "2rem auto 0",
-          textAlign: "center",
-        }}
-      >
+    <div className="checkout-page-wrap">
+      <div className="page-shell checkout-page">
         {isSuccess ? (
-          <>
-            <h1 className="checkout-empty__title">Ödemeniz Alındı</h1>
-            <p className="checkout-empty__text">
-              Ödemeniz işleme alındı. Siparişiniz onaylanınca size e-posta
-              bildirimi gönderilecektir. Durumu hesabım &gt; siparişlerim
-              bölümünden takip edebilirsiniz.
-            </p>
-            {oid ? (
-              <p className="checkout-muted" style={{ marginTop: "0.75rem" }}>
-                İşlem ref: {oid}
-              </p>
-            ) : null}
-            <div
-              className="checkout-form__actions"
-              style={{ justifyContent: "center", marginTop: "1.5rem" }}
-            >
-              <Link href="/" className="cart-cta cart-cta--primary">
-                Alışverişe devam et
-              </Link>
-            </div>
-          </>
+          <FinalizePaidCheckoutOnMount />
         ) : (
-          <>
-            <h1 className="checkout-empty__title">Ödeme Tamamlanamadı</h1>
-            <p className="checkout-empty__text">
-              Ödeme işlemi tamamlanamadı. Kart bilgilerinizi kontrol ederek
-              tekrar deneyebilirsiniz. Sorun sürerse hesap sayfanızdaki
-              siparişlerinizden veya iletişim formundan bize yazın.
-            </p>
-            {oid ? (
-              <p className="checkout-muted" style={{ marginTop: "0.75rem" }}>
-                İşlem ref: {oid}
-              </p>
-            ) : null}
-            <div
-              className="checkout-form__actions checkout-form__actions--split"
-              style={{ justifyContent: "center", marginTop: "1.5rem" }}
-            >
-              <Link href="/odeme" className="cart-cta cart-cta--primary">
-                Tekrar dene
-              </Link>
-              <Link href="/sepet" className="cart-cta">
-                Sepete dön
-              </Link>
-              <Link href="/iletisim" className="cart-cta">
-                İletişim
-              </Link>
-            </div>
-          </>
+          <RestorePendingCheckoutOnMount />
         )}
+        <div className="checkout-empty checkout-empty--center">
+          {isSuccess ? (
+            <>
+              <h1 className="checkout-empty__title">Ödemeniz alındı</h1>
+              <p className="checkout-empty__text">
+                Ödemeniz işleme alındı. Siparişiniz onaylanınca size e-posta
+                bildirimi gönderilecektir. Durumu hesabım &gt; siparişlerim
+                bölümünden takip edebilirsiniz.
+              </p>
+              {oid ? <p className="checkout-muted">İşlem ref: {oid}</p> : null}
+              <div className="checkout-empty__actions">
+                <Link href="/" className="cart-cta cart-cta--primary">
+                  Alışverişe devam et
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <h1 className="checkout-empty__title">Ödeme tamamlanamadı</h1>
+              <p className="checkout-empty__text">
+                Ödeme işlemi tamamlanamadı. Kart bilgilerinizi kontrol ederek
+                tekrar deneyebilirsiniz. Sorun sürerse hesap sayfanızdaki
+                siparişlerinizden veya iletişim formundan bize yazın.
+              </p>
+              {oid ? <p className="checkout-muted">İşlem ref: {oid}</p> : null}
+              <div className="checkout-empty__actions">
+                <Link href="/odeme" className="cart-cta cart-cta--primary">
+                  Tekrar dene
+                </Link>
+                <Link href="/sepet" className="cart-cta">
+                  Sepete dön
+                </Link>
+                <Link href="/iletisim" className="cart-cta">
+                  İletişim
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

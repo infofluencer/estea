@@ -24,7 +24,7 @@ export function CartQtyForm({
   }
 
   return (
-    <div className="cart-qty">
+    <div className="cart-qty" data-pending={pending || undefined}>
       <button
         type="button"
         className="cart-qty__btn"
@@ -73,6 +73,7 @@ export function CartRemoveButton({ lineId }: { lineId: string }) {
       type="button"
       className="cart-line__remove"
       disabled={pending}
+      data-pending={pending || undefined}
       onClick={() =>
         start(async () => {
           const count = await removeLineItemAction(lineId)

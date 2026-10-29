@@ -16,8 +16,6 @@
   font-family: var(--font-logo);
   font-size: clamp(1.35rem, 2.5vw, 1.65rem);
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--brand-deep);
 }
 
@@ -40,20 +38,17 @@
 }
 
 .label {
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
   opacity: 0.55;
   font-weight: 400;
 }
 
 .input {
   width: 100%;
-  padding: 0.35rem 0 0.65rem;
-  border: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.28);
-  border-radius: 0;
-  background: transparent;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-input);
+  background: var(--color-white);
   color: var(--foreground);
   font: inherit;
   font-size: 1rem;
@@ -64,7 +59,8 @@
 
 .input:focus {
   outline: none;
-  border-bottom-color: var(--brand-deep);
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgb(21 24 28 / 0.1);
 }
 
 .input::placeholder {
@@ -109,15 +105,13 @@
   width: 100%;
   margin-top: 0.5rem;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--brand-deep);
+  border: 1px solid var(--brand-fill);
   border-radius: var(--radius-button);
   background: var(--brand-fill);
   color: var(--brand-on-fill);
-  font-family: var(--font-logo);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.975rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -168,15 +162,13 @@
   width: 100%;
   margin-top: 0.5rem;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--brand-deep);
+  border: 1px solid var(--brand-fill);
   border-radius: var(--radius-button);
   background: var(--brand-fill);
   color: var(--brand-on-fill);
-  font-family: var(--font-logo);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.975rem;
+  font-weight: 600;
   text-align: center;
   text-decoration: none;
   box-sizing: border-box;

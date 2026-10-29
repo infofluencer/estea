@@ -1,6 +1,9 @@
+import Link from "next/link"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { FeaturedProductsCarousel } from "@/components/FeaturedProductsCarousel"
+import { mapProduct } from "@/app/categories/CategoriesProductSection"
+import { CategoryProductCard } from "@/app/categories/CategoryProductCard"
+import cardStyles from "@/app/categories/categories.module.css"
 import { TrackViewItem } from "@/components/TrackEvent"
 import { ProductPageView } from "@/components/product/ProductPageView"
 import { listRelatedProducts } from "@/lib/featured-products"
@@ -12,7 +15,7 @@ import {
 } from "@/lib/medusa"
 import { resolveSpecEntries } from "@/lib/spec-labels"
 import { siteUrl } from "@/lib/site"
-import { productHandleFromSlug, productPath } from "@/lib/urls"
+import { categoryPath, productHandleFromSlug, productPath } from "@/lib/urls"
 
 export const dynamic = "force-dynamic"
 
@@ -86,6 +89,9 @@ export default async function ProductPage({
     .map((c) => c.handle)
     .filter((h): h is string => Boolean(h))
   const specEntries = resolveSpecEntries(metadata, categoryHandles)
+  const primaryCategory = (product.categories || []).find((c) => c.handle && c.name) as
+    | { handle: string; name: string }
+    | undefined
   const productSku =
     (product.variants || []).map((v) => (v as { sku?: string | null }).sku).find(Boolean) ?? null
 
@@ -107,7 +113,7 @@ export default async function ProductPage({
 
   let related: Awaited<ReturnType<typeof listRelatedProducts>> = []
   try {
-    related = await listRelatedProducts(product, 16)
+    related = await listRelatedProducts(product, 4)
   } catch {
     related = []
   }
@@ -115,6 +121,19 @@ export default async function ProductPage({
   return (
     <>
       <TrackViewItem item={viewItem} />
+      <nav className="pdp-crumbs" aria-label="Sayfa yolu">
+        <ol>
+          <li>
+            <Link href="/">Ana sayfa</Link>
+          </li>
+          {primaryCategory ? (
+            <li>
+              <Link href={categoryPath(primaryCategory.handle)}>{primaryCategory.name}</Link>
+            </li>
+          ) : null}
+          <li aria-current="page">{product.title}</li>
+        </ol>
+      </nav>
       <ProductPageView
         key={product.id}
         id={product.id}
@@ -150,16 +169,17 @@ export default async function ProductPage({
       />
 
       {related.length > 0 ? (
-        <section className="home-featured pdp-related" aria-label="Benzer ürünler">
-          <FeaturedProductsCarousel
-            products={related}
-            title="Benzer ürünler"
-            prevLabel="Önceki ürünler"
-            nextLabel="Sonraki ürünler"
-            desktopVisible={4}
-            sideArrows
-            autoPlay
-          />
+        <section className="pdp-related" aria-labelledby="pdp-related-title">
+          <h2 id="pdp-related-title" className="pdp-related__title">
+            Benzer ürünler
+          </h2>
+          <ul className={`${cardStyles.grid} ${cardStyles.gridDense} pdp-related__grid`}>
+            {related.map(mapProduct).map((p) => (
+              <li key={p.cardKey} className={cardStyles.gridItem}>
+                <CategoryProductCard product={p} />
+              </li>
+            ))}
+          </ul>
         </section>
       ) : null}
     </>

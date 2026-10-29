@@ -23,8 +23,8 @@ export function FavoritesNavButton() {
       >
         <span className="site-header__icon">
           <svg
-            width="20"
-            height="20"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -37,6 +37,7 @@ export function FavoritesNavButton() {
           </svg>
           <NavCountBadge count={count} />
         </span>
+        <span className="site-header__action-label">Favoriler</span>
       </Link>
       <ProductToast
         visible={toast.visible}

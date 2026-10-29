@@ -79,18 +79,20 @@ export default async function CartPage() {
           </div>
 
           <div className="cart-side">
+            <section className="cart-summary" aria-labelledby="cart-summary-title">
+              <h2 id="cart-summary-title" className="cart-summary__title">
+                Sipariş özeti
+              </h2>
+              <CartSummary
+                subtotal={productSubtotal}
+                discountTotal={discountTotal}
+                cartTotal={cart!.total}
+                shipping={shippingEstimate}
+              />
+              <CartActions />
+              <PromoCodeForm applied={promotions} refreshOnSuccess />
+            </section>
             <CartInfoAside />
-            <PromoCodeForm applied={promotions} refreshOnSuccess />
-          </div>
-
-          <div className="cart-footer-block">
-            <CartSummary
-              subtotal={productSubtotal}
-              discountTotal={discountTotal}
-              cartTotal={cart!.total}
-              shipping={shippingEstimate}
-            />
-            <CartActions />
           </div>
         </div>
       </div>

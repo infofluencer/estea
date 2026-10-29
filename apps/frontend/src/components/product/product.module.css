@@ -308,9 +308,8 @@
 .priceNote {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.68rem;
+  font-size: 0.8125rem;
   font-weight: 400;
-  letter-spacing: 0.03em;
   text-align: right;
   color: color-mix(in srgb, var(--brand-deep) 42%, transparent);
 }
@@ -318,9 +317,8 @@
 .lowStockNote {
   margin: 0.35rem 0 0;
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   font-weight: 400;
-  letter-spacing: 0.04em;
   text-align: right;
   color: var(--brand-gold);
 }
@@ -415,7 +413,7 @@
   height: 100%;
   padding: 0.15rem;
   font-family: var(--font-sans);
-  font-size: 0.55rem;
+  font-size: 0.8125rem;
   line-height: 1.15;
   color: var(--brand-deep);
 }
@@ -428,10 +426,8 @@
   background: var(--brand-fill);
   color: var(--brand-on-fill);
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   cursor: pointer;
   transition:
     background-color 0.2s ease,
@@ -454,10 +450,8 @@
   background: transparent;
   color: color-mix(in srgb, var(--brand-deep) 55%, transparent);
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   cursor: not-allowed;
 }
 
@@ -520,10 +514,8 @@
   background: transparent;
   cursor: pointer;
   font-family: var(--font-sans);
-  font-size: 0.64rem;
+  font-size: 0.8125rem;
   font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--brand-deep);
   text-align: left;
 }
@@ -667,4 +659,203 @@
   .swatch {
     width: 2.5rem;
   }
+}
+
+/* —— Kurumsal düzen (DESIGN.md): solda galeri, sağda satın alma; tüm ekranlar —— */
+.title {
+  font-size: clamp(1.6rem, 2.4vw, 2.25rem);
+  line-height: 1.15;
+}
+
+.priceRow,
+.priceNote,
+.lowStockNote {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.priceCurrent {
+  font-size: 1.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.variantLabel {
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+}
+
+.variantValue {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.variantGrid {
+  gap: 0.5rem;
+}
+
+.swatch,
+.swatch:hover {
+  width: auto;
+}
+
+.swatchMedia {
+  min-width: 5rem;
+  height: 2.75rem;
+  aspect-ratio: auto;
+  padding: 0 1rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-button);
+  background: var(--color-white);
+}
+
+.swatch:hover .swatchMedia {
+  border-color: var(--color-ink);
+}
+
+.swatchSelected .swatchMedia,
+.swatchSelected:hover .swatchMedia {
+  border: 2px solid var(--color-brand);
+  background: var(--color-accent-soft);
+}
+
+.swatchFallback {
+  padding: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.swatchSelected .swatchFallback {
+  color: var(--color-brand);
+}
+
+.addToCart,
+.soldOutBtn {
+  min-height: 3.25rem;
+  border-radius: var(--radius-button);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.storyText,
+.bodyText {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-ink-soft);
+}
+
+.accordionTrigger {
+  padding: 1rem 0;
+  font-size: 0.975rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.skuRow {
+  font-size: 0.875rem;
+}
+
+@media (min-width: 900px) {
+  .heroStage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(2.5rem, 5vw, 5rem);
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: 2rem var(--page-gutter) 1rem;
+  }
+
+  .galleryWrap .gallerySlide,
+  .galleryWrapSingle:not(.galleryWrapSquare) .gallerySlide,
+  .galleryPlaceholder {
+    flex: 0 0 100cqw;
+    width: 100cqw;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .galleryScroll {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+
+  .thumbsRow {
+    position: static;
+    max-width: none;
+    margin-top: 0.75rem;
+    gap: 0.6rem;
+  }
+
+  .thumb {
+    width: 4.5rem;
+    opacity: 1;
+  }
+
+  .thumbMedia {
+    aspect-ratio: 1;
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+  }
+
+  .thumbSelected .thumbMedia {
+    border: 2px solid var(--color-brand);
+  }
+
+  .thumbIndicator {
+    display: none;
+  }
+
+  .purchasePanel {
+    position: sticky;
+    top: calc(var(--site-top-offset) + 1.5rem);
+    right: auto;
+    transform: none;
+    width: auto;
+    gap: 1.5rem;
+    padding: 1rem 0 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .detailsStage {
+    max-width: var(--page-max);
+    padding-inline: var(--page-gutter);
+    border-top: 1px solid var(--color-line);
+    margin-top: 2.5rem;
+  }
+}
+
+.assurance {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid var(--color-line);
+  list-style: none;
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+}
+
+.assurance li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.assurance li::before {
+  content: "";
+  flex: none;
+  width: 0.45rem;
+  height: 0.75rem;
+  margin: -0.2rem 0.15rem 0 0.1rem;
+  border-right: 1.75px solid var(--color-brand);
+  border-bottom: 1.75px solid var(--color-brand);
+  transform: rotate(45deg);
+}
+
+.assurance a {
+  color: var(--color-ink);
+  font-weight: 600;
 }

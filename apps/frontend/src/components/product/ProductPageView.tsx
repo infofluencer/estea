@@ -1,5 +1,6 @@
 "use client"
 
+import { COMPANY } from "@/lib/company"
 import { useMemo, useState, type MouseEvent } from "react"
 import { AddToCartButton } from "@/components/AddToCartButton"
 import { useFavorites } from "@/components/FavoritesProvider"
@@ -359,6 +360,13 @@ export function ProductPageView({
             </button>
           )}
 
+          <ul className={styles.assurance}>
+            <li>Hayrat / Trabzon’daki fabrikamızdan hazırlanır</li>
+            <li>Kartla güvenli ödeme (PayTR)</li>
+            <li>
+              Müşteri hizmetleri: <a href={COMPANY.phoneHref}>{COMPANY.phone}</a>
+            </li>
+          </ul>
         </aside>
       </section>
 

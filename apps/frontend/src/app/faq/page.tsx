@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import type { ReactNode } from "react"
 import { Btn } from "@/components/brand/Btn"
@@ -83,44 +82,37 @@ const FAQ_ITEMS: { id: string; q: string; a: ReactNode }[] = [
  */
 export default function FaqPage() {
   return (
-    <div className="bg-linen py-16 text-ink sm:py-24">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <header className="text-center">
-          <Image
-            src="/logo.png"
-            alt=""
-            width={341}
-            height={182}
-            className="mx-auto mb-5 h-16 w-auto -rotate-[5deg] sm:h-20"
-          />
-          <h1 className="headline text-[clamp(2.6rem,6.4vw,5.4rem)] tracking-[-0.03em]">Sıkça sorulan sorular</h1>
-          <p className="mx-auto mt-4 max-w-[60ch] text-[1.1rem] leading-[1.5] text-ink/75 sm:text-[1.2rem]">
+    <div className="bg-white py-12 text-ink sm:py-16">
+      <div className="mx-auto max-w-3xl px-5 sm:px-8">
+        <header>
+          <h1 className="headline text-[clamp(2rem,3.6vw,2.75rem)]">Sıkça sorulan sorular</h1>
+          <p className="mt-3 max-w-[60ch] text-[1.05rem] leading-[1.55] text-ink-soft">
             Kargo, iade, ödeme ve demleme üzerine en çok gelen sorular.
           </p>
         </header>
 
-        <dl className="mt-14 grid items-start gap-x-10 gap-y-10 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-12 lg:gap-y-12">
+        <div className="mt-10 border-t border-line">
           {FAQ_ITEMS.map((item, i) => (
-            <details key={item.id} id={item.id} className="group" open={i === 0} data-reveal style={{ "--reveal-delay": `${i * 60}ms` } as React.CSSProperties}>
-              <summary className="grid cursor-pointer list-none grid-cols-[1fr_auto] gap-x-4 pt-2 text-left [&::-webkit-details-marker]:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-linen">
+            <details key={item.id} id={item.id} className="group border-b border-line" open={i === 0}>
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left [&::-webkit-details-marker]:hidden">
+                <h2 className="text-[1.125rem] leading-[1.35] font-semibold transition-colors group-hover:text-brand group-open:text-brand">
+                  {item.q}
+                </h2>
                 <span
                   aria-hidden="true"
-                  className="relative row-span-2 size-10 shrink-0 self-start rounded-full bg-paper transition-colors duration-200 group-hover:bg-brand group-open:bg-brand before:absolute before:top-1/2 before:left-1/2 before:h-0.5 before:w-4 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-ink before:transition-colors group-hover:before:bg-cream group-open:before:bg-cream after:absolute after:top-1/2 after:left-1/2 after:h-4 after:w-0.5 after:-translate-x-1/2 after:-translate-y-1/2 after:bg-ink after:transition-[transform,background-color] group-hover:after:bg-cream group-open:after:scale-y-0 group-open:after:bg-cream"
+                  className="relative size-5 shrink-0 before:absolute before:top-1/2 before:left-0 before:h-[1.5px] before:w-5 before:-translate-y-1/2 before:bg-current after:absolute after:top-0 after:left-1/2 after:h-5 after:w-[1.5px] after:-translate-x-1/2 after:bg-current after:transition-transform group-open:after:scale-y-0"
                 />
-                <dt className="headline mt-2 text-[clamp(1.3rem,1.8vw,1.6rem)] leading-[1.1] transition-colors group-hover:text-brand group-open:text-brand">
-                  {item.q}
-                </dt>
               </summary>
-              <dd className="mt-4 pr-14 text-[1.05rem] leading-[1.6] text-ink/75 [&_a]:font-semibold [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-4">
+              <div className="pb-6 pr-10 text-[1rem] leading-[1.7] text-ink-soft [&_a]:font-semibold [&_a]:text-brand [&_a]:underline [&_a]:underline-offset-4">
                 {item.a}
-              </dd>
+              </div>
             </details>
           ))}
-        </dl>
+        </div>
 
-        <footer className="mt-14 flex flex-col items-center gap-5 text-center sm:mt-16">
-          <p className="max-w-[40ch] text-[1.05rem] leading-[1.5] text-ink/70">
-            Cevabını bulamadığınız bir soru mu var? Hafta içi {COMPANY.hours} arasında telefonla ulaşabilirsiniz.
+        <footer className="mt-10 flex flex-col items-start gap-4 rounded-lg border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-[44ch] text-[1rem] leading-[1.5] text-ink-soft">
+            Cevabını bulamadığınız bir soru mu var? {COMPANY.hours} arasında {COMPANY.phone} numarasından ulaşabilirsiniz.
           </p>
           <Btn href="/iletisim" variant="garden">
             Bize ulaşın
