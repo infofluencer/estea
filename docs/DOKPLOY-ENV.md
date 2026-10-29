@@ -19,6 +19,14 @@ Aşağıda `<backend>`, `<frontend>`, `<landing>` = üretilen hostname (ör. `es
 
 Build Path `/`, Docker Context `.` hepsinde.
 
+**Watch Paths** (Advanced → otomatik deploy hangi dosyalarda tetiklensin; yanlışsa push deploy başlatmaz):
+
+| Servis | Watch Paths |
+|---|---|
+| backend | `apps/backend/**`, `shared/**`, `Dockerfile.backend` |
+| frontend | `apps/frontend/**`, `shared/**`, `Dockerfile.storefront` |
+| landing | `apps/landing/**`, `packages/ui/**`, `Dockerfile.landing`, `package.json`, `package-lock.json` |
+
 ## backend — Dönem A
 
 ```
