@@ -34,7 +34,7 @@ function LinkColumn({ title, links }: { title: string; links: NavLink[] }) {
  * and link columns, then the legal strip. The footer is also the contact section.
  */
 export default function Footer() {
-  const corporate = corporateLinks.filter((l) => !/iletisim/.test(l.href))
+  const corporate = corporateLinks.filter((l) => l.href !== '#iletisim')
 
   return (
     <footer id="iletisim" aria-labelledby="iletisim-baslik" className="relative z-20 bg-garden-dark text-cream">

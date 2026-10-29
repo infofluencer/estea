@@ -19,18 +19,19 @@ export const navLinks: NavLink[] = [
   { href: '#blog', label: 'Blog', icon: 'quill' },
 ]
 
+/** Kurumsal sayfalar landing'in kendi bölümleridir (mağaza da buraya bağlanır). */
 export const corporateLinks: NavLink[] = [
-  { href: 'https://esteacay.com/kurumsal/', label: 'Hakkımızda', external: true },
-  { href: 'https://esteacay.com/cayin-yolculugu/', label: 'Çayın Yolculuğu', external: true },
-  { href: 'https://esteacay.com/blog/', label: 'Blog', external: true },
-  { href: 'https://market.esteacay.com/iletisim/', label: 'İletişim', external: true },
+  { href: '#hakkimizda', label: 'Hakkımızda' },
+  { href: '#yolculuk', label: 'Çayın Yolculuğu' },
+  { href: '#sss', label: 'Sıkça sorulan sorular' },
+  { href: '#iletisim', label: 'İletişim' },
 ]
 
 /** Mağaza tarafındaki yardım/yasal sayfalar (escay-storefront yolları). */
 export const shopLinks: NavLink[] = [
-  { href: shopProductsUrl, label: 'Çaylar', external: true },
+  { href: shopUrl, label: 'Online mağaza', external: true },
+  { href: shopProductsUrl, label: 'Tüm çaylar', external: true },
   { href: `${shopUrl}/order-tracking`, label: 'Sipariş takibi', external: true },
-  { href: `${shopUrl}/faq`, label: 'Sıkça sorulan sorular', external: true },
   { href: `${shopUrl}/iade-ve-geri-odeme-politikasi`, label: 'İade ve geri ödeme', external: true },
 ]
 
