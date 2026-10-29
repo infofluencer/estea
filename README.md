@@ -1,6 +1,6 @@
 # Es Çay
 
-Tanıtım sitesi (npm workspaces) + Mareen altyapısından türetilen e-ticaret sistemi (Medusa v2 + Next.js 15).
+Tanıtım sitesi (npm workspaces) + e-ticaret sistemi (Medusa v2 + Next.js 15).
 Teknik kılavuz: [ES-CAY-BLUEPRINT.md](ES-CAY-BLUEPRINT.md) · kararlar: [docs/ESCAY-KARARLAR.md](docs/ESCAY-KARARLAR.md) · durum: [docs/UYARLAMA-DURUMU.md](docs/UYARLAMA-DURUMU.md)
 
 ```

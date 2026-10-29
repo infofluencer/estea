@@ -14,7 +14,7 @@ test.describe("1. Homepage", () => {
   test("arama paneli açılır", async ({ page }) => {
     const home = new HomepagePage(page)
     await home.goto()
-    await home.openSearch("şal")
+    await home.openSearch("çay")
     await expect(home.searchInput).toBeVisible()
   })
 
