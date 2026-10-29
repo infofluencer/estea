@@ -5,7 +5,7 @@
   display: grid;
   gap: 1.5rem;
   padding: clamp(1.25rem, 2.5vw, 1.85rem);
-  border: 1px solid rgba(67, 18, 18, 0.14);
+  border: 1px solid rgba(0, 0, 0, 0.14);
   background: var(--surface);
   color: var(--brand-deep);
 }
@@ -48,7 +48,7 @@
   grid-column: 1 / -1;
   min-width: 0;
   padding: 0.9rem 0;
-  border-bottom: 1px solid rgba(67, 18, 18, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .fieldHalf {
@@ -57,7 +57,7 @@
 
 .fieldHalf + .fieldHalf {
   padding-left: 1.15rem;
-  border-left: 1px solid rgba(67, 18, 18, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .label {

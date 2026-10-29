@@ -85,8 +85,8 @@
   display: grid;
   gap: 0.55rem;
   padding: 1.25rem 1.5rem;
-  border: 1px solid rgba(67, 18, 18, 0.18);
-  background: color-mix(in srgb, var(--surface, #fff) 94%, #f7f4ef);
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: color-mix(in srgb, var(--surface, #fff) 94%, var(--color-linen));
 }
 
 /* Order progress stepper — visible on all breakpoints */
@@ -96,8 +96,8 @@
   margin: 0;
   padding: 1.15rem 1.35rem 1.25rem;
   list-style: none;
-  border: 1px solid rgba(67, 18, 18, 0.16);
-  background: color-mix(in srgb, var(--surface, #fff) 96%, #f7f4ef);
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  background: color-mix(in srgb, var(--surface, #fff) 96%, var(--color-linen));
 }
 
 .timelineStep {
@@ -191,8 +191,8 @@
   display: grid;
   gap: 0.95rem;
   padding: 1.2rem 1.25rem 1.35rem;
-  border: 1px solid rgba(67, 18, 18, 0.16);
-  background: color-mix(in srgb, var(--surface, #fff) 96%, #f7f4ef);
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  background: color-mix(in srgb, var(--surface, #fff) 96%, var(--color-linen));
 }
 
 .sectionTitle {
@@ -234,7 +234,7 @@
   gap: 0.9rem 1.15rem;
   align-items: start;
   padding: 0.95rem 1rem;
-  border: 1px solid rgba(67, 18, 18, 0.14);
+  border: 1px solid rgba(0, 0, 0, 0.14);
   background: #fff;
 }
 
@@ -242,8 +242,8 @@
   width: 5rem;
   height: 6.15rem;
   object-fit: cover;
-  border: 1px solid rgba(67, 18, 18, 0.1);
-  background: color-mix(in srgb, var(--surface-muted, #f5efe4) 70%, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: color-mix(in srgb, var(--surface-muted, var(--color-linen)) 70%, #fff);
   flex-shrink: 0;
 }
 

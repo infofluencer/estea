@@ -187,8 +187,8 @@
 .notice {
   margin: 0;
   padding: 0.85rem 1rem;
-  border: 1px solid rgba(67, 18, 18, 0.14);
-  background: color-mix(in srgb, var(--surface-muted, #f5efe4) 80%, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: color-mix(in srgb, var(--surface-muted, var(--color-linen)) 80%, #fff);
   font-size: 0.9rem;
   line-height: 1.5;
   color: var(--brand-deep);
@@ -223,8 +223,8 @@
   gap: 0.7rem;
   justify-items: start;
   padding: 1.85rem 1.5rem 1.9rem;
-  border: 1px solid rgba(67, 18, 18, 0.14);
-  background: color-mix(in srgb, var(--surface, #fff) 92%, #f7f4ef);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: color-mix(in srgb, var(--surface, #fff) 92%, var(--color-linen));
   color: var(--brand-deep);
   text-align: left;
   cursor: pointer;
@@ -234,8 +234,8 @@
 }
 
 .dashCard:hover:not(:disabled) {
-  border-color: rgba(67, 18, 18, 0.32);
-  background: #f7f4ef;
+  border-color: rgba(0, 0, 0, 0.32);
+  background: var(--color-linen);
 }
 
 .dashCard:disabled {
@@ -283,8 +283,8 @@
   gap: 1rem 1.15rem;
   align-items: start;
   padding: 1rem 1.1rem;
-  border: 1px solid rgba(67, 18, 18, 0.18);
-  background: color-mix(in srgb, var(--surface, #fff) 94%, #f7f4ef);
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: color-mix(in srgb, var(--surface, #fff) 94%, var(--color-linen));
   color: inherit;
   text-decoration: none;
   transition:
@@ -294,10 +294,10 @@
 }
 
 .orderCard:hover {
-  border-color: rgba(67, 18, 18, 0.38);
-  background: #f7f4ef;
+  border-color: rgba(0, 0, 0, 0.38);
+  background: var(--color-linen);
   text-decoration: none;
-  box-shadow: 0 1px 0 rgba(67, 18, 18, 0.06);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 }
 
 .orderThumbs {
@@ -311,8 +311,8 @@
   width: 3.35rem;
   height: 4.15rem;
   object-fit: cover;
-  border: 1px solid rgba(67, 18, 18, 0.12);
-  background: color-mix(in srgb, var(--surface-muted, #f5efe4) 70%, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: color-mix(in srgb, var(--surface-muted, var(--color-linen)) 70%, #fff);
   flex-shrink: 0;
 }
 
@@ -322,7 +322,7 @@
   justify-content: center;
   width: 3.35rem;
   height: 4.15rem;
-  border: 1px dashed rgba(67, 18, 18, 0.28);
+  border: 1px dashed rgba(0, 0, 0, 0.28);
   font-size: 0.78rem;
   color: var(--brand-deep);
   opacity: 0.7;
@@ -366,7 +366,7 @@
 .statusPill {
   display: inline-block;
   padding: 0.15rem 0.45rem;
-  border: 1px solid rgba(67, 18, 18, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   font-size: 0.68rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -421,7 +421,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--brand-deep);
-  border: 1px solid rgba(67, 18, 18, 0.22);
+  border: 1px solid rgba(0, 0, 0, 0.22);
   padding: 0.12rem 0.4rem;
   vertical-align: middle;
 }
@@ -458,8 +458,8 @@
 
 .addressCard {
   padding: 1.15rem 1.2rem 1.2rem;
-  border: 1px solid rgba(67, 18, 18, 0.18);
-  background: color-mix(in srgb, var(--surface, #fff) 94%, #f7f4ef);
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: color-mix(in srgb, var(--surface, #fff) 94%, var(--color-linen));
 }
 
 .addressCardHead {
@@ -476,7 +476,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.55;
-  border: 1px solid rgba(67, 18, 18, 0.16);
+  border: 1px solid rgba(0, 0, 0, 0.16);
   padding: 0.15rem 0.4rem;
 }
 
@@ -500,7 +500,7 @@
   gap: 1rem;
   margin-top: 0.95rem;
   padding-top: 0.85rem;
-  border-top: 1px solid rgba(67, 18, 18, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .textBtn {
@@ -562,7 +562,7 @@
   width: 100%;
   padding: 0.35rem 0 0.65rem;
   border: 0;
-  border-bottom: 1px solid rgba(67, 18, 18, 0.28);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.28);
   border-radius: 0;
   background: transparent;
   color: var(--foreground);
@@ -610,7 +610,7 @@
 }
 
 .submit:hover:not(:disabled) {
-  background: #5a1c1c;
+  background: var(--color-brand-dark);
 }
 
 .submit:disabled {
@@ -655,7 +655,7 @@
   display: grid;
   gap: 1.25rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(67, 18, 18, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .subSectionTitle {
@@ -671,7 +671,7 @@
 .logout {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(67, 18, 18, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .favList {
@@ -688,7 +688,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(67, 18, 18, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .favLink {
@@ -710,7 +710,7 @@
   height: 70px;
   object-fit: cover;
   flex-shrink: 0;
-  background: color-mix(in srgb, var(--surface-muted, #f5efe4) 70%, #fff);
+  background: color-mix(in srgb, var(--surface-muted, var(--color-linen)) 70%, #fff);
 }
 
 .favMeta {

@@ -231,12 +231,12 @@
 
 .title {
   margin: 0;
-  font-family: var(--font-playfair), Georgia, "Times New Roman", serif;
-  font-size: clamp(1.25rem, 1.8vw, 1.55rem);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  color: var(--brand-deep);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  color: var(--color-ink);
 }
 
 /* Optional trial: swap product title to EB Garamond italic (not applied by default) */
@@ -292,10 +292,10 @@
 
 .priceCurrent {
   font-family: var(--font-sans);
-  font-size: 1.05rem;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  color: var(--brand-deep);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--color-ink);
 }
 
 .priceOriginal {

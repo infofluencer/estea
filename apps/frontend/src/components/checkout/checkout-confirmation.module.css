@@ -144,7 +144,7 @@
   display: grid;
   gap: 1.1rem;
   padding: clamp(1.25rem, 2.5vw, 1.85rem);
-  border: 1px solid rgba(67, 18, 18, 0.14);
+  border: 1px solid rgba(0, 0, 0, 0.14);
   background: var(--surface);
 }
 
@@ -155,7 +155,7 @@
   align-items: baseline;
   gap: 1rem;
   padding-bottom: 0.85rem;
-  border-bottom: 1px solid rgba(67, 18, 18, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   font-family: var(--font-logo);
   font-size: 0.8rem;
   font-weight: 500;
@@ -185,7 +185,7 @@
   align-items: center;
   gap: 1rem;
   padding: 0.9rem 0;
-  border-bottom: 1px solid rgba(67, 18, 18, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .item:first-child {
@@ -332,7 +332,7 @@
 .totalsDivider {
   height: 1px;
   margin: 0.35rem 0;
-  background: rgba(67, 18, 18, 0.12);
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .totalsRowStrong {

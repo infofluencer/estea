@@ -6,9 +6,9 @@ import "@fontsource-variable/archivo/wght.css"
 import "@fontsource-variable/bricolage-grotesque/wght.css"
 import { Analytics } from "@/components/Analytics"
 import { BackToTop } from "@/components/BackToTop"
+import RevealInit from "@/components/brand/RevealInit"
 import { FavoritesProvider } from "@/components/FavoritesProvider"
 import { OmnisendSnippet } from "@/components/OmnisendSnippet"
-import { PageLoader } from "@/components/PageLoader"
 import { SiteFooter } from "@/components/SiteFooter"
 import { SiteHeader } from "@/components/SiteHeader"
 import { getLoggedInCustomer } from "@/lib/auth/customer"
@@ -42,22 +42,6 @@ export const metadata: Metadata = {
   },
 }
 
-const bootInitScript = `
-(() => {
-  try {
-    document.documentElement.classList.add("escay-loading");
-  } catch (_) {}
-})();
-`
-
-const bootLoaderStyle = `
-html.escay-loading,html.escay-loading body{overflow:hidden!important;background:#fff}
-html.escay-loading .site-chrome,
-html.escay-loading main,
-html.escay-loading .site-footer,
-html.escay-loading .back-to-top{opacity:0!important;pointer-events:none!important}
-`
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -68,12 +52,7 @@ export default async function RootLayout({
 
   return (
     <html lang="tr" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: bootInitScript }} />
-        <style dangerouslySetInnerHTML={{ __html: bootLoaderStyle }} />
-      </head>
-      <body
-      >
+      <body>
         {/* CookieYes — hidrasyondan SONRA yüklenir; NEXT_PUBLIC_COOKIEYES_ID boşsa hiç yüklenmez.
             Senkron <head> kurulumunda banner React hidrasyonundan önce <body>'ye
             eklenip hidrasyon uyuşmazlığına (React #418) yol açıyor, React sayfayı
@@ -89,7 +68,6 @@ export default async function RootLayout({
           />
         ) : null}
         <FavoritesProvider isLoggedIn={isLoggedIn}>
-          <PageLoader />
           <div className="site-chrome">
             <div className="site-top">
               <SiteHeader />
@@ -98,6 +76,7 @@ export default async function RootLayout({
           <main>{children}</main>
           <SiteFooter />
           <BackToTop />
+          <RevealInit />
           <OmnisendSnippet />
           <Analytics />
         </FavoritesProvider>
