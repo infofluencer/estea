@@ -1,0 +1,1467 @@
+{
+ "url": "http://localhost:3025/",
+ "at": "2026-10-29T12:06:12.238Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.45,
+    0.81
+   ],
+   "motion": {
+    "elements": 13,
+    "css": 0,
+    "transitions": 11,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1745,
+     "screens": 1.9,
+     "words": 152,
+     "img": 2,
+     "video": 0,
+     "canvas": 0,
+     "svg": 11,
+     "sections": 2,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "home-hero.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "chars": 21,
+     "lines": 2,
+     "size": 67.2,
+     "vw": 4.7,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.98,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.48,
+     "top": 271,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "lines": 2,
+     "size": 67.2,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "words": 3,
+      "chars": 21,
+      "lines": 2,
+      "size": 67.2,
+      "vw": 4.7,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.48,
+      "top": 271,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Çaylar",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 32,
+      "vw": 2.2,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.5,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 914,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "ES ÇAY",
+      "words": 2,
+      "chars": 6,
+      "lines": 1,
+      "size": 57.6,
+      "vw": 4,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 500,
+      "tracking": 0.2,
+      "leading": 0.9,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.18,
+      "top": 1312,
+      "tag": "a",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 3,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.46,
+       "mono": false
+      },
+      {
+       "family": "Georgia",
+       "share": 0.39,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.15,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      18,
+      19,
+      32,
+      58,
+      67
+     ],
+     "sizeCount": 11,
+     "notLoaded": [],
+     "body": {
+      "font": "Georgia",
+      "size": 18.4,
+      "leading": 1.6,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 21
+     },
+     "measureChars": 59,
+     "max": {
+      "size": 67.2,
+      "vw": 4.7,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Çayın lezzeti doğadan"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 2,
+     "microLabelShare": 0.109,
+     "microSamples": [
+      "Fırsatlardan haberdar olmak için giriş y",
+      "© 2026 Hamzalı Çay Gıda Tur. ve İnş. A.Ş"
+     ],
+     "upperShare": 0.2,
+     "centerShare": 0.08,
+     "smallText": 9
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#ecebe6",
+       "top": 80,
+       "hsl": {
+        "h": 50,
+        "s": 0.14,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#f8f8f8",
+       "top": 866,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#b43317",
+       "top": 1232,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.39
+      },
+      {
+       "color": "#f9f9f9",
+       "share": 0.25
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.23
+      },
+      {
+       "color": "#355c0c",
+       "share": 0.09
+      },
+      {
+       "color": "#b43317",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#b43317"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 3,
+     "radius": 0,
+     "height": 56,
+     "withShadow": 1,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 4,
+     "heroLabels": [
+      "HARMANLARI KEŞFET",
+      "TÜM ÇAYLAR"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "footer.site-footer → radial-gradient(120% 90% at 0% 0%, color(srgb 0.560784 0.156863 0.0705882 / 0.22) 0%, rgba(0, 0, 0, 0) 55%), n"
+     ],
+     "gradientText": 0,
+     "hairlines": 2,
+     "hairlineSamples": [
+      "form.site-login-bar 1440px",
+      "div.site-footer__bottom 1440px"
+     ],
+     "outlinedBoxes": 5,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 4,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.31
+     }
+    ],
+    "nav": {
+     "links": 8,
+     "fixed": false,
+     "height": 97,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1745,
+    "margins": {
+     "left": 64,
+     "right": 116
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 0,
+      "height": 1174,
+      "words": 78,
+      "media": 1,
+      "middle": 40,
+      "heading": {
+       "text": "Çayın lezzeti doğadan",
+       "size": 67,
+       "tag": "h1"
+      },
+      "left": 64,
+      "right": 64,
+      "textLeft": 64,
+      "textRight": 116,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.site-footer",
+      "tag": "footer",
+      "top": 1232,
+      "height": 512,
+      "words": 67,
+      "media": 0,
+      "middle": 180,
+      "heading": {
+       "text": "Es Çay",
+       "size": 58,
+       "tag": "a"
+      },
+      "left": 124,
+      "right": 268,
+      "textLeft": 124,
+      "textRight": 268,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "size": 67,
+      "top": 271,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 64,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 3,
+    "bodySize": 18,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.18,
+    "voidBox": {
+     "x": 0,
+     "y": 600,
+     "w": 780,
+     "h": 300
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.62,
+    0.99
+   ],
+   "motion": {
+    "elements": 13,
+    "css": 0,
+    "transitions": 11,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 1723,
+     "screens": 1.7,
+     "words": 152,
+     "img": 2,
+     "video": 0,
+     "canvas": 0,
+     "svg": 11,
+     "sections": 2,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "home-hero.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "chars": 21,
+     "lines": 2,
+     "size": 39.9,
+     "vw": 5.2,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.98,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.47,
+     "top": 90,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "lines": 2,
+     "size": 39.9,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "words": 3,
+      "chars": 21,
+      "lines": 2,
+      "size": 39.9,
+      "vw": 5.2,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.47,
+      "top": 90,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "ES ÇAY",
+      "words": 2,
+      "chars": 6,
+      "lines": 1,
+      "size": 38.4,
+      "vw": 5,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 500,
+      "tracking": 0.2,
+      "leading": 0.9,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.23,
+      "top": 998,
+      "tag": "a",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.46,
+       "mono": false
+      },
+      {
+       "family": "Georgia",
+       "share": 0.39,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.15,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      19,
+      22,
+      38,
+      40
+     ],
+     "sizeCount": 10,
+     "notLoaded": [],
+     "body": {
+      "font": "Georgia",
+      "size": 16,
+      "leading": 1.6,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 21
+     },
+     "measureChars": 45,
+     "max": {
+      "size": 39.9,
+      "vw": 5.2,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Çayın lezzeti doğadan"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 2,
+     "microLabelShare": 0.109,
+     "microSamples": [
+      "Fırsatlardan haberdar olmak için giriş y",
+      "© 2026 Hamzalı Çay Gıda Tur. ve İnş. A.Ş"
+     ],
+     "upperShare": 0.2,
+     "centerShare": 0.26,
+     "smallText": 9
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#f8f8f8",
+       "top": 464,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#b43317",
+       "top": 946,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.39
+      },
+      {
+       "color": "#f9f9f9",
+       "share": 0.25
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.23
+      },
+      {
+       "color": "#355c0c",
+       "share": 0.09
+      },
+      {
+       "color": "#b43317",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#b43317"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 4,
+     "radius": 0,
+     "height": 56,
+     "withShadow": 1,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 4,
+     "heroLabels": [
+      "HARMANLARI KEŞFET",
+      "TÜM ÇAYLAR",
+      "GİRİŞ YAP"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "footer.site-footer → radial-gradient(120% 90% at 0% 0%, color(srgb 0.560784 0.156863 0.0705882 / 0.22) 0%, rgba(0, 0, 0, 0) 55%), n"
+     ],
+     "gradientText": 0,
+     "hairlines": 2,
+     "hairlineSamples": [
+      "form.site-login-bar 768px",
+      "div.site-footer__bottom 768px"
+     ],
+     "outlinedBoxes": 5,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 4,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.14
+     }
+    ],
+    "nav": {
+     "links": 8,
+     "fixed": false,
+     "height": 97,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 1723,
+    "margins": {
+     "left": 31,
+     "right": 38
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 0,
+      "height": 887,
+      "words": 78,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Çayın lezzeti doğadan",
+       "size": 40,
+       "tag": "h1"
+      },
+      "left": 38,
+      "right": 38,
+      "textLeft": 38,
+      "textRight": 90,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.site-footer",
+      "tag": "footer",
+      "top": 946,
+      "height": 777,
+      "words": 67,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Es Çay",
+       "size": 38,
+       "tag": "a"
+      },
+      "left": 31,
+      "right": 64,
+      "textLeft": 31,
+      "textRight": 64,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "size": 40,
+      "top": 90,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 38,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 3,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.52,
+    0.52,
+    0.88
+   ],
+   "motion": {
+    "elements": 7,
+    "css": 0,
+    "transitions": 5,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 2159,
+     "screens": 2.6,
+     "words": 128,
+     "img": 2,
+     "video": 0,
+     "canvas": 0,
+     "svg": 11,
+     "sections": 2,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "home-hero.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "chars": 21,
+     "lines": 2,
+     "size": 35.2,
+     "vw": 9,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.98,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.9,
+     "top": 283,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "lines": 2,
+     "size": 35.2,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "words": 3,
+      "chars": 21,
+      "lines": 2,
+      "size": 35.2,
+      "vw": 9,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 283,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Çaylar",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.5,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 623,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "ES ÇAY",
+      "words": 2,
+      "chars": 6,
+      "lines": 1,
+      "size": 43.2,
+      "vw": 11.1,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 500,
+      "tracking": 0.14,
+      "leading": 0.9,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.46,
+      "top": 1591,
+      "tag": "a",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 3,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 1,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Georgia",
+       "share": 0.47,
+       "mono": false
+      },
+      {
+       "family": "Archivo Variable",
+       "share": 0.36,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.18,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      9,
+      10,
+      11,
+      12,
+      14,
+      15,
+      16,
+      19,
+      22,
+      35,
+      43
+     ],
+     "sizeCount": 11,
+     "notLoaded": [],
+     "body": {
+      "font": "Georgia",
+      "size": 16,
+      "leading": 1.6,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 21
+     },
+     "measureChars": 44,
+     "max": {
+      "size": 43.2,
+      "vw": 11.1,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Es Çay"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 2,
+     "microLabelShare": 0.129,
+     "microSamples": [
+      "Fırsatlardan haberdar olmak için giriş y",
+      "© 2026 Hamzalı Çay Gıda Tur. ve İnş. A.Ş"
+     ],
+     "upperShare": 0.2,
+     "centerShare": 0.45,
+     "smallText": 9
+    },
+    "eyebrows": [
+     {
+      "text": "Harmanları keşfet",
+      "above": "Çaylar",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 11,
+      "top": 503
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#f8f8f8",
+       "top": 599,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#b43317",
+       "top": 1551,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.47
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.25
+      },
+      {
+       "color": "#f9f9f9",
+       "share": 0.13
+      },
+      {
+       "color": "#355c0c",
+       "share": 0.11
+      },
+      {
+       "color": "#b43317",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#b43317"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 3,
+     "inHero": 2,
+     "radius": 3,
+     "height": 56,
+     "withShadow": 1,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 3,
+     "heroLabels": [
+      "HARMANLARI KEŞFET",
+      "TÜM ÇAYLAR"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "footer.site-footer → radial-gradient(120% 90% at 0% 0%, color(srgb 0.560784 0.156863 0.0705882 / 0.22) 0%, rgba(0, 0, 0, 0) 55%), n"
+     ],
+     "gradientText": 0,
+     "hairlines": 5,
+     "hairlineSamples": [
+      "form.site-login-bar 390px",
+      "nav.site-footer__nav 358px",
+      "nav.site-footer__nav 358px",
+      "nav.site-footer__nav 358px",
+      "div.site-footer__bottom 390px"
+     ],
+     "outlinedBoxes": 5,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 4,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.23
+     }
+    ],
+    "nav": {
+     "links": 3,
+     "fixed": false,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 2159,
+    "margins": {
+     "left": 14,
+     "right": 14
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 0,
+      "height": 1468,
+      "words": 78,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Çayın lezzeti doğadan",
+       "size": 35,
+       "tag": "h1"
+      },
+      "left": 20,
+      "right": 20,
+      "textLeft": 20,
+      "textRight": 35,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.site-footer",
+      "tag": "footer",
+      "top": 1551,
+      "height": 608,
+      "words": 46,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Es Çay",
+       "size": 43,
+       "tag": "a"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 26,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "size": 35,
+      "top": 283,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 20,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 3,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "2 tiny uppercase letter-spaced label(s): \"Fırsatlardan haberdar olmak için giriş y\", \"© 2026 Hamzalı Çay Gıda Tur. ve İnş. A.Ş\"",
+   "fix": "Prefer sentence case at body size.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "gradient",
+   "width": 1440,
+   "message": "1 gradient fill(s): footer.site-footer → radial-gradient(120% 90% at 0% 0%, color(srgb 0.560784 0.156863 0.0705882 / 0.22) 0%, rgba(0, 0, 0, 0) 55%), n",
+   "fix": "Use a flat colour or a real image. The only gradient allowed by default is a neutral scrim over a photo for legibility.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "button-fx",
+   "width": 1440,
+   "message": "Buttons with shadow/glow.",
+   "fix": "Flat fill, one colour.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "2 thin rule(s)/divider line(s): form.site-login-bar 1440px | div.site-footer__bottom 1440px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "outlined-box",
+   "width": 1440,
+   "message": "5 boxes drawn with a 1px outline.",
+   "fix": "Define a surface by its fill (one tone step from the page) or leave the content unboxed.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "font-count",
+   "width": 1440,
+   "message": "3 typefaces in use (Archivo Variable, Georgia, Bricolage Grotesque Variable).",
+   "fix": "Two at most.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "11 different font sizes (10, 11, 12, 13, 14, 16, 18, 19, 32, 58, 67).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 1 picture(s) on the page (1 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "FAIL",
+   "id": "small-text",
+   "width": 1440,
+   "message": "9 text blocks under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "off-centre",
+   "width": 1440,
+   "message": "The margins differ: 64px on the left, 116px on the right, at 1440px.",
+   "fix": "Put the navigation and the content on one pair of margins; check for padding on one side only, a scrollbar gutter, or a header on another inset than the page."
+  },
+  {
+   "level": "WARN",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Little motion: 13 element(s) moved while the page loaded and scrolled.",
+   "fix": "Give every section an entrance for its parts (not one fade of the whole block) and add one moving picture: a looping clip or a slow move on a photograph."
+  },
+  {
+   "level": "WARN",
+   "id": "name-only-title",
+   "width": 768,
+   "message": "The h1 is a bare name (\"Çayın lezzeti doğadan\") and nothing else on the first screen says what this is.",
+   "fix": "Keep the name if it leads, and give the line under it (18px or more) the plain words: what it is, for whom, where or when. In the study of 97 Sites of the Day, first screens that named nothing lost usability and content points.",
+   "alsoAt": [
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "eyebrow",
+   "width": 390,
+   "message": "1 eyebrow/kicker label(s) above headings: \"Harmanları keşfet\" above \"Çaylar\"",
+   "fix": "Delete them. If the label carried real information, fold it into the headline or the supporting sentence."
+  },
+  {
+   "level": "FAIL",
+   "id": "reduced-hidden",
+   "width": 1440,
+   "message": "With reduced motion requested, 4 text block(s) on the first screen stay invisible: \"Siyah Çay\", \"Yeşil Çay\", \"Bitki Çayı\", \"Tümünü gör\"",
+   "fix": "Put every hidden starting state inside @media (prefers-reduced-motion: no-preference); the reduced page is the finished page (references/motion.md §8)."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/before-home/desktop-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/before-home/desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/before-home/tablet-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/before-home/tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/before-home/mobile-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/before-home/mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

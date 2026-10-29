@@ -1,0 +1,1245 @@
+{
+ "url": "http://localhost:3025/faq",
+ "at": "2026-10-29T12:06:26.986Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.39,
+    0.73
+   ],
+   "motion": {
+    "elements": 6,
+    "css": 0,
+    "transitions": 4,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1279,
+     "screens": 1.4,
+     "words": 130,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 11,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "ES ÇAY",
+     "words": 2,
+     "chars": 6,
+     "lines": 1,
+     "size": 57.6,
+     "vw": 4,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 500,
+     "tracking": 0.2,
+     "leading": 0.9,
+     "upper": true,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.18,
+     "top": 846,
+     "tag": "a",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "SIKÇA SORULAN SORULAR",
+     "words": 3,
+     "lines": 1,
+     "size": 28,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "SIKÇA SORULAN SORULAR",
+      "words": 3,
+      "chars": 21,
+      "lines": 1,
+      "size": 28,
+      "vw": 1.9,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 500,
+      "tracking": 0.12,
+      "leading": 1.5,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.41,
+      "top": 121,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "ES ÇAY",
+      "words": 2,
+      "chars": 6,
+      "lines": 1,
+      "size": 57.6,
+      "vw": 4,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 500,
+      "tracking": 0.2,
+      "leading": 0.9,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.18,
+      "top": 846,
+      "tag": "a",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.81,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.19,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      17,
+      28,
+      58
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 16.3,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 21
+     },
+     "measureChars": 73,
+     "max": {
+      "size": 57.6,
+      "vw": 4,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Es Çay"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 2,
+     "microLabelShare": 0.124,
+     "microSamples": [
+      "Fırsatlardan haberdar olmak için giriş y",
+      "© 2026 Hamzalı Çay Gıda Tur. ve İnş. A.Ş"
+     ],
+     "upperShare": 0.3,
+     "centerShare": 0.06,
+     "smallText": 8
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#b43317",
+       "top": 766,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.32
+      },
+      {
+       "color": "#f9f9f9",
+       "share": 0.28
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.24
+      },
+      {
+       "color": "#355c0c",
+       "share": 0.13
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#b43317"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 2,
+     "inHero": 2,
+     "radius": 0,
+     "height": 43,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 2,
+     "heroLabels": [
+      "GİRİŞ YAP"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "footer.site-footer → radial-gradient(120% 90% at 0% 0%, color(srgb 0.560784 0.156863 0.0705882 / 0.22) 0%, rgba(0, 0, 0, 0) 55%), n"
+     ],
+     "gradientText": 0,
+     "hairlines": 8,
+     "hairlineSamples": [
+      "div.faq_list__QvF_S 592px",
+      "div.faq_item__Jxb_Z 592px",
+      "div.faq_item__Jxb_Z 592px",
+      "div.faq_item__Jxb_Z 592px",
+      "div.faq_item__Jxb_Z 592px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 8,
+     "fixed": true,
+     "height": 97,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1279,
+    "margins": {
+     "left": 124,
+     "right": 275
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 97,
+      "height": 610,
+      "words": 60,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Sıkça Sorulan Sorular",
+       "size": 28,
+       "tag": "h1"
+      },
+      "left": 424,
+      "right": 424,
+      "textLeft": 424,
+      "textRight": 460,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.site-footer",
+      "tag": "footer",
+      "top": 766,
+      "height": 512,
+      "words": 67,
+      "media": 0,
+      "middle": 180,
+      "heading": {
+       "text": "Es Çay",
+       "size": 58,
+       "tag": "a"
+      },
+      "left": 124,
+      "right": 268,
+      "textLeft": 124,
+      "textRight": 268,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "SIKÇA SORULAN SORULAR",
+      "size": 28,
+      "top": 121,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 424,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 2,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.2,
+    "voidBox": {
+     "x": 1080,
+     "y": 120,
+     "w": 360,
+     "h": 720
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.43,
+    0.88
+   ],
+   "motion": {
+    "elements": 6,
+    "css": 0,
+    "transitions": 4,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 1534,
+     "screens": 1.5,
+     "words": 130,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 11,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "ES ÇAY",
+     "words": 2,
+     "chars": 6,
+     "lines": 1,
+     "size": 38.4,
+     "vw": 5,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 500,
+     "tracking": 0.2,
+     "leading": 0.9,
+     "upper": true,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.23,
+     "top": 809,
+     "tag": "a",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "SIKÇA SORULAN SORULAR",
+     "words": 3,
+     "lines": 1,
+     "size": 21.6,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "ES ÇAY",
+      "words": 2,
+      "chars": 6,
+      "lines": 1,
+      "size": 38.4,
+      "vw": 5,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 500,
+      "tracking": 0.2,
+      "leading": 0.9,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.23,
+      "top": 809,
+      "tag": "a",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.81,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.19,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      17,
+      22,
+      38
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 16.3,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 21
+     },
+     "measureChars": 75,
+     "max": {
+      "size": 38.4,
+      "vw": 5,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Es Çay"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 2,
+     "microLabelShare": 0.124,
+     "microSamples": [
+      "Fırsatlardan haberdar olmak için giriş y",
+      "© 2026 Hamzalı Çay Gıda Tur. ve İnş. A.Ş"
+     ],
+     "upperShare": 0.3,
+     "centerShare": 0.26,
+     "smallText": 8
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#b43317",
+       "top": 757,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.32
+      },
+      {
+       "color": "#f9f9f9",
+       "share": 0.28
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.24
+      },
+      {
+       "color": "#355c0c",
+       "share": 0.13
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#b43317"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 2,
+     "inHero": 2,
+     "radius": 0,
+     "height": 43,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 2,
+     "heroLabels": [
+      "GİRİŞ YAP"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "footer.site-footer → radial-gradient(120% 90% at 0% 0%, color(srgb 0.560784 0.156863 0.0705882 / 0.22) 0%, rgba(0, 0, 0, 0) 55%), n"
+     ],
+     "gradientText": 0,
+     "hairlines": 8,
+     "hairlineSamples": [
+      "div.faq_list__QvF_S 611px",
+      "div.faq_item__Jxb_Z 611px",
+      "div.faq_item__Jxb_Z 611px",
+      "div.faq_item__Jxb_Z 611px",
+      "div.faq_item__Jxb_Z 611px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 8,
+     "fixed": true,
+     "height": 97,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 1534,
+    "margins": {
+     "left": 31,
+     "right": 45
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 97,
+      "height": 601,
+      "words": 60,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Sıkça Sorulan Sorular",
+       "size": 22,
+       "tag": "h1"
+      },
+      "left": 79,
+      "right": 79,
+      "textLeft": 79,
+      "textRight": 86,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.site-footer",
+      "tag": "footer",
+      "top": 757,
+      "height": 777,
+      "words": 67,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Es Çay",
+       "size": 38,
+       "tag": "a"
+      },
+      "left": 31,
+      "right": 64,
+      "textLeft": 31,
+      "textRight": 64,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "SIKÇA SORULAN SORULAR",
+      "size": 22,
+      "top": 121,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 79,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 2,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.39,
+    0.81
+   ],
+   "motion": {
+    "elements": 4,
+    "css": 0,
+    "transitions": 2,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 1402,
+     "screens": 1.7,
+     "words": 106,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 11,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "SIKÇA SORULAN SORULAR",
+     "words": 3,
+     "chars": 21,
+     "lines": 1,
+     "size": 21.6,
+     "vw": 5.5,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 500,
+     "tracking": 0.12,
+     "leading": 1.5,
+     "upper": true,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.92,
+     "top": 80,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "SIKÇA SORULAN SORULAR",
+     "words": 3,
+     "lines": 1,
+     "size": 21.6,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "ES ÇAY",
+      "words": 2,
+      "chars": 6,
+      "lines": 1,
+      "size": 43.2,
+      "vw": 11.1,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 500,
+      "tracking": 0.14,
+      "leading": 0.9,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.46,
+      "top": 834,
+      "tag": "a",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 1,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.77,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.23,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      15,
+      16,
+      17,
+      22,
+      43
+     ],
+     "sizeCount": 10,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 16.3,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 21
+     },
+     "measureChars": 44,
+     "max": {
+      "size": 43.2,
+      "vw": 11.1,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Es Çay"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 2,
+     "microLabelShare": 0.15,
+     "microSamples": [
+      "Fırsatlardan haberdar olmak için giriş y",
+      "© 2026 Hamzalı Çay Gıda Tur. ve İnş. A.Ş"
+     ],
+     "upperShare": 0.32,
+     "centerShare": 0.48,
+     "smallText": 8
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#b43317",
+       "top": 794,
+       "hsl": {
+        "h": 11,
+        "s": 0.77,
+        "l": 0.4
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.39
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.29
+      },
+      {
+       "color": "#f9f9f9",
+       "share": 0.15
+      },
+      {
+       "color": "#355c0c",
+       "share": 0.12
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.03
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#b43317"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 1,
+     "inHero": 1,
+     "radius": 0,
+     "height": 36,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 1,
+     "heroLabels": [
+      "GİRİŞ YAP"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "footer.site-footer → radial-gradient(120% 90% at 0% 0%, color(srgb 0.560784 0.156863 0.0705882 / 0.22) 0%, rgba(0, 0, 0, 0) 55%), n"
+     ],
+     "gradientText": 0,
+     "hairlines": 11,
+     "hairlineSamples": [
+      "div.faq_list__QvF_S 358px",
+      "div.faq_item__Jxb_Z 358px",
+      "div.faq_item__Jxb_Z 358px",
+      "div.faq_item__Jxb_Z 358px",
+      "div.faq_item__Jxb_Z 358px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 3,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 1402,
+    "margins": {
+     "left": 14,
+     "right": 14
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 56,
+      "height": 655,
+      "words": 60,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Sıkça Sorulan Sorular",
+       "size": 22,
+       "tag": "h1"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 38,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.site-footer",
+      "tag": "footer",
+      "top": 794,
+      "height": 608,
+      "words": 46,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Es Çay",
+       "size": 43,
+       "tag": "a"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 26,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "SIKÇA SORULAN SORULAR",
+      "size": 22,
+      "top": 80,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 2,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "2 tiny uppercase letter-spaced label(s): \"Fırsatlardan haberdar olmak için giriş y\", \"© 2026 Hamzalı Çay Gıda Tur. ve İnş. A.Ş\"",
+   "fix": "Prefer sentence case at body size.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "gradient",
+   "width": 1440,
+   "message": "1 gradient fill(s): footer.site-footer → radial-gradient(120% 90% at 0% 0%, color(srgb 0.560784 0.156863 0.0705882 / 0.22) 0%, rgba(0, 0, 0, 0) 55%), n",
+   "fix": "Use a flat colour or a real image. The only gradient allowed by default is a neutral scrim over a photo for legibility.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "8 thin rule(s)/divider line(s): div.faq_list__QvF_S 592px | div.faq_item__Jxb_Z 592px | div.faq_item__Jxb_Z 592px | div.faq_item__Jxb_Z 592px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 0 picture(s) on the page (0 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "FAIL",
+   "id": "small-text",
+   "width": 1440,
+   "message": "8 text blocks under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "focal-point",
+   "width": 1440,
+   "message": "The first screen has no dominant element: the largest type is 57.6px (4vw) and no single picture holds a third of the viewport.",
+   "fix": "Make one thing lead: the headline at display size, or one large picture. A grid of many small pictures is not one thing; in blind tests jurors marked a first screen without a headline down every time. On the strongest studied sites the largest type has a median of 8.4vw."
+  },
+  {
+   "level": "FAIL",
+   "id": "off-centre",
+   "width": 1440,
+   "message": "The page sits off-centre: its content comes to 124px from the left edge but only to 275px from the right, at 1440px.",
+   "fix": "Give the page one pair of equal margins. Check the wrapper for a max-width without margin-inline: auto, a grid with an empty last column, or padding on one side only. If one side is meant to hold air, it must still be closed by something that reaches the margin (a picture, the navigation's last item, a figure)."
+  },
+  {
+   "level": "WARN",
+   "id": "small-title",
+   "width": 1440,
+   "message": "The h1 is 28px (\"SIKÇA SORULAN SORULAR\").",
+   "fix": "Set the title at display size, or make the large text of the first screen the h1.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "name-only-title",
+   "width": 1440,
+   "message": "The h1 is a bare name (\"SIKÇA SORULAN SORULAR\") and nothing else on the first screen says what this is.",
+   "fix": "Keep the name if it leads, and give the line under it (18px or more) the plain words: what it is, for whom, where or when. In the study of 97 Sites of the Day, first screens that named nothing lost usability and content points.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Only 6 element(s) moved while the page loaded and scrolled.",
+   "fix": "Build the motion layer (SKILL.md step 9, references/motion.md): the signature move, an entrance for the parts of every section, feedback on every control, and one moving picture. Transform and opacity only, with a reduced-motion fallback."
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 390,
+   "message": "10 different font sizes (9, 10, 11, 12, 13, 15, 16, 17, 22, 43).",
+   "fix": "A page needs about five: display, heading, lead, body, small."
+  },
+  {
+   "level": "FAIL",
+   "id": "reduced-hidden",
+   "width": 1440,
+   "message": "With reduced motion requested, 4 text block(s) on the first screen stay invisible: \"Siyah Çay\", \"Yeşil Çay\", \"Bitki Çayı\", \"Tümünü gör\"",
+   "fix": "Put every hidden starting state inside @media (prefers-reduced-motion: no-preference); the reduced page is the finished page (references/motion.md §8)."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/before-faq/desktop-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/before-faq/desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/before-faq/tablet-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/before-faq/tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/before-faq/mobile-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/before-faq/mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

@@ -1,0 +1,1757 @@
+{
+ "url": "http://localhost:3025/urun/gold-karadeniz-cayi",
+ "at": "2026-10-29T13:06:08.042Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.94,
+    0.7,
+    0.95
+   ],
+   "motion": {
+    "elements": 3,
+    "css": 0,
+    "transitions": 1,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 2563,
+     "screens": 2.8,
+     "words": 295,
+     "img": 34,
+     "video": 0,
+     "canvas": 0,
+     "svg": 32,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 29,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg",
+      "estea-gold-cay-5000-gr.jpg",
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg",
+      "estea-gold-cay-5000-gr.jpg",
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 1,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Gold Karadeniz Çayı",
+     "words": 3,
+     "chars": 19,
+     "lines": 2,
+     "size": 37.4,
+     "vw": 2.6,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.02,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "right",
+     "widthRatio": 0.21,
+     "top": 240,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Gold Karadeniz Çayı",
+     "words": 3,
+     "lines": 2,
+     "size": 37.4,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Gold Karadeniz Çayı",
+      "words": 3,
+      "chars": 19,
+      "lines": 2,
+      "size": 37.4,
+      "vw": 2.6,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.21,
+      "top": 240,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Bize ulaşın",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 69.1,
+      "vw": 4.8,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 1795,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.88,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.12,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      22,
+      24,
+      26,
+      37,
+      69
+     ],
+     "sizeCount": 16,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 14.7,
+      "leading": 1.75,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 19.8
+     },
+     "measureChars": 69,
+     "max": {
+      "size": 69.1,
+      "vw": 4.8,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Bize ulaşın"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 4,
+     "microLabelShare": 0.016,
+     "microSamples": [
+      "Telefon",
+      "Adres",
+      "E-posta",
+      "Sosyal medya"
+     ],
+     "upperShare": 0.15,
+     "centerShare": 0.08,
+     "smallText": 6
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#fbf5e4",
+     "bodyBgHsl": {
+      "h": 44,
+      "s": 0.74,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f8f8f8",
+       "top": 88,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#fbf5e4",
+       "top": 1051,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#355c0c",
+       "top": 1699,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.57
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.4
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.03
+      }
+     ],
+     "button": {
+      "bg": "#b43317",
+      "hsl": {
+       "h": 11,
+       "s": 0.77,
+       "l": 0.4
+      },
+      "fg": "#f8f8f8"
+     },
+     "lowContrast": [
+      {
+       "text": "Telefon",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Adres",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "E-posta",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Sosyal medya",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Çaylar",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Keşfet",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 14,
+     "inHero": 4,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 11,
+     "heroLabels": [
+      "Çaylar",
+      "Harmanlar",
+      "Hediye",
+      "SEPETE EKLE"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 1,
+     "shadowOverlay": 0,
+     "shadowSamples": [
+      "aside.product_purchasePanel__8eH3M → color(srgb 0 0 0 / 0.12) 0px 12px 32px 0px, color(srgb 0 0 0 / 0.08) 0px 0px 0px"
+     ],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 8,
+     "hairlineSamples": [
+      "div.product_detailsAccordions__sqTdB 504px",
+      "div.product_accordion___IhJM 504px",
+      "div.product_accordion___IhJM 504px",
+      "div.product_accordion___IhJM 504px",
+      "div.product_accordion___IhJM 504px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 11,
+     "boxRadius": 16,
+     "squareMedia": 9,
+     "roundedMedia": 20,
+     "mediaRadius": 16,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.18
+     },
+     {
+      "type": "img",
+      "ratio": 0.18
+     },
+     {
+      "type": "img",
+      "ratio": 0.18
+     }
+    ],
+    "nav": {
+     "links": 8,
+     "fixed": true,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 2563,
+    "margins": {
+     "left": 22,
+     "right": 19
+    },
+    "sections": [
+     {
+      "sel": "article.product_page__Gs0la",
+      "tag": "article",
+      "top": 88,
+      "height": 963,
+      "words": 134,
+      "media": 9,
+      "middle": 960,
+      "heading": {
+       "text": "Gold Karadeniz Çayı",
+       "size": 37,
+       "tag": "h1"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": 184,
+      "textRight": 62,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.home-featured.pdp-related",
+      "tag": "section",
+      "top": 1051,
+      "height": 648,
+      "words": 46,
+      "media": 10,
+      "middle": 1721,
+      "heading": {
+       "text": "Benzer ürünler",
+       "size": 24,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -79,
+      "textRight": -1831,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer#iletisim.site-footer.relative",
+      "tag": "footer",
+      "top": 1699,
+      "height": 864,
+      "words": 116,
+      "media": 1,
+      "middle": 43,
+      "heading": {
+       "text": "Bize ulaşın",
+       "size": 69,
+       "tag": "h2"
+      },
+      "left": 82,
+      "right": 112,
+      "textLeft": 112,
+      "textRight": 112,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Gold Karadeniz Çayı",
+      "size": 37,
+      "top": 240,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 184,
+      "n": 4
+     },
+     {
+      "x": 1038,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 5,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.04,
+    "voidBox": {
+     "x": 0,
+     "y": 600,
+     "w": 180,
+     "h": 300
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 4,
+   "filled": [
+    0.97,
+    0.91,
+    0.83,
+    0.97
+   ],
+   "motion": {
+    "elements": 3,
+    "css": 0,
+    "transitions": 1,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 3779,
+     "screens": 3.7,
+     "words": 295,
+     "img": 34,
+     "video": 0,
+     "canvas": 0,
+     "svg": 32,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 29,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg",
+      "estea-gold-cay-5000-gr.jpg",
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg",
+      "estea-gold-cay-5000-gr.jpg",
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 1,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Gold Karadeniz Çayı",
+     "words": 3,
+     "chars": 19,
+     "lines": 1,
+     "size": 27.2,
+     "vw": 3.5,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.02,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.33,
+     "top": 877,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Gold Karadeniz Çayı",
+     "words": 3,
+     "lines": 1,
+     "size": 27.2,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Gold Karadeniz Çayı",
+      "words": 3,
+      "chars": 19,
+      "lines": 1,
+      "size": 27.2,
+      "vw": 3.5,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.33,
+      "top": 877,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Bize ulaşın",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 2495,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.88,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.12,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      22,
+      26,
+      27,
+      42
+     ],
+     "sizeCount": 15,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 14.7,
+      "leading": 1.75,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 19.8
+     },
+     "measureChars": 98,
+     "max": {
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Bize ulaşın"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 4,
+     "microLabelShare": 0.016,
+     "microSamples": [
+      "Telefon",
+      "Adres",
+      "E-posta",
+      "Sosyal medya"
+     ],
+     "upperShare": 0.15,
+     "centerShare": 0.08,
+     "smallText": 6
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#fbf5e4",
+     "bodyBgHsl": {
+      "h": 44,
+      "s": 0.74,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f8f8f8",
+       "top": 88,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#fbf5e4",
+       "top": 1896,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#355c0c",
+       "top": 2399,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.57
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.4
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.03
+      }
+     ],
+     "button": {
+      "bg": "#b43317",
+      "hsl": {
+       "h": 11,
+       "s": 0.77,
+       "l": 0.4
+      },
+      "fg": "#f8f8f8"
+     },
+     "lowContrast": [
+      {
+       "text": "Telefon",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Adres",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "E-posta",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Sosyal medya",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Çaylar",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Keşfet",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 14,
+     "inHero": 3,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 11,
+     "heroLabels": [
+      "Çaylar",
+      "Harmanlar",
+      "Hediye"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 9,
+     "hairlineSamples": [
+      "aside.product_purchasePanel__8eH3M 768px",
+      "div.product_detailsAccordions__sqTdB 722px",
+      "div.product_accordion___IhJM 722px",
+      "div.product_accordion___IhJM 722px",
+      "div.product_accordion___IhJM 722px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 11,
+     "boxRadius": 16,
+     "squareMedia": 9,
+     "roundedMedia": 20,
+     "mediaRadius": 16,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.75
+     }
+    ],
+    "nav": {
+     "links": 8,
+     "fixed": true,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 3779,
+    "margins": {
+     "left": 15,
+     "right": 23
+    },
+    "sections": [
+     {
+      "sel": "section.product_heroStage__GOCV_",
+      "tag": "section",
+      "top": 88,
+      "height": 1051,
+      "words": 18,
+      "media": 9,
+      "middle": 0,
+      "heading": null,
+      "left": 15,
+      "right": 23,
+      "textLeft": 23,
+      "textRight": 336,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.product_detailsStage__Y72KL",
+      "tag": "section",
+      "top": 1139,
+      "height": 758,
+      "words": 116,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 23,
+      "right": 23,
+      "textLeft": 23,
+      "textRight": 33,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.home-featured.pdp-related",
+      "tag": "section",
+      "top": 1896,
+      "height": 503,
+      "words": 46,
+      "media": 10,
+      "middle": 1441,
+      "heading": {
+       "text": "Demlik Süzen Poşet Çay",
+       "size": 19,
+       "tag": "h3"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -95,
+      "textRight": -1550,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer#iletisim.site-footer.relative",
+      "tag": "footer",
+      "top": 2399,
+      "height": 1380,
+      "words": 116,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Bize ulaşın",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 2,
+      "right": 50,
+      "textLeft": 32,
+      "textRight": 50,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Gold Karadeniz Çayı",
+      "size": 27,
+      "top": 877,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 23,
+      "n": 5
+     }
+    ],
+    "leftBlocks": 5,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 5,
+   "filled": [
+    0.96,
+    0.89,
+    0.8,
+    0.97,
+    0.94
+   ],
+   "motion": {
+    "elements": 3,
+    "css": 0,
+    "transitions": 1,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 4091,
+     "screens": 4.8,
+     "words": 291,
+     "img": 34,
+     "video": 0,
+     "canvas": 0,
+     "svg": 32,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 19,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg",
+      "estea-gold-cay-5000-gr.jpg",
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg",
+      "estea-gold-cay-5000-gr.jpg",
+      "estea-gold-cay-500-gr.jpg",
+      "estea-gold-cay-1000-gr.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 1,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Gold Karadeniz Çayı",
+     "words": 3,
+     "chars": 19,
+     "lines": 1,
+     "size": 27.2,
+     "vw": 7,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.02,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.66,
+     "top": 481,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Gold Karadeniz Çayı",
+     "words": 3,
+     "lines": 1,
+     "size": 27.2,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Gold Karadeniz Çayı",
+      "words": 3,
+      "chars": 19,
+      "lines": 1,
+      "size": 27.2,
+      "vw": 7,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.66,
+      "top": 481,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Bize ulaşın",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 10.7,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 2119,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "0462 692 30 61",
+      "words": 4,
+      "chars": 14,
+      "lines": 1,
+      "size": 25.6,
+      "vw": 6.6,
+      "font": "Archivo Variable",
+      "weight": 600,
+      "tracking": 0,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.46,
+      "top": 2418,
+      "tag": "a",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 3,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 1,
+     "centered": 0,
+     "medianWords": 4,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.88,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.12,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      22,
+      26,
+      27,
+      42
+     ],
+     "sizeCount": 14,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 14.7,
+      "leading": 1.75,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 19.8
+     },
+     "measureChars": 49,
+     "max": {
+      "size": 41.6,
+      "vw": 10.7,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Bize ulaşın"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 4,
+     "microLabelShare": 0.016,
+     "microSamples": [
+      "Telefon",
+      "Adres",
+      "E-posta",
+      "Sosyal medya"
+     ],
+     "upperShare": 0.15,
+     "centerShare": 0.08,
+     "smallText": 6
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#fbf5e4",
+     "bodyBgHsl": {
+      "h": 44,
+      "s": 0.74,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f8f8f8",
+       "top": 72,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#fbf5e4",
+       "top": 1637,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#355c0c",
+       "top": 2055,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.57
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.41
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.03
+      }
+     ],
+     "button": {
+      "bg": "#b43317",
+      "hsl": {
+       "h": 11,
+       "s": 0.77,
+       "l": 0.4
+      },
+      "fg": "#f8f8f8"
+     },
+     "lowContrast": [
+      {
+       "text": "Telefon",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Adres",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "E-posta",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Sosyal medya",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Çaylar",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Keşfet",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 11,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 11,
+     "heroLabels": [
+      "SEPETE EKLE"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 9,
+     "hairlineSamples": [
+      "aside.product_purchasePanel__8eH3M 390px",
+      "div.product_detailsAccordions__sqTdB 358px",
+      "div.product_accordion___IhJM 358px",
+      "div.product_accordion___IhJM 358px",
+      "div.product_accordion___IhJM 358px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 11,
+     "boxRadius": 16,
+     "squareMedia": 9,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.46
+     }
+    ],
+    "nav": {
+     "links": 3,
+     "fixed": true,
+     "height": 72,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 4091,
+    "margins": {
+     "left": 12,
+     "right": 16
+    },
+    "sections": [
+     {
+      "sel": "section.product_heroStage__GOCV_",
+      "tag": "section",
+      "top": 72,
+      "height": 664,
+      "words": 18,
+      "media": 9,
+      "middle": 0,
+      "heading": {
+       "text": "Gold Karadeniz Çayı",
+       "size": 27,
+       "tag": "h1"
+      },
+      "left": 12,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 118,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.product_detailsStage__Y72KL",
+      "tag": "section",
+      "top": 736,
+      "height": 902,
+      "words": 116,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 17,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.home-featured.pdp-related",
+      "tag": "section",
+      "top": 1637,
+      "height": 417,
+      "words": 66,
+      "media": 10,
+      "middle": 1270,
+      "heading": {
+       "text": "Benzer ürünler",
+       "size": 18,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -104,
+      "textRight": -1290,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.mx-auto.max-w-7xl",
+      "tag": "div",
+      "top": 2055,
+      "height": 873,
+      "words": 53,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Bize ulaşın",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 23,
+      "textLeft": 20,
+      "textRight": 23,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.bg-moss/30",
+      "tag": "div",
+      "top": 2928,
+      "height": 981,
+      "words": 35,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Çaylar",
+       "size": 12,
+       "tag": "h2"
+      },
+      "left": 20,
+      "right": 81,
+      "textLeft": 20,
+      "textRight": 81,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.bg-moss/50",
+      "tag": "div",
+      "top": 3909,
+      "height": 182,
+      "words": 28,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 20,
+      "right": 31,
+      "textLeft": 20,
+      "textRight": 31,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Gold Karadeniz Çayı",
+      "size": 27,
+      "top": 481,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 5
+     }
+    ],
+    "leftBlocks": 5,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "4 tiny uppercase letter-spaced labels (e.g. \"Telefon\", \"Adres\", \"E-posta\", \"Sosyal medya\").",
+   "fix": "Use sentence-case text at a readable size, or delete the label.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "shadow",
+   "width": 1440,
+   "message": "1 box-shadow(s) on elements at rest: aside.product_purchasePanel__8eH3M → color(srgb 0 0 0 / 0.12) 0px 12px 32px 0px, color(srgb 0 0 0 / 0.08) 0px 0px 0px",
+   "fix": "Remove. Separate surfaces with a tone step or space. Shadows are for things that really float (menus, dialogs, sticky bars)."
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "8 thin rule(s)/divider line(s): div.product_detailsAccordions__sqTdB 504px | div.product_accordion___IhJM 504px | div.product_accordion___IhJM 504px | div.product_accordion___IhJM 504px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #fbf5e4, section #fbf5e4).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "contrast",
+   "width": 1440,
+   "message": "Low-contrast text: \"Telefon\" 4.3:1 needs 4.5:1; \"Adres\" 4.3:1 needs 4.5:1; \"E-posta\" 4.3:1 needs 4.5:1; \"Sosyal medya\" 4.3:1 needs 4.5:1",
+   "fix": "Darken or lighten the text colour.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "16 different font sizes (9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22, 24, 26, 37, 69).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "body-size",
+   "width": 1440,
+   "message": "Body text is 14.7px (the size most of the running text is set in).",
+   "fix": "Body copy 16–20px. Map small sizes from blueprints onto your body step.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "side-scroll",
+   "width": 1440,
+   "message": "1 row(s) scroll sideways with content past their edge.",
+   "fix": "Jurors and most visitors read a row cut at the edge as clipped, not as scrollable. Wrap it onto more lines, or end it inside the grid.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "small-text",
+   "width": 1440,
+   "message": "6 text blocks under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "focal-point",
+   "width": 1440,
+   "message": "The first screen has no dominant element: the largest type is 37.4px (2.6vw) and no single picture holds a third of the viewport.",
+   "fix": "Make one thing lead: the headline at display size, or one large picture. A grid of many small pictures is not one thing; in blind tests jurors marked a first screen without a headline down every time. On the strongest studied sites the largest type has a median of 8.4vw."
+  },
+  {
+   "level": "WARN",
+   "id": "empty-middle",
+   "width": 1440,
+   "message": "1 section(s) have content at both edges and 1721px of nothing between: \"Benzer ürünler\"",
+   "fix": "Bring the two parts together on the grid, or put the picture or figure of the section in the middle. An empty middle third reads as a hole, the same as an empty half.",
+   "alsoAt": [
+    768
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "name-only-title",
+   "width": 1440,
+   "message": "The h1 is a bare name (\"Gold Karadeniz Çayı\") and nothing else on the first screen says what this is.",
+   "fix": "Keep the name if it leads, and give the line under it (18px or more) the plain words: what it is, for whom, where or when. In the study of 97 Sites of the Day, first screens that named nothing lost usability and content points.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Only 3 element(s) moved while the page loaded and scrolled.",
+   "fix": "Build the motion layer (SKILL.md step 9, references/motion.md): the signature move, an entrance for the parts of every section, feedback on every control, and one moving picture. Transform and opacity only, with a reduced-motion fallback."
+  },
+  {
+   "level": "WARN",
+   "id": "measure",
+   "width": 768,
+   "message": "Longest paragraph runs about 98 characters per line.",
+   "fix": "Cap paragraphs at 45–75 characters (max-width: 60ch)."
+  },
+  {
+   "level": "WARN",
+   "id": "small-title",
+   "width": 768,
+   "message": "The h1 is 27px (\"Gold Karadeniz Çayı\").",
+   "fix": "Set the title at display size, or make the large text of the first screen the h1."
+  },
+  {
+   "level": "FAIL",
+   "id": "reduced-hidden",
+   "width": 1440,
+   "message": "With reduced motion requested, 4 text block(s) on the first screen stay invisible: \"Siyah Çay\", \"Yeşil Çay\", \"Bitki Çayı\", \"Tümünü gör\"",
+   "fix": "Put every hidden starting state inside @media (prefers-reduced-motion: no-preference); the reduced page is the finished page (references/motion.md §8)."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/live-urun/desktop-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/live-urun/desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/live-urun/tablet-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/live-urun/tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/live-urun/mobile-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/live-urun/mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

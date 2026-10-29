@@ -1,0 +1,508 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T00:00:00Z",
+  "title": "Design System: Es Çay Mağaza",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "Logo Kırmızısı",
+        "canonical": "#c4161c",
+        "tonalRamp": [
+          "#290000",
+          "#540000",
+          "#840002",
+          "#b60e17",
+          "#d94a42",
+          "#f47c71",
+          "#ffab9f",
+          "#ffe6e2"
+        ]
+      },
+      "brand-dark": {
+        "role": "primary",
+        "displayName": "Koyu Kırmızı",
+        "canonical": "#a10f14",
+        "tonalRamp": [
+          "#2b0000",
+          "#550000",
+          "#820004",
+          "#ac2a26",
+          "#c95c52",
+          "#e4887d",
+          "#feb3aa",
+          "#ffe8e5"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Kırmızı Sis",
+        "canonical": "#fdeff0",
+        "tonalRamp": [
+          "#0e0a0a",
+          "#292424",
+          "#464041",
+          "#675f60",
+          "#898080",
+          "#ada2a3",
+          "#d2c6c7",
+          "#f2eded"
+        ]
+      },
+      "shell": {
+        "role": "secondary",
+        "displayName": "Şerit Kırmızısı",
+        "canonical": "#c4161c",
+        "tonalRamp": [
+          "#290000",
+          "#540000",
+          "#840002",
+          "#b60e17",
+          "#d94a42",
+          "#f47c71",
+          "#ffab9f",
+          "#ffe6e2"
+        ]
+      },
+      "shell-dark": {
+        "role": "secondary",
+        "displayName": "Koyu Şerit",
+        "canonical": "#a10f14",
+        "tonalRamp": [
+          "#2b0000",
+          "#550000",
+          "#820004",
+          "#ac2a26",
+          "#c95c52",
+          "#e4887d",
+          "#feb3aa",
+          "#ffe8e5"
+        ]
+      },
+      "footer": {
+        "role": "neutral",
+        "displayName": "Footer Zemini",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "footer-bar": {
+        "role": "neutral",
+        "displayName": "Footer Şeridi",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "gold": {
+        "role": "tertiary",
+        "displayName": "Logo Altını",
+        "canonical": "#c8962e",
+        "tonalRamp": [
+          "#170700",
+          "#372000",
+          "#593c00",
+          "#7e5a00",
+          "#a67a1a",
+          "#cd9c39",
+          "#eec270",
+          "#fcecd2"
+        ]
+      },
+      "gold-soft": {
+        "role": "tertiary",
+        "displayName": "Altın Sisi",
+        "canonical": "#faf3e3",
+        "tonalRamp": [
+          "#0d0b07",
+          "#27251f",
+          "#45423a",
+          "#656158",
+          "#878277",
+          "#aaa598",
+          "#cfc9bb",
+          "#f1eee8"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Mürekkep",
+        "canonical": "#15181c",
+        "tonalRamp": [
+          "#090b0f",
+          "#222529",
+          "#3f4246",
+          "#5f6165",
+          "#808286",
+          "#a3a5a8",
+          "#c7c9cc",
+          "#eeeeef"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Yumuşak Mürekkep",
+        "canonical": "#4b5258",
+        "tonalRamp": [
+          "#080c0f",
+          "#21262a",
+          "#3d4348",
+          "#5b6268",
+          "#7d8388",
+          "#a1a6aa",
+          "#c6cacd",
+          "#edeff0"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Sis Grisi",
+        "canonical": "#6b7278",
+        "tonalRamp": [
+          "#090b0e",
+          "#222629",
+          "#3e4347",
+          "#5c6268",
+          "#7d8389",
+          "#a0a6ab",
+          "#c5cace",
+          "#edeff0"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Kıl Çizgi",
+        "canonical": "#e3e5e7",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#242526",
+          "#414243",
+          "#606162",
+          "#818284",
+          "#a4a5a7",
+          "#c7c9cb",
+          "#eeeeef"
+        ]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Belirgin Çizgi",
+        "canonical": "#cfd3d6",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#242526",
+          "#404244",
+          "#5f6263",
+          "#808385",
+          "#a2a5a8",
+          "#c6cacd",
+          "#edeff0"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Yüzey",
+        "canonical": "#f6f7f7",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a4a5a5",
+          "#c8c9c9",
+          "#eeeeee"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Beyaz",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Yalnız hero slayt başlığı."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Ürün sayfası başlığı ve sayfa düzeyi başlıklar."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Bölüm başlıkları; en fazla iki satır."
+      },
+      "item": {
+        "displayName": "Item",
+        "purpose": "Kart ürün adı, kategori menüsü, akordeon başlığı, buton metni."
+      },
+      "price": {
+        "displayName": "Price",
+        "purpose": "Fiyat ve fiyat aralığı; ürün sayfasında 1.75rem."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Gövde metni; uzun metinde satır yüksekliği 1.7."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Şerit metni, form etiketi, stok etiketi; büyük harf ve aralık yok."
+      }
+    },
+    "shadows": [
+      {
+        "name": "pop",
+        "value": "0 12px 32px -8px rgb(21 24 28 / 0.18), 0 2px 6px rgb(21 24 28 / 0.06)",
+        "purpose": "Açılır katmanlar: arama sonuçları, toast, mobil çekmece."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 10px 24px -14px rgb(21 24 28 / 0.28)",
+        "purpose": "Ürün ve kategori kartı hover'ı."
+      },
+      {
+        "name": "floating-control",
+        "value": "0 6px 16px -8px rgb(21 24 28 / 0.25)",
+        "purpose": "Sabit konumlu yukarı çık butonu."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 3px rgb(21 24 28 / 0.1)",
+        "purpose": "Form alanı odağı, mürekkep çerçeveyle; renksiz."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Menü alt çizgisi, kart görsel büyümesi, hero geçişi ve metin yükselişi."
+      },
+      {
+        "name": "state-fast",
+        "value": "150ms ease",
+        "purpose": "Buton ve kontrol renk geçişleri."
+      },
+      {
+        "name": "state-card",
+        "value": "200ms ease",
+        "purpose": "Kart çerçeve ve gölge geçişi."
+      },
+      {
+        "name": "hero-crossfade",
+        "value": "900ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Hero slaytları arası çapraz geçiş."
+      },
+      {
+        "name": "hero-drift",
+        "value": "7s cubic-bezier(0.2, 0, 0.2, 1)",
+        "purpose": "Aktif slayt fotoğrafının 1.04'ten 1'e yavaş yakınlaşması."
+      },
+      {
+        "name": "reveal",
+        "value": "700ms ease-out",
+        "purpose": "Kaydırma girişi; 20px yükselip belirme. Azaltılmış harekette kapalı."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "720px"
+      },
+      {
+        "name": "md",
+        "value": "900px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1180px"
+      }
+    ],
+    "notes": {
+      "header": "Yapışkan değil; --site-top-offset 0.",
+      "shellAlias": "shell ve shell-dark logo kırmızısıyla aynı değerdedir; kabuk rolünü adlandırmak için ayrı token olarak durur. footer ve footer-bar beyazdır.",
+      "landingLinks": "Hakkımızda, SSS, İletişim ve Kurumsal site bağlantıları landing'e (LANDING_LINKS) gider."
+    }
+  },
+  "components": [
+    {
+      "name": "Satın Alma Butonu",
+      "kind": "button",
+      "refersTo": "button-buy",
+      "description": "Logo kırmızısı birincil eylem; yalnız sepete ekleme ve satın almaya giden adımlarda.",
+      "html": "<button class=\"ds-btn-buy\">Sepete ekle</button>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-btn-buy{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:var(--radius-button,6px);font-size:0.95rem;font-weight:600;line-height:1;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s;border:1px solid var(--color-brand);background:var(--color-brand);color:#fff;}.ds-btn-buy:hover{background:var(--color-brand-dark);border-color:var(--color-brand-dark);}.ds-btn-buy:focus-visible{outline:2px solid var(--color-brand);outline-offset:2px;}.ds-btn-buy:active{transform:translateY(1px);}"
+    },
+    {
+      "name": "Koyu Buton",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "İkincil eylem; mürekkep dolgu, hover'da çay yeşili.",
+      "html": "<button class=\"ds-btn-ink\">Siparişlerim</button>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-btn-ink{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:var(--radius-button,6px);font-size:0.95rem;font-weight:600;line-height:1;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s;border:0;background:var(--color-ink);color:#fff;}.ds-btn-ink:hover{background:var(--color-ink-soft);}.ds-btn-ink:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px;}"
+    },
+    {
+      "name": "Outline Buton",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Kartta çok gramajlı ürün için 'Gramaj seç'; beyaz zemin, belirgin çizgi çerçeve.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\">Gramaj seç</a>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-btn-outline{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:var(--radius-button,6px);font-size:0.95rem;font-weight:600;line-height:1;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s;min-height:44px;padding:0 16px;border:1px solid var(--color-line-strong);background:#fff;color:var(--color-ink);text-decoration:none;}.ds-btn-outline:hover{border-color:var(--color-ink);}.ds-btn-outline:focus-visible{outline:2px solid var(--color-brand);outline-offset:2px;}"
+    },
+    {
+      "name": "Arama Kutusu",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Header ortasındaki geniş arama; yeşil kare gönder butonuyla.",
+      "html": "<form class=\"ds-search\" role=\"search\"><input type=\"search\" placeholder=\"Çay, bitki çayı veya ürün ara\" aria-label=\"Ara\"><button type=\"submit\" aria-label=\"Ara\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg></button></form>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-search{position:relative;width:100%;max-width:44rem;}.ds-search input{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;width:100%;height:46px;padding:0 52px 0 16px;border:1px solid var(--color-line-strong);border-radius:6px;background:var(--color-surface);color:var(--color-ink);font-size:0.95rem;transition:border-color .15s,background-color .15s;}.ds-search input::placeholder{color:var(--color-muted);}.ds-search input:hover{border-color:var(--color-ink-soft);}.ds-search input:focus{outline:none;border-color:var(--color-ink);background:#fff;box-shadow:0 0 0 3px rgb(21 24 28 / .1);}.ds-search button{position:absolute;top:4px;right:4px;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:0;border-radius:4px;background:var(--color-shell);color:#fff;cursor:pointer;}.ds-search button:hover{background:var(--color-shell-dark);}"
+    },
+    {
+      "name": "Gramaj Çipi",
+      "kind": "chip",
+      "refersTo": "chip-size",
+      "description": "Ürün sayfasında gramaj seçimi; seçili durum kırmızı çerçeve ve kırmızı sis.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" aria-pressed=\"true\">1000 gr</button><button class=\"ds-chip\" aria-pressed=\"false\">500 gr</button><button class=\"ds-chip\" aria-pressed=\"false\">5000 gr</button></div>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-chips{display:flex;gap:8px;flex-wrap:wrap;}.ds-chip{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;min-width:5rem;height:44px;padding:0 16px;border:1px solid var(--color-line-strong);border-radius:6px;background:#fff;color:var(--color-ink);font-size:0.95rem;font-weight:600;cursor:pointer;}.ds-chip:hover{border-color:var(--color-ink);}.ds-chip[aria-pressed=true]{border:2px solid var(--color-brand);background:var(--color-accent-soft);color:var(--color-brand);}.ds-chip:focus-visible{outline:2px solid var(--color-brand);outline-offset:2px;}"
+    },
+    {
+      "name": "Ürün Kartı",
+      "kind": "card",
+      "refersTo": "card-product",
+      "description": "Sabit satırlı kart: beyaz kare görsel, favori diski, iki satırlık ad, seçenek satırı, fiyat aralığı, her zaman görünen eylem.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card__media\"><div class=\"ds-card__img\"></div><button class=\"ds-card__fav\" aria-label=\"Favorilere ekle\"><svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z\"/></svg></button></div><a class=\"ds-card__meta\" href=\"#\"><h3 class=\"ds-card__name\">Karadeniz Çayı</h3><p class=\"ds-card__sub\">3 seçenek</p><p class=\"ds-card__price\">₺190,00 – ₺1.600,00</p></a><div class=\"ds-card__act\"><a class=\"ds-card__btn\" href=\"#\">Gramaj seç</a></div></article>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-card{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;display:flex;flex-direction:column;width:260px;border:1px solid var(--color-line);border-radius:8px;background:#fff;overflow:hidden;transition:border-color .2s,box-shadow .2s;}.ds-card:hover{border-color:var(--color-line-strong);box-shadow:0 10px 24px -14px rgb(21 24 28 / .28);}.ds-card__media{position:relative;aspect-ratio:1;padding:8%;}.ds-card__img{width:100%;height:100%;border-radius:4px;background:linear-gradient(160deg,#e8efe9,#cfe0d3);}.ds-card__fav{position:absolute;top:10px;right:10px;display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--color-line);border-radius:999px;background:#fff;color:var(--color-ink-soft);cursor:pointer;}.ds-card__fav:hover{color:var(--color-brand);border-color:var(--color-line-strong);}.ds-card__meta{display:flex;flex-direction:column;gap:5px;padding:14px 16px 12px;border-top:1px solid var(--color-line);color:inherit;text-decoration:none;}.ds-card__meta:hover .ds-card__name{color:var(--color-brand);}.ds-card__name{margin:0;min-height:2.6em;font-size:0.975rem;font-weight:600;line-height:1.3;color:var(--color-ink);}.ds-card__sub{margin:0;font-size:0.8125rem;color:var(--color-muted);}.ds-card__price{margin:0;padding-top:6px;font-size:1.125rem;font-weight:700;color:var(--color-ink);font-variant-numeric:tabular-nums;}.ds-card__act{padding:0 16px 16px;}.ds-card__btn{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--color-line-strong);border-radius:6px;background:#fff;color:var(--color-ink);font-size:0.9rem;font-weight:600;text-decoration:none;}.ds-card__btn:hover{border-color:var(--color-ink);}"
+    },
+    {
+      "name": "Kabuk: Şerit ve Kategori Menüsü",
+      "kind": "nav",
+      "refersTo": "shell-strip",
+      "description": "Logo kırmızısı iletişim şeridi (beyaz metin), altında 2px altın çizgi; beyaz kategori menüsünde aktif öğenin metni ve 2px alt çizgisi kırmızı. Header yapışkan değildir.",
+      "html": "<div class=\"ds-strip\"><span>Hayrat / Trabzon'daki fabrikamızdan doğrudan kapınıza</span><span class=\"ds-strip__links\"><a href=\"#\">0462 692 30 61</a><a href=\"#\">Sipariş takibi</a></span></div><nav class=\"ds-nav\"><a href=\"#\">Tüm ürünler</a><a href=\"#\" aria-current=\"page\">Siyah Çay</a><a href=\"#\">Yeşil Çay</a><a href=\"#\">Bitki Çayı</a></nav>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-strip{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;display:flex;justify-content:space-between;align-items:center;gap:24px;height:36px;padding:0 24px;border-bottom:2px solid var(--color-gold);background:var(--color-shell);color:#fff;font-size:0.8125rem;}.ds-strip__links{display:flex;gap:24px;}.ds-strip a{color:#fff;font-weight:500;text-decoration:none;}.ds-strip a:hover{text-decoration:underline;}.ds-nav{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;display:flex;gap:32px;height:48px;padding:0 24px;border-bottom:1px solid var(--color-line);background:#fff;}.ds-nav a{position:relative;display:flex;align-items:center;color:var(--color-ink);font-size:0.95rem;font-weight:600;text-decoration:none;}.ds-nav a::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--color-shell);transform:scaleX(0);transition:transform .2s cubic-bezier(.16,1,.3,1);}.ds-nav a:hover,.ds-nav a[aria-current=page]{color:var(--color-brand);}.ds-nav a:hover::after,.ds-nav a[aria-current=page]::after{transform:none;}.ds-nav a:focus-visible{outline:2px solid var(--color-brand);outline-offset:2px;}"
+    },
+    {
+      "name": "Bilgi Butonu",
+      "kind": "button",
+      "refersTo": "button-info",
+      "description": "Hero fotoğrafı üzerinde satın alma olmayan hedef için beyaz buton ('Bizi tanıyın').",
+      "html": "<div class=\"ds-dark\"><a class=\"ds-btn-info\" href=\"#\">Bizi tanıyın</a></div>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-dark{padding:24px;background:linear-gradient(90deg,rgb(15 17 19 / .8),rgb(15 17 19 / .55)),var(--color-ink);}.ds-btn-info{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:var(--radius-button,6px);font-size:0.95rem;font-weight:600;line-height:1;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s;padding:0 22px;border:0;background:#fff;color:var(--color-ink);text-decoration:none;}.ds-btn-info:hover{background:var(--color-accent-soft);}.ds-btn-info:focus-visible{outline:2px solid #fff;outline-offset:2px;}"
+    },
+    {
+      "name": "Footer",
+      "kind": "custom",
+      "refersTo": "footer",
+      "description": "Beyaz footer: 3px kırmızı üst çizgi, zeminde logo ve belirgin çizgilerle ayrılmış yatay iletişim, sütunlar; yasal şerit de beyaz, 1px kıl çizgiyle ayrılır.",
+      "html": "<footer class=\"ds-foot\"><div class=\"ds-foot__top\"><strong class=\"ds-foot__logo\">esçay</strong><dl class=\"ds-foot__contact\"><div><dt>Müşteri hizmetleri</dt><dd class=\"ds-foot__phone\">0462 692 30 61</dd></div><div><dt>E-posta</dt><dd><a href=\"#\">info@esteacay.com</a></dd></div><div><dt>Fabrika</dt><dd>Hayrat / Trabzon</dd></div></dl></div><div class=\"ds-foot__bar\"><span>© 2026 Hamzalı Çay</span><a class=\"ds-foot__social\" href=\"#\" aria-label=\"Instagram\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"5\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/></svg></a></div></footer>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-foot{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;border-top:3px solid var(--color-brand);background:var(--color-footer);color:var(--color-ink-soft);font-size:0.95rem;}.ds-foot a{color:var(--color-ink);font-weight:600;text-decoration:none;transition:color .15s;}.ds-foot a:hover{color:var(--color-brand);}.ds-foot__top{display:flex;align-items:center;justify-content:space-between;gap:32px;padding:32px 24px;border-bottom:1px solid var(--color-line);}.ds-foot__logo{color:var(--color-brand);font-size:1.5rem;font-weight:700;}.ds-foot__contact{display:flex;margin:0;}.ds-foot__contact>div{padding-inline:32px;border-left:1px solid var(--color-line-strong);}.ds-foot__contact dt{color:var(--color-muted);font-size:0.8125rem;}.ds-foot__contact dd{margin:5px 0 0;color:var(--color-ink);}.ds-foot__phone{font-size:1.25rem;font-weight:700;font-variant-numeric:tabular-nums;}.ds-foot__bar{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-top:1px solid var(--color-line);background:var(--color-footer-bar);color:var(--color-ink-soft);font-size:0.8125rem;}.ds-foot .ds-foot__social{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--color-line-strong);border-radius:999px;background:#fff;color:var(--color-ink);transition:background-color .15s,border-color .15s,color .15s;}.ds-foot .ds-foot__social:hover{border-color:var(--color-brand);background:var(--color-brand);color:#fff;}.ds-foot a:focus-visible{outline:2px solid var(--color-brand);outline-offset:2px;}"
+    },
+    {
+      "name": "Hero Sekmeleri",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Hero slider altındaki slayt sekmeleri (İlk Hasat, Fabrikamız, Bahçelerimiz, Tüm ürünler; Fabrikamız beyaz bilgi butonuyla landing'e gider); aktif sekmenin 2px çubuğu slayt süresince dolar. Hero yüksekliği masaüstünde clamp(30rem, 74vh, 46rem), 720px ve altında min(37rem, 80svh); fotoğraf öncesi zemin mürekkep; nötr siyah perde yalnız sol yarıda yatay geçiş artı kısa alt geçiş.",
+      "html": "<div class=\"ds-hero\"><div class=\"ds-hero__tabs\" role=\"tablist\"><button role=\"tab\" aria-selected=\"true\"><span>Siyah Çay</span><i><b></b></i></button><button role=\"tab\" aria-selected=\"false\"><span>Yeşil Çay</span><i><b></b></i></button><button role=\"tab\" aria-selected=\"false\"><span>Bitki Çayı</span><i><b></b></i></button></div></div>",
+      "css": ":root{--color-brand:#c4161c;--color-brand-dark:#a10f14;--color-shell:#c4161c;--color-shell-dark:#a10f14;--color-footer:#fff;--color-footer-bar:#fff;--color-accent-soft:#fdeff0;--color-gold:#c8962e;--color-ink:#15181c;--color-ink-soft:#4b5258;--color-muted:#6b7278;--color-line:#e3e5e7;--color-line-strong:#cfd3d6;--color-surface:#f6f7f7;--color-white:#fff;--radius-button:6px;--radius-card:8px;}.ds-hero{font-family:'Figtree Variable',ui-sans-serif,system-ui,sans-serif;padding:48px 24px 24px;background:linear-gradient(90deg,rgb(15 17 19 / .8) 0%,rgb(15 17 19 / .55) 32%,rgb(15 17 19 / 0) 55%),linear-gradient(0deg,rgb(15 17 19 / .5) 0%,rgb(15 17 19 / 0) 22%),var(--color-ink);}.ds-hero__tabs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,11rem);gap:16px;}.ds-hero__tabs button{display:flex;flex-direction:column;gap:10px;padding:8px 0 0;border:0;background:none;color:rgb(255 255 255 / .7);font:inherit;font-size:0.875rem;font-weight:500;text-align:left;cursor:pointer;}.ds-hero__tabs button[aria-selected=true],.ds-hero__tabs button:hover{color:#fff;}.ds-hero__tabs button:focus-visible{outline:2px solid #fff;outline-offset:4px;}.ds-hero__tabs i{position:relative;display:block;height:2px;overflow:hidden;background:rgb(255 255 255 / .3);}.ds-hero__tabs b{position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left;}.ds-hero__tabs [aria-selected=true] b{animation:ds-progress 6s linear forwards;}.ds-hero:hover [aria-selected=true] b{animation-play-state:paused;}@keyframes ds-progress{to{transform:scaleX(1);}}@media (prefers-reduced-motion:reduce){.ds-hero__tabs [aria-selected=true] b{animation:none;transform:none;}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Fabrikanın Vitrini",
+    "overview": "Mağaza, büyük bir Türk gıda markasının kurumsal mağazası gibi davranır: beyaz zemin, tek bir dürüst yazı ailesi, ince gri çizgiler ve ürün paketinin kendisinin taşıdığı renk. Sayfanın tepesi logo kırmızısı bir şerittir (altında 2px altın çizgi); sayfanın dibi beyaz bir footer'dır (üstünde 3px kırmızı çizgi). Koyu kabuk bloğu yoktur; içerik beyazdır. Markanın tek vurgu rengi logo kırmızısıdır: dolgu olarak yalnız üst şeritte, arama düğmesinde ve satın alma eyleminde; çizgi ve metin olarak seçili ve aktif durumda görünür. Altın yalnız şeridin altındaki 2px çizgidir.\n\nYoğunluk orta-yüksektir; alışveriş görevi için kurulmuş bir ızgara, sabit satırlı ürün kartları ve her kartta görünür bir eylem. Dekor yoktur: doodle, krem zemin, pill buton, oyuncu başlık ve büyük harfli aralıklı etiket bu dünyada bulunmaz; bunlar landing'in dilidir ve mağaza onu bilerek reddeder. Kurumsal içerik (Hakkımızda, SSS, İletişim) landing'de yaşar; mağaza bu bağlantıları oraya yollar. Derinlik çizgiyle kurulur; gölge yalnız açılır katmanlarda ve hover tepkisinde belirir. Header sabit değildir, sayfayla birlikte kayar.\n\nDil yalnız Türkçedir. Fiyatlar tabular rakamla, \"₺\" önekli ve \"–\" ile aralık olarak yazılır.",
+    "keyCharacteristics": [
+      "Beyaz zemin, nötr mürekkep metin, 1px açık gri çizgilerle bölünmüş yüzeyler.",
+      "Kırmızı üst şerit (altında 2px altın çizgi) ve beyaz footer (üstünde 3px kırmızı çizgi); koyu veya gri zeminli blok yok.",
+      "Logo kırmızısı tek vurgu: dolgu yalnız şeritte, arama düğmesinde ve satın almada; çizgi/metin seçili durumda.",
+      "Figtree Variable tek aile, 400–700; başlıklar 700 ve hafif negatif aralıklı.",
+      "6px kontrol, 8px kart köşesi; tam yuvarlak yalnız ikon diskleri ve rozetlerde.",
+      "Gölge istisnadır: açılır menü, toast, çekmece, kart hover'ı ve yukarı çık butonu."
+    ],
+    "rules": [
+      {
+        "name": "The Kırmızı Dolgu Rule",
+        "body": "Kırmızı dolgu yalnız üç yerde durur: üst şerit, arama düğmesi ve satın almaya giden eylem. Satın alma olmayan bir hedefe giden buton (ör. \"Bizi tanıyın\") fotoğraf üzerinde beyaz, açık zeminde outline veya mürekkeptir. Seçili ve aktif durumlar kırmızıyı dolgu olarak değil, çizgi, metin ve kırmızı sis olarak taşır.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tek Altın Çizgi Rule",
+        "body": "Altın, şeridin altındaki 2px çizgidir ve başka yerde görünmez.",
+        "section": "colors"
+      },
+      {
+        "name": "The Kırmızı Şerit, Beyaz Footer Rule",
+        "body": "Sayfa üstte kırmızı şeritle açılır ve altta beyaz footer'la kapanır; ikisi de birer logo rengiyle mühürlenir (şeridin altında altın, footer'ın üstünde kırmızı çizgi). Koyu ya da gri zeminli kabuk bloğu (yeşil, antrasit, gri) kullanılmaz; footer dahil her şey beyaz zemindedir.",
+        "section": "colors"
+      },
+      {
+        "name": "The Düz Yazım Rule",
+        "body": "Büyük harf ve harf aralıklı etiket yoktur; etiketler cümle düzeninde, 0.8125rem ve 600 ağırlıktadır. Başlıklarda harf aralığı yalnız negatiftir (-0.02em ile -0.025em).",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Fiyat Rule",
+        "body": "Fiyat, telefon ve sayaç her zaman tabular rakamla yazılır ki kart ızgarasında hizalı dursun.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sabit Satır Rule",
+        "body": "Izgaradaki kartlar aynı yüksekliktedir: ad iki satır yer tutar, fiyat satırı alta itilir, eylem her zaman en altta görünür.",
+        "section": "layout"
+      },
+      {
+        "name": "The Çizgi Önce Rule",
+        "body": "Dinlenme halindeki hiçbir içerik yüzeyi gölge taşımaz; ayrım kıl çizgiyle kurulur, gölge yalnız katman veya tepki içindir.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** satın alma eylemini kırmızı dolguyla, satın alma olmayan eylemi beyaz, mürekkep veya outline ile ver.",
+      "**Do** seçili ve aktif durumları kırmızı çizgi, kırmızı metin ve kırmızı sis ile işaretle.",
+      "**Do** her ürün kartında eylemi görünür tut; çok gramajlı üründe \"Gramaj seç\", tek seçenekte \"Sepete ekle\".",
+      "**Do** fiyat aralığını en düşük – en yüksek olarak, tabular rakamla yaz.",
+      "**Do** yüzeyleri 1px kıl çizgiyle (line) ayır; kontrol çerçevelerinde belirgin çizgiyi (line-strong) kullan.",
+      "**Do** kontrollerde 6px, kartlarda 8px köşe kullan.",
+      "**Do** ürün görsellerini beyaz kare alanda `contain` ve `multiply` ile yerleştir.",
+      "**Do** Hakkımızda, SSS ve İletişim bağlantılarını landing'e yönlendir.",
+      "**Do** tüm metni Türkçe ve cümle düzeninde yaz."
+    ],
+    "donts": [
+      "**Don't** büyük harfli, harf aralıklı etiket veya başlık üstü \"kicker\" kullanma.",
+      "**Don't** Figtree dışında bir aile ekleme; landing'in Bricolage Grotesque, Archivo veya el yazısı yüzlerini mağazaya taşıma.",
+      "**Don't** pill buton, krem zemin, doodle veya landing'in oyuncu başlık dilini kullanma.",
+      "**Don't** altını buton, ikon veya zemin dolgusu yapma; altın şeridin altındaki tek çizgidir.",
+      "**Don't** kırmızı dolguyu gezinme, bilgi veya dekor eylemi için kullanma.",
+      "**Don't** koyu veya gri zeminli kabuk, bant veya footer kullanma (yeşil, antrasit ve gri reddedildi); koyu ton yalnız hero fotoğrafının perdesindedir.",
+      "**Don't** dinlenme halindeki kartlara gölge verme; sert ofsetli gölge hiç kullanma.",
+      "**Don't** ikon fontu veya emoji ile işaret koyma; ikonlar satır içi SVG, tikler CSS'tir."
+    ]
+  }
+}

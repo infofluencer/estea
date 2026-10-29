@@ -1,0 +1,1949 @@
+{
+ "url": "http://localhost:3025/",
+ "at": "2026-10-29T13:05:19.477Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 5,
+   "filled": [
+    0.87,
+    0.37,
+    0.38,
+    0.56,
+    0.95
+   ],
+   "motion": {
+    "elements": 22,
+    "css": 0,
+    "transitions": 20,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 4436,
+     "screens": 4.9,
+     "words": 467,
+     "img": 51,
+     "video": 0,
+     "canvas": 0,
+     "svg": 60,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 49,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fhome-hero.jpg&w=1920&q=75",
+      "rezene-bitki-cayi.jpg",
+      "papatya-cayi.jpg",
+      "nane-limon-bitki-cayi.jpg",
+      "yesil-cay-bitki-cayi.jpg",
+      "melisa-bitki-cayi.jpg",
+      "kusburnu-bitki-cayi.jpg",
+      "ihlamur-bitki-cayi.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "chars": 21,
+     "lines": 2,
+     "size": 112,
+     "vw": 7.8,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.62,
+     "top": 285,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "lines": 2,
+     "size": 112,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "words": 3,
+      "chars": 21,
+      "lines": 2,
+      "size": 112,
+      "vw": 7.8,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.62,
+      "top": 285,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Her ana ayrı bir çay.",
+      "words": 5,
+      "chars": 21,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 956,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Bahçeden bardağa",
+      "words": 2,
+      "chars": 16,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 2161,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Çayın lezzetine inandık.",
+      "words": 3,
+      "chars": 24,
+      "lines": 2,
+      "size": 66.2,
+      "vw": 4.6,
+      "font": "Archivo Variable",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 2773,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Bize ulaşın",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 69.1,
+      "vw": 4.8,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 3668,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 5,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.81,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.19,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      22,
+      23,
+      24,
+      26,
+      64,
+      66,
+      69,
+      112
+     ],
+     "sizeCount": 16,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 17.6,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 19.3
+     },
+     "measureChars": 34,
+     "max": {
+      "size": 112,
+      "vw": 7.8,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Çayın lezzeti doğadan"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 4,
+     "microLabelShare": 0.01,
+     "microSamples": [
+      "Telefon",
+      "Adres",
+      "E-posta",
+      "Sosyal medya"
+     ],
+     "upperShare": 0.15,
+     "centerShare": 0.12,
+     "smallText": 3
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#fbf5e4",
+     "bodyBgHsl": {
+      "h": 44,
+      "s": 0.74,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#fbf5e4",
+       "top": 0,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#f1ebdf",
+       "top": 2764,
+       "hsl": {
+        "h": 40,
+        "s": 0.39,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#355c0c",
+       "top": 3572,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.58
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.4
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.02
+      },
+      {
+       "color": "#467910",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#b43317",
+      "hsl": {
+       "h": 11,
+       "s": 0.77,
+       "l": 0.4
+      },
+      "fg": "#f8f8f8"
+     },
+     "lowContrast": [
+      {
+       "text": "Telefon",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Adres",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "E-posta",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Sosyal medya",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Çaylar",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Keşfet",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 33,
+     "inHero": 3,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 30,
+     "heroLabels": [
+      "Çaylar",
+      "Harmanlar",
+      "Hediye"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "div.hero-curtain.absolute → linear-gradient(90deg, rgba(22, 12, 5, 0.82) 0px, rgba(22, 12, 5, 0.68) 16%, rgba(22, 12, 5, 0.4) 30%, rgba(22"
+     ],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 35,
+     "boxRadius": 16,
+     "squareMedia": 1,
+     "roundedMedia": 48,
+     "mediaRadius": 16,
+     "textShadow": 4,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.88
+     }
+    ],
+    "nav": {
+     "links": 8,
+     "fixed": false,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 4436,
+    "margins": {
+     "left": 82,
+     "right": 112
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 0,
+      "height": 3572,
+      "words": 314,
+      "media": 38,
+      "middle": 7374,
+      "heading": {
+       "text": "Çayın lezzeti doğadan",
+       "size": 112,
+       "tag": "h1"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -2,
+      "textRight": -7562,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer#iletisim.site-footer.relative",
+      "tag": "footer",
+      "top": 3572,
+      "height": 864,
+      "words": 116,
+      "media": 1,
+      "middle": 43,
+      "heading": {
+       "text": "Bize ulaşın",
+       "size": 69,
+       "tag": "h2"
+      },
+      "left": 82,
+      "right": 112,
+      "textLeft": 112,
+      "textRight": 112,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "size": 112,
+      "top": 285,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 112,
+      "n": 7
+     },
+     {
+      "x": 732,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 9,
+    "bodySize": 18,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.07,
+    "voidBox": {
+     "x": 0,
+     "y": 840,
+     "w": 1440,
+     "h": 60
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 6,
+   "filled": [
+    0.9,
+    0.32,
+    0.31,
+    0.7,
+    0.9,
+    0.97
+   ],
+   "motion": {
+    "elements": 22,
+    "css": 0,
+    "transitions": 20,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 5644,
+     "screens": 5.5,
+     "words": 467,
+     "img": 51,
+     "video": 0,
+     "canvas": 0,
+     "svg": 60,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 49,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fhome-hero.jpg&w=828&q=75",
+      "rezene-bitki-cayi.jpg",
+      "papatya-cayi.jpg",
+      "nane-limon-bitki-cayi.jpg",
+      "yesil-cay-bitki-cayi.jpg",
+      "melisa-bitki-cayi.jpg",
+      "kusburnu-bitki-cayi.jpg",
+      "ihlamur-bitki-cayi.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "chars": 21,
+     "lines": 2,
+     "size": 61.4,
+     "vw": 8,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.64,
+     "top": 506,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "lines": 2,
+     "size": 61.4,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "words": 3,
+      "chars": 21,
+      "lines": 2,
+      "size": 61.4,
+      "vw": 8,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.64,
+      "top": 506,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Her ana ayrı bir çay.",
+      "words": 5,
+      "chars": 21,
+      "lines": 1,
+      "size": 38.4,
+      "vw": 5,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 1101,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Bahçeden bardağa",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 38.4,
+      "vw": 5,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 2351,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Çayın lezzetine inandık.",
+      "words": 3,
+      "chars": 24,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Archivo Variable",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 2847,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Bize ulaşın",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 4360,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 5,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.81,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.19,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      22,
+      24,
+      26,
+      38,
+      42,
+      61
+     ],
+     "sizeCount": 14,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 17.6,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 19.3
+     },
+     "measureChars": 34,
+     "max": {
+      "size": 61.4,
+      "vw": 8,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Çayın lezzeti doğadan"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 4,
+     "microLabelShare": 0.01,
+     "microSamples": [
+      "Telefon",
+      "Adres",
+      "E-posta",
+      "Sosyal medya"
+     ],
+     "upperShare": 0.15,
+     "centerShare": 0.12,
+     "smallText": 3
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#fbf5e4",
+     "bodyBgHsl": {
+      "h": 44,
+      "s": 0.74,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#fbf5e4",
+       "top": 0,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#f1ebdf",
+       "top": 3448,
+       "hsl": {
+        "h": 40,
+        "s": 0.39,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#355c0c",
+       "top": 4264,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.58
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.4
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.02
+      },
+      {
+       "color": "#467910",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#b43317",
+      "hsl": {
+       "h": 11,
+       "s": 0.77,
+       "l": 0.4
+      },
+      "fg": "#f8f8f8"
+     },
+     "lowContrast": [
+      {
+       "text": "Telefon",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Adres",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "E-posta",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Sosyal medya",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Çaylar",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      },
+      {
+       "text": "Keşfet",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 33,
+     "inHero": 3,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 30,
+     "heroLabels": [
+      "Çaylar",
+      "Harmanlar",
+      "Hediye"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "div.hero-curtain.absolute → linear-gradient(90deg, rgba(22, 12, 5, 0.82) 0px, rgba(22, 12, 5, 0.68) 16%, rgba(22, 12, 5, 0.4) 30%, rgba(22"
+     ],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 35,
+     "boxRadius": 16,
+     "squareMedia": 1,
+     "roundedMedia": 48,
+     "mediaRadius": 16,
+     "textShadow": 4,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.88
+     }
+    ],
+    "nav": {
+     "links": 8,
+     "fixed": false,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 5644,
+    "margins": {
+     "left": 2,
+     "right": 32
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 0,
+      "height": 4264,
+      "words": 314,
+      "media": 38,
+      "middle": 5939,
+      "heading": {
+       "text": "Çayın lezzeti doğadan",
+       "size": 61,
+       "tag": "h1"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -98,
+      "textRight": -6127,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer#iletisim.site-footer.relative",
+      "tag": "footer",
+      "top": 4264,
+      "height": 1380,
+      "words": 116,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Bize ulaşın",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 2,
+      "right": 50,
+      "textLeft": 32,
+      "textRight": 50,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "size": 61,
+      "top": 506,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 32,
+      "n": 9
+     }
+    ],
+    "leftBlocks": 9,
+    "bodySize": 18,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 8,
+   "filled": [
+    0.95,
+    0.45,
+    0.39,
+    0.76,
+    0.44,
+    0.85,
+    0.96,
+    0.94
+   ],
+   "motion": {
+    "elements": 18,
+    "css": 0,
+    "transitions": 16,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 6735,
+     "screens": 8,
+     "words": 463,
+     "img": 51,
+     "video": 0,
+     "canvas": 0,
+     "svg": 60,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 35,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fhome-hero.jpg&w=640&q=75",
+      "rezene-bitki-cayi.jpg",
+      "papatya-cayi.jpg",
+      "nane-limon-bitki-cayi.jpg",
+      "yesil-cay-bitki-cayi.jpg",
+      "melisa-bitki-cayi.jpg",
+      "kusburnu-bitki-cayi.jpg",
+      "ihlamur-bitki-cayi.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "chars": 21,
+     "lines": 2,
+     "size": 48,
+     "vw": 12.3,
+     "font": "Bricolage Grotesque Variable",
+     "weight": 700,
+     "tracking": 0.005,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.9,
+     "top": 322,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Çayın lezzeti doğadan",
+     "words": 3,
+     "lines": 2,
+     "size": 48,
+     "font": "Bricolage Grotesque Variable"
+    },
+    "headings": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "words": 3,
+      "chars": 21,
+      "lines": 2,
+      "size": 48,
+      "vw": 12.3,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 322,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Her ana ayrı bir çay.",
+      "words": 5,
+      "chars": 21,
+      "lines": 2,
+      "size": 38.4,
+      "vw": 9.8,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 1019,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Siyah Çay",
+      "words": 2,
+      "chars": 9,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.3,
+      "top": 1361,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Yeşil Çay",
+      "words": 2,
+      "chars": 9,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.27,
+      "top": 1361,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Bitki Çayı",
+      "words": 2,
+      "chars": 10,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.29,
+      "top": 1560,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Harmanlar",
+      "words": 1,
+      "chars": 9,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.32,
+      "top": 1560,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Hediye",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.21,
+      "top": 1781,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Bahçeden bardağa",
+      "words": 2,
+      "chars": 16,
+      "lines": 2,
+      "size": 38.4,
+      "vw": 9.8,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 2380,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Topla",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 2877,
+      "tag": "figcaption",
+      "kind": "statement"
+     },
+     {
+      "text": "Denetle",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3201,
+      "tag": "figcaption",
+      "kind": "statement"
+     },
+     {
+      "text": "Paketle",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3525,
+      "tag": "figcaption",
+      "kind": "statement"
+     },
+     {
+      "text": "Çayın lezzetine inandık.",
+      "words": 3,
+      "chars": 24,
+      "lines": 2,
+      "size": 41.6,
+      "vw": 10.7,
+      "font": "Archivo Variable",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3626,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Bize ulaşın",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 10.7,
+      "font": "Bricolage Grotesque Variable",
+      "weight": 700,
+      "tracking": 0.005,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 4763,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "0462 692 30 61",
+      "words": 4,
+      "chars": 14,
+      "lines": 1,
+      "size": 25.6,
+      "vw": 6.6,
+      "font": "Archivo Variable",
+      "weight": 600,
+      "tracking": 0,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.46,
+      "top": 5062,
+      "tag": "a",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 14,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 9,
+     "centered": 0,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo Variable",
+       "share": 0.8,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque Variable",
+       "share": 0.2,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      22,
+      24,
+      26,
+      38,
+      42,
+      48
+     ],
+     "sizeCount": 13,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo Variable",
+      "size": 17.6,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 19.8
+     },
+     "measureChars": 34,
+     "max": {
+      "size": 48,
+      "vw": 12.3,
+      "font": "Bricolage Grotesque Variable",
+      "text": "Çayın lezzeti doğadan"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 4,
+     "microLabelShare": 0.01,
+     "microSamples": [
+      "Telefon",
+      "Adres",
+      "E-posta",
+      "Sosyal medya"
+     ],
+     "upperShare": 0.15,
+     "centerShare": 0.12,
+     "smallText": 3
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#fbf5e4",
+     "bodyBgHsl": {
+      "h": 44,
+      "s": 0.74,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#fbf5e4",
+       "top": 0,
+       "hsl": {
+        "h": 44,
+        "s": 0.74,
+        "l": 0.94
+       }
+      },
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#f1ebdf",
+       "top": 4269,
+       "hsl": {
+        "h": 40,
+        "s": 0.39,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#355c0c",
+       "top": 4699,
+       "hsl": {
+        "h": 89,
+        "s": 0.77,
+        "l": 0.2
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#000000",
+       "share": 0.58
+      },
+      {
+       "color": "#f8f8f8",
+       "share": 0.39
+      },
+      {
+       "color": "#e9ba3c",
+       "share": 0.02
+      },
+      {
+       "color": "#467910",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#b43317",
+      "hsl": {
+       "h": 11,
+       "s": 0.77,
+       "l": 0.4
+      },
+      "fg": "#f8f8f8"
+     },
+     "lowContrast": [
+      {
+       "text": "Telefon",
+       "ratio": 4.3,
+       "need": 4.5,
+       "size": 12.5,
+       "fg": "#e9ba3c",
+       "bg": "#355c0c"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 30,
+     "inHero": 0,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 30,
+     "heroLabels": []
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 35,
+     "boxRadius": 16,
+     "squareMedia": 1,
+     "roundedMedia": 4,
+     "mediaRadius": 16,
+     "textShadow": 4,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.88
+     },
+     {
+      "type": "svg",
+      "ratio": 0.09
+     }
+    ],
+    "nav": {
+     "links": 3,
+     "fixed": false,
+     "height": 72,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo variable",
+     "bricolage grotesque variable"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 6735,
+    "margins": {
+     "left": 20,
+     "right": 20
+    },
+    "sections": [
+     {
+      "sel": "main",
+      "tag": "main",
+      "top": 0,
+      "height": 4699,
+      "words": 374,
+      "media": 38,
+      "middle": 4295,
+      "heading": {
+       "text": "Çayın lezzeti doğadan",
+       "size": 48,
+       "tag": "h1"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -139,
+      "textRight": -4327,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.mx-auto.max-w-7xl",
+      "tag": "div",
+      "top": 4699,
+      "height": 873,
+      "words": 53,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Bize ulaşın",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 23,
+      "textLeft": 20,
+      "textRight": 23,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.bg-moss/30",
+      "tag": "div",
+      "top": 5572,
+      "height": 981,
+      "words": 35,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Çaylar",
+       "size": 12,
+       "tag": "h2"
+      },
+      "left": 20,
+      "right": 81,
+      "textLeft": 20,
+      "textRight": 81,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.bg-moss/50",
+      "tag": "div",
+      "top": 6553,
+      "height": 182,
+      "words": 28,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 20,
+      "right": 31,
+      "textLeft": 20,
+      "textRight": 31,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Çayın lezzeti doğadan",
+      "size": 48,
+      "top": 322,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 20,
+      "n": 9
+     }
+    ],
+    "leftBlocks": 9,
+    "bodySize": 18,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "4 tiny uppercase letter-spaced labels (e.g. \"Telefon\", \"Adres\", \"E-posta\", \"Sosyal medya\").",
+   "fix": "Use sentence-case text at a readable size, or delete the label.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "gradient",
+   "width": 1440,
+   "message": "1 gradient fill(s): div.hero-curtain.absolute → linear-gradient(90deg, rgba(22, 12, 5, 0.82) 0px, rgba(22, 12, 5, 0.68) 16%, rgba(22, 12, 5, 0.4) 30%, rgba(22",
+   "fix": "Use a flat colour or a real image. The only gradient allowed by default is a neutral scrim over a photo for legibility.",
+   "alsoAt": [
+    768
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "text-shadow",
+   "width": 1440,
+   "message": "4 text-shadow(s).",
+   "fix": "Remove; fix legibility with a scrim or a different crop.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #fbf5e4, section #fbf5e4, section #f1ebdf).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "contrast",
+   "width": 1440,
+   "message": "Low-contrast text: \"Telefon\" 4.3:1 needs 4.5:1; \"Adres\" 4.3:1 needs 4.5:1; \"E-posta\" 4.3:1 needs 4.5:1; \"Sosyal medya\" 4.3:1 needs 4.5:1",
+   "fix": "Darken or lighten the text colour.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "16 different font sizes (13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 26, 64, 66, 69, 112).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "small-text",
+   "width": 1440,
+   "message": "3 text block(s) under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "off-centre",
+   "width": 1440,
+   "message": "The margins differ: 82px on the left, 112px on the right, at 1440px.",
+   "fix": "Put the navigation and the content on one pair of margins; check for padding on one side only, a scrollbar gutter, or a header on another inset than the page.",
+   "alsoAt": [
+    768
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "first-action",
+   "width": 390,
+   "message": "No visible button in the first phone screen.",
+   "fix": "On a phone the first screen still holds the headline, the supporting sentence and the action; move navigation into one row or a menu so it does not push them down."
+  },
+  {
+   "level": "WARN",
+   "id": "name-only-title",
+   "width": 390,
+   "message": "The h1 is a bare name (\"Çayın lezzeti doğadan\") and nothing else on the first screen says what this is.",
+   "fix": "Keep the name if it leads, and give the line under it (18px or more) the plain words: what it is, for whom, where or when. In the study of 97 Sites of the Day, first screens that named nothing lost usability and content points."
+  },
+  {
+   "level": "FAIL",
+   "id": "reduced-hidden",
+   "width": 1440,
+   "message": "With reduced motion requested, 4 text block(s) on the first screen stay invisible: \"Siyah Çay\", \"Yeşil Çay\", \"Bitki Çayı\", \"Tümünü gör\"",
+   "fix": "Put every hidden starting state inside @media (prefers-reduced-motion: no-preference); the reduced page is the finished page (references/motion.md §8)."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/live-home/desktop-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/live-home/desktop-page-01.jpg",
+    "/Users/yusuf/Desktop/estea/.taste-skill/live-home/desktop-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/live-home/tablet-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/live-home/tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "/Users/yusuf/Desktop/estea/.taste-skill/live-home/mobile-fold.jpg",
+   "pages": [
+    "/Users/yusuf/Desktop/estea/.taste-skill/live-home/mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}
