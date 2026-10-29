@@ -12,13 +12,6 @@ export function displayColor(color: string | null | undefined): string | null {
   return color && !HIDDEN_VARIANT_VALUES.has(color) ? color : null
 }
 
-/** SKU normalizasyonu (büyük harf, alfasayısal). */
-export function normalizeProductSku(sku: unknown): string | null {
-  if (typeof sku !== "string" || !sku.trim()) return null
-  const s = sku.trim().toUpperCase().replace(/[^A-Z0-9-]+/g, "")
-  return s || null
-}
-
 /** Kart görseli + hover görseli: thumbnail, ardından ürün görselleri. */
 export function resolveCardImages(input: {
   thumbnail?: string | null

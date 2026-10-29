@@ -3,7 +3,7 @@ import { sdk } from "./medusa"
 import { authHeaders } from "./auth/session"
 
 export { AUTH_COOKIE, LAST_ORDER_EMAIL_COOKIE } from "./auth/constants"
-export { getAuthToken, authHeaders } from "./auth/session"
+export { authHeaders } from "./auth/session"
 export { getLoggedInCustomer } from "./auth/customer"
 
 /** Checkout cart fields: line items, totals, addresses, shipping. */

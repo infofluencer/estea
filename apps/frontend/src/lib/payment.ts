@@ -1,7 +1,6 @@
 import { sdk } from "./medusa"
 
 export const PAYTR_PAYMENT_PROVIDER_ID = "pp_paytr_paytr"
-export const MANUAL_PAYMENT_PROVIDER_ID = "pp_system_default"
 /** Havale / EFT — backend src/modules/bank-transfer */
 export const BANK_TRANSFER_PAYMENT_PROVIDER_ID = "pp_havale_havale"
 
@@ -160,15 +159,3 @@ export async function initiatePaytrPayment(
   }
 }
 
-/** Fallback: Manuel ödeme provider (test/geliştirme) */
-export async function initiateCheckoutPayment(
-  cart: CartForPayment,
-  headers?: Record<string, string>
-) {
-  return sdk.store.payment.initiatePaymentSession(
-    cart as Parameters<typeof sdk.store.payment.initiatePaymentSession>[0],
-    { provider_id: MANUAL_PAYMENT_PROVIDER_ID },
-    undefined,
-    headers
-  )
-}

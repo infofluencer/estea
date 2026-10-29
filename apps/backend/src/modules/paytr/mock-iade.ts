@@ -36,19 +36,6 @@ export function resetPaytrIadeMock(mode: PaytrIadeMockMode = "success") {
   state.failErrNo = "009"
 }
 
-export function setPaytrIadeMockMode(mode: PaytrIadeMockMode) {
-  state.mode = mode
-}
-
-export function setPaytrIadeMockFail(
-  errNo: string,
-  errMsg: string
-) {
-  state.mode = "fail"
-  state.failErrNo = errNo
-  state.failMessage = errMsg
-}
-
 export function getPaytrIadeMockRequests(): PaytrIadeCapturedRequest[] {
   return [...state.requests]
 }

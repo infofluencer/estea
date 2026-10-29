@@ -28,9 +28,6 @@ export const VERIFY_COOKIE_MAX_AGE = 60 * 60 * 24 // 24h — matches verificatio
 export const FORGOT_PASSWORD_SUCCESS_MESSAGE =
   "Eğer bu e-posta kayıtlıysa, şifre sıfırlama bağlantısı gönderildi."
 
-export const UNVERIFIED_LOGIN_MESSAGE =
-  "Hesabınız doğrulanmamış. E-postanıza gönderilen bağlantıya tıklayın."
-
 export const AUTH_COOKIE_OPTIONS = {
   path: "/",
   sameSite: "lax" as const,

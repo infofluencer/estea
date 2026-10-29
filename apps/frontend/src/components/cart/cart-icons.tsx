@@ -20,25 +20,6 @@ export function IconPackage({ className }: IconProps) {
   )
 }
 
-export function IconHeadphones({ className }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 32 32"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.15"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M6 18v-4a10 10 0 0 1 20 0v4" />
-      <rect x="4" y="18" width="5" height="8" rx="2" />
-      <rect x="23" y="18" width="5" height="8" rx="2" />
-    </svg>
-  )
-}
-
 export function IconShieldCheck({ className }: IconProps) {
   return (
     <svg
@@ -57,39 +38,3 @@ export function IconShieldCheck({ className }: IconProps) {
   )
 }
 
-export function IconRefresh({ className }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 32 32"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.15"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M8 12V8H4" />
-      <path d="M4 12a10 10 0 0 1 17-3" />
-      <path d="M24 20v4h4" />
-      <path d="M28 20a10 10 0 0 1-17 3" />
-    </svg>
-  )
-}
-
-export function IconArrowRight({ className }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.15"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M5 12h14M13 6l6 6-6 6" />
-    </svg>
-  )
-}

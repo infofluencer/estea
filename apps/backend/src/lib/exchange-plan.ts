@@ -224,13 +224,3 @@ export function exchangeDisplayState(input: {
   return input.returnReceived ? "to_ship" : "awaiting_return"
 }
 
-export const EXCHANGE_STATE_LABEL: Record<ExchangeDisplayState, string> = {
-  awaiting_return: "Ürün bekleniyor",
-  to_ship: "Gönderi açılacak",
-  failed: "Gönderi açılamadı",
-  label_ready: "Etiket hazır",
-  shipped: "Kargoda",
-  delivered: "Teslim edildi",
-  rejected: "İade reddedildi",
-  canceled: "İptal",
-}

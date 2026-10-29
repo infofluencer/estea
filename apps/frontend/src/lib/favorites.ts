@@ -40,10 +40,6 @@ export function writeFavorites(items: FavoriteProduct[]) {
   window.dispatchEvent(new Event("escay:favorites"))
 }
 
-export function isFavorite(productId: string) {
-  return readFavorites().some((f) => f.id === productId)
-}
-
 export function toggleFavoriteLocal(product: FavoriteProduct) {
   const current = readFavorites()
   const exists = current.some((f) => f.id === product.id)

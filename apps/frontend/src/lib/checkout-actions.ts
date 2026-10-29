@@ -8,7 +8,7 @@ import {
   getCheckoutCart,
   getLoggedInCustomer,
 } from "./checkout"
-import { loginAction, type ActionResult } from "./auth/actions"
+import type { ActionResult } from "./auth/actions"
 import {
   buildBillingInvoiceMetadata,
   validateCheckoutAddress,
@@ -73,14 +73,6 @@ async function requireCartId() {
   const cartId = await getCartId()
   if (!cartId) throw new Error("Sepet bulunamadı. Önce ürün ekleyin.")
   return cartId
-}
-
-/** Checkout login — delegates to shared auth layer. */
-export async function checkoutLoginAction(
-  email: string,
-  password: string
-): Promise<ActionResult> {
-  return loginAction(email, password)
 }
 
 /**

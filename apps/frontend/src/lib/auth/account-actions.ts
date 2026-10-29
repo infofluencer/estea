@@ -97,43 +97,6 @@ export async function changePasswordAction(input: {
   }
 }
 
-export async function listCustomerOrdersAction() {
-  try {
-    const headers = await requireAuthHeaders()
-    const { orders } = await sdk.store.order.list(
-      {
-        limit: 30,
-        order: "-created_at",
-        fields: "id,display_id,created_at,total,status,currency_code",
-      },
-      headers
-    )
-    return {
-      ok: true as const,
-      orders: (orders || []).map((o) => ({
-        id: o.id,
-        display_id: o.display_id,
-        created_at: o.created_at,
-        total: o.total,
-        status: o.status,
-        currency_code: o.currency_code,
-      })),
-    }
-  } catch (e) {
-    return { ok: false as const, message: errMessage(e, "Siparişler alınamadı.") }
-  }
-}
-
-export async function listCustomerAddressesAction() {
-  try {
-    const headers = await requireAuthHeaders()
-    const { addresses } = await sdk.store.customer.listAddress({}, headers)
-    return { ok: true as const, addresses: addresses || [] }
-  } catch (e) {
-    return { ok: false as const, message: errMessage(e, "Adresler alınamadı.") }
-  }
-}
-
 export async function createCustomerAddressAction(
   input: AddressInput
 ): Promise<ActionResult> {

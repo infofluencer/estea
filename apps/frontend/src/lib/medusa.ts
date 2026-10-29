@@ -95,9 +95,6 @@ export function s3BaseUrl(): string {
   ).replace(/\/$/, "")
 }
 
-/** @deprecated Prefer s3BaseUrl() */
-export const S3_FILE_URL = s3BaseUrl()
-
 export function s3FileUrl(filename: string) {
   return `${s3BaseUrl()}/files/${filename}`
 }

@@ -232,8 +232,3 @@ export async function removeLineItemAction(lineId: string) {
   return countCartItems(await getCart())
 }
 
-/** Optional: drop cart cookie (e.g. after completed order). */
-export async function clearCartSessionAction() {
-  await clearCartIdCookie()
-  refreshCartViews()
-}

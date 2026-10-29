@@ -11,7 +11,7 @@ const PRIORITY_IMAGE_COUNT = 16
 
 /**
  * Kategori ürün ızgarası. (Eski S3 editoryal vitrin kutuları kaldırıldı;
- * kategori görselleri gerekirse `CategoryBanner` ile sayfa başına eklenir.)
+ * kategori görselleri gerekirse ayrı bir banner bileşeniyle sayfa başına eklenir.)
  */
 export function CategoryProductGrid({
   products,

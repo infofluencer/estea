@@ -73,10 +73,6 @@ const KIND_LABEL: Record<OpsEventKind, string> = {
   "contract.failed": "Sözleşme PDF'i oluşturulamadı",
 }
 
-export function opsEventKindLabel(kind: string): string {
-  return KIND_LABEL[kind as OpsEventKind] || kind
-}
-
 /** Workflow/MedusaError düz obje gelebilir — "[object Object]" yerine mesaj. */
 export function errorText(err: unknown): string {
   if (err instanceof Error) return err.message
