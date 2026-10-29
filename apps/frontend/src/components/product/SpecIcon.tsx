@@ -21,13 +21,6 @@ function Svg({ children }: { children: ReactNode }) {
 
 export function SpecIcon({ name }: { name: SpecIconName }) {
   switch (name) {
-    case "fabric":
-      return (
-        <Svg>
-          <path d="M4 8h16M4 16h16" />
-          <path d="M8 4v16M16 4v16" />
-        </Svg>
-      )
     case "ruler":
       return (
         <Svg>

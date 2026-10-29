@@ -27,7 +27,6 @@ export type SpecEntry = {
 }
 
 export type SpecIconName =
-  | "fabric"
   | "ruler"
   | "wash"
   | "texture"
