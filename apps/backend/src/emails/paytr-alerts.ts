@@ -20,9 +20,11 @@ export type PaytrCriticalAlertData = {
 
 const KIND_LABEL: Record<PaytrCriticalAlertKind, string> = {
   late_success_canceled:
-    "PayTR success, sipariş iptal — para alındı; elle işlenmeli (otomatik iade yalnızca PAYTR_LATE_SUCCESS_AUTO_REFUND=1)",
-  amount_mismatch: "PayTR callback tutarı session tutarından farklı",
-  success_no_order: "PayTR success, Medusa siparişi yok",
+    "PayTR success, sipariş iptal — para alındı; elle işlenmeli (otomatik iade yalnızca PAYTR_CALLBACK_AUTO_REFUND=1)",
+  amount_mismatch:
+    "PayTR callback payment_amount session tutarından farklı — para alınmış olabilir; elle inceleyin (otomatik iade yalnızca PAYTR_CALLBACK_AUTO_REFUND=1)",
+  success_no_order:
+    "PayTR success, Medusa siparişi yok — para alındı; elle inceleyin (otomatik iade yalnızca PAYTR_CALLBACK_AUTO_REFUND=1)",
   compensate_failed: "PayTR iade telafisi başarısız — para içeride kalmış olabilir",
   process_failed: "PayTR success işlenemedi (workflow) — PayTR retry bekleniyor",
 }

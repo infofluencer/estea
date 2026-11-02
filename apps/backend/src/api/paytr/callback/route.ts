@@ -8,15 +8,20 @@ import {
 import { callbackAmountMatchesSession, verifyCallbackHash } from "../../../modules/paytr/hash"
 import { isPaytrMockEnabled } from "../../../modules/paytr/mock-iade"
 import {
-  cancelUnpaidOrderIfSafe,
   findOrderIdForPaymentSession,
   findPaymentSessionByMerchantOid,
   markCallbackProcessed,
   paytrCallbackLockKey,
+  recordFailedAttempt,
   resolvePaymentModule,
   retrieveOrderForCancelGuard,
   type PaymentSessionLike,
 } from "../../../modules/paytr/order-guards"
+import {
+  callbackAutoRefundEnabled,
+  manualReviewStatusFor,
+  type PaytrSuccessAnomalyKind,
+} from "../../../modules/paytr/callback-state"
 import {
   compensatePaytrCharge,
   sendPaytrCriticalAlert,
@@ -37,9 +42,15 @@ export class PaytrCallbackProcessError extends Error {
  * KRİTİK KURALLAR:
  * 1. AUTH/CORS olmadan erişilebilir (middleware muafiyeti — middlewares.ts'e eklendi).
  * 2. Yalnızca düz metin "OK" döner (bad hash hariç).
- * 3. İdempotency: aynı merchant_oid ikinci gelişte işlem yapma, OK dön.
+ * 3. İdempotency YALNIZCA success için: işlenmiş success tekrar gelirse no-op, OK dön.
  * 4. Hash geçersizse "PAYTR notification failed: bad hash" → PayTR retry yapmaz.
- * 5. FAILED → unpaid order cancelOrderWorkflow (stok Medusa core ile serbest).
+ * 5. FAILED → sipariş İPTAL EDİLMEZ, oturum kilitlenmez; yalnızca sayaç + sebep yazılır.
+ *    PayTR 3D Secure başarısız olunca aynı merchant_oid ile tekrar deneme sunar; ikinci
+ *    deneme success gelince normal capture olur. Vazgeçen müşterinin siparişini
+ *    temizlik işi (jobs/cancel-unpaid-paytr-orders) iptal eder.
+ * 6. Tutarsız success (iptal siparişe geç success, tutar farkı, siparişsiz session):
+ *    otomatik iade YOK — uyarı maili + elle inceleme. PAYTR_CALLBACK_AUTO_REFUND=1 ile
+ *    eski otomatik iade davranışı açılır.
  */
 export async function POST(req: MedusaRequest, res: MedusaResponse) {
   const body =
@@ -315,58 +326,43 @@ async function processPaytrCallback(
   }
 
   // status === "failed" (veya success dışı)
-  try {
-    await processPaymentWorkflow(req.scope).run({
-      input: {
-        action: PaymentActions.FAILED,
-        data: {
-          session_id: session.id,
-          amount: amountMajor,
-        },
-      },
-    })
-  } catch (err) {
-    // Medusa process-payment FAILED dalı çoğunlukla no-op; hata olursa yine cancel deneriz
-    logger?.warn(
-      `[paytr/callback] processPaymentWorkflow FAILED (devam): ${formatUnknownError(err)}`
-    )
-  }
-
-  if (orderId) {
-    await cancelUnpaidOrderIfSafe(
-      req.scope,
-      orderId,
-      `[paytr/callback] FAIL cancel`
-    )
-  } else {
-    logger?.warn(
-      `[paytr/callback] FAILED — order bulunamadı session=${session.id} oid=${merchantOid}`
-    )
-  }
-
-  session = (await payment.retrievePaymentSession(session.id)) as PaymentSessionLike
-  await markCallbackProcessed(req.scope, session, {
-    paytr_status: "failed",
-    failed_reason: `${failedReasonCode} ${failedReasonMsg}`.trim(),
+  //
+  // Sipariş İPTAL EDİLMEZ, callback_processed YAZILMAZ. PayTR 3D Secure başarısız
+  // olunca müşteriye aynı merchant_oid ile tekrar deneme sunar; ikinci deneme
+  // success gelince yukarıdaki yoldan capture olur. (Mareen'de failed'da iptal +
+  // idempotency kilidi yüzünden para çekildi, sipariş iptal kaldı: #201, #130.)
+  // Vazgeçen müşterinin siparişi temizlik işinde iptal olur; son deneme zamanı
+  // (paytr_last_failed_at) işin süresini yeniler.
+  const attempts = await recordFailedAttempt(req.scope, session, {
+    code: failedReasonCode,
+    msg: failedReasonMsg,
   })
 
   logger?.warn(
-    `[paytr/callback] Ödeme başarısız işlendi — session=${session.id} reason: ${failedReasonCode} / ${failedReasonMsg}`
+    `[paytr/callback] Ödeme denemesi başarısız (${attempts}. deneme) — session=${session.id} ` +
+      `order=${orderId || "-"} reason: ${failedReasonCode} / ${failedReasonMsg} — sipariş açık, iptal yok`
   )
   await recordOpsEvent(req.scope, {
     kind: "payment.failed",
     level: "warning",
-    title: `PayTR ödemesi başarısız — sipariş iptal`,
-    detail: `Sebep (${failedReasonCode || "?"}): ${failedReasonMsg || "bilinmiyor"}`,
+    title: `PayTR ödeme denemesi başarısız (${attempts}. deneme) — sipariş açık`,
+    detail:
+      `Sebep (${failedReasonCode || "?"}): ${failedReasonMsg || "bilinmiyor"}. ` +
+      "Müşteri aynı ödeme oturumunda tekrar deneyebilir; vazgeçerse temizlik işi iptal eder.",
     orderId,
-    data: { merchant_oid: merchantOid, reason_code: failedReasonCode, reason: failedReasonMsg },
+    data: {
+      merchant_oid: merchantOid,
+      attempts,
+      reason_code: failedReasonCode,
+      reason: failedReasonMsg,
+    },
   })
 }
 
 async function compensateOrThrow(
   req: MedusaRequest,
   input: {
-    kind: "late_success_canceled" | "amount_mismatch" | "success_no_order"
+    kind: PaytrSuccessAnomalyKind
     merchantOid: string
     session: PaymentSessionLike
     totalAmount: string
@@ -375,12 +371,12 @@ async function compensateOrThrow(
   }
 ) {
   const logger = req.scope.resolve("logger")
-  // İptal edilmiş siparişe geç success: varsayılan olarak iade YOK — para tutulur,
-  // sipariş elle yeniden açılır. (Cutover'da DNS yayılırken callback ulaşamadı, gerçek
-  // sipariş #9 cleanup ile iptal oldu.) Eski davranış: PAYTR_LATE_SUCCESS_AUTO_REFUND=1.
-  const holdForManualReview =
-    input.kind === "late_success_canceled" &&
-    process.env.PAYTR_LATE_SUCCESS_AUTO_REFUND !== "1"
+  // Tutarsız success'te varsayılan: iade YOK — para PayTR'de tutulur, uyarı maili
+  // gider, admin siparişi yeniden açar ya da panelden iade eder. (Mareen: cutover'da
+  // DNS yayılırken callback ulaşamadı, gerçek sipariş #9 cleanup ile iptal oldu;
+  // otomatik iade gerçek siparişin parasını iade edecekti. Taksitli #14'te tutar
+  // kontrolü yanlış alarm verdi.) Eski otomatik iade: PAYTR_CALLBACK_AUTO_REFUND=1.
+  const holdForManualReview = !callbackAutoRefundEnabled()
 
   await sendPaytrCriticalAlert(req.scope, {
     kind: input.kind,
@@ -395,13 +391,16 @@ async function compensateOrThrow(
   })
 
   if (holdForManualReview) {
+    // callback_processed=true: aynı success tekrar gelirse no-op. manual_review=true:
+    // temizlik işi bu siparişe dokunmaz (para PayTR'de olabilir).
     await markCallbackProcessed(req.scope, input.session, {
-      paytr_status: "success_on_canceled_order",
+      paytr_status: manualReviewStatusFor(input.kind),
       manual_review: true,
+      manual_review_kind: input.kind,
       paytr_webhook_at: new Date().toISOString(),
     })
     logger?.warn(
-      `[paytr/callback] Geç success iptal siparişte — iade yapılmadı, elle işlenecek oid=${input.merchantOid} order=${input.orderId || "-"}`
+      `[paytr/callback] Tutarsız success (${input.kind}) — iade yapılmadı, elle incelenecek oid=${input.merchantOid} order=${input.orderId || "-"}: ${input.detail}`
     )
     return
   }

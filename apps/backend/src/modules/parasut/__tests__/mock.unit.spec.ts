@@ -6,6 +6,23 @@ import {
 } from "../mock"
 import { isMockMode, normalizeOptions } from "../options"
 
+// Lokal .env (PARASUT_DRY_RUN=true / PAYTR_OID_PREFIX=STG) jest.config loadEnv ile
+// sürece sızar; bu dosya "canlı, dry-run kapalı" davranışını test eder → izole et.
+const ENV_KEYS = ["PARASUT_DRY_RUN", "PAYTR_OID_PREFIX"] as const
+const saved: Partial<Record<(typeof ENV_KEYS)[number], string | undefined>> = {}
+beforeAll(() => {
+  for (const k of ENV_KEYS) {
+    saved[k] = process.env[k]
+    delete process.env[k]
+  }
+})
+afterAll(() => {
+  for (const k of ENV_KEYS) {
+    if (saved[k] === undefined) delete process.env[k]
+    else process.env[k] = saved[k]
+  }
+})
+
 describe("parasut options mock mode", () => {
   it("treats empty credentials as mock", () => {
     const opts = normalizeOptions({})

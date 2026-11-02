@@ -25,6 +25,8 @@ npx medusa user -e admin@example.com -p <şifre>
 npm run test:unit
 npm run test:integration:http      # docker-compose.dev Postgres/Redis gerekir
 npm run test:smoke:full            # PAYTR_MOCK=1 uçtan uca
+npm run test:paytr:token           # gerçek get-token, yalnız test_mode=1
+npm run test:paytr:inject -- --oid STG… --amount 19990   # iframe sonrası callback'i elle POST'la (panel URL'i bize bakmıyorken)
 ```
 
 Env envanteri: `.env.template` ve blueprint §8. Deploy: kök `Dockerfile.backend` (Build Path `/`).

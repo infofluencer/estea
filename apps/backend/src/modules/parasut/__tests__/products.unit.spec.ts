@@ -17,7 +17,7 @@ function liveClient(opts: {
       clientSecret: "secret",
       username: "user@test",
       password: "pass",
-      companyId: "811925",
+      companyId: "100001",
       dryRun: opts.dryRun ?? true,
       productCreate: opts.productCreate,
       shippingProductId: opts.shippingProductId,

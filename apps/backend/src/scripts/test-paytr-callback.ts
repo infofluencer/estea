@@ -9,11 +9,12 @@
  * Senaryolar:
  *  1. success        → "OK", ödeme captured, stok rezerve kalır
  *  2. success tekrar → "OK", ikinci capture / sipariş / rezervasyon yok
- *  3. failed         → "OK", sipariş canceled, rezervasyon serbest
- *  4. yanlış hash    → "bad hash", sipariş değişmez (sonra failed ile temizlenir)
+ *  3. failed         → "OK", sipariş AÇIK kalır (iptal yok), sayaç 1; ikinci failed sayaç 2;
+ *                      aynı oid ile success → captured (3D Secure tekrar denemesi)
+ *  4. yanlış hash    → "bad hash", sipariş değişmez (sonra temizlik işi mantığıyla iptal)
  *  5. bilinmeyen oid → "OK", no-op (Script A'nın oid'i argüman olarak verilebilir)
- *  6. iptal sonrası success → capture yok, compensated + mock iade
- *  8. tutar uyuşmazlığı → capture yok, compensated
+ *  6. iptal sonrası success → capture yok; iade YOK, manual_review (PAYTR_CALLBACK_AUTO_REFUND=1 ise compensated)
+ *  8. tutar uyuşmazlığı → capture yok; iade YOK, manual_review (PAYTR_CALLBACK_AUTO_REFUND=1 ise compensated)
  *
  *   PAYTR_OID_PREFIX=STG PAYTR_TEST_MODE=1 \
  *     npx medusa exec ./src/scripts/test-paytr-callback.ts [script-a-oid]
@@ -397,15 +398,50 @@ export default async function testPaytrCallback({ container, args }: ExecArgs) {
   check("3", 'endpoint "OK"', r3.http === 200 && r3.text === "OK", `${r3.http} ${r3.text}`)
   await sleep(2500)
   const b1 = await orderState(container, b.orderId)
-  check("3", "sipariş canceled", b1.status === "canceled", `status=${b1.status}`)
+  check("3", "sipariş AÇIK (failed iptal etmez)", b1.status !== "canceled", `status=${b1.status}`)
   check("3", "capture yok", b1.captures === 0, `captures=${b1.captures}`)
-  const bAfter = await stockOf(container, inventoryItemId)
+  const bAfterFail = await stockOf(container, inventoryItemId)
   check(
     "3",
-    "rezervasyon serbest (stok geri)",
-    (await reservationsFor(container, b.lineItemId)) === 0 &&
-      bAfter.reserved === beforeB.reserved,
-    `reserved ${beforeB.reserved}→${bPlaced.reserved}→${bAfter.reserved}`
+    "rezervasyon duruyor (müşteri tekrar deneyebilir)",
+    (await reservationsFor(container, b.lineItemId)) === 1 &&
+      bAfterFail.reserved === bPlaced.reserved,
+    `reserved ${beforeB.reserved}→${bPlaced.reserved}→${bAfterFail.reserved}`
+  )
+  const bSession1 = await sessionOf(container, b.paymentCollectionId)
+  check(
+    "3",
+    "session: sayaç 1, callback_processed yok, paytr_status pending",
+    bSession1.data?.paytr_failed_attempts === 1 &&
+      bSession1.data?.callback_processed !== true &&
+      bSession1.data?.paytr_status === "pending",
+    JSON.stringify({
+      attempts: bSession1.data?.paytr_failed_attempts,
+      processed: bSession1.data?.callback_processed,
+      status: bSession1.data?.paytr_status,
+    })
+  )
+  // ikinci failed → sayaç 2
+  await postCallback({ oid: b.oid, amount: b.kurus, status: "failed" })
+  await sleep(1500)
+  const bSession2 = await sessionOf(container, b.paymentCollectionId)
+  check("3", "ikinci failed → sayaç 2", bSession2.data?.paytr_failed_attempts === 2)
+  // 3D Secure tekrar denemesi: aynı merchant_oid ile success → captured (Mareen #201/#130)
+  const r3s = await postCallback({ oid: b.oid, amount: b.kurus, status: "success" })
+  check("3", 'failed sonrası success "OK"', r3s.http === 200 && r3s.text === "OK", `${r3s.http} ${r3s.text}`)
+  await sleep(2500)
+  const b2 = await orderState(container, b.orderId)
+  check(
+    "3",
+    "failed sonrası success → captured, sipariş açık",
+    PAID.has(b2.paymentStatus) && b2.captures === 1 && b2.status !== "canceled",
+    `status=${b2.status} payment_collection=${b2.paymentStatus} captures=${b2.captures}`
+  )
+  const bSession3 = await sessionOf(container, b.paymentCollectionId)
+  check(
+    "3",
+    "session callback_processed + paytr_status=success",
+    bSession3.data?.callback_processed === true && bSession3.data?.paytr_status === "success"
   )
 
   // ── 4. bad hash ───────────────────────────────────────────────────
@@ -433,13 +469,13 @@ export default async function testPaytrCallback({ container, args }: ExecArgs) {
   )
   const cSession = await sessionOf(container, c.paymentCollectionId)
   check("4", "session işlenmedi", cSession.data?.callback_processed !== true)
-  const rc = await postCallback({ oid: c.oid, amount: c.kurus, status: "failed" })
-  await sleep(2500)
+  // Temizlik işi mantığı (UNPAID_ORDER_TIMEOUT_MINUTES dolmuş gibi): iptal + stok geri
+  const cCancel = await cancelUnpaidOrderIfSafe(container, c.orderId, "[stg-badhash]")
   const c2 = await orderState(container, c.orderId)
   check(
     "4",
-    "temizlik: failed ile iptal + stok geri",
-    rc.text === "OK" &&
+    "temizlik: ödenmemiş sipariş iptal + stok geri",
+    cCancel.canceled === true &&
       c2.status === "canceled" &&
       (await reservationsFor(container, c.lineItemId)) === 0,
     `status=${c2.status}`
@@ -451,8 +487,11 @@ export default async function testPaytrCallback({ container, args }: ExecArgs) {
   const r5 = await postCallback({ oid: unknownOid, amount: "100", status: "success" })
   check("5", 'geçerli imza + session yok → "OK" no-op', r5.text === "OK", `${unknownOid} → ${r5.text}`)
 
-  // Not: 6. adım backend'de PAYTR_LATE_SUCCESS_AUTO_REFUND=1 ister; yoksa iade yapılmaz
-  // (paytr_status=success_on_canceled_order, manual_review=true).
+  // Varsayılan: tutarsız success'te iade YOK (manual_review=true, para PayTR'de).
+  // Backend .env'inde PAYTR_CALLBACK_AUTO_REFUND=1 ise eski otomatik telafi (mock iade).
+  const autoRefund = process.env.PAYTR_CALLBACK_AUTO_REFUND === "1"
+  console.log(`  tutarsız success: ${autoRefund ? "otomatik iade (PAYTR_CALLBACK_AUTO_REFUND=1)" : "elle inceleme (iade yok)"}`)
+
   // ── 6. late success after cancel (cleanup simülasyonu) ──────────
   console.log("\n── 6. iptal sonrası geç success")
   const d = await createOrder(container, variantId, "late")
@@ -464,19 +503,31 @@ export default async function testPaytrCallback({ container, args }: ExecArgs) {
   const d1 = await orderState(container, d.orderId)
   check("6", "iptal kaldı, capture yok", d1.status === "canceled" && d1.captures === 0, `status=${d1.status} captures=${d1.captures}`)
   const dSession = await sessionOf(container, d.paymentCollectionId)
-  check(
-    "6",
-    "session compensated (capture yok)",
-    dSession.data?.paytr_status === "compensated" &&
-      dSession.data?.callback_processed === true &&
-      dSession.data?.compensate_kind === "late_success_canceled"
-  )
-  check(
-    "6",
-    "iade referansı session'da",
-    typeof dSession.data?.compensate_reference === "string" &&
-      Boolean(dSession.data.compensate_reference)
-  )
+  if (autoRefund) {
+    check(
+      "6",
+      "session compensated (capture yok)",
+      dSession.data?.paytr_status === "compensated" &&
+        dSession.data?.callback_processed === true &&
+        dSession.data?.compensate_kind === "late_success_canceled"
+    )
+    check(
+      "6",
+      "iade referansı session'da",
+      typeof dSession.data?.compensate_reference === "string" &&
+        Boolean(dSession.data.compensate_reference)
+    )
+  } else {
+    check(
+      "6",
+      "session manual_review (iade yok, tekrar gelen success no-op)",
+      dSession.data?.paytr_status === "success_on_canceled_order" &&
+        dSession.data?.manual_review === true &&
+        dSession.data?.callback_processed === true &&
+        dSession.data?.compensate_reference === undefined,
+      JSON.stringify({ status: dSession.data?.paytr_status, review: dSession.data?.manual_review })
+    )
+  }
 
   // ── 8. amount mismatch ─────────────────────────────────────────
   console.log("\n── 8. tutar uyuşmazlığı")
@@ -493,7 +544,18 @@ export default async function testPaytrCallback({ container, args }: ExecArgs) {
     `payment_collection=${e1.paymentStatus}`
   )
   const eSession = await sessionOf(container, e.paymentCollectionId)
-  check("8", "session compensated / amount_mismatch", eSession.data?.compensate_kind === "amount_mismatch")
+  if (autoRefund) {
+    check("8", "session compensated / amount_mismatch", eSession.data?.compensate_kind === "amount_mismatch")
+  } else {
+    check(
+      "8",
+      "session manual_review / amount_mismatch (iade yok)",
+      eSession.data?.paytr_status === "success_amount_mismatch" &&
+        eSession.data?.manual_review === true &&
+        eSession.data?.manual_review_kind === "amount_mismatch",
+      JSON.stringify({ status: eSession.data?.paytr_status, kind: eSession.data?.manual_review_kind })
+    )
+  }
   await cancelUnpaidOrderIfSafe(container, e.orderId, "[stg-amt]")
 
   const end = await stockOf(container, inventoryItemId)

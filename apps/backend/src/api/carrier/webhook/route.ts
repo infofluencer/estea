@@ -1,9 +1,10 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 import { getConfiguredCarrier, listCarrierAdapters } from "../../../modules/carrier/registry"
-import { readFulfillmentData, type CarrierWebhook } from "../../../modules/carrier/types"
+import type { CarrierWebhook } from "../../../modules/carrier/types"
 import { applyCarrierAction, patchFulfillmentData } from "../../../lib/carrier-actions"
 import { errorText, recordOpsEvent } from "../../../lib/ops-events"
+import { findFulfillmentByCarrierRef } from "../../../lib/shipping/open-fulfillments"
 
 /**
  * POST /carrier/webhook[?carrier=<kod>][&token=…]
@@ -100,40 +101,13 @@ async function findFulfillment(
   carrierCode: string,
   parsed: CarrierWebhook
 ): Promise<{ id: string; orderId: string | null } | null> {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const matches = (data: Record<string, unknown> | null | undefined) => {
-    const d = readFulfillmentData(data)
-    return d.carrier === carrierCode && d.shipment_ref === parsed.shipmentRef
-  }
-
-  const ref = (parsed.orderReference || "").trim()
-  const displayId = ref ? Number(ref.replace(/[^0-9]/g, "")) : NaN
-  if (Number.isFinite(displayId) && displayId > 0) {
-    const { data: orders } = await query.graph({
-      entity: "order",
-      fields: ["id", "fulfillments.id", "fulfillments.canceled_at", "fulfillments.data"],
-      // Medusa query graph types display_id as string filter (bkz. store/orders/lookup)
-      filters: { display_id: String(displayId) },
-    })
-    for (const o of orders as { id: string; fulfillments?: { id: string; canceled_at?: unknown; data?: Record<string, unknown> | null }[] }[]) {
-      const f = (o.fulfillments || []).find((x) => !x.canceled_at && matches(x.data))
-      if (f) return { id: f.id, orderId: o.id }
-    }
-  }
-
-  const { data } = await query.graph({
-    entity: "fulfillment",
-    fields: ["id", "canceled_at", "data"],
-    pagination: { take: 500, order: { created_at: "DESC" } },
+  // Mareen dersi: "son N kayıt" taraması eski gönderilerin teslim bildirimini kaçırır.
+  // Sipariş referansı → etiket tablosu (takip no) → açık kayıtların sayfalı taraması.
+  const found = await findFulfillmentByCarrierRef(req.scope, {
+    carrierCode,
+    shipmentRef: parsed.shipmentRef,
+    trackingNumbers: [parsed.patch?.tracking_number as string | undefined, parsed.patch?.barcode as string | undefined],
+    orderReference: parsed.orderReference,
   })
-  const f = (data as { id: string; canceled_at?: unknown; data?: Record<string, unknown> | null }[]).find(
-    (x) => !x.canceled_at && matches(x.data)
-  )
-  if (!f) return null
-  const { data: links } = await query.graph({
-    entity: "order_fulfillment",
-    fields: ["order_id", "fulfillment_id"],
-    filters: { fulfillment_id: f.id },
-  })
-  return { id: f.id, orderId: (links?.[0] as { order_id?: string } | undefined)?.order_id || null }
+  return found ? { id: found.id, orderId: found.orderId } : null
 }

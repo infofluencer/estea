@@ -3,6 +3,7 @@ import type { Logger } from "@medusajs/framework/types"
 import { ParasutClient } from "./client"
 import {
   isMockMode,
+  isNonProdDeployment,
   isParasutDryRun,
   isPlaceholderCredential,
   normalizeOptions,
@@ -55,6 +56,11 @@ class ParasutModuleService {
       this.logger_.warn(
         "[parasut] DRY-RUN ON — taslak sales invoice oluşur; finalize/e-belge ASLA çağrılmaz"
       )
+      if (isNonProdDeployment()) {
+        this.logger_.warn(
+          `[parasut] DRY-RUN zorlandı: PAYTR_OID_PREFIX=${(process.env.PAYTR_OID_PREFIX || "").trim()} (canlı dışı ortam). Canlıya geçerken öneki BOŞALT.`
+        )
+      }
       this.logger_.warn(
         `[parasut] DRY-RUN product create=${this.options_.productCreate ? "AÇIK (PARASUT_PRODUCT_CREATE)" : "kapalı — yalnızca mevcut ürünler aranır"}`
       )

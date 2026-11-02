@@ -1,6 +1,7 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
-import { Badge, Button, Container, Heading, Text, toast, usePrompt } from "@medusajs/ui"
+import { Badge, Button, Checkbox, Container, Heading, Input, Label, Text, toast, usePrompt } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { fetchOpsEvents, formatEventDate, OPS_KIND_LABEL, OPS_LEVEL_BADGE } from "../lib/ops-events"
 
@@ -76,14 +77,37 @@ const OrderOpsWidget = () => {
     onError: (e: Error) => toast.error(e.message, { duration: 60000 }),
   })
 
+  const [attachOpen, setAttachOpen] = useState(false)
+  const [attachRef, setAttachRef] = useState("")
+  const [attachTracking, setAttachTracking] = useState("")
+  const [attachShipped, setAttachShipped] = useState(true)
+  const attach = useMutation({
+    mutationFn: () =>
+      postJson(`/admin/orders/${orderId}/fulfillment/attach`, {
+        shipment_ref: attachRef.trim() || undefined,
+        tracking_number: attachTracking.trim() || undefined,
+        mark_shipped: attachShipped,
+      }),
+    onSuccess: () => {
+      toast.success("Dış gönderi siparişe bağlandı.")
+      setAttachOpen(false)
+      setAttachRef("")
+      setAttachTracking("")
+      refresh()
+    },
+    onError: (e: Error) => toast.error(e.message, { duration: 60000 }),
+  })
+
   if (!orderId) return null
 
   const g = state.data
   const needsShipment = Boolean(g && g.carrier_configured && g.paid && !g.canceled && !g.has_fulfillment)
   const canReship = Boolean(g && g.carrier_configured && g.active && !g.active.shipped && !g.active.delivered && !g.canceled)
+  // Şubede elle açılmış gönderi: kayıt yok ya da kayıtta firma kimliği yok ve paket henüz "kargoya verildi" değil.
+  const canAttach = Boolean(g && g.paid && !g.canceled && (!g.active || (!g.active.shipped && !g.active.data.shipment_ref)))
   const list = events.data?.events || []
 
-  if (!needsShipment && !canReship && list.length === 0) return null
+  if (!needsShipment && !canReship && !canAttach && list.length === 0) return null
 
   const onRetry = async () => {
     const ok = await prompt({
@@ -139,6 +163,47 @@ const OrderOpsWidget = () => {
               Gönderiyi yeniden aç
             </Button>
           </div>
+        </div>
+      ) : null}
+
+      {canAttach ? (
+        <div className="flex flex-col gap-2 px-6 py-4">
+          <div className="flex items-center justify-between gap-2">
+            <Heading level="h2">Dış gönderi</Heading>
+            <Button size="small" variant="transparent" onClick={() => setAttachOpen((v) => !v)}>
+              {attachOpen ? "Kapat" : "Siparişe bağla"}
+            </Button>
+          </div>
+          <Text size="small" className="text-ui-fg-subtle">
+            Paket şubede ya da firma panelinde elle açıldıysa kimliğini buraya yazın; firmaya yeni gönderi açılmaz, takip ve teslim buradan izlenir.
+          </Text>
+          {attachOpen ? (
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1">
+                <Label size="xsmall">Firma gönderi kimliği (ref)</Label>
+                <Input size="small" value={attachRef} onChange={(e) => setAttachRef(e.target.value)} placeholder="Firma panelindeki gönderi no" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <Label size="xsmall">Takip numarası</Label>
+                <Input size="small" value={attachTracking} onChange={(e) => setAttachTracking(e.target.value)} placeholder="Takip / barkod" />
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox id="attach-shipped" checked={attachShipped} onCheckedChange={(v) => setAttachShipped(v === true)} />
+                <Label htmlFor="attach-shipped" size="xsmall">Paket kargoya verildi (müşteriye kargo maili gider)</Label>
+              </div>
+              <div>
+                <Button
+                  size="small"
+                  variant="secondary"
+                  isLoading={attach.isPending}
+                  disabled={!attachRef.trim() && !attachTracking.trim()}
+                  onClick={() => attach.mutate()}
+                >
+                  Bağla
+                </Button>
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : null}
 

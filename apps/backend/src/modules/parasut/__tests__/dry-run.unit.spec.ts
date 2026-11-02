@@ -1,5 +1,6 @@
 import {
   assertParasutDryRunEnabled,
+  isNonProdDeployment,
   isParasutDryRun,
   normalizeOptions,
   parseDryRunFlag,
@@ -9,17 +10,44 @@ import { ParasutClient, ParasutError, retryAfterMs } from "../client"
 
 describe("PARASUT_DRY_RUN flags", () => {
   const prev = process.env.PARASUT_DRY_RUN
+  const prevOid = process.env.PAYTR_OID_PREFIX
 
   afterEach(() => {
     if (prev === undefined) delete process.env.PARASUT_DRY_RUN
     else process.env.PARASUT_DRY_RUN = prev
+    if (prevOid === undefined) delete process.env.PAYTR_OID_PREFIX
+    else process.env.PAYTR_OID_PREFIX = prevOid
   })
 
   it("defaults to false (prod unchanged)", () => {
     delete process.env.PARASUT_DRY_RUN
+    delete process.env.PAYTR_OID_PREFIX
     expect(parseDryRunFlag(undefined)).toBe(false)
     expect(isParasutDryRun()).toBe(false)
+    expect(isNonProdDeployment()).toBe(false)
     expect(normalizeOptions({}).dryRun).toBe(false)
+  })
+
+  it("PAYTR_OID_PREFIX (canlı dışı ortam) forces dry-run even when env says false", () => {
+    // Mareen: test siparişi #59 gerçek e-fatura oldu. Staging işareti varken
+    // PARASUT_DRY_RUN=false bile olsa taslak dışına çıkılmaz.
+    process.env.PARASUT_DRY_RUN = "false"
+    process.env.PAYTR_OID_PREFIX = "STG"
+    expect(isNonProdDeployment()).toBe(true)
+    expect(isParasutDryRun()).toBe(true)
+    expect(isParasutDryRun({ dryRun: false })).toBe(true)
+    const opts = normalizeOptions({ dryRun: "false" })
+    expect(opts.dryRun).toBe(true)
+    // DRY-RUN'da ürün oluşturma varsayılan kapalı (çift Paraşüt ürünü üretme)
+    expect(opts.productCreate).toBe(false)
+    expect(() => assertParasutDryRunEnabled()).not.toThrow()
+  })
+
+  it("blank PAYTR_OID_PREFIX is prod (no forcing)", () => {
+    delete process.env.PARASUT_DRY_RUN
+    process.env.PAYTR_OID_PREFIX = "   "
+    expect(isNonProdDeployment()).toBe(false)
+    expect(isParasutDryRun()).toBe(false)
   })
 
   it("parses true/1/yes", () => {
@@ -67,7 +95,7 @@ describe("finalizeInvoice / refund DRY-RUN guard", () => {
         clientSecret: "secret",
         username: "user@test",
         password: "pass",
-        companyId: "811925",
+        companyId: "100001",
         dryRun,
       }),
       transport: async () => {
@@ -147,7 +175,7 @@ describe("Parasut HTTP error body logging", () => {
         clientSecret: "secret",
         username: "user@test",
         password: "pass",
-        companyId: "811925",
+        companyId: "100001",
         dryRun: true,
       }),
       logger: {

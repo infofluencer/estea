@@ -90,8 +90,18 @@ export function parseDryRunFlag(value?: unknown): boolean {
   return s === "1" || s === "true" || s === "yes" || s === "on"
 }
 
+/**
+ * Canlı dışı ortam işareti: PAYTR_OID_PREFIX dolu (ör. staging "STG").
+ * Omnisend / Meta CAPI / PayTR iade ile aynı kural. Mareen'de test siparişi
+ * gerçek e-fatura kesti; burada bu işaret DRY-RUN'ı zorlar (env false olsa bile).
+ */
+export function isNonProdDeployment(): boolean {
+  return Boolean((process.env.PAYTR_OID_PREFIX || "").trim())
+}
+
 export function isParasutDryRun(options?: { dryRun?: boolean }): boolean {
   if (options?.dryRun === true) return true
+  if (isNonProdDeployment()) return true
   return parseDryRunFlag(process.env.PARASUT_DRY_RUN)
 }
 
@@ -138,7 +148,9 @@ export function normalizeOptions(raw: ParasutRawOptions = {}): ParasutOptions {
   const vat = Number(raw.defaultVatRate)
   const shipVat = Number(raw.shippingVatRate)
   const dryRun =
-    parseDryRunFlag(raw.dryRun) || parseDryRunFlag(process.env.PARASUT_DRY_RUN)
+    parseDryRunFlag(raw.dryRun) ||
+    parseDryRunFlag(process.env.PARASUT_DRY_RUN) ||
+    isNonProdDeployment()
   const productCreateRaw = text(raw.productCreate)
 
   return {

@@ -48,8 +48,8 @@ CONTACT_INBOX=info@esteacay.com
 RETURNS_INBOX=info@esteacay.com
 UNPAID_ORDER_TIMEOUT_MINUTES=30
 
-# Canlı-dışı işareti: gerçek iade engellenir, Omnisend/CAPI kapalı, OID öneki STG.
-# Canlıya geçerken BOŞALT.
+# Canlı-dışı işareti: gerçek iade engellenir, Omnisend/CAPI kapalı, Paraşüt DRY-RUN
+# zorlanır (PARASUT_DRY_RUN ne olursa olsun), OID öneki STG. Canlıya geçerken BOŞALT.
 PAYTR_OID_PREFIX=STG
 PAYTR_TEST_MODE=1
 PAYTR_MERCHANT_ID=
@@ -65,6 +65,7 @@ SMTP_PASS=<google app password>
 SMTP_FROM=Es Çay <info@esteacay.com>
 SMTP_SECURE=false
 
+# Paraşüt: Es Çay'ın kendi hesabı (K14); Mareen kimlikleri kullanılmaz. Hesap açılana dek PARASUT_CLIENT_ID vb. boş → mock.
 PARASUT_ENV=test
 PARASUT_DRY_RUN=true
 PARASUT_DEFAULT_VAT_RATE=1
@@ -126,9 +127,29 @@ NEXT_PUBLIC_SHOP_URL=http://<frontend>     (Build-time Argument da)
 
 ## Dönem B'ye geçiş (domain + TLS)
 
-1. DNS: `api`, `market`, apex/`www` → 187.77.69.91; Dokploy Domains'te gerçek host + HTTPS, Generate Domain'leri sil.
-2. backend: tüm `http://<…>` → `https://…`; `COOKIE_SECURE` satırını sil; `PAYTR_OID_PREFIX` boşalt; `PAYTR_TEST_MODE=0` ancak canlı PayTR kimlikleri girilince; `PARASUT_ENV=prod`, `PARASUT_DRY_RUN=false` mali müşavir onayıyla.
-3. frontend: `SITE_URL=https://market.esteacay.com`, `MEDUSA_BACKEND_URL=https://api.esteacay.com`, `COOKIE_SECURE` sil → **rebuild** (NEXT_PUBLIC_* gömülü).
-4. landing: `NEXT_PUBLIC_SHOP_URL=https://market.esteacay.com` → rebuild.
-5. PayTR paneli bildirim URL'i: `https://api.esteacay.com/paytr/callback`.
-6. Postgres Backups → S3, `0 3 * * *`, restore testi.
+PayTR bildirim URL'i **tek** ve **panelde** yaşar; DNS yayılırken callback'in
+ulaşamadığı her dakika "para çekildi, sipariş iptal" riskidir (Mareen #9). Sıra bu yüzden
+önce callback ucu, sonra DNS, en son canlı mod:
+
+1. **Callback ucu DNS'ten önce ayakta:** Dokploy backend Domains'e `api.esteacay.com` + HTTPS ekle
+   (Generate Domain henüz kalsın). Sunucudan `curl -X POST https://api.esteacay.com/paytr/callback`
+   → `PAYTR notification failed: bad hash` dönmeli (uç ayakta, imza reddediyor). Dönmüyorsa DNS'e geçme.
+2. **Panel URL'ini cutover gecesinden önce test et:** PayTR paneli bildirim URL'i
+   `https://api.esteacay.com/paytr/callback` yap; staging kimlikleriyle (`PAYTR_OID_PREFIX=STG`,
+   `PAYTR_TEST_MODE=1`) bir test ödemesi at, admin **Logs**'ta `payment.succeeded` gör. Eski WordPress/başka
+   ucu aynı panelde bırakma — bildirim tek yere gider.
+3. DNS: `api`, `market`, apex/`www` → 187.77.69.91; Generate Domain'leri sil. Geçiş sırasında callback
+   sayfası eski IP'ye giderse PayTR retry eder; temizlik işi (`UNPAID_ORDER_TIMEOUT_MINUTES`) geç gelen
+   success'i artık iade etmez, uyarı maili + elle inceleme ister.
+4. backend: tüm `http://<…>` → `https://…`; `COOKIE_SECURE` satırını sil; `PARASUT_ENV=prod`,
+   `PARASUT_DRY_RUN=false` mali müşavir onayıyla. Not: `PAYTR_OID_PREFIX` dolu kaldıkça Paraşüt taslakta
+   kalır, e-belge kesilmez; gerçek fatura ancak 7. adımda önek boşalınca başlar. Deploy sonrası
+   `/health/revision` commit hash'i push edilenle aynı mı kontrol et.
+5. frontend: `SITE_URL=https://market.esteacay.com`, `MEDUSA_BACKEND_URL=https://api.esteacay.com`, `COOKIE_SECURE` sil → **rebuild** (NEXT_PUBLIC_* gömülü).
+6. landing: `NEXT_PUBLIC_SHOP_URL=https://market.esteacay.com` → rebuild.
+7. **Canlı PayTR (ayrı adım, kimlikler girilince):** `PAYTR_MERCHANT_*` canlı değerler, `PAYTR_OID_PREFIX=` (boş),
+   `PAYTR_TEST_MODE=0`, `PAYTR_MOCK` satırını sil. Üçü birlikte değişir; boot'taki env doğrulaması
+   (`src/modules/paytr/env-guard.ts`) `TEST_MODE=0 + önek dolu`, `TEST_MODE tanımsız` ya da `mock açık`
+   görürse backend başlamaz — Dokploy log'unda `[paytr/env]` satırına bak. Sonra 1 TL gerçek ödeme + panelden iade.
+8. Postgres Backups → S3, `0 3 * * *`, restore testi; cron'a başarı sinyali (heartbeat ping) ekle —
+   sessiz kalan cron Mareen'de haftalarca fark edilmedi (K10).

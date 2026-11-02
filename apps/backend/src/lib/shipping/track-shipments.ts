@@ -1,5 +1,6 @@
 import type { MedusaContainer } from "@medusajs/framework/types"
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { listOpenFulfillments } from "./open-fulfillments"
 import { getCarrierFor } from "../../modules/carrier/registry"
 import { readFulfillmentData, type FulfillmentAction } from "../../modules/carrier/types"
 import { applyCarrierAction, patchFulfillmentData } from "../carrier-actions"
@@ -14,17 +15,10 @@ type Row = {
   data?: Record<string, unknown> | null
 }
 
-/** Son N gün içinde açılmış, teslim edilmemiş, firmada kaydı olan gönderiler. */
-export async function listTrackTargets(container: MedusaContainer, lookbackDays = 30): Promise<Row[]> {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const since = new Date(Date.now() - lookbackDays * 86_400_000).toISOString()
-  const { data } = await query.graph({
-    entity: "fulfillment",
-    fields: ["id", "created_at", "shipped_at", "delivered_at", "canceled_at", "data"],
-    filters: { created_at: { $gte: since } },
-    pagination: { take: 500, order: { created_at: "DESC" } },
-  })
-  return (data as Row[]).filter((f) => !f.canceled_at && !f.delivered_at && readFulfillmentData(f.data).shipment_ref)
+/** Son N gün içinde açılmış, teslim edilmemiş, firmada kaydı olan gönderiler (sayfalı; sabit üst sınır yok). */
+export async function listTrackTargets(container: MedusaContainer, lookbackDays = 60): Promise<Row[]> {
+  const rows = await listOpenFulfillments(container, { lookbackDays })
+  return rows.filter((f) => Boolean(readFulfillmentData(f.data).shipment_ref))
 }
 
 /**

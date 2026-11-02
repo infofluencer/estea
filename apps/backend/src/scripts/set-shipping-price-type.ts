@@ -8,7 +8,7 @@
  *   SHIPPING_PRICE_TYPE=calculated SHIPPING_PRICE_TYPE_APPLY=1 npx medusa exec ./src/scripts/set-shipping-price-type.js
  *   SHIPPING_PRICE_TYPE=flat       SHIPPING_PRICE_TYPE_APPLY=1 npx medusa exec ./src/scripts/set-shipping-price-type.js
  *
- * Not: seed-escay yeniden çalıştırılırsa seçenek tekrar flat olur.
+ * Not: seed-escay mevcut seçenek `calculated` ise fiyat tipini korur (ayarı ezmez).
  */
 import { ExecArgs } from "@medusajs/framework/types"
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils"

@@ -439,15 +439,19 @@ async function ensureTrShipping(
 
   if (prefer) {
     keeperId = prefer.id as string
+    // Idempotent: set-shipping-price-type ile `calculated` yapılmış seçeneği seed ezmez
+    // (Mareen dersi: seed yeniden çalışınca kargo ücreti sabit tipe dönüyordu).
+    const keepCalculated = prefer.price_type === "calculated"
     logger.info(
-      `Updating TR shipping option ${keeperId} → ${SHIPPING_CONFIG.name} ${SHIPPING_CONFIG.amount} ${SHIPPING_CONFIG.currency}`
+      keepCalculated
+        ? `Updating TR shipping option ${keeperId} → ${SHIPPING_CONFIG.name} (price_type=calculated korunuyor)`
+        : `Updating TR shipping option ${keeperId} → ${SHIPPING_CONFIG.name} ${SHIPPING_CONFIG.amount} ${SHIPPING_CONFIG.currency}`
     )
     await updateShippingOptionsWorkflow(container).run({
       input: [
         {
           id: keeperId,
           name: SHIPPING_CONFIG.name,
-          price_type: "flat",
           provider_id: SHIPPING_PROVIDER_ID,
           shipping_profile_id: shippingProfileId,
           data: SHIPPING_OPTION_DATA,
@@ -456,7 +460,7 @@ async function ensureTrShipping(
             description: "Türkiye içi standart kargo",
             code: SHIPPING_TYPE_CODE,
           },
-          prices: pricesPayload,
+          ...(keepCalculated ? { price_type: "calculated" as const } : { price_type: "flat" as const, prices: pricesPayload }),
           rules,
         },
       ],

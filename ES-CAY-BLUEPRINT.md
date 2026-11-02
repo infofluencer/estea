@@ -260,10 +260,10 @@ Dosyalar: `src/modules/paytr/{service,hash,order-guards,mock-iade}.ts`, `src/api
 3. Hash: `base64(HMAC_SHA256(key, merchant_oid + salt + status + total_amount))`, `timingSafeEqual`. Hatalıysa 200 "bad hash".
 4. Lock `paytr-callback:<oid>` (timeout 30, ttl 120).
 5. Session bulma: `listPaymentSessions({provider_id})` sayfalayarak `data.merchant_oid` eşleşmesi. Bulunamazsa `OK` (PayTR tekrar denemesin — eski site/WP callback'leri sessizce yutulur).
-6. `callback_processed===true` → no-op (idempotent).
+6. `callback_processed===true` → no-op (idempotent). Bu bayrak **yalnız success** sonunda yazılır; failed bildirimi oturumu kilitlemez (PayTR 3D Secure sonrası aynı `merchant_oid` ile tekrar deneme sunar — Mareen #201/#130).
 7. Sipariş bulma: `order_payment_collection` → yoksa `cart_payment_collection` → `order_cart`.
-8. **success:** sipariş yok → telafi `success_no_order`; sipariş iptal edilmiş → `late_success_canceled`: varsayılan **iade etmez**, kritik alarm maili + session `manual_review` (`PAYTR_LATE_SUCCESS_AUTO_REFUND=1` ile otomatik iade); tutar uyuşmazlığı (1 kuruş tolerans) → telafi `amount_mismatch`; normal → session `paytr_status=success`, `processPaymentWorkflow(SUCCESSFUL, amount)` (authorize+capture → `payment.captured`), `callback_processed=true`, ops event `payment.succeeded`. Workflow hata verirse alarm + **500** (PayTR tekrar dener).
-9. **failed:** `processPaymentWorkflow(FAILED)`, `cancelUnpaidOrderIfSafe` (sipariş iptali, stok serbest), ops `payment.failed`.
+8. **success:** sipariş yok → telafi `success_no_order`; sipariş iptal edilmiş → `late_success_canceled`; tutar uyuşmazlığı (`payment_amount`, 1 kuruş tolerans) → `amount_mismatch`. Üç tutarsızlıkta da varsayılan **iade etmez**: kritik alarm maili + session `manual_review=true` (temizlik işi dokunmaz); `PAYTR_CALLBACK_AUTO_REFUND=1` eski otomatik telafi; normal → session `paytr_status=success`, `processPaymentWorkflow(SUCCESSFUL, amount)` (authorize+capture → `payment.captured`), `callback_processed=true`, ops event `payment.succeeded`. Workflow hata verirse alarm + **500** (PayTR tekrar dener).
+9. **failed:** sipariş **iptal edilmez**, kilit yok — session'a `paytr_failed_attempts` +1, `paytr_last_failed_at`, `failed_reason`; ops `payment.failed`. Vazgeçen müşterinin siparişini temizlik işi süre dolunca (son denemeden itibaren) iptal eder; bkz. `docs/ESCAY-KARARLAR.md` K11.
 10. Telafi (`compensatePaytrCharge`): tam tutarı `/odeme/iade` ile iade, başarısızsa alarm `compensate_failed` + 500.
 
 **Order guards:** `isOrderUnpaidSafeToCancel` (iptal edilmiş, ödenmiş veya bilinmeyen statüde iptal etmez); `cancelUnpaidOrderIfSafe` → `cancelOrderWorkflow({no_notification:true})`; "already canceled" idempotent, "has fulfillments" admin incelemesine bırakılır.
@@ -763,7 +763,8 @@ Sütun "Es Çay": **Aynen** = kopyala, **Yeni değer** = markaya göre doldur, *
 | `PAYTR_USER_IP` | Lokal testte dış IP (PayTR geçerli IP ister) | Lokal |
 | `PAYTR_DEBUG_ON` | get-token `debug_on` zorla | Aynen (boş) |
 | `PAYTR_ALERT_INBOX` | Kritik tutarsızlık alarmı (geç success, tutar farkı) | Yeni değer |
-| `PAYTR_LATE_SUCCESS_AUTO_REFUND` | `1` → iptal edilmiş siparişe geç gelen success'i otomatik iade et (varsayılan: iade yok, manual_review + alarm maili) | Aynen (boş) |
+| `PAYTR_CALLBACK_AUTO_REFUND` | `1` → tutarsız success'i (geç success, tutar farkı, siparişsiz session) otomatik iade et (varsayılan: iade yok, manual_review + alarm maili) | Aynen (boş) |
+| `PAYTR_ENV_STRICT` | `1` → env doğrulaması prod dışında da süreci durdurur (prod'da zaten zorunlu; `PAYTR_TEST_MODE` açıkça yazılmalı) | Aynen (boş) |
 
 ### 8.3 Backend — Havale/EFT
 
@@ -944,6 +945,19 @@ Bu liste `docs/CUTOVER.md`'deki 25 bölümün ve commit geçmişinin damıtılm�
 36. Her olayı `ops_event`'e yaz (ödeme, iptal, kargo, havale onayı, iade). Admin "Logs" operasyon sorularının %80'ini cevapladı.
 37. Yasal sözleşme metni tek kaynak (`shared/legal-contracts.ts`), siparişte PDF snapshot (S3 private), `CONTRACT_TEXT_VERSION`. Hukukçu onayı tarihini kaydet.
 38. KDV: fiyatlar KDV dahil; region tax rate ile Paraşüt KDV oranı tutarlı olmalı.
+
+### Fatura, pazarlama ve altyapı (2026-10-30 eki — Mareen kapanış notlarından)
+39. **Paraşüt ürün kopyaları.** WooCommerce her yeniden adlandırmada Paraşüt'te yeni ürün açtı; kod/barkod boş, çoğu ürün 2-3 kopya → elle onaylı eşleştirme raporu gerekti. Es Çay: SKU ilk günden Paraşüt ürün kodu (`ensureProduct` önce `code`, sonra birebir ad); DRY-RUN'da ürün oluşturma kapalı; ad değişikliği kopya üretmez (bkz. 29).
+40. **Paraşüt API ayrıntıları.** Para birimi `TRL` (TRY kabul edilmez), her satır ürün referansı ister, 429 gövdesinde "Try again in N seconds" var (`retryAfterMs`), KDV hariç birim fiyat 2 hanede yuvarlanınca adet × fiyat 1 kuruş sapar (bkz. 28). Çay KDV'si %1 olduğu için yuvarlama ve oran eşlemesi `amounts.unit.spec.ts`'te baştan test edildi; Medusa oranı **yüzde** saklar (1 = %1), `mapMedusaTaxRateToParasutVat` 1'i kesir sanıp %100 yapıyordu — düzeltildi.
+41. **Gerçek fatura riski.** Dry-run kapalıyken her capture GİB faturası keser; Mareen test siparişi #59 gerçek e-fatura oldu. Eski siparişleri Medusa siparişi olarak içe almak subscriber'ları (fatura, mail, Omnisend) tetikler. Es Çay: `PAYTR_OID_PREFIX` dolu (staging) iken Paraşüt DRY-RUN **zorlanır** (env false olsa bile); arşiv sipariş importu yok, gerekirse ayrı tablo — Medusa `order` tablosuna yazılmaz.
+42. **Trendyol / pazaryeri.** İki sistem aynı anda stok yazınca birbirini ezdi; checkout rezervasyonu `inventory-level.updated` yaymıyor; flush 15 varyantla sınırlıydı; sonunda ertelendi. Es Çay'da pazaryeri açılırsa stok sahibi **tek sistem** (Medusa) olsun, diğeri salt okur.
+43. **Çerez onayı tüm takibi kapattı.** CookieYes senkron script'i hidrasyonla yarıştı, banner silindi, GA4/Ads/Pixel/Clarity/Omnisend hiç yüklenmedi; CookieYes kotası %82'ye geldi. Es Çay: `afterInteractive` (bkz. 14) + K7 açılışında "onay verilmedi" oranını izle (CookieYes panosu / GA4 consent raporu); aylarca sıfır veri = banner kırık demektir.
+44. **Omnisend sandbox yok.** Staging test adresleri gerçek hesaba düştü (bounce riski); izinsiz kişi kaydı 400 döndü; `NEXT_PUBLIC_*` değişince storefront rebuild ister. Es Çay: `OMNISEND_TEST_EMAILS` allowlist, staging'de API key boş (bkz. 30); test e-posta listesi ilk günden.
+45. **GTM container + kodda gtag çift sayım yapar.** Takip tek kaynaktan: Es Çay'da GTM container **yok**, her şey `Analytics.tsx` + onay. GTM açılacaksa koddaki gtag kapatılır, ikisi birden asla.
+46. **Mail.** `SMTP_PASS` boştu, mail aylarca gitmedi; `info@` hesabı yoktu; Gmail günlük limitine takılınca bildirim modülü aynı idempotency anahtarıyla "not found" verdi (bkz. 9, 33). Es Çay: SMTP modülü boş şifrede uyarır; mail sağlayıcı kararı (K12) canlıdan önce; SPF/DKIM/DMARC (K8).
+47. **Ortam karışıklığı.** Staging ve prod aynı sunucu ve IP'de; build bilgisi "unknown" olduğundan prod'un eski kodda çalıştığı geç fark edildi; git'teki eski derlenmiş `.js` dosyaları `.ts` yerine yüklendi (bkz. 22, 27). Es Çay: ayrı Dokploy projesi ve ayrı sırlar (K13), `GIT_COMMIT` her deploy'da build arg, `/health/revision` ve `/api/build-info` ile doğrula; `.js` kopyaları git'e girmez.
+48. **Gözlem yoktu.** Hata izleme, uptime ve olay kaydı sonradan eklendi; DB yedeği cron'u haftalarca sessizce çalışmadı (bkz. 25, 36). Es Çay: `ops_event` ilk günden var; yedek başarı sinyali (heartbeat ping ya da `ops_event`) ve aylık restore provası K10'a eklendi.
+49. **S3 ve görseller.** Bucket ACL kapalıyken (`Object Ownership: bucket owner enforced`) yüklemeler düştü → file module `acl: false`; ürün thumbnail'ları WP'ye bağlı kaldığı için DNS sonrası kırılacaktı → Es Çay görselleri kendi S3/`public/urunler` kökünden servis eder, eski siteye URL bağı yok.
 
 ---
 

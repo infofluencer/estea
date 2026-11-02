@@ -27,6 +27,8 @@ export type OpsEventKind =
   | "shipment.problem"
   | "shipment.webhook"
   | "shipment.poll"
+  | "shipment.audit"
+  | "carrier.health"
   | "return.requested"
   | "return.code_sent"
   | "return.refund_failed"
@@ -63,6 +65,8 @@ const KIND_LABEL: Record<OpsEventKind, string> = {
   "shipment.problem": "Kargo sorunu",
   "shipment.webhook": "Kargo bildirimi",
   "shipment.poll": "Kargo yoklaması",
+  "shipment.audit": "Kargo denetimi",
+  "carrier.health": "Kargo hesabı",
   "return.requested": "İade talebi alındı",
   "return.code_sent": "İade kodu gönderildi",
   "return.refund_failed": "İade parası gönderilemedi",

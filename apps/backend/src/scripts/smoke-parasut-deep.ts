@@ -873,6 +873,13 @@ export default async function smokeParasutDeep({ container }: ExecArgs) {
   )
   add(
     checks,
+    "vat_map_1_is_one_percent",
+    mapMedusaTaxRateToParasutVat(1, 10) === 1 && mapMedusaTaxRateToParasutVat(0.01, 10) === 1,
+    "Çay KDV: Medusa 1 (yüzde) → Parasut 1, 0.01 → 1 (asla 100 değil)",
+    logger
+  )
+  add(
+    checks,
     "amount_no_x100",
     toParasutAmount(1689.29) === 1689.29 && toParasutAmount(10.999) === 11,
     "major-unit TL, kuruş çarpanı YOK",

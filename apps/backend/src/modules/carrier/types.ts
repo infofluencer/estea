@@ -132,16 +132,90 @@ export type CreateReturnResult = {
 }
 
 /**
+ * Taşıyıcıdan dönen hata — kod, mesaj ve istek bağlamı birlikte kaydedilsin
+ * (log'a "[object Object]" düşmesin). Adaptörler HTTP/iş hatalarını bununla fırlatır.
+ *
+ * `shipmentRef`: gönderi firmada açıldı ama akış sonradan (teklif/kabul/etiket)
+ * çöktü → yarım kalan kaydın kimliği. Service bunu hata mesajına ve log'a yazar;
+ * adaptör mümkünse kaydı kendisi iptal eder (bkz. CarrierAdapter kuralları).
+ */
+export class CarrierError extends Error {
+  readonly code: string
+  readonly context: Record<string, unknown>
+  readonly shipmentRef: string | null
+
+  constructor(
+    message: string,
+    opts: { code?: string; context?: Record<string, unknown>; shipmentRef?: string | null; cause?: unknown } = {}
+  ) {
+    super(message)
+    this.name = "CarrierError"
+    this.code = opts.code || "CARRIER_ERROR"
+    this.context = opts.context || {}
+    this.shipmentRef = opts.shipmentRef || null
+    if (opts.cause !== undefined) (this as { cause?: unknown }).cause = opts.cause
+  }
+}
+
+function safeJson(value: unknown): string {
+  try {
+    return JSON.stringify(value).slice(0, 2000)
+  } catch {
+    return String(value)
+  }
+}
+
+/** Hatanın log/olay satırı: `[KOD] mesaj (firmadaki kayıt: ref) {bağlam}` — düz obje gelirse de okunur. */
+export function carrierErrorText(error: unknown): string {
+  if (error instanceof CarrierError) {
+    const ref = error.shipmentRef ? ` (firmadaki kayıt: ${error.shipmentRef})` : ""
+    const ctx = Object.keys(error.context).length ? ` ${safeJson(error.context)}` : ""
+    return `[${error.code}] ${error.message}${ref}${ctx}`
+  }
+  if (error instanceof Error) return error.message
+  if (error && typeof error === "object") {
+    const o = error as Record<string, unknown>
+    const msg = o.message ?? (o.error as Record<string, unknown> | undefined)?.message
+    if (typeof msg === "string" && msg) return msg
+    return safeJson(error)
+  }
+  return String(error)
+}
+
+/**
+ * Hesap sağlığı — cutover öncesi canlı test (scripts/smoke-carrier.ts) ve günlük
+ * denetim (jobs/shipment-audit.ts). `balance` bakiye tabanlı aracılar için;
+ * `warnings` pasif hesap, IP yetkisi, düşük bakiye gibi uyarılar (olay kaydına düşer).
+ */
+export type CarrierHealth = {
+  ok: boolean
+  /** TL — bakiye tabanlı aracıda; yoksa null. */
+  balance?: number | null
+  /** Bu eşiğin altında "bakiye düşük" uyarısı (TL). */
+  lowBalanceThreshold?: number | null
+  warnings: string[]
+}
+
+/**
  * Kargo firması adaptörü — firma API'si ile konuşan tek yer.
  *
- * Kurallar (blueprint §11/34-35):
+ * Kurallar (blueprint §11/34-35, docs/KARGO-DERSLERI.md):
  *  - `createShipment` sipariş başına SABİT referans gönderir; POST'u körlemesine
- *    retry ETMEZ (5xx'te çoklu kayıt açılmasın). "Satın al/onayla" adımından
- *    önce shipment ref'i `data`ya yazılmış olmalı.
+ *    retry ETMEZ (5xx'te çoklu kayıt açılmasın). Yalnız okuma (getStatus, getLabel,
+ *    quote, healthCheck) ve iptal istekleri yeniden denenebilir. "Satın al/onayla"
+ *    adımından önce shipment ref'i `data`ya yazılmış olmalı.
+ *  - Çok adımlı akış (aç → teklif → kabul → etiket) ara adımda çökerse adaptör
+ *    firmadaki yarım kaydı İPTAL eder; edemiyorsa `CarrierError({ shipmentRef })`
+ *    fırlatır: kimlik log/olay kaydına düşer, sonraki deneme ikinci kayıt açmaz.
+ *  - Firmaya giden gövde şemayla doğrulanır (adet number, string değil); hatalar
+ *    `CarrierError` ile kod + mesaj + istek bağlamı taşır.
  *  - `cancelShipment` throw etmez (Medusa iptali engellenmesin);
  *    `cancelShipmentStrict` reship/elle bağlama için reddedilirse throw eder.
  *  - `getStatus` ve `parseWebhook` birlikte çalışabilir; `applyCarrierAction`
- *    "already shipped/delivered" yarışını yutar.
+ *    "already shipped/delivered" yarışını yutar. Webhook hızlandırıcıdır; durum
+ *    takibi `getStatus` yoklamasıyla da tam çalışmalıdır.
+ *  - Takip numarasının varlığı "kargoya verildi" sayılmaz; `shipped` yalnız
+ *    firmanın "alındı" olayıyla (ya da admin onayıyla) döner.
  */
 export interface CarrierAdapter {
   /** data.carrier değeri ve SHIPPING_CARRIER env anahtarı (küçük harf, ör. "aras"). */
@@ -165,6 +239,8 @@ export interface CarrierAdapter {
   createReturn?(originalData: Record<string, unknown>, returnId: string): Promise<CreateReturnResult>
   /** Müşteri takip linki şablonu. */
   trackingUrl(trackingNumber: string): string
+  /** Hesap / yetki / bakiye kontrolü (smoke-carrier + günlük denetim). Yoksa adım atlanır. */
+  healthCheck?(): Promise<CarrierHealth>
 }
 
 /**

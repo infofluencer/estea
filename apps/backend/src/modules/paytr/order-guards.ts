@@ -4,6 +4,7 @@ import {
   Modules,
 } from "@medusajs/framework/utils"
 import { cancelOrderWorkflow } from "@medusajs/medusa/core-flows"
+import { nextFailedAttemptData, type PaytrFailedReason } from "./callback-state"
 
 export const PAYTR_PROVIDER_ID = "pp_paytr_paytr"
 
@@ -100,6 +101,27 @@ export async function markCallbackProcessed(
       callback_processed_at: new Date().toISOString(),
     },
   })
+}
+
+/**
+ * Failed bildirim: sayaç + sebep yaz. callback_processed YAZILMAZ, sipariş iptal
+ * EDİLMEZ — aynı merchant_oid ile gelecek success (3D Secure tekrar denemesi)
+ * normal yoldan capture edilir. Döner: toplam başarısız deneme sayısı.
+ */
+export async function recordFailedAttempt(
+  container: MedusaContainer,
+  session: PaymentSessionLike,
+  reason: PaytrFailedReason
+): Promise<number> {
+  const payment = resolvePaymentModule(container)
+  const next = nextFailedAttemptData(session.data, reason)
+  await payment.updatePaymentSession({
+    id: session.id,
+    currency_code: String(session.currency_code || "try"),
+    amount: session.amount ?? 0,
+    data: next,
+  })
+  return Number(next.paytr_failed_attempts) || 1
 }
 
 export async function findPaymentSessionByMerchantOid(

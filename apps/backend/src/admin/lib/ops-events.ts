@@ -26,6 +26,8 @@ export const OPS_KIND_LABEL: Record<string, string> = {
   "shipment.problem": "Kargo sorunu",
   "shipment.webhook": "Kargo bildirimi",
   "shipment.poll": "Kargo yoklaması",
+  "shipment.audit": "Kargo denetimi",
+  "carrier.health": "Kargo hesabı",
   "return.requested": "İade talebi alındı",
   "return.code_sent": "İade kodu gönderildi",
   "return.refund_failed": "İade parası gönderilemedi",

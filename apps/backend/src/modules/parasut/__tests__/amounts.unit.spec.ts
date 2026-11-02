@@ -108,6 +108,57 @@ describe("grossToNet / netToGross (KDV dahil → hariç)", () => {
   })
 })
 
+describe("%1 KDV (çay — KDV_RATE=1, K2) yuvarlama", () => {
+  // Mareen dersi: KDV hariç birim fiyat 2 haneye yuvarlanınca adet × fiyat
+  // brütten 1 kuruş sapabilir. Çay oranı Mareen'den farklı (%1), baştan test.
+  it("converts tax-inclusive tea prices at 1% and round-trips", () => {
+    expect(grossToNet(250, 1)).toBe(247.52)
+    expect(netToGross(247.52, 1)).toBe(250)
+    expect(grossToNet(89.9, 1)).toBe(89.01)
+    expect(netToGross(89.01, 1)).toBe(89.9)
+    expect(grossToNet(149.9, 1)).toBe(148.42)
+    expect(netToGross(148.42, 1)).toBe(149.9)
+  })
+
+  it("maps region tax rate 0.01 / 1 to Parasut vat 1", () => {
+    expect(mapMedusaTaxRateToParasutVat(0.01, 1)).toBe(1)
+    expect(mapMedusaTaxRateToParasutVat(1, 1)).toBe(1)
+    expect(mapMedusaTaxRateToParasutVat(undefined, 1)).toBe(1)
+  })
+
+  it("qty × rounded net unit drifts ≤ 1 kuruş per unit; 5 × 149.90 drifts 2 kuruş", () => {
+    // 149.90 / 1.01 = 148.4158… → 148.42 (0.0042 fazla) → ×5 ×1.01 = 749.52, müşteri 749.50 ödedi
+    const net = grossToNet(149.9, 1)
+    const estimated = estimateGrossFromParasutLines({
+      lines: [{ description: "Siyah Çay 500 g", quantity: 5, unitPrice: net, vatRate: 1 }],
+    })
+    expect(estimated).toBe(749.52)
+    expect(Math.abs(estimated - 5 * 149.9)).toBeCloseTo(0.02, 2)
+    // parasut-invoice "Gross check drift" eşiği 0.05 — bu adet uyarı üretmez
+    expect(Math.abs(estimated - 5 * 149.9)).toBeLessThanOrEqual(0.05)
+  })
+
+  it("payload line at 1% + shipping at 20% keeps separate vat rates", () => {
+    const body = buildSalesInvoicePayload({
+      contactId: "c1",
+      orderId: "o1",
+      orderDisplayId: "ESC-2",
+      currencyCode: "try",
+      lines: [
+        { description: "Yeşil Çay 250 g", quantity: 2, unitPrice: grossToNet(120, 1), vatRate: 1 },
+      ],
+      shipping: { description: "Kargo", amount: grossToNet(149.9, 20), vatRate: 20 },
+    })
+    const details = body.data.relationships.details.data
+    expect(details[0].attributes.vat_rate).toBe(1)
+    expect(details[0].attributes.unit_price).toBe(118.81)
+    expect(details[1].attributes.vat_rate).toBe(20)
+    expect(body.data.attributes.currency).toBe("TRL")
+    // 2 × 118.81 × 1.01 = 239.9962 → 240.00 ; kargo 124.92 × 1.2 = 149.904 → 149.90
+    expect(estimatePayloadNetTotal(body)).toBe(362.54)
+  })
+})
+
 describe("buildSalesInvoicePayload", () => {
   it("keeps major-unit prices, line discount, and separate shipping", () => {
     const body = buildSalesInvoicePayload({

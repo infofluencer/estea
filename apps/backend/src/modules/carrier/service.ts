@@ -23,11 +23,20 @@ import {
 import {
   CARRIER_FULFILLMENT_OPTION_ID,
   CARRIER_RETURN_OPTION_ID,
+  CarrierError,
+  carrierErrorText,
   mergeFulfillmentData,
+  readFulfillmentData,
   type CarrierAdapter,
   type FulfillmentData,
   type LabelRow,
 } from "./types"
+
+/**
+ * Admin "dış gönderiyi bağla" / uzlaştırma: fulfillment metadata'sında bu anahtar
+ * varsa provider firmaya GİTMEZ; şubede elle açılmış gönderinin kimliği kayda yazılır.
+ */
+export const EXTERNAL_SHIPMENT_METADATA_KEY = "escay_external_shipment"
 
 type InjectedDependencies = { logger: Logger }
 
@@ -139,6 +148,32 @@ class CarrierFulfillmentProviderService extends AbstractFulfillmentProviderServi
     const isExchange = Boolean(fulMeta.escay_exchange_return_id)
     const reference = buildOrderReference(order?.display_id, { exchange: isExchange })
 
+    // Şubede elle açılmış gönderi: firmaya yeni kayıt açma, verileni yaz.
+    const external = fulMeta[EXTERNAL_SHIPMENT_METADATA_KEY]
+    if (external && typeof external === "object") {
+      const ext = readFulfillmentData(external as Record<string, unknown>)
+      const owner = getCarrierFor({ carrier: ext.carrier }) ?? adapter
+      const trackingNumber = ext.tracking_number || ""
+      const data = mergeFulfillmentData(
+        {
+          carrier: ext.carrier || owner?.code || "manual",
+          carrier_name: ext.carrier_name || owner?.name || "Kargo",
+          order_reference: reference,
+          attached_externally: true,
+        },
+        {
+          shipment_ref: ext.shipment_ref,
+          tracking_number: trackingNumber,
+          tracking_url: ext.tracking_url || (trackingNumber && owner ? owner.trackingUrl(trackingNumber) : ""),
+          barcode: ext.barcode,
+        }
+      )
+      const labels: LabelRow[] = trackingNumber
+        ? [{ tracking_number: trackingNumber, tracking_url: String(data.tracking_url || ""), label_url: "" }]
+        : []
+      return { data, labels }
+    }
+
     if (!adapter) {
       const code = configuredCarrierCode()
       if (code) {
@@ -202,9 +237,16 @@ class CarrierFulfillmentProviderService extends AbstractFulfillmentProviderServi
       })
     } catch (error) {
       if (error instanceof MedusaError) throw error
+      // Kod + mesaj + istek bağlamı tek satırda; yarım kalan firma kaydı varsa kimliği de.
+      this.logger_.error(`[carrier] ${adapter.code} createShipment ${reference} başarısız: ${carrierErrorText(error)}`)
+      if (error instanceof CarrierError && error.shipmentRef) {
+        this.logger_.error(
+          `[carrier] ${adapter.code} ${reference}: firmada yarım kalan kayıt ${error.shipmentRef} — adaptör iptal edemedi; firmadan iptal edin ya da "Dış gönderiyi bağla" ile bu kimliği kullanın.`
+        )
+      }
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
-        `${adapter.name} gönderisi oluşturulamadı: ${error instanceof Error ? error.message : String(error)}`
+        `${adapter.name} gönderisi oluşturulamadı: ${carrierErrorText(error)}`
       )
     }
 

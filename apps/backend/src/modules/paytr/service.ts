@@ -41,6 +41,7 @@ import {
   isPaytrMockEnabled,
   mockPaytrIadeFetch,
 } from "./mock-iade"
+import { assertPaytrEnvAtBoot } from "./env-guard"
 
 type PaytrOptions = {
   merchantId?: string
@@ -104,15 +105,13 @@ class PaytrProviderService extends AbstractPaymentProvider<PaytrOptions> {
     this.options_ = options
   }
 
-  static validateOptions(options: Record<string, unknown>) {
-    const required = ["merchantId", "merchantKey", "merchantSalt"] as const
-    for (const key of required) {
-      if (!options[key]) {
-        console.warn(
-          `[paytr] Missing option "${key}". Set PAYTR_* env vars before production.`
-        )
-      }
-    }
+  /**
+   * Medusa module-provider-loader boot'ta çağırır. Env bayrakları tutarsızsa
+   * (canlı mod + STG öneki, canlı mod + mock, prod'da PAYTR_TEST_MODE tanımsız …)
+   * NODE_ENV=production'da throw — süreç başlamaz (bkz. env-guard.ts).
+   */
+  static validateOptions(_options: Record<string, unknown>) {
+    assertPaytrEnvAtBoot(console)
   }
 
   private get merchantId(): string {

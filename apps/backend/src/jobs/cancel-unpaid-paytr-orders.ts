@@ -7,11 +7,20 @@ import {
   isOrderUnpaidSafeToCancel,
   paytrCallbackLockKey,
 } from "../modules/paytr/order-guards"
+import { isCallbackSettled, isRetryingSince } from "../modules/paytr/callback-state"
 import { recordOpsEvent } from "../lib/ops-events"
 
 /**
  * PayTR iframe vazgeçme / timeout: callback gelmeyen unpaid siparişleri iptal et.
  * Stok, cancelOrderWorkflow → Medusa reservation release ile serbest kalır.
+ *
+ * Ödenmemiş sipariş yaşam döngüsü (docs/ESCAY-KARARLAR.md K11):
+ *   cart.complete → sipariş pending (stok rezerve) → PayTR iframe
+ *   - success callback → capture, iş dokunmaz
+ *   - failed callback → yalnızca sayaç; son denemeden itibaren süre yeniden işler
+ *   - callback sonuçlanmış (manual_review / callback_processed) → iş dokunmaz
+ *   - süre dolunca → cancelOrderWorkflow (stok serbest), ops event
+ *   İptalden sonra geç success gelirse route iade YAPMAZ, elle inceleme ister.
  *
  * Env:
  *   UNPAID_ORDER_TIMEOUT_MINUTES (default 30)
@@ -114,6 +123,19 @@ export default async function cancelUnpaidPaytrOrdersJob(
     })
 
     if (anyPaidSession || !stillPending) {
+      skipped++
+      continue
+    }
+
+    // Callback sonuçlanmış (capture ya da elle inceleme: para PayTR'de olabilir) → dokunma.
+    if (paytrSessions.some((s) => isCallbackSettled(s.data))) {
+      skipped++
+      continue
+    }
+
+    // Son başarısız deneme eşiğin içindeyse müşteri hâlâ aynı iframe'de deniyor
+    // (3D Secure tekrar denemesi) — süre son denemeden itibaren yeniden işler.
+    if (paytrSessions.some((s) => isRetryingSince(s.data, cutoff))) {
       skipped++
       continue
     }

@@ -141,14 +141,16 @@ function lineDiscountAmount(item: {
   return roundMoney(fromAdj)
 }
 
-/** Medusa tax_lines.rate → Parasut vat_rate (%). 0.1 → 10, 10 → 10, 0.2 → 20. */
+/** Medusa tax_lines.rate → Parasut vat_rate (%). 1 → 1 (çay), 0.1 → 10, 10 → 10, 0.2 → 20. */
 export function mapMedusaTaxRateToParasutVat(
   rate: unknown,
   fallback: number
 ): number {
   const r = asNumber(rate)
   if (r > 0) {
-    return r <= 1 ? roundMoney(r * 100) : r
+    // Medusa tax_rate.rate / tax_lines.rate YÜZDE saklar (çay: 1 = %1, kargo: 20 = %20).
+    // 1'in altı kesir sayılır (0.01 → 1, 0.2 → 20). `r <= 1` olsaydı %1 → %100 olurdu.
+    return r < 1 ? roundMoney(r * 100) : r
   }
   return fallback
 }
