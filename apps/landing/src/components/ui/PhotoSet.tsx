@@ -5,6 +5,9 @@ import Image from 'next/image'
 
 const SWIPE_PX = 40
 
+/** One photograph; `thumb` is a tighter crop for the small 4:5 tiles, the gallery always opens `src`. */
+export type Photo = { src: string; thumb?: string }
+
 /**
  * The photographs of one Journey step, all on the page at once: the first
  * runs the full width of the column, the rest share one row beneath it.
@@ -19,7 +22,7 @@ export default function PhotoSet({
   sizes,
   className = '',
 }: {
-  images: readonly string[]
+  images: readonly Photo[]
   /** Step colour for the gallery controls. */
   color: string
   /** Step name for the control labels, e.g. "Paketle". */
@@ -72,20 +75,20 @@ export default function PhotoSet({
   return (
     <div className={`grid gap-3 sm:gap-4 ${className}`} style={{ '--step': color } as CSSProperties}>
       <button type="button" onClick={() => show(0)} aria-label={`${label} fotoğrafını büyüt`} className={`${tile} ${rest.length ? 'aspect-[16/10]' : 'aspect-[4/3]'} cursor-zoom-in`}>
-        <Image src={lead} alt="" fill sizes={sizes} className={pic} />
+        <Image src={lead.src} alt="" fill sizes={sizes} className={pic} />
       </button>
 
       {rest.length > 0 && (
         <div className="grid gap-3 sm:gap-4" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
-          {rest.map((src, i) => (
+          {rest.map((photo, i) => (
             <button
-              key={src}
+              key={photo.src}
               type="button"
               onClick={() => show(i + 1)}
               aria-label={`${label} fotoğrafı ${i + 2}, büyüt`}
               className={`${tile} aspect-[4/5] cursor-zoom-in`}
             >
-              <Image src={src} alt="" fill sizes={`calc(${sizes} / ${cols})`} className={pic} />
+              <Image src={photo.thumb ?? photo.src} alt="" fill sizes={`calc(${sizes} / ${cols})`} className={pic} />
             </button>
           ))}
         </div>
@@ -111,8 +114,8 @@ export default function PhotoSet({
               if (e.target === e.currentTarget) close()
             }}
           >
-            <div key={images[open]} className="caption-in relative h-full w-full max-w-6xl overflow-hidden rounded-2xl motion-reduce:animate-none">
-              <Image src={images[open]} alt="" fill sizes="100vw" priority draggable={false} className="object-contain" />
+            <div key={images[open].src} className="caption-in relative h-full w-full max-w-6xl overflow-hidden rounded-2xl motion-reduce:animate-none">
+              <Image src={images[open].src} alt="" fill sizes="100vw" priority draggable={false} className="object-contain" />
             </div>
 
             <div className="flex items-center gap-3">

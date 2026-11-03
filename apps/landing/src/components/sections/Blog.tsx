@@ -2,8 +2,6 @@ import Image from 'next/image'
 import { blog } from '@/data/content'
 import Btn from '@/components/ui/Btn'
 
-const ext = { target: '_blank', rel: 'noopener noreferrer' } as const
-
 /**
  * Blog in the FAQ's idiom (hairlines, brand-red labels, outlined discs) but
  * with a different opening: the seal, title, lead and link form the first
@@ -29,7 +27,7 @@ export default function Blog() {
             </h2>
             <p className="mt-4 max-w-[26ch] text-[1.1rem] leading-[1.5] text-ink/75">{blog.lead}</p>
             <div className="mt-8">
-              <Btn href={blog.all.href} variant="brand" external>
+              <Btn href={blog.all.href} variant="brand">
                 {blog.all.label}
               </Btn>
             </div>
@@ -40,7 +38,6 @@ export default function Blog() {
           <article key={post.href} className="border-t border-ink/15">
             <a
               href={post.href}
-              {...ext}
               className="group block pt-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-linen"
             >
               <div className="flex items-start justify-between gap-4">

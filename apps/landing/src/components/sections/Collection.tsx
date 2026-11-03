@@ -79,11 +79,11 @@ export default function Collection() {
       <div className="relative bg-ink text-cream lg:min-h-[56.25vw]">
       <div className="absolute inset-0" aria-hidden="true">
         <Image
-          src="/showcase.jpg"
+          src="/koleksiyon/sahne.jpg"
           alt=""
           fill
           sizes="100vw"
-          className="object-cover object-[55%_50%]"
+          className="object-cover object-[55%_62%]"
         />
         <div className="absolute inset-0 bg-ink/40" />
       </div>
@@ -219,6 +219,12 @@ export default function Collection() {
             >
               <BlobBg className="[fill:var(--btn)] [transition-duration:500ms]" />
               <span className="blob-label">{collection.cta}</span>
+            </a>
+            <a
+              href={collection.all.href}
+              className="mt-5 block text-[0.95rem] font-semibold text-cream underline decoration-cream/40 decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-cream"
+            >
+              {collection.all.label}
             </a>
           </div>
         </div>

@@ -117,16 +117,6 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
 
       {count > 1 ? (
         <>
-          <button type="button" className="hero-slider__arrow hero-slider__arrow--prev" aria-label="Önceki slayt" onClick={() => go(index - 1)}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
-              <path d="M12 4.5 6.5 10l5.5 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-          <button type="button" className="hero-slider__arrow hero-slider__arrow--next" aria-label="Sonraki slayt" onClick={() => go(index + 1)}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
-              <path d="M8 4.5 13.5 10 8 15.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
           <div className="hero-slider__dots" role="tablist" aria-label="Slaytlar">
             {slides.map((s, i) => (
               <button

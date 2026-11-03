@@ -12,19 +12,19 @@ export type NavLink = {
   external?: boolean
 }
 
-/** In-page navigation for the landing. */
+/** Main navigation; section links carry the leading slash so they work from sub-pages too. */
 export const navLinks: NavLink[] = [
-  { href: '#harmanlar', label: 'Harmanlar', icon: 'sprig' },
-  { href: '#yolculuk', label: 'Yolculuk', icon: 'hills' },
-  { href: '#blog', label: 'Blog', icon: 'quill' },
+  { href: '/harmanlar', label: 'Harmanlar', icon: 'sprig' },
+  { href: '/hakkimizda', label: 'Hakkımızda', icon: 'hills' },
+  { href: '/blog', label: 'Blog', icon: 'quill' },
 ]
 
-/** Kurumsal sayfalar landing'in kendi bölümleridir (mağaza da buraya bağlanır). */
+/** Kurumsal sayfalar (mağaza da buraya bağlanır). */
 export const corporateLinks: NavLink[] = [
-  { href: '#hakkimizda', label: 'Hakkımızda' },
-  { href: '#yolculuk', label: 'Çayın Yolculuğu' },
-  { href: '#sss', label: 'Sıkça sorulan sorular' },
-  { href: '#iletisim', label: 'İletişim' },
+  { href: '/hakkimizda', label: 'Hakkımızda' },
+  { href: '/#yolculuk', label: 'Çayın Yolculuğu' },
+  { href: '/#sss', label: 'Sıkça sorulan sorular' },
+  { href: '/#iletisim', label: 'İletişim' },
 ]
 
 /** Mağaza tarafındaki yardım/yasal sayfalar (escay-storefront yolları). */

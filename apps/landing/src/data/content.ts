@@ -2,6 +2,7 @@
  * Landing copy & data. Everything here is a DRAFT — placeholder metin,
  * gerçek değerlerle (tat notları, yorumlar, rakamlar) değiştirilmeli.
  */
+import { posts } from './posts'
 
 export const hero = {
   /** Başlık: "<brand> <title>" tek akışta; marka altın renkte. */
@@ -23,12 +24,24 @@ export const about = {
     { icon: 'teapot', label: 'Katkısız harman' },
     { icon: 'glass', label: 'Tavşan kanı demleme' },
   ] as const,
-  photoCaption: 'Esçay fabrikası, çay bahçelerinin içinde.',
+  /**
+   * Yırtık kenarlı fotoğraf alanında sırayla geçen dört kare (fotoğraf brief'i, bölüm 1).
+   * Sol dörtte bir yırtıkla gider, alt bant altyazıya kalır; `focus` kırpma odağıdır (CSS object-position).
+   * Fabrika karesinde tabela solda kaldığından odak sola çekilir.
+   */
+  photos: [
+    { src: '/hakkimizda/fabrika.jpg', alt: 'Çay bahçelerinin ortasındaki Esçay fabrikası, yüksekten', caption: 'Esçay fabrikası, çay bahçelerinin içinde.', focus: '30% 50%' },
+    { src: '/hakkimizda/uretim-hatti.jpg', alt: 'Üretim hattında bantlardan akan taze çay yaprağı', caption: 'Taze yaprak, bahçeden saatler sonra hatta.' },
+    { src: '/hakkimizda/sevkiyat.jpg', alt: 'Esçay kolileri sevkiyat için tıra yükleniyor', caption: 'Koliler aynı gün yola çıkar.' },
+    { src: '/hakkimizda/raf.jpg', alt: 'Açık kolide dizili Esçay Karadeniz çayı paketleri', caption: 'Esçay paketleri rafta, baskı yüzü size dönük.' },
+  ] as const,
 }
 
 export const collection = {
   title: 'Her ana ayrı bir harman.',
   cta: 'Ürüne git',
+  /** Link under the carousel to the blends page. */
+  all: { label: 'Dört harmanı yan yana görün', href: '/harmanlar' },
   /** Running band above the collection. */
   taglines: [
     'Katkısız, yüzde yüz Karadeniz',
@@ -64,8 +77,8 @@ export const products: Product[] = [
     name: 'Gold Karadeniz',
     line: 'Gold Serisi',
     weight: '1000 g',
-    note: 'Yüksek rakım bahçelerinden. Koyu demli, yuvarlak gövdeli, tatlı bitişli.',
-    strength: 'Orta',
+    note: 'Elekten çıkan ilk parti, sürgünün ilk iki yaprağı. Hafif, tatlı içim; demi kırmızıya çalar.',
+    strength: 'Hafif',
     image: '/estea-gold-cay-1000-gr.png',
     href: 'https://market.esteacay.com/u/estea-gold-cay-1000-gr/',
   },
@@ -76,8 +89,8 @@ export const products: Product[] = [
     name: 'İlk Hasat',
     line: 'Mevsim Serisi',
     weight: '1000 g',
-    note: 'Mayıs sürgünü. Daha açık, çiçeksi ve taze; sabah çayı için.',
-    strength: 'Hafif',
+    note: 'Mayıs sürgünü. Buruk, sert ve yoğun demli; koyu sevenlerin sabah çayı.',
+    strength: 'Sert',
     image: '/estea-hasat-cay-1000-gr.png',
     href: 'https://market.esteacay.com/u/es-tea-ilk-hasat-cay-5000-gr/',
   },
@@ -88,8 +101,8 @@ export const products: Product[] = [
     name: 'Tiryaki',
     line: 'Klasik Seri',
     weight: '1000 g',
-    note: 'Sert içim, uzun demlemeye dayanıklı. Gün boyu süren çay için.',
-    strength: 'Sert',
+    note: 'Aroması en yoğun harman. Tavşan kanı dem, yumuşak içim; günün her saati.',
+    strength: 'Yoğun',
     image: '/estea-tiryaki-1000-gr-cay.png',
     href: 'https://market.esteacay.com/u/es-tea-tiryaki-cayi-1000-gr/',
   },
@@ -100,7 +113,7 @@ export const products: Product[] = [
     name: 'Karadeniz',
     line: 'Klasik Seri',
     weight: '1000 g',
-    note: 'Her gün içilen, dengeli demlik çayı. Evin çayı.',
+    note: 'Normal koyulukta, yumuşak içimli demlik çayı. Evin çayı.',
     strength: 'Orta',
     image: '/estea-karadeniz-cayi-1000-gr.png',
     href: 'https://market.esteacay.com/u/estea-karadeniz-cay-1000-gr/',
@@ -113,7 +126,7 @@ export const products: Product[] = [
     line: 'Gold Serisi · Aile boyu',
     weight: '5000 g',
     note: 'Aynı Gold harmanı, kalabalık sofralar için büyük paket.',
-    strength: 'Orta',
+    strength: 'Hafif',
     image: '/estea-gold-cay-5000-gr.png',
     href: 'https://market.esteacay.com/u/estea-gold-cay-5000-gr/',
   },
@@ -130,7 +143,10 @@ export const products: Product[] = [
 export const journey = {
   title: 'Bahçeden bardağa',
   lead: 'Kışı kar altında geçen yüksek bahçeden demliğe: yaprağın Esçay fabrikasından geçerek bardağa gelen yolu.',
-  /** Fotoğraflar: Esçay bahçe ve fabrika çekimleri (public/fabrika). Her adımda birden çok kare; galeri sırayla gösterir. */
+  /**
+   * Fotoğraflar: fotoğraf brief'i bölüm 3 (public/yolculuk). İlk kare geniş (16:10) gösterilir, kalanlar
+   * dikey küçük kare (4:5); küçük kareler için konusu ortalanmış `-k` kırpımı kullanılır, galeri tam kareyi açar.
+   */
   stops: [
     {
       verb: 'Yetiştir',
@@ -143,7 +159,12 @@ export const journey = {
         { term: 'Kış', value: 'Kar altında doğal dinlenme' },
       ],
       color: '#3f6f0e',
-      images: ['/fabrika/cay-bahceleri.jpg', '/fabrika/cay-bahceleri-2.jpg', '/fabrika/cay-bahceleri-3.jpg'],
+      images: [
+        { src: '/yolculuk/yetistir-1.jpg' },
+        { src: '/yolculuk/yetistir-2.jpg', thumb: '/yolculuk/yetistir-2-k.jpg' },
+        { src: '/yolculuk/yetistir-3.jpg', thumb: '/yolculuk/yetistir-3-k.jpg' },
+        { src: '/yolculuk/yetistir-4.jpg', thumb: '/yolculuk/yetistir-4-k.jpg' },
+      ],
     },
     {
       verb: 'Topla',
@@ -156,7 +177,13 @@ export const journey = {
         { term: 'Sürgün', value: 'Yılda üç dönem' },
       ],
       color: '#557f10',
-      images: ['/fabrika/cay-hasadi.jpg', '/fabrika/cay-hasadi-2.jpg', '/fabrika/cay-hasadi-3.jpg'],
+      images: [
+        { src: '/yolculuk/topla-1.jpg' },
+        { src: '/yolculuk/topla-2.jpg', thumb: '/yolculuk/topla-2-k.jpg' },
+        { src: '/yolculuk/topla-3.jpg', thumb: '/yolculuk/topla-3-k.jpg' },
+        { src: '/yolculuk/topla-4.jpg', thumb: '/yolculuk/topla-4-k.jpg' },
+        { src: '/yolculuk/topla-5.jpg', thumb: '/yolculuk/topla-5-k.jpg' },
+      ],
     },
     {
       verb: 'İşle',
@@ -169,7 +196,12 @@ export const journey = {
         { term: 'Yer', value: 'Esçay fabrikası' },
       ],
       color: '#86700f',
-      images: ['/fabrika/taze-yapraklar.jpg', '/fabrika/isleme-2.jpg', '/fabrika/isleme-3.jpg'],
+      /* Hat geneli Hakkımızda'daki üretim hattı karesidir; detaylar: eleme/kurutucu çıkışı, kumanda (dolum karesi istek üzerine kaldırıldı). */
+      images: [
+        { src: '/hakkimizda/uretim-hatti.jpg' },
+        { src: '/yolculuk/isle-3.jpg', thumb: '/yolculuk/isle-3-k.jpg' },
+        { src: '/yolculuk/isle-2.jpg', thumb: '/yolculuk/isle-2-k.jpg' },
+      ],
     },
     {
       verb: 'Denetle',
@@ -182,7 +214,8 @@ export const journey = {
         { term: 'Tadım', value: 'Renk, koku ve tat' },
       ],
       color: '#a5630f',
-      images: ['/fabrika/kalite-kontrol.jpg', '/fabrika/kalite-kontrol-2.jpg'],
+      /* Avuçta kuru çay, boy farkı; tadımcı karesi istek üzerine kaldırıldı. */
+      images: [{ src: '/yolculuk/denetle-avuc.jpg' }],
     },
     {
       verb: 'Paketle',
@@ -195,7 +228,14 @@ export const journey = {
         { term: 'Amaç', value: 'Aromanın korunması' },
       ],
       color: '#bb4f1b',
-      images: ['/fabrika/paketleme.jpg', '/fabrika/paketleme-2.jpg', '/fabrika/paketleme-3.jpg', '/fabrika/paketleme-4.jpg'],
+      images: [
+        { src: '/yolculuk/paketle-1.jpg' },
+        { src: '/yolculuk/paketle-bant.jpg', thumb: '/yolculuk/paketle-bant-k.jpg' },
+        { src: '/yolculuk/paketle-2.jpg', thumb: '/yolculuk/paketle-2-k.jpg' },
+        { src: '/yolculuk/paketle-3.jpg', thumb: '/yolculuk/paketle-3-k.jpg' },
+        { src: '/yolculuk/paketle-4.jpg', thumb: '/yolculuk/paketle-4-k.jpg' },
+        { src: '/hakkimizda/sevkiyat-tir.jpg', thumb: '/yolculuk/paketle-tir-k.jpg' },
+      ],
     },
     {
       verb: 'Demle',
@@ -208,7 +248,7 @@ export const journey = {
         { term: 'Demlenme', value: '10 – 15 dakika' },
       ],
       color: '#a32e18',
-      images: ['/fabrika/demle.jpg'],
+      images: [{ src: '/yolculuk/demle-1.jpg' }],
     },
   ] as const,
 }
@@ -217,21 +257,21 @@ export const journey = {
  * Short history of tea on the Black Sea coast, ending with Esçay today.
  * Dates checked against public sources (laws 407/1924, 3788/1940, 3092/1984;
  * first Rize factory usually given as 1947, some sources say 1946).
- * Esçay's own founding year is not published, so its line says "Bugün".
+ * Esçay's founding year (2019, Hayrat) is from esteacay.com/hakkimizda (Wayback 2022).
  */
 export const history = {
   title: 'Karadeniz’de bir asırlık çay',
   lead: 'Karadeniz’in yamaçlarına çay yüz yıl önce geldi. Esçay bu yamaçlarda büyüyen yaprakla demleniyor.',
   /** Başlığın altındaki fotoğraf: çay bahçelerinin içindeki Esçay fabrikası. */
-  image: { src: '/fabrika/cay-hasadi.jpg', alt: 'Karadeniz bahçelerinde çay hasadı', caption: 'Karadeniz bahçelerinde hasat.' },
+  image: { src: '/yolculuk/topla-1.jpg', mobile: '/yolculuk/topla-1-k.jpg', alt: 'Karadeniz bahçelerinde çay hasadı', caption: 'Karadeniz bahçelerinde hasat.' },
   /** Son maddenin (Bugün) fotoğrafı. */
-  todayImage: { src: '/fabrika/fabrika-sevkiyat.jpg', alt: 'Esçay paketleriyle yüklü sevkiyat aracı fabrika önünde' },
+  todayImage: { src: '/hakkimizda/sevkiyat-tir.jpg', mobile: '/yolculuk/paketle-tir-k.jpg', alt: 'Esçay paketleriyle yüklü sevkiyat aracı fabrika önünde' },
   entries: [
     { when: '1924', title: 'İlk adım', body: 'Doğu Karadeniz’de çay yetiştirilmesi için ilk kanun çıkar.' },
     { when: '1940', title: 'Bahçeler büyür', body: 'Çay Kanunu ile üretici desteklenir, yamaçlar çay bahçesine döner.' },
     { when: '1947', title: 'İlk fabrika', body: 'Karadeniz’de ilk çay fabrikası açılır; yaprak artık bahçenin yanında işlenir.' },
     { when: '1984', title: 'Yeni harmanlar', body: 'Çay işlemek özel sektöre açılır; Karadeniz’de yeni markalar doğar.' },
-    { when: 'Bugün', title: 'Esçay', body: 'Rakımı yüksek Karadeniz bahçelerinden özenle seçilen yaprak, Esçay harmanında bardağa gelir.' },
+    { when: '2019', title: 'Esçay', body: 'Hayrat’ta, çay bahçelerinin ortasında Esçay fabrikası açılır. Yüksek Karadeniz bahçelerinden seçilen yaprak Esçay harmanında bardağa gelir.' },
   ],
 }
 
@@ -255,7 +295,7 @@ export const faq = {
     },
     {
       q: 'Harmanlar arasındaki fark nedir?',
-      a: 'Her harman farklı bir sürgün ve demlik alışkanlığı için hazırlanır: İlk Hasat mayıs sürgünüyle daha açık ve çiçeksi, Tiryaki koyu ve gövdeli, Gold Karadeniz yuvarlak ve tatlı bitişlidir. Ürün sayfalarında her harmanın tadım notu ve demleme önerisi yer alır.',
+      a: 'Dördü de aynı bahçeden gelir; farkı elek belirler. Gold elenen ilk partidir, hafif ve tatlıdır. İlk Hasat mayıs sürgünüyle buruk ve yoğun demlidir. Karadeniz normal koyulukta, yumuşak içimli evin çayıdır. Tiryaki aroması en yoğun olandır. Hepsini Harmanlar sayfasında yan yana görebilirsiniz.',
     },
     {
       q: 'Karadeniz usulü nasıl demlenir?',
@@ -272,20 +312,12 @@ export const faq = {
   ] as const,
 }
 
-/** Posts from esteacay.com/blog (titles, links and dates as published there). */
+/** Home blog section: the six newest posts from src/data/posts.ts, hosted at /blog. */
 export const blog = {
   title: 'Çay üzerine',
   lead: 'Karadeniz çayı, demleme ve harmanlar üzerine yazılar.',
-  all: { label: 'Tüm yazılar', href: 'https://esteacay.com/blog/' },
-  /** Görseller esteacay.com'daki öne çıkan görsellerden (public/blog). */
-  posts: [
-    { title: 'Karadeniz Usulü Çay Nasıl Demlenir?', href: 'https://esteacay.com/elementor-3218/', date: '25 Ocak 2022', image: '/blog/karadeniz-usulu-cay-nasil-demlenir.jpg' },
-    { title: 'Türkiye’de Yerli İlk Çay Üretimi', href: 'https://esteacay.com/turkiye-de-yerli-ilk-cay-uretimi/', date: '17 Şubat 2022', image: '/blog/turkiyede-yerli-ilk-cay-uretimi.jpg' },
-    { title: 'Dökme Çayın Püf Noktaları Nelerdir?', href: 'https://esteacay.com/dokme-cayin-puf-notlari-nelerdir/', date: '10 Şubat 2022', image: '/blog/dokme-cayin-puf-noktalari.jpg' },
-    { title: 'Sütlü Çay Nedir? Nasıl Yapılır?', href: 'https://esteacay.com/sutlu-cay-nedir-nasil-yapilir/', date: '30 Kasım 2021', image: '/blog/sutlu-cay-nedir.jpg' },
-    { title: 'Earl Grey Çay Nedir?', href: 'https://esteacay.com/earl-grey-cay-nedir/', date: '10 Aralık 2021', image: '/blog/earl-grey-cay-nedir.jpg' },
-    { title: 'Formda Tutan Çaylar: Bitki Çayları', href: 'https://esteacay.com/formda-tutan-caylar-bitki-caylari/', date: '17 Ocak 2022', image: '/blog/formda-tutan-caylar.jpg' },
-  ] as const,
+  all: { label: 'Tüm yazılar', href: '/blog' },
+  posts: posts.slice(0, 6).map((p) => ({ title: p.title, href: `/blog/${p.slug}`, date: p.dateLabel, image: p.image })),
 }
 
 /** Contact details as published on market.esteacay.com/iletisim. */

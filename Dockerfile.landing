@@ -24,6 +24,8 @@ COPY apps/landing ./apps/landing
 # Build anında gömülür: mağaza linkleri ("Çaylarımız"). Domain gelince değiştir → rebuild.
 ARG NEXT_PUBLIC_SHOP_URL
 ENV NEXT_PUBLIC_SHOP_URL=$NEXT_PUBLIC_SHOP_URL
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build:landing
 

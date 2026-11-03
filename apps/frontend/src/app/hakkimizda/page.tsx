@@ -8,10 +8,12 @@ export const metadata = {
 
 const POINTS = ["Yüksek bahçe yaprağı", "Katkısız harman", "Tavşan kanı demleme"]
 
+/** Bahçeden bardağa: dört adım, 4:3 kareler (fotoğraf brief'i bölüm 3 çekimleri). */
 const PHOTOS = [
-  { src: "/fabrika/cay-hasadi.jpg", alt: "Çay hasadı: yaprak elle toplanıyor", caption: "Hasat" },
-  { src: "/fabrika/kalite-kontrol.jpg", alt: "Tadım kâselerinde kalite kontrol", caption: "Denetim" },
-  { src: "/fabrika/paketleme-3.jpg", alt: "Paketleme hattı", caption: "Paketleme" },
+  { src: "/hakkimizda/hasat.jpg", alt: "Çay hasadı: üretici sepetine taze sürgün topluyor", caption: "Hasat" },
+  { src: "/hakkimizda/isleme.jpg", alt: "Üretim hattında bantlardan akan taze çay yaprağı", caption: "İşleme" },
+  { src: "/hakkimizda/denetim.jpg", alt: "Tadım masasında demlenmiş çayı kaşıkla tadan tadımcı", caption: "Denetim" },
+  { src: "/hakkimizda/paketleme.jpg", alt: "Paketleme hattında paketleri kolileyen iki çalışan", caption: "Paketleme" },
 ]
 
 /** Kurumsal düzen: solda metin ve üç ilke, sağda fabrika fotoğrafı; altta süreç ve künye. */
@@ -44,12 +46,12 @@ export default function AboutPage() {
         </div>
         <div className="relative aspect-square overflow-hidden rounded-lg bg-paper lg:col-span-7" data-reveal>
           <Image
-            src="/fabrika/fabrika-bahceler.jpg"
-            alt="Çay bahçelerinin ortasındaki Es Çay fabrikası"
+            src="/hero/fabrika.jpg"
+            alt="Çay bahçelerinin ortasındaki Es Çay fabrikası, yüksekten"
             fill
             priority
             sizes="(min-width: 1024px) 58vw, 100vw"
-            className="object-cover object-[60%_50%]"
+            className="object-cover object-[35%_50%]"
           />
         </div>
       </section>
@@ -62,12 +64,12 @@ export default function AboutPage() {
           Siyah çaylarımız, yeşil çaylarımız, bitki çaylarımız ve harmanlarımız aynı ilkeyle hazırlanır: yapraktan bardağa,
           katkısız ve yüzde yüz Karadeniz.
         </p>
-        <ul className="mt-10 grid gap-6 sm:grid-cols-3">
+        <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {PHOTOS.map((p, i) => (
             <li key={p.src} data-reveal style={{ "--reveal-delay": `${i * 80}ms` } as React.CSSProperties}>
               <figure className="m-0">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-paper">
-                  <Image src={p.src} alt={p.alt} fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
+                  <Image src={p.src} alt={p.alt} fill sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" className="object-cover" />
                 </div>
                 <figcaption className="headline mt-4 text-[1.3rem]">{p.caption}</figcaption>
               </figure>

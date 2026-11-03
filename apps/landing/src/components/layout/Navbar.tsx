@@ -7,16 +7,32 @@ import { navLinks, shopProductsUrl } from '@/lib/site'
 import BlobBg from '@/components/ui/BlobBg'
 import { Glass, doodles } from '@/components/ui/Doodles'
 
-/* The header only ever sits over the hero video (it fades out on scroll), so every
-   link reads in cream: an outlined cream pill that fills cream on hover. */
-const pillClass =
-  'inline-flex min-h-10 items-center gap-2 rounded-full border border-cream/45 px-4 text-[0.92rem] font-semibold whitespace-nowrap text-cream transition-colors duration-200 hover:border-cream hover:bg-cream hover:text-ink focus:outline-none focus-visible:border-cream focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink'
+/* On the home page the header sits over the hero video (it fades out on scroll), so every
+   link reads in cream: an outlined cream pill that fills cream on hover. Sub-pages open on
+   linen, so they ask for the ink tone: the same pill drawn in ink. */
+type Tone = 'cream' | 'ink'
+
+const pillBase =
+  'inline-flex min-h-10 items-center gap-2 rounded-full border px-4 text-[0.92rem] font-semibold whitespace-nowrap transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
+const pillTone: Record<Tone, string> = {
+  cream: 'border-cream/45 text-cream hover:border-cream hover:bg-cream hover:text-ink focus-visible:border-cream focus-visible:ring-cream focus-visible:ring-offset-ink',
+  ink: 'border-ink/30 text-ink hover:border-ink hover:bg-ink hover:text-cream focus-visible:border-ink focus-visible:ring-ink focus-visible:ring-offset-linen',
+}
+const shopTone: Record<Tone, { text: string; blob: string }> = {
+  cream: { text: 'text-ink focus-visible:ring-cream focus-visible:ring-offset-ink', blob: 'fill-gold group-hover:fill-cream' },
+  ink: { text: 'text-ink hover:text-cream focus-visible:ring-ink focus-visible:ring-offset-linen', blob: 'fill-gold group-hover:fill-brand' },
+}
+const burgerTone: Record<Tone, string> = {
+  cream: 'bg-cream text-ink hover:bg-gold focus-visible:ring-cream focus-visible:ring-offset-ink',
+  ink: 'bg-ink text-cream hover:bg-brand focus-visible:ring-ink focus-visible:ring-offset-linen',
+}
 
 /* Mobile rows carry the same coloured discs as the manifesto facts. */
 const discs = ['bg-leaf text-ink', 'bg-gold text-ink', 'bg-brand text-cream', 'bg-garden text-cream']
 
-export default function Navbar() {
+export default function Navbar({ tone = 'cream' }: { tone?: Tone }) {
   const [open, setOpen] = useState(false)
+  const pillClass = `${pillBase} ${pillTone[tone]}`
 
   useEffect(() => {
     if (!open) return
@@ -34,7 +50,7 @@ export default function Navbar() {
   return (
     <header
       id="main-nav"
-      className={`absolute inset-x-0 top-0 z-50 transition-colors duration-300 ${open ? 'bg-linen text-ink' : 'bg-transparent text-cream'}`}
+      className={`absolute inset-x-0 top-0 z-50 transition-colors duration-300 ${open ? 'bg-linen text-ink' : `bg-transparent ${tone === 'ink' ? 'text-ink' : 'text-cream'}`}`}
     >
       <div className="relative z-10 mx-auto flex h-20 max-w-[90rem] items-center justify-between px-5 sm:h-[5.5rem] sm:px-8 lg:px-10">
         <Link
@@ -73,9 +89,9 @@ export default function Navbar() {
             <li className="ml-2">
               <a
                 href={shopProductsUrl}
-                className="group relative isolate inline-flex min-h-10 items-center rounded-full px-5 text-[0.74rem] font-bold tracking-[0.12em] text-ink uppercase transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+                className={`group relative isolate inline-flex min-h-10 items-center rounded-full px-5 text-[0.74rem] font-bold tracking-[0.12em] uppercase transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${shopTone[tone].text}`}
               >
-                <BlobBg className="fill-gold group-hover:fill-cream" />
+                <BlobBg className={shopTone[tone].blob} />
                 <span className="blob-label">
                   <span className="flex items-center gap-2 whitespace-nowrap">
                     <Glass className="h-5 w-5 shrink-0" />
@@ -89,7 +105,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-cream text-ink transition-colors md:hidden hover:bg-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+          className={`inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${open ? burgerTone.ink : burgerTone[tone]}`}
           aria-expanded={open}
           aria-controls="mobil-menu"
           aria-label={open ? 'Menüyü kapat' : 'Menüyü aç'}

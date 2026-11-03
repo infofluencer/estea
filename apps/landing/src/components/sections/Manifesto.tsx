@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -13,6 +13,9 @@ import BlobBg from '@/components/ui/BlobBg'
 gsap.registerPlugin(ScrollTrigger)
 
 const words = about.lead.split(' ')
+
+/* Photo slider: each of the four frames holds this long before the next fades in. */
+const SLIDE_MS = 5500
 
 /* Torn edges for the photo (objectBoundingBox): down the left side on desktop,
    across the bottom on mobile where the photo sits above the copy. */
@@ -29,6 +32,28 @@ const pointStyle = {
 export default function Manifesto() {
   const ref = useRef<HTMLElement>(null)
   const reduced = usePrefersReducedMotion()
+  const [slide, setSlide] = useState(0)
+
+  /* The four frames cross-fade while the section is on screen; with reduced motion the first frame stays. */
+  useEffect(() => {
+    if (reduced) return
+    const section = ref.current
+    if (!section) return
+    let timer: ReturnType<typeof setInterval> | undefined
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        timer ??= setInterval(() => setSlide((s) => (s + 1) % about.photos.length), SLIDE_MS)
+      } else if (timer) {
+        clearInterval(timer)
+        timer = undefined
+      }
+    })
+    io.observe(section)
+    return () => {
+      io.disconnect()
+      if (timer) clearInterval(timer)
+    }
+  }, [reduced])
 
   useEffect(() => {
     if (reduced) return
@@ -100,8 +125,6 @@ export default function Manifesto() {
 
           <a
             href={corporateLinks[0].href}
-            target="_blank"
-            rel="noopener noreferrer"
             className="group relative isolate mt-10 inline-flex min-h-12 items-center rounded-full px-8 text-[0.8rem] font-bold tracking-[0.14em] text-ink uppercase transition-colors duration-200 hover:text-cream focus-visible:text-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
           >
             <BlobBg className="fill-gold group-hover:fill-garden" />
@@ -112,19 +135,29 @@ export default function Manifesto() {
         <div className="relative order-2 -mx-5 h-[400px] sm:-mx-8 sm:h-[520px] lg:order-none lg:col-span-7 lg:mx-0 lg:h-auto lg:self-stretch" data-reveal>
           <div className="absolute inset-0 lg:-inset-y-28 lg:right-[min(-2rem,calc((80rem-100vw)/2-2rem))]">
             <div className="absolute inset-0 [clip-path:url(#tear-bottom)] lg:[clip-path:url(#tear-front)]">
-              <Image
-                src="/fabrika/fabrika-bahceler.jpg"
-                alt="Çay bahçelerinin ortasındaki Esçay fabrikası"
-                fill
-                sizes="(min-width: 1024px) 60vw, 100vw"
-                className="object-cover object-[60%_50%]"
-              />
+              {about.photos.map((photo, i) => (
+                <Image
+                  key={photo.src}
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  priority={i === 0}
+                  sizes="(min-width: 1024px) 60vw, 100vw"
+                  style={{ objectPosition: 'focus' in photo ? photo.focus : '60% 50%' }}
+                  className={`object-cover transition-opacity duration-[1200ms] ease-in-out motion-reduce:transition-none ${i === slide ? 'opacity-100' : 'opacity-0'}`}
+                  aria-hidden={i !== slide}
+                />
+              ))}
               <div
                 className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.35),transparent_35%)]"
                 aria-hidden="true"
               />
-              <p className="absolute bottom-[17%] left-5 text-[0.85rem] text-cream/90 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)] sm:left-8 lg:right-8 lg:bottom-14 lg:left-auto">
-                {about.photoCaption}
+              <p
+                key={slide}
+                className="caption-in absolute bottom-[17%] left-5 text-[0.85rem] text-cream/90 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)] motion-reduce:animate-none sm:left-8 lg:right-8 lg:bottom-14 lg:left-auto"
+                aria-live="polite"
+              >
+                {about.photos[slide].caption}
               </p>
             </div>
 

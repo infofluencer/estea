@@ -8,6 +8,8 @@
   --color-linen: #fbf5e4;
   --color-leaf-soft: #eef6dc;
   --color-gold-soft: #fbf0cf;
+  --color-amber-soft: #fbe6d6;
+  --color-brand-soft: #f9dfd8;
   --color-line: rgba(0, 0, 0, 0.12);
 }
 
@@ -68,6 +70,14 @@
 .leaf-cursor,
 .leaf-cursor * {
   cursor: none !important;
+}
+/* A modal <dialog> renders in the top layer, above the leaf; inside the gallery the system pointer returns. */
+.leaf-cursor dialog[open],
+.leaf-cursor dialog[open] * {
+  cursor: default !important;
+}
+.leaf-cursor dialog[open] button {
+  cursor: pointer !important;
 }
 
 /* Hero shade behind the copy: a left-to-right curtain that is fully clear before the

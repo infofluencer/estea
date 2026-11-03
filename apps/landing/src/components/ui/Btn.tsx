@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import BlobBg from '@/components/ui/BlobBg'
 
-type Variant = 'cream' | 'ink' | 'brand' | 'gold' | 'garden' | 'outline-cream' | 'outline-ink'
+type Variant = 'cream' | 'ink' | 'brand' | 'gold' | 'amber' | 'garden' | 'outline-cream' | 'outline-ink'
 
 const base =
   'group relative isolate inline-flex min-h-12 items-center justify-center rounded-full px-8 text-[0.8rem] font-bold tracking-[0.14em] uppercase transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
@@ -15,6 +15,7 @@ const variants: Record<Variant, { text: string; blob: string }> = {
     text: 'text-ink hover:text-cream focus-visible:text-cream focus-visible:ring-gold focus-visible:ring-offset-ink',
     blob: 'fill-gold group-hover:fill-amber',
   },
+  amber: { text: 'text-cream focus-visible:ring-amber focus-visible:ring-offset-linen', blob: 'fill-amber group-hover:fill-brand' },
   garden: { text: 'text-cream focus-visible:ring-garden focus-visible:ring-offset-linen', blob: 'fill-garden group-hover:fill-olive' },
   'outline-cream': {
     text: 'text-cream focus-visible:ring-cream focus-visible:ring-offset-ink',

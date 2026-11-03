@@ -43,3 +43,9 @@ apps/backend/shared/
 /assets/escay-site-fotograflari-2/
 /assets/çayhero.png
 /assets/çayhero.webp
+
+# Ham fotoğraf teslimleri (117 MB PNG); optimize edilmiş kopyalar apps/landing/public altında
+esçay-web-site-foto/
+
+# Tasarım denetimi (tasteskill) ekran görüntüleri ve raporları
+.taste-skill/

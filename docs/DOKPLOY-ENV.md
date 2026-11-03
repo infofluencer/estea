@@ -123,6 +123,7 @@ Takip ID'leri boşken hiçbir script yüklenmez; CookieYes banner'ı da çıkmaz
 
 ```
 NEXT_PUBLIC_SHOP_URL=http://<frontend>     (Build-time Argument da)
+NEXT_PUBLIC_SITE_URL=http://<landing>      (Build-time Argument; boşsa https://esteacay.com, paylaşım önizlemeleri için)
 ```
 
 ## Dönem B'ye geçiş (domain + TLS)
@@ -146,7 +147,7 @@ ulaşamadığı her dakika "para çekildi, sipariş iptal" riskidir (Mareen #9).
    kalır, e-belge kesilmez; gerçek fatura ancak 7. adımda önek boşalınca başlar. Deploy sonrası
    `/health/revision` commit hash'i push edilenle aynı mı kontrol et.
 5. frontend: `SITE_URL=https://market.esteacay.com`, `MEDUSA_BACKEND_URL=https://api.esteacay.com`, `COOKIE_SECURE` sil → **rebuild** (NEXT_PUBLIC_* gömülü).
-6. landing: `NEXT_PUBLIC_SHOP_URL=https://market.esteacay.com` → rebuild.
+6. landing: `NEXT_PUBLIC_SHOP_URL=https://market.esteacay.com`, `NEXT_PUBLIC_SITE_URL=https://esteacay.com` → rebuild.
 7. **Canlı PayTR (ayrı adım, kimlikler girilince):** `PAYTR_MERCHANT_*` canlı değerler, `PAYTR_OID_PREFIX=` (boş),
    `PAYTR_TEST_MODE=0`, `PAYTR_MOCK` satırını sil. Üçü birlikte değişir; boot'taki env doğrulaması
    (`src/modules/paytr/env-guard.ts`) `TEST_MODE=0 + önek dolu`, `TEST_MODE tanımsız` ya da `mock açık`
