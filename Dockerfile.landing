@@ -22,7 +22,8 @@ COPY package.json package-lock.json tsconfig.base.json ./
 COPY packages/ui ./packages/ui
 COPY apps/landing ./apps/landing
 # Build anında gömülür: mağaza linkleri ("Çaylarımız"). Domain gelince değiştir → rebuild.
-ARG NEXT_PUBLIC_SHOP_URL
+# Dönem A varsayılanı: mağazanın geçici adresi. Domain gelince Dokploy build argümanıyla ezilir (docs/DOKPLOY-ENV.md).
+ARG NEXT_PUBLIC_SHOP_URL=http://187.77.69.91:3025
 ENV NEXT_PUBLIC_SHOP_URL=$NEXT_PUBLIC_SHOP_URL
 ARG NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL

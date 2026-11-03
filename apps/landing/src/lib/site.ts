@@ -1,4 +1,5 @@
-export const shopUrl = (process.env.NEXT_PUBLIC_SHOP_URL ?? 'http://localhost:3025').replace(/\/+$/, '')
+/** Boş string de yedeğe düşer: Dokploy build argümanı boş gelince linkler landing'in kendi yoluna gidiyordu. */
+export const shopUrl = (process.env.NEXT_PUBLIC_SHOP_URL || 'http://localhost:3025').replace(/\/+$/, '')
 
 export const shopProductsUrl = `${shopUrl}/urun-kategori`
 
