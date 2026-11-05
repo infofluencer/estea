@@ -11,7 +11,7 @@ export const COPY = {
   profile: "Profil",
   igTitle: "Instagram’da bizi takip edin",
   igBtn: "Takip Et",
-  footerTagline: "Rize ve Artvin’in yüksek bahçelerinden,\nkatkısız harmanlanan Karadeniz çayı.",
+  footerTagline: "Karadeniz’in yüksek bahçelerinden,\nkatkısız harmanlanan çay.",
   footerSignature: "Yapraktan bardağa",
   footerEmail: "E-posta",
   footerEmailPh: "örnek@mail.com",

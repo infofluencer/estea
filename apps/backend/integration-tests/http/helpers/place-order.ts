@@ -17,7 +17,8 @@ export async function placeGuestStubOrder(
   api: ApiClient,
   fx: StorefrontFixture,
   variantId: string,
-  email: string
+  email: string,
+  opts: { quantity?: number; promoCode?: string } = {}
 ): Promise<PlacedStoreOrder> {
   const created = await api.post(
     `/store/carts`,
@@ -31,9 +32,16 @@ export async function placeGuestStubOrder(
   const cartId = created.data.cart.id
   await api.post(
     `/store/carts/${cartId}/line-items`,
-    { variant_id: variantId, quantity: 1 },
+    { variant_id: variantId, quantity: opts.quantity ?? 1 },
     fx.storeHeaders
   )
+  if (opts.promoCode) {
+    await api.post(
+      `/store/carts/${cartId}/promotions`,
+      { promo_codes: [opts.promoCode] },
+      fx.storeHeaders
+    )
+  }
   const addr = trShippingAddress()
   await api.post(
     `/store/carts/${cartId}`,

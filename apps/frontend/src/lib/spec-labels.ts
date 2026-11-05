@@ -231,14 +231,14 @@ export function normalizeSpecifications(
  */
 const CATEGORY_SPEC_DEFAULTS: Record<string, Record<string, string>> = {
   "siyah-cay": {
-    origin: "Rize / Artvin, Doğu Karadeniz",
+    origin: "Karadeniz",
     brew_dose: "1 litre su için 3 yemek kaşığı (yaklaşık 15 g) kuru çay",
     brew_time: "15–20 dakika",
     brew_temp: "Kaynar su, demlik kısık ateşte",
     storage: "Serin, kuru ve kokusuz bir yerde, ağzı kapalı kapta saklayın.",
   },
   "yesil-cay": {
-    origin: "Rize, Doğu Karadeniz",
+    origin: "Karadeniz",
     brew_dose: "1 fincan (200 ml) için 1 tatlı kaşığı",
     brew_time: "2–3 dakika",
     brew_temp: "75–80 °C (kaynattıktan sonra birkaç dakika dinlendirin)",
@@ -251,7 +251,7 @@ const CATEGORY_SPEC_DEFAULTS: Record<string, Record<string, string>> = {
     storage: "Serin, kuru ve kokusuz bir yerde, ağzı kapalı kapta saklayın.",
   },
   harmanlar: {
-    origin: "Rize / Artvin, Doğu Karadeniz",
+    origin: "Karadeniz",
     brew_time: "10–15 dakika",
     brew_temp: "Kaynar su, demlik kısık ateşte",
     storage: "Serin, kuru ve kokusuz bir yerde, ağzı kapalı kapta saklayın.",

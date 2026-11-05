@@ -36,6 +36,8 @@ export const OPS_KIND_LABEL: Record<string, string> = {
   "exchange.shipped": "Değişim gönderisi açıldı",
   "exchange.failed": "Değişim gönderisi açılamadı",
   "contract.failed": "Sözleşme PDF'i oluşturulamadı",
+  "invoice.failed": "Fatura oluşturulamadı",
+  "invoice.refund_manual": "İade faturası elle kesilecek",
 }
 
 export const OPS_LEVEL_BADGE: Record<OpsEvent["level"], { label: string; color: "green" | "orange" | "red" | "grey" }> = {

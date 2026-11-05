@@ -51,7 +51,7 @@ type BankTransferSessionData = {
  * Ödeme onayı yalnızca admin'deki "Havale alındı" butonundan gelir:
  * POST /admin/orders/:id/bank-transfer/confirm → session'a "received" yazılır
  * → processPaymentWorkflow SUCCESSFUL → authorize + capture → payment.captured
- * (onay maili, kargo, Paraşüt mevcut subscriber'larla).
+ * (onay maili, kargo, BizimHesap mevcut subscriber'larla).
  *
  * Otomatik iptal YOK — cancel-unpaid-paytr-orders yalnızca PayTR session'larına bakar.
  */

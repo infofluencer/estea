@@ -23,12 +23,12 @@
  *                 görmek için. DİKKAT: o butona basmak canlıda gerçek kargo +
  *                 e-arşiv fatura açar; işiniz bitince siparişi admin'den iptal edin.
  *  confirm        Script "Havale alındı"yı da dener (capture, tekrar tıklama no-op).
- *                 Yalnızca Paraşüt mock/dry-run VE kargo test modundaysa çalışır;
+ *                 Yalnızca BizimHesap mock/dry-run VE kargo test modundaysa çalışır;
  *                 canlı ayarlarla reddedilir.
  *
  * Yan etkiler (varsayılan): bir sipariş numarası harcanır, admin'de iptal edilmiş
  * "HAVALE TEST" siparişi kalır, adres verildiyse IBAN maili gelir.
- * Kart ödemesi, PayTR, kargo, Paraşüt, Omnisend, Meta etkilenmez (hepsi ödeme
+ * Kart ödemesi, PayTR, kargo, BizimHesap, Omnisend, Meta etkilenmez (hepsi ödeme
  * onayında çalışır; varsayılan modda onay yok).
  */
 import type { ExecArgs, MedusaContainer } from "@medusajs/framework/types"
@@ -54,10 +54,10 @@ import {
 } from "../lib/bank-transfer-confirm"
 import { cancelUnpaidOrderIfSafe } from "../modules/paytr/order-guards"
 import {
-  isMockMode as isParasutMockMode,
-  isParasutDryRun,
-  normalizeOptions as normalizeParasutOptions,
-} from "../modules/parasut/options"
+  isMockMode as isBizimhesapMockMode,
+  isBizimhesapDryRun,
+  normalizeOptions as normalizeBizimhesapOptions,
+} from "../modules/bizimhesap/options"
 import { carrierTestMode, isCarrierConfigured } from "../modules/carrier/registry"
 import { OPS_EVENT_MODULE } from "../modules/ops-event"
 import type OpsEventModuleService from "../modules/ops-event/service"
@@ -110,16 +110,12 @@ function parseArgs(args: string[] | undefined) {
 
 /** --confirm yalnızca capture'ın gerçek fatura / kargo açmayacağı ortamda. */
 function confirmBlockedReason(): string | null {
-  const parasut = normalizeParasutOptions({
-    clientId: process.env.PARASUT_CLIENT_ID,
-    clientSecret: process.env.PARASUT_CLIENT_SECRET,
-    username: process.env.PARASUT_USERNAME,
-    password: process.env.PARASUT_PASSWORD,
-    companyId: process.env.PARASUT_COMPANY_ID,
-    dryRun: process.env.PARASUT_DRY_RUN,
+  const bizimhesap = normalizeBizimhesapOptions({
+    firmId: process.env.BIZIMHESAP_FIRM_ID,
+    dryRun: process.env.BIZIMHESAP_DRY_RUN,
   })
-  if (!isParasutMockMode(parasut) && !isParasutDryRun(parasut)) {
-    return "Paraşüt canlı (PARASUT_DRY_RUN kapalı) — onay gerçek e-arşiv fatura keser"
+  if (!isBizimhesapMockMode(bizimhesap) && !isBizimhesapDryRun(bizimhesap)) {
+    return "BizimHesap canlı (BIZIMHESAP_DRY_RUN kapalı) — onay gerçek fatura kaydı açar"
   }
   if (isCarrierConfigured() && !carrierTestMode()) {
     return "Kargo adaptörü canlı (SHIPPING_CARRIER_TEST_MODE=false) — onay gerçek kargo gönderisi açar"

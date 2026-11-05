@@ -26,7 +26,7 @@ async function main() {
 
   const items = [
     {
-      title: "Rize Siyah Çay 500 g",
+      title: "Karadeniz Siyah Çay 500 g",
       quantity: 1,
       reasonLabel: "Ayıplı / hasarlı ürün",
       variantLabel: "500 g",

@@ -101,7 +101,7 @@ export const posts: Post[] = [
     image: '/yolculuk/topla-1.jpg',
     imageMobile: '/yolculuk/topla-1-k.jpg',
     alt: 'Karadeniz bahçelerinde çay hasadı',
-    excerpt: 'Hasat edilmeyen çay on altı metrelik ağaç olur; Türkiye’de çayı 1924’te Rize’de Zihni Derin yetiştirdi.',
+    excerpt: 'Hasat edilmeyen çay on altı metrelik ağaç olur; Türkiye’de çayı 1924’te Karadeniz’de Zihni Derin yetiştirdi.',
     body: [
       { type: 'p', text: 'Siyah çay Türkiye’de en çok tüketilen çay çeşididir. Lezzetli, yoğun kıvamlı çayı günün her anında içmeye bayılırız. Çay tiryakilerinin bile bilmediği on bilgi:' },
       {
@@ -109,7 +109,7 @@ export const posts: Post[] = [
         items: [
           'Çay bitkisi hasat edilmediğinde büyümeye devam eder ve on altı metrelik bir çay ağacına dönüşür.',
           'Dünyada sudan sonra en çok tüketilen içecek çaydır; yeşil çayın payı yalnızca yüzde üçtür.',
-          'Çayın babası sayılan Zihni Derin 1924’te Rize’de çay üretimini başardı. Daha önce Türkiye’de çay üretilmiyordu.',
+          'Çayın babası sayılan Zihni Derin 1924’te Karadeniz’de çay üretimini başardı. Daha önce Türkiye’de çay üretilmiyordu.',
           'Doğu toplumları yaklaşık beş bin yıldır çay içiyor; Avrupalılar dört yüz yıldır.',
           'Çay bardağının ince belli olmasının başlıca nedeni, sıcak çayın eli yakmadan tutulabilmesidir.',
           'Türkiye’de yetişen çayın bu kadar lezzetli olmasının en önemli nedeni kışın kar altında kalmasıdır. Kar yaprağa doğal bir aroma verir ve onu korur.',

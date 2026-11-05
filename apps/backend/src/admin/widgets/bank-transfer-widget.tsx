@@ -24,7 +24,7 @@ const BADGE: Record<string, { label: string; color: "green" | "orange" | "grey" 
 
 /**
  * Sipariş detayı — Havale / EFT. Yalnızca havale siparişlerinde görünür.
- * "Havale alındı" → ödeme capture → onay maili + kargo + Paraşüt.
+ * "Havale alındı" → ödeme capture → onay maili + kargo + BizimHesap.
  */
 const BankTransferWidget = () => {
   const { id: orderId } = useParams()

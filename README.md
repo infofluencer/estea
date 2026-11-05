@@ -46,4 +46,4 @@ npm run typecheck && npm run lint
 | --- | --- | --- |
 | landing | `apps/landing/.env.example` → `.env.local` | `NEXT_PUBLIC_SHOP_URL` mağaza adresi |
 | frontend | `apps/frontend/.env.template` → `.env.local` | Medusa adresi, publishable key, region |
-| backend | `apps/backend/.env.template` → `.env` | DB, Redis, PayTR, SMTP, Paraşüt, kargo |
+| backend | `apps/backend/.env.template` → `.env` | DB, Redis, PayTR, SMTP, BizimHesap, kargo |

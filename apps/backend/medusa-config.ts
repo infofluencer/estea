@@ -162,22 +162,14 @@ module.exports = defineConfig({
       resolve: "./src/modules/ops-event",
     },
     {
-      // Paraşüt e-arşiv / e-fatura. Kimlik yoksa mock (gerçek HTTP yok).
-      resolve: "./src/modules/parasut",
+      // BizimHesap fatura. BIZIMHESAP_FIRM_ID yoksa mock (gerçek HTTP yok).
+      resolve: "./src/modules/bizimhesap",
       options: {
-        clientId: process.env.PARASUT_CLIENT_ID,
-        clientSecret: process.env.PARASUT_CLIENT_SECRET,
-        username: process.env.PARASUT_USERNAME,
-        password: process.env.PARASUT_PASSWORD,
-        companyId: process.env.PARASUT_COMPANY_ID,
-        baseUrl: process.env.PARASUT_BASE_URL,
-        env: process.env.PARASUT_ENV ?? "test",
-        defaultVatRate: process.env.PARASUT_DEFAULT_VAT_RATE,
-        shippingVatRate: process.env.PARASUT_SHIPPING_VAT_RATE,
-        dryRun: process.env.PARASUT_DRY_RUN,
-        productCreate: process.env.PARASUT_PRODUCT_CREATE,
-        shippingProductId: process.env.PARASUT_SHIPPING_PRODUCT_ID,
-        shippingProductCode: process.env.PARASUT_SHIPPING_PRODUCT_CODE,
+        firmId: process.env.BIZIMHESAP_FIRM_ID,
+        baseUrl: process.env.BIZIMHESAP_BASE_URL,
+        defaultVatRate: process.env.BIZIMHESAP_DEFAULT_VAT_RATE,
+        shippingVatRate: process.env.BIZIMHESAP_SHIPPING_VAT_RATE,
+        dryRun: process.env.BIZIMHESAP_DRY_RUN,
       },
     },
     // File module: S3 when S3_BUCKET set, otherwise local static for dev.

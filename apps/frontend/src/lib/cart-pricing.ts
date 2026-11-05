@@ -1,7 +1,7 @@
 /**
  * Es Çay TR storefront — KDV dahil tüketici fiyatları.
  * TODO(K2): çay KDV oranı mali müşavir teyidiyle NEXT_PUBLIC_VAT_RATE'e yazılır
- * (backend region tax rate + PARASUT_DEFAULT_VAT_RATE ile aynı olmalı).
+ * (backend region tax rate + BIZIMHESAP_DEFAULT_VAT_RATE ile aynı olmalı).
  */
 export const VAT_RATE = Number(process.env.NEXT_PUBLIC_VAT_RATE ?? 1)
 

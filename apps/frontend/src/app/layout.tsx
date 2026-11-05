@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | Es Çay",
   },
   description:
-    "Rize ve Artvin'in yüksek bahçelerinden, katkısız harmanlanan Karadeniz çayı. Siyah çay, yeşil çay, bitki çayları ve harmanlar.",
+    "Karadeniz'in yüksek bahçelerinden, katkısız harmanlanan çay. Siyah çay, yeşil çay, bitki çayları ve harmanlar.",
   // Omnisend mağaza doğrulaması
   ...(process.env.NEXT_PUBLIC_OMNISEND_BRAND_ID
     ? {

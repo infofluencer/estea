@@ -11,7 +11,7 @@ const base: LabelOrder = {
   phone: "+905308248291",
   email: "a@example.com",
   addressLines: ["49.sk Güneşlipark Gardenya sitesi E blok D:22", "Bağlar Mahallesi", "Bağcılar / İstanbul 34212"],
-  lines: [{ title: "Rize Siyah Çay", variant: "Gramaj: 500 g", sku: "ESC-SIYAH-500", quantity: 1 }],
+  lines: [{ title: "Karadeniz Siyah Çay", variant: "Gramaj: 500 g", sku: "ESC-SIYAH-500", quantity: 1 }],
   note: "Hediye paketi olsun lütfen",
   carrier: "MANUAL",
   trackingNumber: "324406761644",

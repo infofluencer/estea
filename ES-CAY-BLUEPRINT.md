@@ -58,7 +58,7 @@ Tablolardaki "Es Çay" sütunu: **Aynen** = değiştirmeden kopyala · **Yeni de
                     │ Postgres │  │ Redis 7  │  cache + event bus + admin session
                     │ 16/17    │  └──────────┘
                     └──────────┘
- Dış servisler: PayTR (iFrame + callback) · Paraşüt (e-arşiv) · S3 (görsel + yedek + sözleşme PDF)
+ Dış servisler: PayTR (iFrame + callback) · BizimHesap (fatura) · S3 (görsel + yedek + sözleşme PDF)
                 Google Workspace SMTP · Omnisend · Meta CAPI · GA4/Ads/Pixel/Clarity (CookieYes onayıyla)
                 [Mareen'de ayrıca: Geliver/DHL kargo, Trendyol — Es Çay'da YOK]
 ```
@@ -149,7 +149,7 @@ Modül kayıtları (sırayla):
 | `notification` | `./src/modules/smtp-notification` id `smtp` kanal `email`; `notification-local` id `local` kanal `feed` (admin zil) | Aynen |
 | `wishlist`, `ops-event` | custom | Aynen |
 | `wp-legacy`, `trendyol` | custom | Sil |
-| `parasut` | custom, kimlik boşsa mock | Aynen |
+| `bizimhesap` | custom, firmId boşsa mock | Paraşüt yerine |
 | `file` | `S3_BUCKET` doluysa file-s3 (`prefix: files/`, `acl: false`), yoksa file-local `static/` | Aynen |
 
 ### 3.2 Dizin haritası ve satır sayıları (yaklaşık)
@@ -209,14 +209,14 @@ Rate-limiter: `src/api/store/_rate-limit.ts` `createRateLimiter({name, maxAttemp
 | `order.placed` | `order-placed.ts` | Yalnızca havale siparişinde "Ödemeniz Bekleniyor" (IBAN) maili + `payment.pending` olayı; kart siparişinde **mail yok** (ödeme henüz yok) | Aynen |
 | `payment.captured` | `payment-captured-email.ts` | "Siparişiniz Alındı" / "Havale Ödemeniz Alındı" (idempotent `order-confirmation:<orderId>`) | Aynen |
 | `payment.captured` | `payment-captured-geliver.ts` | Otomatik fulfillment + kargo gönderisi | Kargo adaptörüne göre |
-| `payment.captured` | `payment-captured-parasut.ts` | e-Arşiv fatura | Aynen |
+| `payment.captured` | `payment-captured-bizimhesap.ts` | BizimHesap satış faturası | Paraşüt yerine |
 | `payment.captured` | `omnisend-placed-order.ts` | Omnisend `placed order` (v2) | Aynen |
 | `payment.captured` | `meta-capi-purchase.ts` | Meta CAPI Purchase (yalnızca `tracking_consent`, yalnızca prod) | Aynen |
 | `cart.updated` | `omnisend-started-checkout.ts` | E-posta + ürün varsa `started checkout` (24 saat Redis dedupe), izinliyse contact `subscribed` | Aynen |
 | `shipment.created` / `delivery.created` | `order-shipping-status-email.ts` | "Kargoya verildi" / "Teslim edildi" mailleri (`no_notification` ise atla) | Aynen (kargo bağımsız) |
 | `order.return_requested` | `return-requested-email.ts` | Müşteriye talep/iade kodu maili + satıcıya `RETURNS_INBOX` | Aynen |
 | `order.return_received` | `return-received-refund.ts` / `return-received-exchange.ts` | Para iadesi (PayTR iade) veya değişim gönderisi | Aynen (kargo kısmı adaptöre) |
-| `mareen.return_refunded` (özel) | `return-refunded-email.ts`, `return-refunded-parasut.ts` | Müşteri maili + Paraşüt iade faturası | Aynen (event adını yeniden adlandır) |
+| `mareen.return_refunded` (özel) | `return-refunded-email.ts`, `return-refunded-bizimhesap.ts` | Müşteri maili + Paraşüt iade faturası | Aynen (event adını yeniden adlandır) |
 | `mareen.return_rejected` (özel) | `return-rejected-email.ts` | Red maili | Aynen |
 | inventory-level.updated / reservation.created | `trendyol-*.ts` | Trendyol stok kuyruğu | Sil |
 
@@ -225,7 +225,7 @@ Rate-limiter: `src/api/store/_rate-limit.ts` `createRateLimiter({name, maxAttemp
 | Job | Zamanlama | İş | Es Çay |
 |---|---|---|---|
 | `cancel-unpaid-paytr-orders` | `*/10 * * * *` | `status=pending`, `created_at ≤ now-30dk`, PayTR session'ı pending/error olan siparişi `cancelOrderWorkflow` ile iptal (stok serbest). Havale siparişlerine dokunmaz. PayTR callback kilidiyle aynı lock | Aynen |
-| `retry-parasut-invoices` | periyodik | Başarısız faturaları 8 denemeye kadar, 72 saat geriye | Aynen |
+| `retry-bizimhesap-invoices` | periyodik | Reddedilen faturaları 8 denemeye kadar, 72 saat geriye; belirsizleri denemez | Paraşüt yerine |
 | `dhl-track-shipments` | 30 dk | DHL durum sorgusu → shipped/delivered | Adaptöre göre (webhook yoksa polling şablonu olarak değerli) |
 | `trendyol-push-stock` (5 dk), `trendyol-pull-orders` (15 dk), `trendyol-reconcile-stock` (15 dk) | | | Sil |
 
@@ -289,7 +289,7 @@ Akış:
 4. `GET /store/orders/:id` ve `lookup` yanıtına `bank_transfer` bilgisi eklenir (onay + takip sayfasında IBAN kutusu).
 5. Admin liste: `awaiting` + `payment_method=bank_transfer` → `requires_action` ("Havale onayı bekleniyor").
 6. Admin widget (`order.details.side.before`) "Havale alındı" → `POST /admin/orders/:id/bank-transfer/confirm` → `confirmBankTransferPayment` (lock, idempotent) → `processPaymentWorkflow(SUCCESSFUL)` → `payment.captured` → onay maili + fatura + kargo + Omnisend/CAPI. Ops `payment.succeeded {method: bank_transfer}`.
-7. Otomatik iptal yok. Paraşüt'te ödeme şekli EFT/HAVALE, platform = `BANK_TRANSFER_BANK_NAME`.
+7. Otomatik iptal yok. BizimHesap fatura açıklamasında ödeme EFT/HAVALE + `BANK_TRANSFER_BANK_NAME`.
 
 Kurulum: env → redeploy → `npm run enable:bank-transfer:prod` (provider'ı Türkiye region'a bağlar, idempotent) → `BANK_TRANSFER_ENABLED=1`. Test: `test:bank-transfer` (sipariş açar, doğrular, iptal eder).
 
@@ -320,8 +320,7 @@ Kurulum: env → redeploy → `npm run enable:bank-transfer:prod` (provider'ı T
 | `return-refunded-customer` | `mareen.return_refunded` | `…:<returnId>:<payment>` |
 | `return-rejected-customer` | `mareen.return_rejected` | `…:<returnId>` |
 | `return-dhl-code-customer` | admin iade kodu girince | `return-dhl-code:<returnId>:<code>` |
-| `parasut-invoice-issued` | fatura kesilince | `parasut-invoice:<orderId>` |
-| `parasut-invoice-failure-admin` → `PARASUT_ADMIN_ALERT_EMAIL` | fatura hatası | |
+| `bizimhesap-invoice-problem-admin`, `bizimhesap-refund-manual-admin` → `BIZIMHESAP_ADMIN_ALERT_EMAIL` | fatura sorunu, elle iade faturası | |
 | `return-refund-failed` → `RETURNS_INBOX` | iade hatası | |
 | `paytr-critical-<kind>` → `PAYTR_ALERT_INBOX` | callback anomalisi | `paytr-critical:<kind>:<oid>` |
 | `contact-form` → `CONTACT_INBOX` | `POST /store/contact` | yok |
@@ -393,20 +392,15 @@ Veri modeli: özel tablo **yok**; her şey Medusa `return`/`order` `metadata`'s�
 - Admin sipariş listesi filtreleri: Medusa v2 ödeme/kargo durumu filtresi vermez → `scripts/patch-dashboard-order-filters.mjs` dashboard dist yaması ("Ödeme durumu", "Kargo durumu" seçicileri + hazır butonlar: Tümü / Kargolanacaklar / Havale bekleyenler / Kargoda / İptaller) + sunucu `status-filter.ts` (≤5000 sipariş tarar, `id` filtresine çevirir).
 - `GET /admin/mareen-nav-counts` → kenar çubuğu rozetleri (bekleyen iade, kargolanacak, havale bekleyen); widget dakikada bir yoklar.
 
-### 4.10 Paraşüt e-Arşiv / e-Fatura — aynen kopyalanır
+### 4.10 BizimHesap fatura (Paraşüt'ün yerine, 2026-11-03)
 
-Modül `src/modules/parasut` (DB modeli yok; durum `order.metadata.parasut_invoice`).
-- **OAuth2 password grant** (`client_id/secret + username/password + company_id`), token cache (expires − 30 sn), refresh_token → başarısızsa password. 429/5xx/abort'ta exponential retry (`Try again in N seconds` dikkate alınır).
-- **Mock mod:** beş kimlikten biri boş/placeholder ise HTTP yok. **DRY-RUN:** taslak oluşturur, finalize/GİB yok.
-- **Tetik:** `payment.captured` (kart: PayTR callback; havale: admin onayı) → `issueSalesInvoiceForOrder`. Idempotent (`issued` atla; `pending/error` + `invoice_id` varsa yeniden oluşturmaz, finalize'a geçer).
-- **Akış:** `ensureContact` (e-posta ile ara, yoksa oluştur: ad/unvan, vergi no, vergi dairesi, telefon, il/ilçe/adres) → `createSalesInvoice` (`order_no` = 100000+display_id, `issue_date` bugün, satırlar net `unit_price` + `vat_rate` + indirim, kargo satırı "Kargo") → `pending` → `finalizeInvoice` → `getInvoicePdf` → `issued` → müşteriye "e-Arşiv Fatura" maili (PDF linki).
-- **e-Arşiv / e-Fatura kararı:** vergi no 10 haneli (VKN) ise `GET /e_invoice_inboxes?filter[vkn]=` → kayıt varsa **e_invoice**, yoksa/TCKN/boş → **e_archive** (`internet_sale {url, payment_type: KREDIKARTI/BANKAKARTI | EFT/HAVALE, payment_platform: PayTR | banka adı, payment_date}`).
-- **KDV:** Medusa fiyatları KDV dahil → `gross/(1+rate/100)`; satır KDV `tax_lines[0].rate` yoksa `PARASUT_DEFAULT_VAT_RATE`; kargo `PARASUT_SHIPPING_VAT_RATE`; sipariş geneli kalan indirim `invoice_discount`. Bilinen sapma: 2 haneye yuvarlanan net birim × adet → 1 kuruş.
-- **Ürün eşleştirme:** `variant.metadata.parasut_product_id` varsa o; yoksa SKU = Paraşüt ürün kodu → ad; bulunamazsa `PARASUT_PRODUCT_CREATE` ile oluşturur (`inventory_tracking:false`). Script'ler: `parasut-product-match` (rapor) → `parasut-apply-mapping` (`PARASUT_APPLY_CONFIRM=yes`).
-- **Vergi no kaynağı:** `customer.metadata` / `billing_address.metadata` / `order.metadata` → `tax_number | vkn | tckn | identity_number`; `company_name`, `tax_office`, `district`. Storefront checkout bunları `billing_address.metadata`'ya yazar.
-- **Hata:** `error` + `PARASUT_ADMIN_ALERT_EMAIL` maili (idempotent `admin_notified_at`); job `retry-parasut-invoices` (15 dk, 72 saat, 8 deneme); admin widget "Yeniden dene".
-- **İade faturası** (`mareen.return_refunded`): `createRefundInvoice` → `order.metadata.parasut_refund_invoices[return_id]`. Kodda "iskelet" olarak işaretli: **detay satırı göndermez, resmileştirmez** → Es Çay'da mali müşavirle netleştirip tamamla.
-- Markaya bağlı: açıklama metni "Mareen sipariş/iade …", `mareen.com.tr` fallback URL.
+Modül `src/modules/bizimhesap` (DB modeli yok; durum `order.metadata.bizimhesap_invoice`). Karar ve açık sorular: `docs/ESCAY-KARARLAR.md` K14.
+
+- **API:** yalnız `POST https://bizimhesap.com/api/b2b/addinvoice`, kimlik gövdede `firmId`. Müşteri ve ürün yoksa BizimHesap açar. Test ortamı, sorgu, düzeltme, silme, idempotency ve iade tipi yok.
+- **Akış:** `payment.captured` → kilit → `pending` → istek → `created` (`guid`, `url`). `BIZIMHESAP_FIRM_ID` boşsa mock; `BIZIMHESAP_DRY_RUN` veya `PAYTR_OID_PREFIX` doluysa `dry_run`, istek atılmaz.
+- **KDV:** Medusa fiyatları KDV dahil; net ve vergi satır toplamından hesaplanır, dip toplam siparişle kuruşu kuruşuna tutar. Fark 0,05 TL'yi aşarsa gönderilmez. Satır KDV `tax_lines[0].rate`, yoksa `BIZIMHESAP_DEFAULT_VAT_RATE`/`KDV_RATE`; kargo `BIZIMHESAP_SHIPPING_VAT_RATE`.
+- **Hata:** reddedilen istek `error`, job `retry-bizimhesap-invoices` 8 denemeye kadar dener. Zaman aşımı, 5xx ve okunamayan yanıt `unknown`: kayıt oluşmuş olabilir, otomatik denenmez; admin panelden kontrol edip widget'tan onaylayarak gönderir. Takılı `pending` 10 dk sonra `unknown` olur. İkisinde de admin maili + `invoice.failed` olayı.
+- **İade faturası:** API desteklemez. `escay.return_refunded` → `metadata.bizimhesap_refund_invoices[return_id]` `manual_required` + admin maili + `invoice.refund_manual` olayı; panelden elle kesilir.
 
 ### 4.11 Yasal sözleşme PDF'leri ve etiketler — aynen kopyalanır
 
@@ -427,7 +421,7 @@ Modül `src/modules/parasut` (DB modeli yok; durum `order.metadata.parasut_invoi
 | `widgets/return-reject-widget.tsx` | `order.details.side.before` | İade kutusu: ürün bazlı kabul (stoğa/hasarlı), red, iade tekrar, kod gir | Aynen |
 | `widgets/order-status-widget.tsx` | `order.details.side.after` | Zaman çizelgesi + Hazırlandı/Kargoya ver/Teslim + takip no + Geliver/DHL elle bağlama | Aynen; Geliver/DHL alanları adaptöre |
 | `widgets/order-contracts-widget.tsx` | `order.details.side.after` | Sözleşme PDF'leri | Aynen |
-| `widgets/parasut-invoice-widget.tsx` | `order.details.side.after` | Fatura durumu + tekrar | Aynen |
+| `widgets/bizimhesap-invoice-widget.tsx` | `order.details.side.after` | Fatura durumu + tekrar | Paraşüt yerine |
 | `widgets/order-bulk-labels-widget.tsx` | `order.list.before` | Toplu etiket, ödeme/kargo/etiket filtreleri, toplu kargoya verildi/teslim (`notify:false`), yeniden gönderi | Aynen |
 | `widgets/hide-native-return-actions.tsx` | `order.details.before` | Medusa'nın yerleşik iade/claim/edit/fulfillment/refund linklerini gizler (CSS + MutationObserver) → personel özel akışları kullanır | Aynen |
 | `widgets/variant-stock-widget.tsx` | variant/inventory detay | Lokasyon bazlı stok hızlı düzenleme | Aynen |
@@ -781,24 +775,18 @@ Sütun "Es Çay": **Aynen** = kopyala, **Yeni değer** = markaya göre doldur, *
 
 DNS tarafı: MX Google, SPF `include:_spf.google.com`, Google DKIM, DMARC. Gmail günlük gönderim limiti var (Mareen'de 19.10 limit aşımında mailler başarısız oldu → idempotent bildirim düzeltmesi).
 
-### 8.5 Backend — Paraşüt
+### 8.5 Backend — BizimHesap
 
-| Değişken | Amaç | Es Çay |
+| Değişken | Açıklama | Es Çay |
 |---|---|---|
-| `PARASUT_CLIENT_ID`, `PARASUT_CLIENT_SECRET`, `PARASUT_USERNAME`, `PARASUT_PASSWORD`, `PARASUT_COMPANY_ID` | OAuth2 password grant | Yeni değer |
-| `PARASUT_ENV` | `test` (varsayılan) / `prod` | Canlıda `prod` |
-| `PARASUT_BASE_URL` | Varsayılan `https://api.parasut.com/v4` | Aynen |
-| `PARASUT_DRY_RUN` | `true` → yalnızca taslak, GİB'e gitmez | Testte `true` |
-| `PARASUT_DRY_RUN_ORDER_ID` | Tek sipariş için dry-run | Test |
-| `PARASUT_DEFAULT_VAT_RATE` | Ürün satırı KDV % (Mareen 10) | **Yeni değer — çay için KDV oranını mali müşavire sor** |
-| `PARASUT_SHIPPING_VAT_RATE` | Kargo satırı KDV % (20) | Aynen |
-| `PARASUT_PRODUCT_CREATE` | Eşleşmeyen ürünü Paraşüt'te oluştur | Aynen |
-| `PARASUT_SHIPPING_PRODUCT_ID` / `PARASUT_SHIPPING_PRODUCT_CODE` | Kargo kalemi ürünü (varsayılan kod `KARGO`) | Yeni değer |
-| `PARASUT_ADMIN_ALERT_EMAIL` | Fatura hatası uyarısı | Yeni değer |
-| `PARASUT_INTERNET_SALE_URL` | e-Arşiv internet satış URL'i (yoksa STOREFRONT_URL) | Yeni değer |
-| `PARASUT_RETRY_MAX_ATTEMPTS`, `PARASUT_RETRY_LOOKBACK_HOURS` | Retry job (8 deneme, 72 saat) | Aynen |
-
-Kimlikler boşsa modül **mock** modda çalışır (HTTP yok) → lokal/staging güvenli.
+| `BIZIMHESAP_FIRM_ID` | Hesaba özel kimlik; boşsa mock | Es Çay hesabı (K14) |
+| `BIZIMHESAP_BASE_URL` | Varsayılan `https://bizimhesap.com/api/b2b` | Aynen |
+| `BIZIMHESAP_DRY_RUN` | `true` → gövde hazırlanır, gönderilmez | Testte `true` |
+| `BIZIMHESAP_DEFAULT_VAT_RATE` | Ürün satırı KDV %; boşsa `KDV_RATE` | K2 |
+| `BIZIMHESAP_SHIPPING_VAT_RATE` | Kargo satırı KDV % (20) | Aynen |
+| `BIZIMHESAP_ADMIN_ALERT_EMAIL` | Fatura sorunu ve elle iade uyarısı; boşsa `CONTACT_INBOX` | Yeni değer |
+| `BIZIMHESAP_INTERNET_SALE_URL` | Fatura açıklamasındaki satış adresi (yoksa `STOREFRONT_URL`) | Yeni değer |
+| `BIZIMHESAP_RETRY_MAX_ATTEMPTS`, `BIZIMHESAP_RETRY_LOOKBACK_HOURS` | Retry job (8 deneme, 72 saat) | Aynen |
 
 ### 8.6 Backend — Dosya / S3
 
@@ -966,7 +954,7 @@ Bu liste `docs/CUTOVER.md`'deki 25 bölümün ve commit geçmişinin damıtılm�
 ### Aşama 0 — Kararlar (kodlamadan önce)
 - Domain: `escay.com.tr`? API: `api.escay.com.tr`. Marka adı, logo, renk/font.
 - Şirket künyesi (ünvan, adres, telefon, KVKK e-postası, MERSİS/vergi no) → `COMPANY` sabitleri, sözleşme metni.
-- **KDV oranı**: çay için ürün KDV'si (mali müşavir teyidi; Mareen %10 tekstil). Region tax + `PARASUT_DEFAULT_VAT_RATE` + Paraşüt ürün kartları.
+- **KDV oranı**: çay için ürün KDV'si (mali müşavir teyidi; Mareen %10 tekstil). Region tax + `BIZIMHESAP_DEFAULT_VAT_RATE` + Paraşüt ürün kartları.
 - Kargo firması ve çalışma modeli (API var mı? sadece panel mi? sabit ücret mi, desi mi? ücretsiz kargo eşiği?).
 - Ödeme: PayTR (ayrı mağaza hesabı) + Havale açık mı? Taksit?
 - İade politikası: gıda ürününde cayma hakkı istisnaları (ambalajı açılmış ürün) → hukukçu; iade/değişim akışı gerekli mi, ne kadarı?
@@ -1019,7 +1007,7 @@ Her iki durumda: `setup-turkey` script'inde shipping option provider'ı `manual_
 | # | Soru | Etkilediği yer |
 |---|---|---|
 | K1 | Kargo firması ve API durumu | §4.13, §12 Aşama 3, env 8.8, koli profili |
-| K2 | Çay KDV oranı (mali müşavir) | setup-turkey tax rate, `PARASUT_DEFAULT_VAT_RATE`, fiyatlandırma |
+| K2 | Çay KDV oranı (mali müşavir) | setup-turkey tax rate, `BIZIMHESAP_DEFAULT_VAT_RATE`, fiyatlandırma |
 | K3 | Havale/EFT açık mı, banka bilgileri | `BANK_TRANSFER_*`, checkout |
 | K4 | Ücretsiz kargo eşiği / sabit ücret | shipping option rules, sepet UI |
 | K5 | İade/değişim kapsamı (gıda istisnası) | returns API, storefront iade formu, yasal metin |

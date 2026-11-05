@@ -94,11 +94,11 @@ describe("mapItems", () => {
   it("başlık + varyant, SKU ve adet", () => {
     expect(
       mapItems([
-        { title: "Rize Çayı", variant_title: "500 g", variant_sku: "RZ-500", quantity: 2, unit_price: 189.9 },
+        { title: "Karadeniz Çayı", variant_title: "500 g", variant_sku: "KD-500", quantity: 2, unit_price: 189.9 },
         { title: "Yeşil Çay", variant_title: "Default variant", quantity: 0 },
       ])
     ).toEqual([
-      { title: "Rize Çayı - 500 g", sku: "RZ-500", quantity: 2, unitPrice: 189.9 },
+      { title: "Karadeniz Çayı - 500 g", sku: "KD-500", quantity: 2, unitPrice: 189.9 },
       { title: "Yeşil Çay", quantity: 1 },
     ])
   })

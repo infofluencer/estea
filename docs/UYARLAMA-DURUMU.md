@@ -7,7 +7,7 @@
 | 2 — Marka ve içerik | Kısmen | Künye, logo, palet/font token'ları, mail şablonları, ana sayfa iskeleti, kategori yer tutucuları yapıldı. Yasal metinler, hakkımızda/SSS kopyası ve ürün içerikleri **taslak** |
 | 3 — Kargo katmanı | Sözleşme hazır, adaptör yok | `src/modules/carrier` (provider + registry + webhook + polling job + günlük denetim + dış gönderi bağlama / uzlaştırma + `smoke:carrier`); Mareen dersleri `docs/KARGO-DERSLERI.md`; K1 verilince `adapters/<kod>.ts` |
 | 4 — Çaya özgü | Kısmen | Seed kategorileri/iade sebepleri, koli profili, etiket "Gramaj/Paket", storefront spec etiketleri; KDV env (K2) |
-| 5 — Kurulum | Yapılmadı | Dokploy/S3/PayTR/Paraşüt/SMTP hesapları ve env'ler |
+| 5 — Kurulum | Yapılmadı | Dokploy/S3/PayTR/BizimHesap/SMTP hesapları ve env'ler |
 
 ## Mareen'e göre bilinçli farklar
 

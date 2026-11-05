@@ -34,7 +34,7 @@ const MOCK_ORDER: OrderDetailView = {
     iban: "TR00 0000 0000 0000 0000 0000 00",
   },
   items: [
-    { id: "item_1", title: "Rize Siyah Çay", quantity: 1, unit_price: 2499, variant: { title: "500 g" } },
+    { id: "item_1", title: "Karadeniz Siyah Çay", quantity: 1, unit_price: 2499, variant: { title: "500 g" } },
     { id: "item_2", title: "Bergamot Çay", quantity: 1, unit_price: 2499, variant: { title: "250 g" } },
   ],
   shipping_address: {

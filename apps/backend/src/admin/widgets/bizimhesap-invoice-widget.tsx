@@ -7,9 +7,10 @@ import { useState } from "react"
 type InvoiceMeta = {
   status?: string
   mode?: string
-  invoice_number?: string
-  invoice_type?: "e_archive" | "e_invoice"
-  pdf_url?: string
+  guid?: string
+  url?: string
+  invoice_no?: string
+  total?: number
   error?: string
   at?: string
   retry_count?: number
@@ -18,18 +19,15 @@ type InvoiceMeta = {
 type RefundMeta = {
   status?: string
   return_id?: string
-  invoice_number?: string
   amount?: number
-  pdf_url?: string
-  error?: string
 }
 
 type OrderPayload = {
   order?: {
     id?: string
     metadata?: {
-      parasut_invoice?: InvoiceMeta
-      parasut_refund_invoices?: Record<string, RefundMeta>
+      bizimhesap_invoice?: InvoiceMeta
+      bizimhesap_refund_invoices?: Record<string, RefundMeta>
     } | null
   }
 }
@@ -38,40 +36,36 @@ function statusBadge(
   status?: string
 ): { label: string; color: "green" | "orange" | "red" | "grey" } {
   switch (status) {
-    case "issued":
-      return { label: "Kesildi", color: "green" }
+    case "created":
+      return { label: "BizimHesap'a işlendi", color: "green" }
     case "pending":
-      return { label: "Bekliyor", color: "orange" }
+      return { label: "Gönderiliyor", color: "orange" }
+    case "unknown":
+      return { label: "Belirsiz, kontrol edin", color: "red" }
     case "error":
       return { label: "Hata", color: "red" }
     case "skipped":
       return { label: "Atlandı", color: "grey" }
-    case "canceled":
-      return { label: "İptal", color: "grey" }
-    case "draft_dryrun":
-      return { label: "DRY-RUN taslak", color: "orange" }
+    case "dry_run":
+      return { label: "DRY-RUN, gönderilmedi", color: "orange" }
+    case "manual_required":
+      return { label: "Panelden elle kesilecek", color: "orange" }
     default:
       return { label: status || "Yok", color: "grey" }
   }
 }
 
-function typeLabel(t?: string): string {
-  if (t === "e_invoice") return "e-Fatura"
-  if (t === "e_archive") return "e-Arşiv"
-  return "—"
-}
-
 /**
- * Sipariş detayı — Parasut fatura durumu (yasal görünürlük).
- * metadata.parasut_invoice + parasut_refund_invoices.
+ * Sipariş detayı — BizimHesap fatura durumu (yasal görünürlük).
+ * metadata.bizimhesap_invoice + bizimhesap_refund_invoices.
  */
-const ParasutInvoiceWidget = () => {
+const BizimhesapInvoiceWidget = () => {
   const { id: orderId } = useParams()
   const qc = useQueryClient()
   const [retryMsg, setRetryMsg] = useState<string | null>(null)
 
   const { data, isLoading } = useQuery({
-    queryKey: ["escay-order-parasut", orderId],
+    queryKey: ["escay-order-bizimhesap", orderId],
     enabled: Boolean(orderId),
     queryFn: async () => {
       const res = await fetch(
@@ -84,10 +78,17 @@ const ParasutInvoiceWidget = () => {
   })
 
   const retryMut = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (confirmNotInBizimhesap: boolean) => {
       const res = await fetch(
-        `/admin/orders/${orderId}/parasut-invoice/retry`,
-        { method: "POST", credentials: "include" }
+        `/admin/orders/${orderId}/bizimhesap-invoice/retry`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            confirm_not_in_bizimhesap: confirmNotInBizimhesap,
+          }),
+        }
       )
       const body = await res.json().catch(() => ({}))
       if (!res.ok) {
@@ -100,18 +101,14 @@ const ParasutInvoiceWidget = () => {
       }
     },
     onSuccess: (body) => {
-      if (body.meta?.status === "issued") {
-        setRetryMsg(
-          body.skipped
-            ? "Zaten kesilmiş (idempotent)."
-            : `Kesildi: ${body.meta.invoice_number || "OK"}`
-        )
-      } else if (body.meta?.status === "error") {
+      if (body.meta?.status === "created") {
+        setRetryMsg(body.skipped ? "Zaten işlenmiş." : "BizimHesap'a işlendi.")
+      } else if (body.meta?.status === "error" || body.meta?.status === "unknown") {
         setRetryMsg(`Hata: ${body.meta.error || "bilinmiyor"}`)
       } else {
         setRetryMsg(`Durum: ${body.meta?.status || "?"}`)
       }
-      void qc.invalidateQueries({ queryKey: ["escay-order-parasut", orderId] })
+      void qc.invalidateQueries({ queryKey: ["escay-order-bizimhesap", orderId] })
     },
     onError: (err) => {
       setRetryMsg(err instanceof Error ? err.message : String(err))
@@ -120,9 +117,9 @@ const ParasutInvoiceWidget = () => {
 
   if (!orderId) return null
 
-  const inv = data?.order?.metadata?.parasut_invoice
+  const inv = data?.order?.metadata?.bizimhesap_invoice
   const refunds = Object.values(
-    data?.order?.metadata?.parasut_refund_invoices || {}
+    data?.order?.metadata?.bizimhesap_refund_invoices || {}
   )
 
   if (isLoading) {
@@ -136,19 +133,16 @@ const ParasutInvoiceWidget = () => {
   }
 
   const st = statusBadge(inv?.status)
-  const canRetry =
-    !inv ||
-    inv.status === "error" ||
-    inv.status === "pending" ||
-    inv.status === undefined
+  const uncertain = inv?.status === "unknown" || inv?.status === "pending"
+  const canSend = !inv || inv.status === "error"
 
   return (
     <Container className="p-4">
       <Heading level="h2" className="mb-2">
-        Es Çay — Fatura (Paraşüt)
+        Es Çay — Fatura (BizimHesap)
       </Heading>
       <Text size="small" className="text-ui-fg-subtle mb-3 block">
-        e-Arşiv / e-Fatura. Kesilmeyen sipariş yasal risktir.
+        Kayıt ödemede açılır. e-Arşiv / e-Fatura gönderimini BizimHesap panelinden izleyin.
       </Text>
 
       <div className="rounded-md border border-ui-border-base p-3 space-y-2">
@@ -159,38 +153,39 @@ const ParasutInvoiceWidget = () => {
               {inv.mode === "mock" ? "mock" : "canlı"}
             </Badge>
           ) : null}
-          {inv?.invoice_type ? (
-            <Badge color="grey">{typeLabel(inv.invoice_type)}</Badge>
-          ) : null}
         </div>
 
         {!inv ? (
           <Text size="small" className="text-ui-fg-subtle">
-            Henüz fatura kaydı yok (ödeme sonrası kesilir).
+            Henüz fatura kaydı yok (ödeme sonrası açılır).
           </Text>
         ) : (
           <>
-            {inv.invoice_number ? (
+            {inv.invoice_no ? (
               <Text size="small">
-                Fatura no:{" "}
-                <span className="font-mono">{inv.invoice_number}</span>
+                Belge no: <span className="font-mono">{inv.invoice_no}</span>
               </Text>
             ) : null}
-            {inv.pdf_url ? (
+            {typeof inv.total === "number" ? (
+              <Text size="small" className="text-ui-fg-subtle">
+                Tutar: {inv.total.toFixed(2)} TRY
+              </Text>
+            ) : null}
+            {inv.url ? (
               <Text size="small">
                 <a
-                  href={inv.pdf_url}
+                  href={inv.url}
                   target="_blank"
                   rel="noreferrer"
                   className="text-ui-fg-interactive underline"
                 >
-                  PDF indir
+                  BizimHesap'ta aç
                 </a>
               </Text>
             ) : null}
-            {inv.status === "error" && inv.error ? (
+            {inv.error ? (
               <Text size="small" className="text-ui-fg-error">
-                Hata: {inv.error}
+                {inv.error}
               </Text>
             ) : null}
             {typeof inv.retry_count === "number" && inv.retry_count > 0 ? (
@@ -206,18 +201,30 @@ const ParasutInvoiceWidget = () => {
           </>
         )}
 
-        {canRetry ? (
+        {canSend || uncertain ? (
           <div className="pt-2">
             <Button
               size="small"
               variant="secondary"
               disabled={retryMut.isPending}
               onClick={() => {
+                if (
+                  uncertain &&
+                  !window.confirm(
+                    `BizimHesap panelinde ${inv?.invoice_no || "bu sipariş"} için kayıt olmadığını kontrol ettiniz mi? Kayıt varsa çift fatura oluşur.`
+                  )
+                ) {
+                  return
+                }
                 setRetryMsg(null)
-                retryMut.mutate()
+                retryMut.mutate(uncertain)
               }}
             >
-              {retryMut.isPending ? "Kesiliyor…" : "Yeniden kes"}
+              {retryMut.isPending
+                ? "Gönderiliyor…"
+                : uncertain
+                  ? "Panelde yok, yeniden gönder"
+                  : "Yeniden gönder"}
             </Button>
             {retryMsg ? (
               <Text size="small" className="mt-1 block text-ui-fg-subtle">
@@ -235,40 +242,15 @@ const ParasutInvoiceWidget = () => {
           </Text>
           {refunds.map((r) => {
             const rs = statusBadge(r.status)
-            const key = r.return_id || r.invoice_number || "refund"
             return (
               <div
-                key={key}
+                key={r.return_id || "refund"}
                 className="rounded-md border border-ui-border-base p-2 space-y-1"
               >
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Badge color={rs.color}>{rs.label}</Badge>
-                  {r.invoice_number ? (
-                    <Text size="small" className="font-mono">
-                      {r.invoice_number}
-                    </Text>
-                  ) : null}
-                </div>
+                <Badge color={rs.color}>{rs.label}</Badge>
                 {typeof r.amount === "number" ? (
                   <Text size="small" className="text-ui-fg-subtle">
                     Tutar: {r.amount.toFixed(2)} TRY
-                  </Text>
-                ) : null}
-                {r.status === "error" && r.error ? (
-                  <Text size="small" className="text-ui-fg-error">
-                    {r.error}
-                  </Text>
-                ) : null}
-                {r.pdf_url ? (
-                  <Text size="small">
-                    <a
-                      href={r.pdf_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-ui-fg-interactive underline"
-                    >
-                      PDF
-                    </a>
                   </Text>
                 ) : null}
               </div>
@@ -284,4 +266,4 @@ export const config = defineWidgetConfig({
   zone: "order.details.side.after",
 })
 
-export default ParasutInvoiceWidget
+export default BizimhesapInvoiceWidget

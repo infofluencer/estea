@@ -48,8 +48,8 @@ CONTACT_INBOX=info@esteacay.com
 RETURNS_INBOX=info@esteacay.com
 UNPAID_ORDER_TIMEOUT_MINUTES=30
 
-# Canlı-dışı işareti: gerçek iade engellenir, Omnisend/CAPI kapalı, Paraşüt DRY-RUN
-# zorlanır (PARASUT_DRY_RUN ne olursa olsun), OID öneki STG. Canlıya geçerken BOŞALT.
+# Canlı-dışı işareti: gerçek iade engellenir, Omnisend/CAPI kapalı, BizimHesap DRY-RUN
+# zorlanır (BIZIMHESAP_DRY_RUN ne olursa olsun), OID öneki STG. Canlıya geçerken BOŞALT.
 PAYTR_OID_PREFIX=STG
 PAYTR_TEST_MODE=1
 PAYTR_MERCHANT_ID=
@@ -65,11 +65,11 @@ SMTP_PASS=<google app password>
 SMTP_FROM=Es Çay <info@esteacay.com>
 SMTP_SECURE=false
 
-# Paraşüt: Es Çay'ın kendi hesabı (K14); Mareen kimlikleri kullanılmaz. Hesap açılana dek PARASUT_CLIENT_ID vb. boş → mock.
-PARASUT_ENV=test
-PARASUT_DRY_RUN=true
-PARASUT_DEFAULT_VAT_RATE=1
-PARASUT_SHIPPING_VAT_RATE=20
+# BizimHesap: Es Çay'ın kendi hesabı (K14). Firm ID verilene dek boş → mock. Test ortamı yok.
+BIZIMHESAP_FIRM_ID=
+BIZIMHESAP_DRY_RUN=true
+BIZIMHESAP_DEFAULT_VAT_RATE=1
+BIZIMHESAP_SHIPPING_VAT_RATE=20
 
 SHIPPING_CARRIER=
 SHIPPING_CARRIER_TEST_MODE=true
@@ -142,9 +142,9 @@ ulaşamadığı her dakika "para çekildi, sipariş iptal" riskidir (Mareen #9).
 3. DNS: `api`, `market`, apex/`www` → 187.77.69.91; Generate Domain'leri sil. Geçiş sırasında callback
    sayfası eski IP'ye giderse PayTR retry eder; temizlik işi (`UNPAID_ORDER_TIMEOUT_MINUTES`) geç gelen
    success'i artık iade etmez, uyarı maili + elle inceleme ister.
-4. backend: tüm `http://<…>` → `https://…`; `COOKIE_SECURE` satırını sil; `PARASUT_ENV=prod`,
-   `PARASUT_DRY_RUN=false` mali müşavir onayıyla. Not: `PAYTR_OID_PREFIX` dolu kaldıkça Paraşüt taslakta
-   kalır, e-belge kesilmez; gerçek fatura ancak 7. adımda önek boşalınca başlar. Deploy sonrası
+4. backend: tüm `http://<…>` → `https://…`; `COOKIE_SECURE` satırını sil; `BIZIMHESAP_DRY_RUN=false`
+   mali müşavir onayıyla. Not: `PAYTR_OID_PREFIX` dolu kaldıkça BizimHesap'a hiçbir şey gönderilmez;
+   gerçek kayıt ancak 7. adımda önek boşalınca başlar. Deploy sonrası
    `/health/revision` commit hash'i push edilenle aynı mı kontrol et.
 5. frontend: `SITE_URL=https://market.esteacay.com`, `MEDUSA_BACKEND_URL=https://api.esteacay.com`, `COOKIE_SECURE` sil → **rebuild** (NEXT_PUBLIC_* gömülü).
 6. landing: `NEXT_PUBLIC_SHOP_URL=https://market.esteacay.com`, `NEXT_PUBLIC_SITE_URL=https://esteacay.com` → rebuild.

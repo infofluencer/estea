@@ -33,8 +33,6 @@ export type OrderConfirmationData = {
   taxTotal?: number | string | null
   total?: number | string | null
   shippingAddress?: Parameters<typeof formatAddress>[0]
-  /** Varsa Parasut PDF (çoğu zaman ayrı fatura maili gider; burada yedek). */
-  invoicePdfUrl?: string | null
   /** Havale siparişi verildi, ödeme bekleniyor → IBAN bloğu + farklı başlık. */
   /** Havale ile verilip admin'den "havale alındı" onaylanan sipariş — onay mailinde belirtilir. */
   paidByBankTransfer?: boolean
@@ -84,7 +82,6 @@ export function buildOrderConfirmationEmail(data: OrderConfirmationData): {
     shippingAddress,
     trackingUrl,
     trackingFormUrl,
-    invoicePdfUrl,
     email,
     bankTransfer,
     paidByBankTransfer,
@@ -165,18 +162,6 @@ export function buildOrderConfirmationEmail(data: OrderConfirmationData): {
       ? `\nSipariş takibi: ${trackingFormUrl}\n`
       : ""
 
-  const invoiceHtml = invoicePdfUrl
-    ? `<p style="margin:0 0 24px;text-align:center;">
-      <a href="${escapeHtml(invoicePdfUrl)}" target="_blank" style="display:inline-block;padding:12px 24px;font-size:13px;font-weight:600;color:${EMAIL_STYLES.brandColor};text-decoration:underline;">
-        Faturanızı indirin (PDF)
-      </a>
-    </p>`
-    : ""
-
-  const invoiceText = invoicePdfUrl
-    ? `\nFaturanızı indirin: ${invoicePdfUrl}\n`
-    : ""
-
   const itemRowsHtml = items
     .map((item) => {
       const qty = item.quantity ?? 1
@@ -216,7 +201,6 @@ export function buildOrderConfirmationEmail(data: OrderConfirmationData): {
 
     ${bankHtml}
     ${trackingHtml}
-    ${invoiceHtml}
 
     <h2 style="margin:0 0 12px;font-size:16px;color:${EMAIL_STYLES.brandColor};">Ürünler</h2>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
@@ -272,7 +256,7 @@ export function buildOrderConfirmationEmail(data: OrderConfirmationData): {
 ${intro}
 
 Sipariş No: #${displayId}
-${bankText}${trackingText}${invoiceText}
+${bankText}${trackingText}
 Ürünler:
 ${itemRowsText}
 

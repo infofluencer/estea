@@ -37,6 +37,8 @@ export type OpsEventKind =
   | "exchange.shipped"
   | "exchange.failed"
   | "contract.failed"
+  | "invoice.failed"
+  | "invoice.refund_manual"
 
 export type OpsEventInput = {
   kind: OpsEventKind
@@ -75,6 +77,8 @@ const KIND_LABEL: Record<OpsEventKind, string> = {
   "exchange.shipped": "Değişim gönderisi açıldı",
   "exchange.failed": "Değişim gönderisi açılamadı",
   "contract.failed": "Sözleşme PDF'i oluşturulamadı",
+  "invoice.failed": "Fatura oluşturulamadı",
+  "invoice.refund_manual": "İade faturası elle kesilecek",
 }
 
 /** Workflow/MedusaError düz obje gelebilir — "[object Object]" yerine mesaj. */

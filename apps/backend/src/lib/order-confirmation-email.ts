@@ -71,14 +71,6 @@ export async function sendOrderConfirmationEmail(
       ? Number(coerceAmount(order.item_total) ?? 0) + discountForDisplay
       : (orderAny.item_subtotal ?? order.item_total))
 
-  const parasutInv = orderAny.metadata?.parasut_invoice as
-    | { pdf_url?: string; status?: string }
-    | undefined
-  const invoicePdfUrl =
-    parasutInv?.status === "issued" && parasutInv.pdf_url
-      ? parasutInv.pdf_url
-      : null
-
   const { subject, html, text } = buildOrderConfirmationEmail({
     displayId,
     email,
@@ -111,7 +103,6 @@ export async function sendOrderConfirmationEmail(
     taxTotal: coerceAmount(order.tax_total),
     total: coerceAmount(order.total),
     shippingAddress: order.shipping_address,
-    invoicePdfUrl,
     bankTransfer: opts.bankTransfer ?? null,
     paidByBankTransfer: !opts.bankTransfer && orderAny.metadata?.payment_method === "bank_transfer",
   })

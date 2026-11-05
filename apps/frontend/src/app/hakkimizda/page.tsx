@@ -26,7 +26,7 @@ export default function AboutPage() {
             Çayın lezzetine inandık.
           </h1>
           <p className="mt-7 max-w-[30ch] text-[clamp(1.2rem,1.6vw,1.45rem)] leading-[1.45] font-medium text-ink">
-            Rize ve Artvin’in yüksek bahçelerinden gelen yaprağı katkısız harmanlıyoruz. Sisin geç kalktığı yamaçlarda yavaş
+            Karadeniz’in yüksek bahçelerinden gelen yaprağı katkısız harmanlıyoruz. Sisin geç kalktığı yamaçlarda yavaş
             büyüyen yaprak, aceleye getirilmeden demlenince kendini gösterir.
           </p>
           <p className="mt-5 max-w-[42ch] text-[1rem] leading-relaxed text-ink/75">

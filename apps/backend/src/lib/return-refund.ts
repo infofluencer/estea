@@ -172,7 +172,7 @@ async function alertRefundFailed(
     ? `Havale siparişi iadesi elle yapılmalı (${amount} TL)`
     : `PayTR iadesi başarısız (${amount} TL)`
   const detail = meta.manual_required
-    ? "Ödeme PayTR ile alınmamış. Müşteriye IBAN'a havale yapın, Paraşüt'te iade faturasını elle kesin, müşteriye bilgi verin."
+    ? "Ödeme PayTR ile alınmamış. Müşteriye IBAN'a havale yapın, BizimHesap'ta iade faturasını elle kesin, müşteriye bilgi verin."
     : `Hata: ${meta.error || "bilinmiyor"}. Sipariş sayfasında iade kutusundan "Tekrar dene".`
   try {
     await recordOpsEvent(scope, {

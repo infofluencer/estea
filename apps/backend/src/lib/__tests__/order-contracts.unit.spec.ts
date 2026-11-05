@@ -32,7 +32,7 @@ const order: ContractOrder = {
   },
   billing_address: null,
   items: [
-    { product_title: "Rize Siyah Çay", variant_title: "500 g", variant_sku: "ESC-1001", quantity: 1, unit_price: 1299.9, total: 1299.9 },
+    { product_title: "Karadeniz Siyah Çay", variant_title: "500 g", variant_sku: "ESC-1001", quantity: 1, unit_price: 1299.9, total: 1299.9 },
     { product_title: "Bergamot Çay", variant_title: "Default", quantity: 2, unit_price: 450, total: 900 },
   ],
 }
@@ -59,7 +59,7 @@ describe("order-contracts", () => {
     expect(d.recipient.name).toBe("Ayşe Yılmaz")
     expect(d.billing.address).toContain("Çiçek Sok.")
     expect(d.items).toEqual([
-      { name: "Rize Siyah Çay - 500 g (ESC-1001)", quantity: 1, total: expect.stringContaining("1.299,90") },
+      { name: "Karadeniz Siyah Çay - 500 g (ESC-1001)", quantity: 1, total: expect.stringContaining("1.299,90") },
       { name: "Bergamot Çay", quantity: 2, total: expect.stringContaining("900,00") },
     ])
     expect(d.totals.map((t) => t.label)).toEqual(["Ara Toplam", "İndirim", "Kargo", "Toplam (KDV dahil)"])

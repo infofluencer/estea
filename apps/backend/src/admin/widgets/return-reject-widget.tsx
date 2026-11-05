@@ -485,7 +485,7 @@ const ReturnRejectWidget = () => {
                   <Text size="small" className="text-ui-fg-error">
                     Ödeme PayTR ile alınmamış (havale).{" "}
                     {(r.metadata.paytr_refund.amount ?? 0).toFixed(2)} TL&apos;yi
-                    müşterinin IBAN&apos;ına havale edin, Paraşüt&apos;te iade
+                    müşterinin IBAN&apos;ına havale edin, BizimHesap&apos;ta iade
                     faturasını elle kesin ve müşteriye bilgi verin.
                   </Text>
                 ) : (

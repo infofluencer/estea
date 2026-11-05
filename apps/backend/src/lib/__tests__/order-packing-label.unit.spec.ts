@@ -19,9 +19,9 @@ const order = {
   },
   items: [
     {
-      product_title: "Rize Çayı",
+      product_title: "Karadeniz Çayı",
       variant_title: "500 g / Karton",
-      variant_sku: "RZ-500",
+      variant_sku: "KD-500",
       quantity: 2,
       variant: {
         options: [
@@ -61,7 +61,7 @@ describe("order packing label", () => {
     expect(label.displayId).toBe("1042")
     expect(label.customerName).toBe("Ayşe Yılmaz")
     expect(label.addressLines).toEqual(["Gül Sok. No:5 D:3", "Caferağa Mah.", "Kadıköy / İstanbul 34710"])
-    expect(label.lines[0]).toEqual({ title: "Rize Çayı", variant: "Gramaj: 500 g · Paket: Karton", sku: "RZ-500", quantity: 2 })
+    expect(label.lines[0]).toEqual({ title: "Karadeniz Çayı", variant: "Gramaj: 500 g · Paket: Karton", sku: "KD-500", quantity: 2 })
     expect(label.lines[1].variant).toBe("")
     expect(label.lines[2]).toEqual({ title: "Bergamot Harmanı", variant: "Gramaj: 250 g", sku: "", quantity: 3 })
     expect(label.note).toBe("Hediye paketi olsun <lütfen>")

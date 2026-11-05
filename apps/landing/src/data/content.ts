@@ -256,7 +256,7 @@ export const journey = {
 /**
  * Short history of tea on the Black Sea coast, ending with Esçay today.
  * Dates checked against public sources (laws 407/1924, 3788/1940, 3092/1984;
- * first Rize factory usually given as 1947, some sources say 1946).
+ * first Black Sea factory usually given as 1947, some sources say 1946).
  * Esçay's founding year (2019, Hayrat) is from esteacay.com/hakkimizda (Wayback 2022).
  */
 export const history = {

@@ -100,7 +100,7 @@ export async function getBankTransferOrderState(
 /**
  * Admin "Havale alındı": session'a received yaz → processPaymentWorkflow
  * SUCCESSFUL (authorize + capture) → payment.captured subscriber'ları
- * (onay maili, kargo, Paraşüt) PayTR'deki gibi çalışır.
+ * (onay maili, kargo, BizimHesap) PayTR'deki gibi çalışır.
  *
  * Aynı sipariş için eşzamanlı iki tıklama lock ile tek capture'a iner.
  */

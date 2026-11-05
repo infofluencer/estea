@@ -16,7 +16,7 @@ import { isTrDistrictOf } from "@escay/shared/tr-districts"
 export { listTrDistricts } from "@escay/shared/tr-districts"
 export { listTrCities, type TrCityOption } from "@escay/shared/tr-address"
 
-/** Backend Parasut: individual → e_archive yolu; corporate → VKN ile e_invoice kontrolü. */
+/** Backend BizimHesap faturası: corporate → VKN + vergi dairesi müşteri kartına gider. */
 export type CheckoutInvoiceType = "individual" | "corporate"
 
 export type CheckoutAddressInput = {

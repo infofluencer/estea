@@ -54,7 +54,7 @@ const SHIPPING_CONFIG = {
   freeOver: envNumber("FREE_SHIPPING_THRESHOLD", 0),
 }
 
-/** Çay KDV oranı (%) — TODO(K2): mali müşavir teyidi. PARASUT_DEFAULT_VAT_RATE ile aynı olmalı. */
+/** Çay KDV oranı (%) — TODO(K2): mali müşavir teyidi. BIZIMHESAP_DEFAULT_VAT_RATE ile aynı olmalı. */
 const KDV_RATE = envNumber("KDV_RATE", 1)
 
 /** Medusa shipping option provider_id = `{identifier}_{config.id}` */
