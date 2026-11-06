@@ -118,6 +118,33 @@
   }
 }
 
+/* Blog başlığındaki bahçe şeridi: soldan açılır, içindeki kare yerine oturur. */
+.shutter {
+  animation: shutter 1.1s cubic-bezier(0.7, 0, 0.2, 1) 0.15s both;
+}
+.shutter-img {
+  animation: shutter-img 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both;
+}
+@keyframes shutter {
+  from {
+    clip-path: inset(0 100% 0 0 round 1rem);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 1rem);
+  }
+}
+@keyframes shutter-img {
+  from {
+    transform: scale(1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shutter,
+  .shutter-img {
+    animation: none;
+  }
+}
+
 /* Scroll reveal: toggled by RevealInit via IntersectionObserver. */
 [data-reveal] {
   opacity: 0;

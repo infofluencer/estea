@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import ArtPhoto from '@/components/ui/ArtPhoto'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import SkipLink from '@/components/layout/SkipLink'
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: { title: 'Esçay blog', description: blogPage.lead, locale: 'tr_TR', type: 'website' },
 }
 
-/** Yazılar çay süzgeciyle (BlogIndex); kapanışta demleme karesi ve mağaza. */
+/** Yazılar çay süzgeciyle (BlogIndex); kapanış tam kırmızı alanda mağazaya çağırır. */
 export default function BlogPage() {
   return (
     <>
@@ -24,19 +23,18 @@ export default function BlogPage() {
       <Navbar tone="ink" />
       <main id="icerik">
         <BlogIndex />
-        <section aria-labelledby="kapanis-baslik" className="relative z-10 grid bg-brand text-cream lg:grid-cols-2">
-          <div className="relative aspect-[40/39] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[34rem]">
-            <ArtPhoto photo={{ src: '/yolculuk/demle-1.jpg', mobile: '/yolculuk/demle-1-k.jpg', alt: 'Tezgâhta ince belli bardakta tavşan kanı çay ve Esçay Gold paketi' }} />
-          </div>
-          <div className="flex flex-col justify-center px-5 py-14 sm:px-8 lg:px-16" data-reveal>
-            <h2 id="kapanis-baslik" className="headline text-[clamp(2.4rem,5vw,4.6rem)] leading-[0.98] tracking-[-0.025em]">
+        <section aria-labelledby="kapanis-baslik" className="relative z-10 bg-brand text-cream">
+          <div className="mx-auto flex max-w-[90rem] flex-col justify-between gap-12 lg:min-h-[64svh] lg:gap-16 px-5 pt-24 pb-14 sm:px-8 lg:px-10 lg:pt-32 lg:pb-16">
+            <h2 id="kapanis-baslik" data-reveal className="headline text-[clamp(3.6rem,11vw,10rem)] leading-[0.92] tracking-[-0.035em]">
               {blogPage.closeTitle}
             </h2>
-            <p className="mt-5 max-w-[42ch] text-[1.2rem] leading-[1.5]">{blogPage.closeLead}</p>
-            <div className="mt-8">
-              <Btn href={shopProductsUrl} variant="cream" external>
-                {blogPage.closeCta}
-              </Btn>
+            <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between" data-reveal style={{ '--reveal-delay': '90ms' } as React.CSSProperties}>
+              <p className="max-w-[40ch] text-[1.25rem] leading-[1.5]">{blogPage.closeLead}</p>
+              <div className="shrink-0">
+                <Btn href={shopProductsUrl} variant="cream" external>
+                  {blogPage.closeCta}
+                </Btn>
+              </div>
             </div>
           </div>
         </section>
