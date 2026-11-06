@@ -3,6 +3,9 @@ export const shopUrl = (process.env.NEXT_PUBLIC_SHOP_URL || 'http://localhost:30
 
 export const shopProductsUrl = `${shopUrl}/urun-kategori`
 
+/** Mağaza ürün sayfası; handle Medusa'daki ürün handle'ı (apps/backend/src/lib/wc-import-plan.ts). */
+export const shopProduct = (handle: string) => `${shopUrl}/urun/${handle}`
+
 /** Doodle shown next to the link; keys map to `@/components/ui/Doodles`. */
 export type NavIcon = 'sprig' | 'hills' | 'teapot' | 'quill' | 'glass'
 

@@ -8,6 +8,7 @@ import BlendsHeader from '@/components/blends/BlendsHeader'
 import BlendSpreads from '@/components/blends/BlendSpreads'
 import BlendCompare from '@/components/blends/BlendCompare'
 import Brew from '@/components/blends/Brew'
+import Shelf from '@/components/sections/Shelf'
 
 export const metadata: Metadata = {
   title: 'Harmanlar — Esçay',
@@ -31,6 +32,7 @@ export default function BlendsPage() {
         <BlendSpreads />
         <BlendCompare />
         <Brew />
+        <Shelf />
       </main>
       <Footer />
       <RevealInit />

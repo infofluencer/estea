@@ -4,6 +4,7 @@
  * ifadeleriyle sınırlı: elek partisi, sürgün, hasat ayı, içim, dem rengi, paketler.
  * Sıra ana sayfadaki koleksiyonla aynı.
  */
+import { shopProduct } from '@/lib/site'
 import type { Tone } from './content'
 
 export type Blend = {
@@ -83,7 +84,7 @@ export const blends: Blend[] = [
     ],
     compare: { yaprak: 'Sürgünün ilk iki yaprağı', elek: 'Kurutma sonrası ilk parti', icim: 'Hafif, tatlı, burukluğu az', dem: 'Açık kırmızı', paket: '500 g, 1 kg, 5 kg' },
     image: '/estea-gold-cay-1000-gr.png',
-    href: 'https://market.esteacay.com/u/estea-gold-cay-1000-gr/',
+    href: shopProduct('gold-karadeniz-cayi'),
   },
   {
     slug: 'ilk-hasat',
@@ -103,7 +104,7 @@ export const blends: Blend[] = [
     ],
     compare: { yaprak: 'İki buçuk yapraklı sürgün', elek: 'Mayıs ilk hasadının özel kısmı', icim: 'Buruk, sert, yoğun demli', dem: 'Yoğun kırmızı', paket: '500 g, 1 kg, 5 kg' },
     image: '/estea-hasat-cay-1000-gr.png',
-    href: 'https://market.esteacay.com/u/es-tea-ilk-hasat-cay-5000-gr/',
+    href: shopProduct('ilk-hasat-cay'),
   },
   {
     slug: 'karadeniz',
@@ -123,7 +124,7 @@ export const blends: Blend[] = [
     ],
     compare: { yaprak: 'Elek dışı, iri yaprak', elek: 'Elek dışında kalan kısım', icim: 'Yumuşak, normal koyulukta', dem: 'Normal koyuluk', paket: '500 g, 1 kg, 5 kg' },
     image: '/estea-karadeniz-cayi-1000-gr.png',
-    href: 'https://market.esteacay.com/u/estea-karadeniz-cay-1000-gr/',
+    href: shopProduct('karadeniz-cayi'),
   },
   {
     slug: 'tiryaki',
@@ -143,6 +144,6 @@ export const blends: Blend[] = [
     ],
     compare: { yaprak: 'Elek altı, ince yaprak', elek: 'Elek altı için ayrılan kısım', icim: 'Yumuşak, aroması en yoğun', dem: 'Tavşan kanı', paket: '500 g, 1 kg' },
     image: '/estea-tiryaki-1000-gr-cay.png',
-    href: 'https://market.esteacay.com/u/es-tea-tiryaki-cayi-1000-gr/',
+    href: shopProduct('tiryaki-cayi'),
   },
 ]

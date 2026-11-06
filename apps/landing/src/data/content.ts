@@ -2,6 +2,7 @@
  * Landing copy & data. Everything here is a DRAFT — placeholder metin,
  * gerçek değerlerle (tat notları, yorumlar, rakamlar) değiştirilmeli.
  */
+import { shopProduct } from '@/lib/site'
 import { posts } from './posts'
 
 export const hero = {
@@ -80,7 +81,7 @@ export const products: Product[] = [
     note: 'Elekten çıkan ilk parti, sürgünün ilk iki yaprağı. Hafif, tatlı içim; demi kırmızıya çalar.',
     strength: 'Hafif',
     image: '/estea-gold-cay-1000-gr.png',
-    href: 'https://market.esteacay.com/u/estea-gold-cay-1000-gr/',
+    href: shopProduct('gold-karadeniz-cayi'),
   },
   {
     slug: 'ilk-hasat',
@@ -92,7 +93,7 @@ export const products: Product[] = [
     note: 'Mayıs sürgünü. Buruk, sert ve yoğun demli; koyu sevenlerin sabah çayı.',
     strength: 'Sert',
     image: '/estea-hasat-cay-1000-gr.png',
-    href: 'https://market.esteacay.com/u/es-tea-ilk-hasat-cay-5000-gr/',
+    href: shopProduct('ilk-hasat-cay'),
   },
   {
     slug: 'tiryaki',
@@ -104,7 +105,7 @@ export const products: Product[] = [
     note: 'Aroması en yoğun harman. Tavşan kanı dem, yumuşak içim; günün her saati.',
     strength: 'Yoğun',
     image: '/estea-tiryaki-1000-gr-cay.png',
-    href: 'https://market.esteacay.com/u/es-tea-tiryaki-cayi-1000-gr/',
+    href: shopProduct('tiryaki-cayi'),
   },
   {
     slug: 'karadeniz',
@@ -116,7 +117,7 @@ export const products: Product[] = [
     note: 'Normal koyulukta, yumuşak içimli demlik çayı. Evin çayı.',
     strength: 'Orta',
     image: '/estea-karadeniz-cayi-1000-gr.png',
-    href: 'https://market.esteacay.com/u/estea-karadeniz-cay-1000-gr/',
+    href: shopProduct('karadeniz-cayi'),
   },
   {
     slug: 'gold-5000',
@@ -128,7 +129,7 @@ export const products: Product[] = [
     note: 'Aynı Gold harmanı, kalabalık sofralar için büyük paket.',
     strength: 'Hafif',
     image: '/estea-gold-cay-5000-gr.png',
-    href: 'https://market.esteacay.com/u/estea-gold-cay-5000-gr/',
+    href: shopProduct('gold-karadeniz-cayi'),
   },
 ]
 

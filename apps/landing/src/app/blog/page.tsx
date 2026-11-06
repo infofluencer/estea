@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
+import ArtPhoto from '@/components/ui/ArtPhoto'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import SkipLink from '@/components/layout/SkipLink'
 import RevealInit from '@/components/ui/RevealInit'
 import LeafCursor from '@/components/ui/LeafCursor'
-import PostCard from '@/components/blog/PostCard'
-import { blogPage, posts } from '@/data/posts'
+import Btn from '@/components/ui/Btn'
+import BlogIndex from '@/components/blog/BlogIndex'
+import { blogPage } from '@/data/posts'
+import { shopProductsUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Blog — Esçay',
@@ -14,37 +16,28 @@ export const metadata: Metadata = {
   openGraph: { title: 'Esçay blog', description: blogPage.lead, locale: 'tr_TR', type: 'website' },
 }
 
-/**
- * Yazılar, ana sayfadaki blog bölümünün düzeninde: mühür, başlık ve giriş
- * ilk sütunda yapışkan; en yeni yazı iki sütuna yayılır, kalanlar üçer
- * sütunlu sıralarda devam eder.
- */
+/** Yazılar çay süzgeciyle (BlogIndex); kapanışta demleme karesi ve mağaza. */
 export default function BlogPage() {
-  const [latest, ...rest] = posts
   return (
     <>
       <SkipLink />
       <Navbar tone="ink" />
       <main id="icerik">
-        <section aria-labelledby="blog-baslik" className="relative z-10 bg-linen pt-32 pb-28 text-ink sm:pt-40 sm:pb-36">
-          <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-10 px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:gap-y-12 xl:gap-x-12">
-            <header className="border-t border-ink/15 pt-6 sm:col-span-2 lg:col-span-1 lg:row-span-2" data-reveal>
-              <div className="lg:sticky lg:top-28">
-                <Image src="/logo.png" alt="" width={341} height={182} className="h-20 w-auto -rotate-[8deg] drop-shadow-[0_8px_14px_rgba(0,0,0,0.22)] sm:h-24" />
-                <h1 id="blog-baslik" className="headline mt-8 text-[clamp(2.4rem,3vw,2.8rem)] leading-[1] tracking-[-0.025em] text-ink">
-                  {blogPage.title}
-                </h1>
-                <p className="mt-4 max-w-[24ch] text-[1.2rem] leading-[1.5] text-ink/75">{blogPage.lead}</p>
-              </div>
-            </header>
-            <div className="sm:col-span-2 lg:col-span-3" data-reveal style={{ '--reveal-delay': '80ms' } as React.CSSProperties}>
-              <PostCard post={latest} wide priority />
+        <BlogIndex />
+        <section aria-labelledby="kapanis-baslik" className="relative z-10 grid bg-brand text-cream lg:grid-cols-2">
+          <div className="relative aspect-[40/39] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[34rem]">
+            <ArtPhoto photo={{ src: '/yolculuk/demle-1.jpg', mobile: '/yolculuk/demle-1-k.jpg', alt: 'Tezgâhta ince belli bardakta tavşan kanı çay ve Esçay Gold paketi' }} />
+          </div>
+          <div className="flex flex-col justify-center px-5 py-14 sm:px-8 lg:px-16" data-reveal>
+            <h2 id="kapanis-baslik" className="headline text-[clamp(2.4rem,5vw,4.6rem)] leading-[0.98] tracking-[-0.025em]">
+              {blogPage.closeTitle}
+            </h2>
+            <p className="mt-5 max-w-[42ch] text-[1.2rem] leading-[1.5]">{blogPage.closeLead}</p>
+            <div className="mt-8">
+              <Btn href={shopProductsUrl} variant="cream" external>
+                {blogPage.closeCta}
+              </Btn>
             </div>
-            {rest.map((post, i) => (
-              <div key={post.slug} data-reveal style={{ '--reveal-delay': `${(i % 3) * 80}ms` } as React.CSSProperties}>
-                <PostCard post={post} />
-              </div>
-            ))}
           </div>
         </section>
       </main>

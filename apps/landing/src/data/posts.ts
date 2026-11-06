@@ -4,6 +4,8 @@
  * düzeltildi, cümleler olduğu gibi; rakip marka adı tek yazıdan çıkarıldı.
  * Sırada en yeni başta. Arşivde yazı görselleri yok; kareler public/blog ve public/yolculuk'tan.
  */
+import type { TeaSlug } from './shelf'
+
 export type PostBlock =
   | { type: 'p'; text: string }
   | { type: 'h2'; text: string }
@@ -22,6 +24,8 @@ export type Post = {
   alt: string
   /** Listede ve meta açıklamasında görünen tek cümle. */
   excerpt: string
+  /** Yazının çayı: blogdaki süzgeç ve yazı sayfasındaki paket buradan gelir. */
+  teas: readonly { slug: TeaSlug; why: string }[]
   body: readonly PostBlock[]
 }
 
@@ -30,6 +34,16 @@ export const blogPage = {
   lead: 'Karadeniz çayı, demleme ve harmanlar üzerine Esçay’ın yazıları.',
   more: 'Diğer yazılar',
   back: 'Tüm yazılar',
+  /** Çay süzgeci. */
+  pick: 'Çayınızı seçin, yazılar ona göre süzülsün.',
+  all: 'Bütün çaylar',
+  listTitle: 'Bütün yazılar',
+  teaTitle: (name: string) => `${name} ile okunacak yazılar`,
+  teaCta: (name: string) => `${name} mağazada`,
+  side: 'Bu yazının çayı',
+  closeTitle: 'Sıra demlemede.',
+  closeLead: 'Yazılarda andığımız çayların hepsi mağazada; dökme harmanlar, süzen poşet ve bitki çayları.',
+  closeCta: 'Mağazaya git',
 }
 
 export const posts: Post[] = [
@@ -41,6 +55,7 @@ export const posts: Post[] = [
     image: '/blog/sutlu-cay-nedir.jpg',
     alt: 'Fincanda sütlü çay',
     excerpt: 'Çaya süt katmak 17. yüzyılda Avrupa’da yayıldı; demin üstüne azar azar süt, hafif kahverengi tona gelince durun.',
+    teas: [{ slug: 'ilk-hasat', why: 'Süt yoğun demi sever; koyu içenlerin sabah çayı.' }],
     body: [
       { type: 'p', text: 'Sütlü çay 17. yüzyılda Avrupa’da yaygınlaşmış bir çay türüdür. Çaya süt katmak zamanla İngilizler tarafından benimsenmiştir. Yıllar içinde İngiliz sömürgesinden ayrılan Hindistan, Singapur gibi ülkeler de sütlü çayı benimsemeye başlamıştır.' },
       { type: 'h2', text: 'Sütlü çay nasıl yapılır?' },
@@ -57,9 +72,10 @@ export const posts: Post[] = [
     title: 'Poşet çay ne zaman bulundu?',
     date: '2021-11-23',
     dateLabel: '23 Kasım 2021',
-    image: '/blog/karadeniz-usulu-cay-nasil-demlenir.jpg',
-    alt: 'Dökme demlik ve bardakta çay',
+    image: '/blog/suzen-poset.jpg',
+    alt: 'Süzen poşetler, ince belli bardakta çay ve demlik poşet kutusu',
     excerpt: 'İlk patent 1896’da alındı; 1904’te New York’ta ipek keselerle gönderilen numuneler poşet çayı yaygınlaştırdı.',
+    teas: [{ slug: 'demlik-poset', why: 'Poşetin demliğe uyarlanmış hâli, ilk hasat yaprağından.' }],
     body: [
       { type: 'p', text: 'Poşet çaylar hayatımızı kolaylaştıran, bir yandan da hızlı ve pratik çay demleme keyfi sunan bir buluştur. Çay her toplumda farklı bir yer edinmiş, her zaman çok sevilen bir içecek olmuştur. Peki dökme çaydan sonra poşet çay ne zaman bulundu?' },
       { type: 'h2', text: 'Poşet çay' },
@@ -78,6 +94,7 @@ export const posts: Post[] = [
     image: '/blog/earl-grey-cay-nedir.jpg',
     alt: 'Buharı tüten bir bardak siyah çay',
     excerpt: 'Kaliteli yaprak, kokusuz saklama, porselen ya da cam demlik ve taze içme suyu: iyi demin dört şartı.',
+    teas: [{ slug: 'karadeniz', why: 'Gün boyu demlikte durmaya alışkın evin çayı.' }],
     body: [
       { type: 'p', text: 'Siyah çay demlemek ülkemizde en önemli konulardan biridir. Sabah kahvaltısıyla başlayan çay gün boyu devam eder. Çay iyi demlenmediğinde tadı bozulur, istenmeyen bir lezzet ortaya çıkar. Bu yüzden demlemenin birkaç püf noktası vardır.' },
       { type: 'h2', text: 'Nelere dikkat etmeli?' },
@@ -102,6 +119,7 @@ export const posts: Post[] = [
     imageMobile: '/yolculuk/topla-1-k.jpg',
     alt: 'Karadeniz bahçelerinde çay hasadı',
     excerpt: 'Hasat edilmeyen çay on altı metrelik ağaç olur; Türkiye’de çayı 1924’te Karadeniz’de Zihni Derin yetiştirdi.',
+    teas: [{ slug: 'karadeniz', why: 'Yazıda andığımız, kışı kar altında geçen bahçelerin çayı.' }],
     body: [
       { type: 'p', text: 'Siyah çay Türkiye’de en çok tüketilen çay çeşididir. Lezzetli, yoğun kıvamlı çayı günün her anında içmeye bayılırız. Çay tiryakilerinin bile bilmediği on bilgi:' },
       {
@@ -131,6 +149,7 @@ export const posts: Post[] = [
     imageMobile: '/yolculuk/demle-1-k.jpg',
     alt: 'Tezgâhta ince belli bardakta tavşan kanı çay',
     excerpt: 'Yaprak çay, kaynamadan hemen önce alınan taze su, ısıtılmış demlik ve metal olmayan kap: iyi fincanın on kuralı.',
+    teas: [{ slug: 'gold', why: 'İlk kural yaprak çay: elekten çıkan ilk parti, hafif ve tatlı.' }],
     body: [
       { type: 'p', text: 'Sıcak çayın tatlı aroması bütün duyuları uyandırır. Çay severler hem sağlıklı hem yatıştırıcı olan bu içeceği iyi demlemek ister. Kendinize ve misafirlerinize en iyi fincanı hazırlamak için çay ustası olmanız gerekmez; şu birkaç ipucu çayı hazırlama biçiminizi değiştirecek.' },
       {
@@ -159,6 +178,10 @@ export const posts: Post[] = [
     imageMobile: '/yolculuk/denetle-avuc-k.jpg',
     alt: 'Avuçta dört boy kuru çay yaprağı',
     excerpt: 'Bir paket Gold’u büyük bir kaba boşaltın, bergamotlu Earl Grey’i azar azar katıp karıştırın; harman homojen olsun.',
+    teas: [
+      { slug: 'gold', why: 'Tarifin tabanı: büyük kaba önce bir paket Gold.' },
+      { slug: 'earl-grey', why: 'Azar azar katılan bergamotlu yarısı.' },
+    ],
     body: [
       { type: 'p', text: 'Çay içmeyi seremoni ya da ritüel gibi seven çok müdavim vardır. Bize göre bu, iyi bir harman ya da karışımla çok özel ve güzel hâle gelir.' },
       { type: 'p', text: 'Siyah çayı harmanlarken en çok tercih ettiğimiz, damak zevkimize de en uygun yöntem Earl Grey ile karıştırmaktır. Böylece bergamot yağının güzelliğini, tatlılığını, kokusunu ve burukluğunu hissedersiniz; aroması da rahatsız edecek kadar baskın olmaz.' },
@@ -174,6 +197,7 @@ export const posts: Post[] = [
     image: '/blog/dokme-cayin-puf-noktalari.jpg',
     alt: 'Sıra sıra çay bahçesi',
     excerpt: 'Bizim siyah dediğimiz çay Çinliler için kırmızıdır; kişi başı tüketimde Türkiye yılda üç buçuk kiloyla ilk sırada.',
+    teas: [{ slug: 'tiryaki', why: 'Yılda üç buçuk kilo içen bir ülkenin aroması en yoğun harmanı.' }],
     body: [
       { type: 'p', text: 'Çay içmek ata sporlarımızdan biridir. Yanında çekirdek çitlemek gibi sevdiğimiz başka etkinlikler de vardır. Uzun dost sohbetlerinde üzerine konuşabileceğiniz birkaç ilginç bilgi:' },
       {

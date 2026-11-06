@@ -9,6 +9,7 @@ import LeafCursor from '@/components/ui/LeafCursor'
 import Btn from '@/components/ui/Btn'
 import PostBody from '@/components/blog/PostBody'
 import PostCard from '@/components/blog/PostCard'
+import PostTeas from '@/components/blog/PostTeas'
 import { blogPage, postBySlug, posts } from '@/data/posts'
 
 type Params = { params: Promise<{ slug: string }> }
@@ -57,13 +58,22 @@ export default async function PostPage({ params }: Params) {
                 <ArtPhoto photo={{ src: post.image, mobile: post.imageMobile, alt: post.alt }} priority />
               </div>
             </header>
-            <div className="mt-14 max-w-[62ch] lg:mt-20" data-reveal>
-              <PostBody blocks={post.body} />
-            </div>
-            <div className="mt-12">
-              <Btn href="/blog" variant="garden">
-                {blogPage.back}
-              </Btn>
+            <div className="mt-14 grid gap-x-8 gap-y-12 lg:mt-20 lg:grid-cols-12">
+              <div className="lg:col-span-8">
+                <div className="max-w-[62ch]" data-reveal>
+                  <PostBody blocks={post.body} />
+                </div>
+                <div className="mt-12">
+                  <Btn href="/blog" variant="garden">
+                    {blogPage.back}
+                  </Btn>
+                </div>
+              </div>
+              <div className="lg:col-span-4" data-reveal style={{ '--reveal-delay': '120ms' } as React.CSSProperties}>
+                <div className="lg:sticky lg:top-28">
+                  <PostTeas post={post} />
+                </div>
+              </div>
             </div>
           </div>
         </article>

@@ -6,6 +6,7 @@ import LeafCursor from '@/components/ui/LeafCursor'
 import Hero from '@/components/sections/Hero'
 import Manifesto from '@/components/sections/Manifesto'
 import Collection from '@/components/sections/Collection'
+import Shelf from '@/components/sections/Shelf'
 import Journey from '@/components/sections/Journey'
 import Faq from '@/components/sections/Faq'
 import Blog from '@/components/sections/Blog'
@@ -19,6 +20,7 @@ export default function LandingPage() {
         <Hero />
         <Manifesto />
         <Collection />
+        <Shelf />
         <Journey />
         <Faq />
         <Blog />
