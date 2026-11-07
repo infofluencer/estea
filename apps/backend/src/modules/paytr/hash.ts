@@ -194,6 +194,30 @@ export function computeRefundHash(input: RefundHashInput): string {
     .digest("base64")
 }
 
+/**
+ * Silinmiş ödeme oturumunu aynı numarayla yeniden açma izni. Oturum verisi mağaza
+ * API'sinden de gelebildiği için sunucu sırrıyla imzalanır; müşteri üretemez.
+ */
+export function computeAdoptToken(merchantOid: string): string {
+  const key = process.env.PAYTR_MERCHANT_KEY || ""
+  const salt = process.env.PAYTR_MERCHANT_SALT || ""
+  return crypto.createHmac("sha256", `${key}:${salt}`).update(`adopt:${merchantOid}`).digest("hex")
+}
+
+/** Yalnız sırrı olan sunucu üretmişse true. Kimlik yoksa yalnız mock'ta geçerli. */
+export function verifyAdoptToken(
+  merchantOid: string,
+  token: unknown,
+  opts: { allowWithoutSecret?: boolean } = {}
+): boolean {
+  if (typeof token !== "string" || !merchantOid) return false
+  const hasSecret = Boolean(process.env.PAYTR_MERCHANT_KEY && process.env.PAYTR_MERCHANT_SALT)
+  if (!hasSecret && !opts.allowWithoutSecret) return false
+  const expected = Buffer.from(computeAdoptToken(merchantOid))
+  const given = Buffer.from(token)
+  return expected.length === given.length && crypto.timingSafeEqual(expected, given)
+}
+
 /** Session major-unit TRY → kuruş tamsayı (callback total_amount ile karşılaştırma). */
 export function sessionAmountToKurus(amount: unknown): number | null {
   let n: number

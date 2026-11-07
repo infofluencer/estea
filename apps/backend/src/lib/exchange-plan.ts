@@ -104,6 +104,8 @@ export type VariantChoice = {
   sku: string | null
   /** null = stok takibi yok / ön siparişe açık */
   available: number | null
+  /** Aynı varyantın aynısı (defolu / hasarlı ürün yerine) */
+  same?: boolean
 }
 
 type VariantLike = {
@@ -117,7 +119,14 @@ type VariantLike = {
     | {
         required_quantity?: unknown
         inventory?: {
-          location_levels?: { location_id?: string | null; available_quantity?: unknown }[] | null
+          location_levels?:
+            | {
+                location_id?: string | null
+                available_quantity?: unknown
+                stocked_quantity?: unknown
+                reserved_quantity?: unknown
+              }[]
+            | null
         } | null
       }[]
     | null
@@ -131,6 +140,20 @@ export function variantLabel(v: Pick<VariantLike, "title" | "options">): string 
   return /^default/i.test(title) ? "" : title
 }
 
+/**
+ * Medusa BigNumber (`numeric` getter; query.graph available_quantity böyle döner),
+ * { value } / string / number → sayı.
+ */
+function num(value: unknown): number {
+  let raw = value
+  if (value && typeof value === "object") {
+    const o = value as { numeric?: unknown; value?: unknown }
+    raw = "numeric" in o ? o.numeric : "value" in o ? o.value : Number(value)
+  }
+  const n = Number(raw ?? 0)
+  return Number.isFinite(n) ? n : 0
+}
+
 /** Satılabilir adet (varsayılan depoda); stok takibi yoksa null. */
 export function variantAvailable(v: VariantLike, locationId?: string | null): number | null {
   if (v.manage_inventory === false || v.allow_backorder === true) return null
@@ -140,35 +163,43 @@ export function variantAvailable(v: VariantLike, locationId?: string | null): nu
   for (const ii of items) {
     const levels = ii.inventory?.location_levels || []
     const level = (locationId && levels.find((l) => l.location_id === locationId)) || levels[0]
-    const available = Number(
-      level?.available_quantity && typeof level.available_quantity === "object"
-        ? (level.available_quantity as { value?: unknown }).value
-        : level?.available_quantity ?? 0
-    )
+    // available_quantity yalnız stocked + reserved yüklenince hesaplanır; yoksa kendimiz düşeriz.
+    const available =
+      level?.available_quantity != null
+        ? num(level.available_quantity)
+        : num(level?.stocked_quantity) - num(level?.reserved_quantity)
     const required = Math.max(1, qty(ii.required_quantity) || 1)
     min = Math.min(min, Math.floor((Number.isFinite(available) ? available : 0) / required))
   }
   return Number.isFinite(min) ? Math.max(0, min) : 0
 }
 
-/** Aynı ürünün diğer varyantları (mevcut varyant hariç), stok bilgisiyle. */
+/**
+ * Aynı ürünün diğer varyantları, stok bilgisiyle. `includeCurrent` (yalnız
+ * admin): mevcut varyant da "… (aynısı)" olarak en başta — defolu / hasarlı
+ * ürünün yerine aynısı gönderilir.
+ */
 export function exchangeChoices(
   variants: VariantLike[],
   currentVariantId: string | null | undefined,
-  locationId?: string | null
+  locationId?: string | null,
+  opts: { includeCurrent?: boolean } = {}
 ): VariantChoice[] {
-  return variants
-    .filter((v) => v.id && v.id !== currentVariantId)
-    .map((v) => ({
-      variant_id: v.id,
-      title: variantLabel(v) || v.sku || v.id,
-      sku: v.sku || null,
-      available: variantAvailable(v, locationId),
-    }))
+  const choice = (v: VariantLike): VariantChoice => ({
+    variant_id: v.id,
+    title: variantLabel(v) || v.sku || v.id,
+    sku: v.sku || null,
+    available: variantAvailable(v, locationId),
+  })
+  const current = opts.includeCurrent ? variants.find((v) => v.id && v.id === currentVariantId) : undefined
+  const others = variants.filter((v) => v.id && v.id !== currentVariantId).map(choice)
+  if (!current) return others
+  const same = choice(current)
+  return [{ ...same, title: same.title ? `${same.title} (aynısı)` : "Aynısı", same: true }, ...others]
 }
 
 /**
- * Seçimleri doğrular: varyant aynı ürünün başka varyantı olmalı, stok yetmeli
+ * Seçimleri doğrular: varyant seçenek listesinde olmalı, stok yetmeli
  * (aynı varyant birden çok satırda seçilirse toplam adet). Hata metni panelde /
  * mağazada gösterilir.
  */

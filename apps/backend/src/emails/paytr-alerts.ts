@@ -4,7 +4,13 @@ import { EMAIL_STYLES, emailLayout, escapeHtml } from "./format"
 export type PaytrCriticalAlertKind =
   | "late_success_canceled"
   | "amount_mismatch"
+  | "currency_mismatch"
+  | "order_canceled"
   | "success_no_order"
+  | "session_not_found"
+  | "duplicate_payment"
+  | "cart_changed"
+  | "order_create_failed"
   | "compensate_failed"
   | "process_failed"
 
@@ -23,8 +29,20 @@ const KIND_LABEL: Record<PaytrCriticalAlertKind, string> = {
     "PayTR success, sipariş iptal — para alındı; elle işlenmeli (otomatik iade yalnızca PAYTR_CALLBACK_AUTO_REFUND=1)",
   amount_mismatch:
     "PayTR callback payment_amount session tutarından farklı — para alınmış olabilir; elle inceleyin (otomatik iade yalnızca PAYTR_CALLBACK_AUTO_REFUND=1)",
+  currency_mismatch:
+    "PayTR ödemesinin para birimi denemeyle tutmuyor — para alınmış olabilir, sipariş açılmadı; PayTR panelinden kontrol edin",
+  order_canceled:
+    "PayTR success, bu sepetin siparişi iptal edilmiş — para alındı, tahsilat yazılmadı; siparişi yeniden açın ya da iade edin",
   success_no_order:
     "PayTR success, Medusa siparişi yok — para alındı; elle inceleyin (otomatik iade yalnızca PAYTR_CALLBACK_AUTO_REFUND=1)",
+  session_not_found:
+    "PayTR success, ödeme oturumu bulunamadı — para alındı; PayTR panelinde müşteriyi bulup siparişi elle işleyin",
+  duplicate_payment:
+    "Aynı sepet iki kez ödendi — ikinci sipariş açılmadı; bu ödemeyi PayTR panelinden iade edin",
+  cart_changed:
+    "PayTR success, sepet ödeme sırasında değişmiş — para alındı, sipariş açılmadı; elle işleyin",
+  order_create_failed:
+    "PayTR success, sipariş oluşturulamadı — para alındı (ör. stok); sistem tekrar deniyor",
   compensate_failed: "PayTR iade telafisi başarısız — para içeride kalmış olabilir",
   process_failed: "PayTR success işlenemedi (workflow) — PayTR retry bekleniyor",
 }

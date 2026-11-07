@@ -6,7 +6,7 @@ import { loadExchangeOptions } from "../../../../../lib/exchange"
 
 /** GET /admin/orders/:id/exchange — her kalem için seçilebilecek varyantlar (stok adediyle). */
 export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse) {
-  res.json({ items: await loadExchangeOptions(req.scope, req.params.id) })
+  res.json({ items: await loadExchangeOptions(req.scope, req.params.id, { includeCurrent: true }) })
 }
 
 type Body = {

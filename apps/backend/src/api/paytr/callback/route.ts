@@ -1,18 +1,17 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { processPaymentWorkflow } from "@medusajs/medusa/core-flows"
 import { recordOpsEvent } from "../../../lib/ops-events"
-import {
-  Modules,
-  PaymentActions,
-} from "@medusajs/framework/utils"
+import { PaymentActions } from "@medusajs/framework/utils"
 import { callbackAmountMatchesSession, verifyCallbackHash } from "../../../modules/paytr/hash"
 import { isPaytrMockEnabled } from "../../../modules/paytr/mock-iade"
 import {
   findOrderIdForPaymentSession,
   findPaymentSessionByMerchantOid,
   markCallbackProcessed,
+  markPaytrSessionPaid,
   paytrCallbackLockKey,
   recordFailedAttempt,
+  resolveLocking,
   resolvePaymentModule,
   retrieveOrderForCancelGuard,
   type PaymentSessionLike,
@@ -20,12 +19,19 @@ import {
 import {
   callbackAutoRefundEnabled,
   manualReviewStatusFor,
+  pickCallbackPaymentAmount,
   type PaytrSuccessAnomalyKind,
 } from "../../../modules/paytr/callback-state"
 import {
   compensatePaytrCharge,
   sendPaytrCriticalAlert,
 } from "../../../lib/paytr-compensate"
+import {
+  ensureCheckoutForSession,
+  findPaytrCheckout,
+  recordPaytrCheckoutFailure,
+  settlePaytrCheckout,
+} from "../../../lib/paytr-checkout"
 
 export class PaytrCallbackProcessError extends Error {
   constructor(message: string) {
@@ -51,6 +57,9 @@ export class PaytrCallbackProcessError extends Error {
  * 6. Tutarsız success (iptal siparişe geç success, tutar farkı, siparişsiz session):
  *    otomatik iade YOK — uyarı maili + elle inceleme. PAYTR_CALLBACK_AUTO_REFUND=1 ile
  *    eski otomatik iade davranışı açılır.
+ * 7. Sipariş burada oluşur: paytr_checkout kaydı olan numarada para önce kayda yazılır,
+ *    sonra sepet tamamlanır (lib/paytr-checkout.ts). Kayıt yoksa eski yol (stub / mevcut
+ *    sipariş).
  */
 export async function POST(req: MedusaRequest, res: MedusaResponse) {
   const body =
@@ -63,11 +72,14 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
   const status = body.status || ""
   const totalAmount = body.total_amount || ""
   // total_amount taksit/vade farkı dahil müşterinin ödediği tutardır; sipariş
-  // tutarı payment_amount'tur. Tutar kontrolü ve capture payment_amount ile yapılır.
-  const paymentAmount = body.payment_amount || totalAmount
+  // tutarı payment_amount'tur. Tutar kontrolü ve capture payment_amount ile yapılır
+  // (imzasız alan: biçimi bozuksa ya da total'ı aşıyorsa imzalı total_amount kullanılır).
+  const paymentAmount = pickCallbackPaymentAmount(body.payment_amount, totalAmount)
   const incomingHash = body.hash || ""
   const failedReasonCode = body.failed_reason_code || ""
   const failedReasonMsg = body.failed_reason_msg || ""
+  // PayTR para birimini "TL" olarak bildirir; kuruşu denk gelen başka birim sipariş açmasın.
+  const currency = body.currency || ""
 
   const merchantKey = process.env.PAYTR_MERCHANT_KEY || ""
   const merchantSalt = process.env.PAYTR_MERCHANT_SALT || ""
@@ -110,26 +122,20 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
 
   // ── 2–5. Lock + idempotency + process ────────────────────────────────
   try {
-    const locking = req.scope.resolve(Modules.LOCKING) as {
-      execute: <T>(
-        keys: string | string[],
-        job: () => Promise<T>,
-        args?: { timeout?: number; ttl?: number }
-      ) => Promise<T>
-    }
-
-    await locking.execute(
+    // Redis kilidi: ttl boyunca tutulur (sipariş + tahsilat + abonelikler 30 sn'yi aşabilir).
+    await resolveLocking(req.scope).execute(
       paytrCallbackLockKey(merchantOid),
       async () => {
         await processPaytrCallback(req, {
           merchantOid,
           status,
           paymentAmount,
+          currency,
           failedReasonCode,
           failedReasonMsg,
         })
       },
-      { timeout: 30, ttl: 120 }
+      { timeout: 30, ttl: 180 }
     )
   } catch (err) {
     logger?.error(
@@ -174,44 +180,41 @@ function formatUnknownError(err: unknown): string {
   return String(err)
 }
 
-/**
- * Persist PayTR success on the session BEFORE processPaymentWorkflow so
- * authorizePayment returns AUTHORIZED (Medusa SUCCESSFUL path: authorize → capture).
- * callback_processed stays false until after the workflow (idempotency gate).
- */
-async function markPaytrWebhookSuccess(
-  req: MedusaRequest,
-  session: PaymentSessionLike
-): Promise<PaymentSessionLike> {
-  const payment = resolvePaymentModule(req.scope)
-  const prev = (session.data || {}) as Record<string, unknown>
-  await payment.updatePaymentSession({
-    id: session.id,
-    currency_code: String(session.currency_code || "try"),
-    amount: session.amount ?? 0,
-    data: {
-      ...prev,
-      paytr_status: "success",
-      paytr_webhook_at: new Date().toISOString(),
-    },
-  })
-  return (await payment.retrievePaymentSession(session.id)) as PaymentSessionLike
-}
-
 async function processPaytrCallback(
   req: MedusaRequest,
   input: {
     merchantOid: string
     status: string
     paymentAmount: string
+    currency: string
     failedReasonCode: string
     failedReasonMsg: string
   }
 ) {
   const logger = req.scope.resolve("logger")
-  const { merchantOid, status, paymentAmount, failedReasonCode, failedReasonMsg } =
+  const { merchantOid, status, paymentAmount, currency, failedReasonCode, failedReasonMsg } =
     input
   const totalAmount = paymentAmount
+
+  const checkout = await findPaytrCheckout(req.scope, merchantOid)
+  if (checkout) {
+    if (status === "success") {
+      const result = await settlePaytrCheckout(req.scope, checkout, {
+        paidKurus: Number(paymentAmount),
+        paidCurrency: currency,
+        source: "callback",
+      })
+      logger?.info(
+        `[paytr/callback] Ödeme kaydı işlendi — merchant_oid=${merchantOid} sonuç=${result.outcome}`
+      )
+    } else {
+      await recordPaytrCheckoutFailure(req.scope, checkout, {
+        code: failedReasonCode,
+        msg: failedReasonMsg,
+      })
+    }
+    return
+  }
 
   let session = await findPaymentSessionByMerchantOid(req.scope, merchantOid)
 
@@ -219,6 +222,16 @@ async function processPaytrCallback(
     logger?.warn(
       `[paytr/callback] Session bulunamadı — merchant_oid=${merchantOid}. OK (idempotency veya geç callback).`
     )
+    // Hash doğru ve success: para alınmış ama bağlanacak oturum yok. Sessiz OK yerine
+    // kritik uyarı (Mareen'de 30.10'da silinmiş oturumda ödeme böyle fark edilmedi).
+    if (status === "success") {
+      await sendPaytrCriticalAlert(req.scope, {
+        kind: "session_not_found",
+        merchantOid,
+        callbackAmountKurus: totalAmount,
+        detail: "Callback success; bu merchant_oid ile ödeme oturumu yok (oturum silinmiş olabilir).",
+      })
+    }
     return
   }
 
@@ -243,6 +256,16 @@ async function processPaytrCallback(
       : null
 
     if (!orderId || !order) {
+      // Kayıt adımı atlanmış ama sepete bağlı oturum: normal yoldan sipariş açılır.
+      const created = orderId ? null : await ensureCheckoutForSession(req.scope, session)
+      if (created) {
+        await settlePaytrCheckout(req.scope, created, {
+          paidKurus: Number(paymentAmount),
+          paidCurrency: currency,
+          source: "session",
+        })
+        return
+      }
       await compensateOrThrow(req, {
         kind: "success_no_order",
         merchantOid,
@@ -279,7 +302,8 @@ async function processPaytrCallback(
     }
 
     // Signal authorizePayment before Medusa SUCCESSFUL autocapture path runs
-    session = await markPaytrWebhookSuccess(req, session)
+    // (callback_processed stays false until after the workflow — idempotency gate).
+    session = await markPaytrSessionPaid(req.scope, session.id)
 
     try {
       await processPaymentWorkflow(req.scope).run({

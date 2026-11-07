@@ -1,0 +1,928 @@
+{
+ "swagger": "2.0",
+ "info": {
+  "version": "1.0",
+  "x-ibm-name": "bulk-query-api-10",
+  "title": "Bulk Query API",
+  "description": "Aynı istekte bir çok sipariş ya da gönderi bilgisini, gönderi durumunu, gönderi haraketlerinin getirilebilmesini sağlayan API'dır. | It is the API that provides getting many order or shipment information, shipment status, shipment movements in same request.",
+  "termsOfService": "http://swagger.io/terms/",
+  "x-ibm-summary": ""
+ },
+ "basePath": "/mngapi/api/bulkqueryapi",
+ "paths": {
+  "/getShipmentByDate/{StartDate}": {
+   "get": {
+    "tags": [
+     "BulkQuery"
+    ],
+    "summary": "Get Shipment By Date",
+    "description": "İlgili tarih aralığına ait gönderi bilgilerini getirir. Eğer sipariş faturalaşmış ise bu bilgi elde edilebilir. | Returns the shipment information of the relevant datetime range. If the order has been invoiced, this information can be obtained.",
+    "operationId": "GetShipmentByDateByStartDateGet",
+    "consumes": [],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "StartDate",
+      "in": "path",
+      "required": true,
+      "type": "string"
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "schema": {
+       "uniqueItems": false,
+       "type": "array",
+       "items": {
+        "$ref": "#/definitions/GetShipmentResponse"
+       }
+      },
+      "examples": {
+       "application/json": {
+        "shipment": {
+         "shipmentServiceType": "STANDART_TESLİMAT",
+         "packagingType": "PAKET",
+         "paymentType": "GONDERICI_ODER",
+         "deliveryType": "ADRESE_TESLIM",
+         "referenceId": "SIPARIS34567",
+         "shipmentId": "931001401082",
+         "shipmentSerialNumber": "FM",
+         "shipmentNumber": "306971",
+         "shipmentDateTime": "20-02-2020 15:59:51",
+         "pieceCount": 0,
+         "totalKg": 1,
+         "totalDesi": 1,
+         "totalKgDesi": 1,
+         "total": 34.61,
+         "kdv": 6.23,
+         "finalTotal": 40.84,
+         "shipmentStatusCode": 5,
+         "isMarketPlaceShipment": 0,
+         "isMarketPlacePays": 0,
+         "shipperBranch": "ATLAS",
+         "billOfLandingId": "İrsaliye 1",
+         "isCOD": 0,
+         "codAmount": "0",
+         "content": "İçerik 1",
+         "estimatedDeliveryDate": "21-02-2020",
+         "isDelivered": 0
+        },
+        "shipmentPieceList": [
+         {
+          "numberOfPieces": 1,
+          "kgDesi": 2,
+          "barcode": "SIPARIS34567_PARCA1",
+          "desi": 2,
+          "kg": 1,
+          "content": "Parça açıklama 1"
+         },
+         {
+          "numberOfPieces": 1,
+          "kgDesi": 2,
+          "barcode": "SIPARIS34567_PARCA2",
+          "desi": 2,
+          "kg": 1,
+          "content": "Parça açıklama 2"
+         }
+        ],
+        "shipper": {
+         "customerId": 847555,
+         "refCustomerId": "",
+         "city": "",
+         "district": "",
+         "address": "",
+         "bussinessPhoneNumber": "",
+         "email": "",
+         "taxOffice": "",
+         "taxNumber": "",
+         "fullName": "",
+         "homePhoneNumber": "",
+         "mobilePhoneNumber": ""
+        },
+        "recipient": {
+         "refCustomerId": "",
+         "city": "İstanbul",
+         "district": "Levent",
+         "address": "Hürriyet Mah. Ahmet Yesevi Cad. İkizler Sok.",
+         "bussinessPhoneNumber": "",
+         "email": "email@ornekemail.com",
+         "taxOffice": "",
+         "taxNumber": "",
+         "fullName": "Ad 2",
+         "homePhoneNumber": "5555555555",
+         "mobilePhoneNumber": ""
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "404": {
+      "description": "Shipment not found",
+      "schema": {
+       "$ref": "#/definitions/ProblemDetails"
+      }
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/getDeliveredShipment/{StartDate}": {
+   "get": {
+    "tags": [
+     "BulkQuery"
+    ],
+    "summary": "Get Delivered Shipment",
+    "description": "İlgili tarihte teslim edilmiş gönderilerin bilgilerini getirir. | Returns the information of the shipments delivered on the relevant date.",
+    "operationId": "GetDeliveredShipmentByStartDateGet",
+    "consumes": [],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "StartDate",
+      "in": "path",
+      "required": true,
+      "type": "string"
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "schema": {
+       "uniqueItems": false,
+       "type": "array",
+       "items": {
+        "$ref": "#/definitions/GetShipmentResponse"
+       }
+      },
+      "examples": {
+       "application/json": {
+        "shipment": {
+         "shipmentServiceType": "STANDART_TESLİMAT",
+         "packagingType": "PAKET",
+         "paymentType": "GONDERICI_ODER",
+         "deliveryType": "ADRESE_TESLIM",
+         "referenceId": "SIPARIS34567",
+         "shipmentId": "931001401082",
+         "shipmentSerialNumber": "FM",
+         "shipmentNumber": "306971",
+         "shipmentDateTime": "20-02-2020 15:59:51",
+         "pieceCount": 0,
+         "totalKg": 1,
+         "totalDesi": 1,
+         "totalKgDesi": 1,
+         "total": 34.61,
+         "kdv": 6.23,
+         "finalTotal": 40.84,
+         "shipmentStatusCode": 5,
+         "isMarketPlaceShipment": 0,
+         "isMarketPlacePays": 0,
+         "shipperBranch": "ATLAS",
+         "billOfLandingId": "İrsaliye 1",
+         "isCOD": 0,
+         "codAmount": "0",
+         "content": "İçerik 1",
+         "estimatedDeliveryDate": "21-02-2020",
+         "isDelivered": 0
+        },
+        "shipmentPieceList": [
+         {
+          "numberOfPieces": 1,
+          "kgDesi": 2,
+          "barcode": "SIPARIS34567_PARCA1",
+          "desi": 2,
+          "kg": 1,
+          "content": "Parça açıklama 1"
+         },
+         {
+          "numberOfPieces": 1,
+          "kgDesi": 2,
+          "barcode": "SIPARIS34567_PARCA2",
+          "desi": 2,
+          "kg": 1,
+          "content": "Parça açıklama 2"
+         }
+        ],
+        "shipper": {
+         "customerId": 847555,
+         "refCustomerId": "",
+         "city": "",
+         "district": "",
+         "address": "",
+         "bussinessPhoneNumber": "",
+         "email": "",
+         "taxOffice": "",
+         "taxNumber": "",
+         "fullName": "",
+         "homePhoneNumber": "",
+         "mobilePhoneNumber": ""
+        },
+        "recipient": {
+         "refCustomerId": "",
+         "city": "İstanbul",
+         "district": "Levent",
+         "address": "Hürriyet Mah. Ahmet Yesevi Cad. İkizler Sok.",
+         "bussinessPhoneNumber": "",
+         "email": "email@ornekemail.com",
+         "taxOffice": "",
+         "taxNumber": "",
+         "fullName": "Ad 2",
+         "homePhoneNumber": "5555555555",
+         "mobilePhoneNumber": ""
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "404": {
+      "description": "Shipment not found",
+      "schema": {
+       "$ref": "#/definitions/ProblemDetails"
+      }
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/getStatusChangedShipments/{StatusChangedDate}/{StatusChangedDateTime}": {
+   "get": {
+    "tags": [
+     "BulkQuery"
+    ],
+    "summary": "Get Status Changed Shipments",
+    "description": "İlgili tarihte hareket görmüş gönderilerin bilgilerini getirir. | Returns the information of the shipments have events on the relevant date.",
+    "operationId": "GetStatusChangedShipmentsByStatusChangedDateByStatusChangedDateTimeGet",
+    "consumes": [],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "StatusChangedDate",
+      "in": "path",
+      "required": true,
+      "type": "string"
+     },
+     {
+      "name": "StatusChangedDateTime",
+      "in": "path",
+      "required": true,
+      "type": "string"
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "schema": {
+       "uniqueItems": false,
+       "type": "array",
+       "items": {
+        "$ref": "#/definitions/GetShipmentResponse"
+       }
+      },
+      "examples": {
+       "application/json": {
+        "shipment": {
+         "shipmentServiceType": "STANDART_TESLİMAT",
+         "packagingType": "PAKET",
+         "paymentType": "GONDERICI_ODER",
+         "deliveryType": "ADRESE_TESLIM",
+         "referenceId": "SIPARIS34567",
+         "shipmentId": "931001401082",
+         "shipmentSerialNumber": "FM",
+         "shipmentNumber": "306971",
+         "shipmentDateTime": "20-02-2020 15:59:51",
+         "pieceCount": 0,
+         "totalKg": 1,
+         "totalDesi": 1,
+         "totalKgDesi": 1,
+         "total": 34.61,
+         "kdv": 6.23,
+         "finalTotal": 40.84,
+         "shipmentStatusCode": 5,
+         "isMarketPlaceShipment": 0,
+         "isMarketPlacePays": 0,
+         "shipperBranch": "ATLAS",
+         "billOfLandingId": "İrsaliye 1",
+         "isCOD": 0,
+         "codAmount": "0",
+         "content": "İçerik 1",
+         "estimatedDeliveryDate": "21-02-2020",
+         "isDelivered": 0
+        },
+        "shipmentPieceList": [
+         {
+          "numberOfPieces": 1,
+          "kgDesi": 2,
+          "barcode": "SIPARIS34567_PARCA1",
+          "desi": 2,
+          "kg": 1,
+          "content": "Parça açıklama 1"
+         },
+         {
+          "numberOfPieces": 1,
+          "kgDesi": 2,
+          "barcode": "SIPARIS34567_PARCA2",
+          "desi": 2,
+          "kg": 1,
+          "content": "Parça açıklama 2"
+         }
+        ],
+        "shipper": {
+         "customerId": 847555,
+         "refCustomerId": "",
+         "city": "",
+         "district": "",
+         "address": "",
+         "bussinessPhoneNumber": "",
+         "email": "",
+         "taxOffice": "",
+         "taxNumber": "",
+         "fullName": "",
+         "homePhoneNumber": "",
+         "mobilePhoneNumber": ""
+        },
+        "recipient": {
+         "refCustomerId": "",
+         "city": "İstanbul",
+         "district": "Levent",
+         "address": "Hürriyet Mah. Ahmet Yesevi Cad. İkizler Sok.",
+         "bussinessPhoneNumber": "",
+         "email": "email@ornekemail.com",
+         "taxOffice": "",
+         "taxNumber": "",
+         "fullName": "Ad 2",
+         "homePhoneNumber": "5555555555",
+         "mobilePhoneNumber": ""
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "404": {
+      "description": "Shipment not found",
+      "schema": {
+       "$ref": "#/definitions/ProblemDetails"
+      }
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/GetShipmentByDateDetail": {
+   "post": {
+    "description": "",
+    "summary": "GetShipmentByDateDetail_POST",
+    "tags": [
+     "BulkQuery"
+    ],
+    "operationId": "GetShipmentByDateDetail_POST",
+    "deprecated": false,
+    "produces": [
+     "application/json"
+    ],
+    "consumes": [
+     "application/json-patch+json"
+    ],
+    "parameters": [
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string",
+      "description": ""
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "required": true,
+      "type": "string",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+     },
+     {
+      "name": "Content-Type",
+      "in": "header",
+      "required": false,
+      "enum": [
+       "application/json-patch+json"
+      ],
+      "type": "string",
+      "description": ""
+     },
+     {
+      "name": "body",
+      "in": "body",
+      "required": false,
+      "description": "",
+      "schema": {
+       "$ref": "#/definitions/GetShipmentByDateRequest"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "schema": {
+       "type": "array",
+       "default": "",
+       "items": {
+        "$ref": "#/definitions/GetShipmentByDateResponse"
+       }
+      },
+      "headers": []
+     },
+     "500": {
+      "description": "Server Error",
+      "headers": []
+     }
+    }
+   }
+  }
+ },
+ "definitions": {
+  "GetShipmentResponse": {
+   "type": "object",
+   "properties": {
+    "shipment": {
+     "$ref": "#/definitions/ShipmentOUT"
+    },
+    "shipmentPieceList": {
+     "uniqueItems": false,
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/OrderPieceListOUT"
+     }
+    },
+    "shipper": {
+     "$ref": "#/definitions/CustomerOUT"
+    },
+    "recipient": {
+     "$ref": "#/definitions/CustomerOUT"
+    }
+   }
+  },
+  "ShipmentOUT": {
+   "type": "object",
+   "properties": {
+    "shipmentServiceType": {
+     "description": "Shipment service type: 1:STANDART_TESLİMAT, 7:GUNİCİ_TESLİMAT, 8:AKŞAM_TESLİMAT\r\nGönderi Tipi",
+     "type": "string"
+    },
+    "packagingType": {
+     "description": "Package Type of Order:  1:DOSYA, 2:Mİ, 3:PAKET, 4:KOLİ\r\nKargo Cinsi",
+     "type": "string"
+    },
+    "paymentType": {
+     "description": "Payment Type of Order: P:GONDERICI_ODER, U:ALICI_ODER, PL:PLATFORM_ODER\r\nÖdeme Türü",
+     "type": "string"
+    },
+    "deliveryType": {
+     "description": "Delivery Type of Order: 1:ADRESE_TESLIM, 2:ALICISI_HABERLİ \r\nTeslim Türü",
+     "type": "string"
+    },
+    "referenceId": {
+     "description": "Identity Number of Order\r\nSipariş Numarası",
+     "type": "string"
+    },
+    "shipmentId": {
+     "description": "Identity Number of Shipment\r\nGönderi Numarası",
+     "type": "string"
+    },
+    "shipmentSerialNumber": {
+     "type": "string"
+    },
+    "shipmentNumber": {
+     "type": "string"
+    },
+    "shipmentDateTime": {
+     "description": "Shipment Date\r\nGönderi Tarihi",
+     "type": "string"
+    },
+    "pieceCount": {
+     "format": "int32",
+     "description": "Shipment Piece Count \r\nGönderi Parça Sayısı",
+     "type": "integer"
+    },
+    "totalKg": {
+     "format": "double",
+     "type": "number"
+    },
+    "totalDesi": {
+     "format": "double",
+     "type": "number"
+    },
+    "totalKgDesi": {
+     "format": "double",
+     "type": "number"
+    },
+    "total": {
+     "format": "double",
+     "type": "number"
+    },
+    "kdv": {
+     "format": "double",
+     "type": "number"
+    },
+    "finalTotal": {
+     "format": "double",
+     "type": "number"
+    },
+    "shipmentStatusCode": {
+     "format": "int32",
+     "description": "Shipment Status Code: 1:Gönderi_Hazırlandı, 2:Transfer_Aşamasında, 3: Teslimat_Birimine_Ulaştı, 4: Alıcı_Adresine_Yönlendirildi, 5: Teslim_Edildi, 6:Teslim_Edilemedi, 7:Geri_Geliyor, 8: Destek_Gerekiyor       \r\nGönderi Durum Kodu",
+     "type": "integer"
+    },
+    "isMarketPlaceShipment": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "isMarketPlacePays": {
+     "format": "int32",
+     "description": "Market Place is pays ?\r\nGönderi ücretini platform mu öder ?",
+     "type": "integer"
+    },
+    "receivingBranch": {
+     "description": "Recipient Branch\r\nAlıcı Şube",
+     "type": "string"
+    },
+    "shipperBranch": {
+     "description": "Shipper Branch\r\nGönderici Şube",
+     "type": "string"
+    },
+    "description": {
+     "type": "string"
+    },
+    "billOfLandingId": {
+     "description": "Bill Of LandingId\r\nİrsaliye Numarası",
+     "type": "string"
+    },
+    "isCOD": {
+     "format": "int32",
+     "description": "Indicates whether it is Cash On Delivery.\r\nKapıda Ödeme mi?",
+     "type": "integer"
+    },
+    "codAmount": {
+     "description": "Cash on Delivery Amount\r\nKapıda Ödeme Miktarı",
+     "type": "string"
+    },
+    "content": {
+     "description": "Content\r\nGenel İçerik Bilgisi",
+     "type": "string"
+    },
+    "estimatedDeliveryDate": {
+     "description": "Shipment Estimated Delivery Date\r\nGönderi Tahmini Teslim Tarihi",
+     "type": "string"
+    },
+    "deliveryDate": {
+     "description": "Shipment Delivery Date\r\nGönderi Teslim Tarihi",
+     "type": "string"
+    },
+    "isDelivered": {
+     "format": "int32",
+     "description": "Is Shipment Delivered?\r\nGönderi Teslim Edildi Mi?",
+     "type": "integer"
+    },
+    "deliveryTo": {
+     "description": "Name and Surname who delivery to shipment.\r\nGönderiyi teslim alan adı ve soyadı.",
+     "type": "string"
+    }
+   }
+  },
+  "OrderPieceListOUT": {
+   "required": [
+    "barcode",
+    "desi",
+    "kg"
+   ],
+   "type": "object",
+   "properties": {
+    "numberOfPieces": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "kgDesi": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "barcode": {
+     "type": "string"
+    },
+    "desi": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "kg": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "content": {
+     "type": "string"
+    }
+   }
+  },
+  "CustomerOUT": {
+   "type": "object",
+   "properties": {
+    "customerId": {
+     "format": "int64",
+     "description": "Identity Number of Customer \r\nMüşteri Numarası",
+     "type": "integer"
+    },
+    "refCustomerId": {
+     "description": "Identity Number of Customer in their's own system.\r\nMüşterinin kendi sistemindeki numarası",
+     "type": "string"
+    },
+    "city": {
+     "type": "string"
+    },
+    "district": {
+     "type": "string"
+    },
+    "address": {
+     "type": "string"
+    },
+    "bussinessPhoneNumber": {
+     "type": "string"
+    },
+    "email": {
+     "type": "string"
+    },
+    "taxOffice": {
+     "type": "string"
+    },
+    "taxNumber": {
+     "description": "Tax Office\r\nVergi Dairesi",
+     "type": "string"
+    },
+    "fullName": {
+     "description": "Tax Number\r\nVergi Numarası",
+     "type": "string"
+    },
+    "homePhoneNumber": {
+     "type": "string"
+    },
+    "mobilePhoneNumber": {
+     "type": "string"
+    }
+   }
+  },
+  "ProblemDetails": {
+   "type": "object",
+   "properties": {
+    "type": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "status": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "detail": {
+     "type": "string"
+    },
+    "instance": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": {
+    "type": "object"
+   }
+  },
+  "GetShipmentByDateRequest": {
+   "title": "GetShipmentByDateRequest",
+   "type": "object",
+   "properties": {
+    "date": {
+     "type": "string"
+    },
+    "reportType": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "subCompany": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "date",
+    "reportType",
+    "subCompany"
+   ]
+  },
+  "GetShipmentByDateResponse": {
+   "title": "GetShipmentByDateResponse",
+   "type": "object",
+   "properties": {
+    "shipmentDate": {
+     "type": "string"
+    },
+    "shipmentDateTime": {
+     "type": "string"
+    },
+    "shipmentSerialNumber": {
+     "type": "string"
+    },
+    "shipmentNumber": {
+     "type": "string"
+    },
+    "shipmentType": {
+     "type": "string"
+    },
+    "paymentType": {
+     "type": "string"
+    },
+    "pieceCount": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "receivingBranch": {
+     "type": "string"
+    },
+    "shipperBranch": {
+     "type": "string"
+    },
+    "totalKgDesi": {
+     "type": "string"
+    },
+    "finalTotal": {
+     "type": "string"
+    },
+    "referenceId": {
+     "type": "string"
+    },
+    "billOfLandingId": {
+     "type": "string"
+    },
+    "codAmount": {
+     "type": "string"
+    },
+    "isCOD": {
+     "type": "string"
+    },
+    "isDelivered": {
+     "type": "string"
+    },
+    "deliveryDate": {
+     "type": "string"
+    },
+    "deliveryTime": {
+     "type": "string"
+    },
+    "deliveryTo": {
+     "type": "string"
+    },
+    "shipmentStatus": {
+     "type": "string"
+    },
+    "shipmentStatusExplanation": {
+     "type": "string"
+    },
+    "statusDateTime": {
+     "type": "string"
+    },
+    "trackingUrl": {
+     "type": "string"
+    },
+    "scheduledPaymentDate": {
+     "type": "string"
+    },
+    "actualPaymentDate": {
+     "type": "string"
+    },
+    "actualCollectionType": {
+     "type": "string"
+    },
+    "orderPieceList": {
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/OrderPieceListOUT"
+     }
+    },
+    "shipper": {
+     "$ref": "#/definitions/CustomerOUT"
+    },
+    "recipient": {
+     "$ref": "#/definitions/CustomerOUT"
+    }
+   }
+  }
+ },
+ "x-ibm-configuration": {
+  "enforced": true,
+  "testable": true,
+  "phase": "realized",
+  "cors": {
+   "enabled": true
+  },
+  "type": "rest",
+  "servers": [
+   {
+    "url": "https://api.mngkargo.com.tr/mngapi/api/bulkqueryapi",
+    "type": [
+     "development",
+     "production"
+    ]
+   }
+  ]
+ },
+ "securityDefinitions": {
+  "api-key-1": {
+   "description": "",
+   "in": "header",
+   "name": "X-IBM-Client-Id",
+   "type": "apiKey"
+  },
+  "api-key-2": {
+   "description": "",
+   "in": "header",
+   "name": "X-IBM-Client-Secret",
+   "type": "apiKey"
+  }
+ },
+ "security": [
+  {
+   "api-key-2": [],
+   "api-key-1": []
+  }
+ ],
+ "x-ibm-comment": [
+  "AMU version used to port this API: v10.0.5.3-R1-680cbea6bb81861c86dc4522ed22fba48a697875-2023-05-09T21:45:55Z",
+  "API06: Changed gateway type to `datapower-api-gateway`.",
+  "API14: Ported v5-compatible policies to work with the API Gateway and updated policy versions.",
+  "API45: Compatibility toggle: `allow-chunked-uploads` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `copy-id-headers-to-message` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `return-v5-responses` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API61: Set buffering property to true. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#SET_BUFFERING",
+  "API24: Removed redundant `parse` policy from the beginning of the assembly. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#REMOVED_REDUNDANT_FRONT_PARSE"
+ ],
+ "schemes": [
+  "https"
+ ],
+ "host": "api.mngkargo.com.tr"
+}

@@ -80,6 +80,46 @@ export function resolvePaymentModule(container: MedusaContainer): PaymentModule 
  * Mark PayTR callback as processed on the payment session data.
  * Requires currency_code + amount (Medusa UpdatePaymentSessionDTO).
  */
+export type LockingLike = {
+  execute: <T>(
+    keys: string | string[],
+    job: () => Promise<T>,
+    args?: { timeout?: number; ttl?: number }
+  ) => Promise<T>
+}
+
+/**
+ * Kilit modülü. medusa-config'te Redis sağlayıcı tanımlıdır: ttl gerçekten uygulanır ve
+ * kilit süreçler arasında geçerlidir (bellek içi sağlayıcıda ttl yok sayılır, kilit yalnız
+ * `timeout` kadar yaşar ve ikinci replika kilidi görmez).
+ */
+export function resolveLocking(container: MedusaContainer): LockingLike {
+  return container.resolve(Modules.LOCKING) as LockingLike
+}
+
+/**
+ * Oturuma "ödeme başarılı" işaretini yazar; authorizePayment bu işareti görünce
+ * AUTHORIZED döner. Callback ve paytr-checkout aynı yazımı kullanır. Taze oturumu döner.
+ */
+export async function markPaytrSessionPaid(
+  container: MedusaContainer,
+  sessionId: string
+): Promise<PaymentSessionLike> {
+  const payment = resolvePaymentModule(container)
+  const session = (await payment.retrievePaymentSession(sessionId)) as PaymentSessionLike
+  await payment.updatePaymentSession({
+    id: session.id,
+    currency_code: String(session.currency_code || "try"),
+    amount: session.amount ?? 0,
+    data: {
+      ...((session.data || {}) as Record<string, unknown>),
+      paytr_status: "success",
+      paytr_webhook_at: new Date().toISOString(),
+    },
+  })
+  return (await payment.retrievePaymentSession(session.id)) as PaymentSessionLike
+}
+
 export async function markCallbackProcessed(
   container: MedusaContainer,
   session: PaymentSessionLike,

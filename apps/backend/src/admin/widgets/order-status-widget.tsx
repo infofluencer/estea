@@ -185,6 +185,10 @@ const OrderStatusWidget = () => {
   )
 }
 
-export const config = defineWidgetConfig({ zone: "order.details.side.after" })
+export const config = defineWidgetConfig({
+  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
+  id: "escay-order-status",
+  zone: "order.details.side.after",
+})
 
 export default OrderStatusWidget

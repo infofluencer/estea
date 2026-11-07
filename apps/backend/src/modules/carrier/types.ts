@@ -19,6 +19,12 @@ export const MANUAL_PROVIDER_ID = "manual_manual"
 export const CARRIER_FULFILLMENT_OPTION_ID = "carrier-standard"
 export const CARRIER_RETURN_OPTION_ID = "carrier-standard-return"
 
+/**
+ * Fulfillment metadata anahtarı (auto-fulfill yazar): siparişin iptal edilmiş eski kargo
+ * kayıtlarının `shipment_ref`'leri → `CreateShipmentInput.order.canceledShipmentRefs`.
+ */
+export const CANCELED_SHIPMENT_REFS_METADATA_KEY = "escay_canceled_carrier_refs"
+
 /** Değişim gönderisinin sipariş referansı eki: ESC-65 → ESC-65-D */
 export const EXCHANGE_ORDER_NO_SUFFIX = "-D"
 
@@ -43,6 +49,8 @@ export type Recipient = {
   cityCode: string
   cityName: string
   districtName: string
+  /** Mahalle (checkout metadata.neighbourhood) — servis dışı bölge kontrolü için. */
+  neighbourhood?: string
   zip?: string
 }
 
@@ -85,6 +93,12 @@ export type CreateShipmentInput = {
     /** Firmaya giden SABİT referans: ORDER_REF_PREFIX + display_id (+ "-D" değişimde). */
     reference: string
     isExchange: boolean
+    /**
+     * Bu siparişin daha önce firmada açılıp İPTAL edilmiş gönderi kimlikleri
+     * (reship / yeniden aç). Referansı benzersiz isteyen firmada adaptör yeni
+     * gönderi için bunlardan farklı bir referans üretir.
+     */
+    canceledShipmentRefs?: string[]
     currencyCode: string
     total?: number | null
   }
@@ -100,6 +114,12 @@ export type CarrierStatus = {
   code: string
   description: string
   action: FulfillmentAction
+  /** fulfillment.data'ya birleştirilecek alanlar (takip linki, sonradan gelen etiket…). */
+  patch?: Partial<FulfillmentData> & Record<string, unknown>
+  /** Doluysa fulfillment etiket satırları bununla değişir (gecikmeli etiket). */
+  labels?: LabelRow[]
+  /** Admin Logs'a bir kez düşecek uyarı (ör. etiket saatlerdir alınamıyor). */
+  alert?: { level: "warning" | "error"; title: string; detail?: string }
 }
 
 /** Webhook ayrıştırma sonucu (adaptör üretir, route işler). */

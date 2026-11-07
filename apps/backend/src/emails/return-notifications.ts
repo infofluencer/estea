@@ -365,8 +365,11 @@ export function buildReturnCodeCustomerEmail(data: {
   orderDisplayId: string
   code: string
   items: ReturnEmailLine[]
+  /** Kargo firmasının iade etiketi linki (varsa; ör. DHL returnOrderLabelURL). */
+  labelUrl?: string | null
 }): { subject: string; html: string; text: string } {
   const subject = `İade Kodunuz — #${data.orderDisplayId}`
+  const labelUrl = data.labelUrl && /^https:\/\//i.test(data.labelUrl) ? data.labelUrl : ""
   const html = emailLayout(`
     <h1 style="margin:0 0 8px;font-size:22px;color:${EMAIL_STYLES.brandColor};">İade kodunuz hazır</h1>
     <p style="margin:0 0 24px;font-size:15px;color:${EMAIL_STYLES.mutedColor};line-height:24px;">
@@ -377,6 +380,7 @@ export function buildReturnCodeCustomerEmail(data: {
       ${COMPANY.returnCustomerNumber ? `<strong>Firma numarası:</strong> ${escapeHtml(COMPANY.returnCustomerNumber)}<br>` : ""}
       <strong>İade kodu:</strong> <span style="font-size:18px;">${escapeHtml(data.code)}</span><br>
       <strong>Sipariş No:</strong> #${escapeHtml(data.orderDisplayId)}
+      ${labelUrl ? `<br><strong>İade etiketi:</strong> <a href="${escapeHtml(labelUrl)}" style="color:${EMAIL_STYLES.brandColor};">${escapeHtml(labelUrl)}</a>` : ""}
     </div>
     <h2 style="margin:0 0 12px;font-size:16px;color:${EMAIL_STYLES.brandColor};">İade edilen ürünler</h2>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
@@ -394,7 +398,7 @@ export function buildReturnCodeCustomerEmail(data: {
 Firma adı: ${COMPANY.legalName}
 ${COMPANY.returnCustomerNumber ? `Firma numarası: ${COMPANY.returnCustomerNumber}\n` : ""}İade kodu: ${data.code}
 Sipariş No: #${data.orderDisplayId}
-
+${labelUrl ? `İade etiketi: ${labelUrl}\n` : ""}
 İade edilen ürünler:
 ${itemRowsText(data.items)}
 

@@ -42,7 +42,7 @@ export function buildEmailVerificationEmail(data: EmailVerificationData): {
     </p>
 
     <p style="margin:0 0 8px;font-size:13px;color:${EMAIL_STYLES.mutedColor};line-height:20px;">
-      Bu bağlantı <strong>${expiresHours} saat</strong> geçerlidir.
+      Bu bağlantı <strong>${expiresHours} saat</strong> geçerlidir. Birden fazla mail aldıysanız en son geleni kullanın.
     </p>
     <p style="margin:0;font-size:13px;color:${EMAIL_STYLES.mutedColor};line-height:20px;">
       Bu hesabı siz oluşturmadıysanız bu e-postayı yok sayabilirsiniz.
@@ -57,7 +57,7 @@ Es Çay hesabınızı oluşturduğunuz için teşekkürler. Hesabınızı aktifl
 
 ${verifyUrl}
 
-Bu bağlantı ${expiresHours} saat geçerlidir.
+Bu bağlantı ${expiresHours} saat geçerlidir. Birden fazla mail aldıysanız en son geleni kullanın.
 
 Bu hesabı siz oluşturmadıysanız bu e-postayı yok sayabilirsiniz.
 

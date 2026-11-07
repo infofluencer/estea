@@ -1,7 +1,7 @@
 import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework"
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
 import { buildEmailVerificationEmail } from "../emails/email-verification"
-import { createNotificationIdempotent } from "../lib/notify"
+import { createNotificationIdempotent, secretIdempotencyKey } from "../lib/notify"
 
 const EXPIRES_HOURS = 24
 
@@ -51,15 +51,21 @@ export default async function emailVerificationHandler({
 
     const notificationService = container.resolve(Modules.NOTIFICATION)
 
-    await createNotificationIdempotent(notificationService, {
+    const result = await createNotificationIdempotent(notificationService, {
       to: email,
       channel: "email",
       template: "email-verification",
       content: { subject, html, text },
-      idempotency_key: `email-verification:${code.slice(0, 32)}`,
+      idempotency_key: secretIdempotencyKey("email-verification", code),
     })
 
-    logger.info(`[email-verification] Verification email sent to ${email}`)
+    if (result.sent) {
+      logger.info(`[email-verification] Verification email sent to ${email}`)
+    } else {
+      logger.warn(
+        `[email-verification] Verification email NOT sent to ${email} (${result.skipped}, key=${result.idempotency_key})`
+      )
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     logger.error(

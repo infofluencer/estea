@@ -70,6 +70,9 @@ const PRODUCT_VARIANT_FIELDS = [
   "variants.inventory_items.required_quantity",
   "variants.inventory_items.inventory.location_levels.location_id",
   "variants.inventory_items.inventory.location_levels.available_quantity",
+  // available_quantity hesaplanan alan: stocked + reserved istenmezse boş gelir (→ "stok yok")
+  "variants.inventory_items.inventory.location_levels.stocked_quantity",
+  "variants.inventory_items.inventory.location_levels.reserved_quantity",
 ]
 
 async function loadOrderItems(container: MedusaContainer, orderId: string): Promise<OrderItemRow[]> {
@@ -103,10 +106,14 @@ export type ExchangeOptionsItem = {
   choices: VariantChoice[]
 }
 
-/** Sipariş kalemleri için seçilebilecek diğer varyantlar (aynı ürün, stok bilgisiyle). */
+/**
+ * Sipariş kalemleri için seçilebilecek diğer varyantlar (aynı ürün, stok
+ * bilgisiyle). `includeCurrent` (yalnız admin): aynı varyantın aynısı da seçilebilir.
+ */
 export async function loadExchangeOptions(
   container: MedusaContainer,
-  orderId: string
+  orderId: string,
+  opts: { includeCurrent?: boolean } = {}
 ): Promise<ExchangeOptionsItem[]> {
   const items = (await loadOrderItems(container, orderId)).filter(
     // Önceki değişimde eklenen kalem de yeniden değiştirilebilir; product_id şart.
@@ -130,21 +137,22 @@ export async function loadExchangeOptions(
     item_id: i.id,
     title: i.product_title || i.title || "Ürün",
     variant: i.variant_title && !/^default/i.test(i.variant_title) ? i.variant_title : null,
-    choices: exchangeChoices(byProduct.get(i.product_id as string) || [], i.variant_id, locationId),
+    choices: exchangeChoices(byProduct.get(i.product_id as string) || [], i.variant_id, locationId, opts),
   }))
 }
 
 /**
  * Müşteri / admin seçimini değişim kalemlerine çevirir (varyant aynı ürünün
- * başka varyantı, stok yeterli). Adetler çağıran tarafta doğrulanır.
+ * başka varyantı ya da admin için aynısı, stok yeterli). Adetler çağıran tarafta doğrulanır.
  */
 export async function buildExchangeItems(
   container: MedusaContainer,
   orderId: string,
-  selections: { item_id: string; quantity: number; variant_id: string }[]
+  selections: { item_id: string; quantity: number; variant_id: string }[],
+  opts: { includeCurrent?: boolean } = {}
 ): Promise<ExchangeItem[]> {
   if (!selections.length) throw new Error("Değişim için en az bir ürün seçin.")
-  const options = await loadExchangeOptions(container, orderId)
+  const options = await loadExchangeOptions(container, orderId, opts)
   const byItem = new Map(options.map((o) => [o.item_id, o]))
   validateExchangeChoices(
     selections.map((s) => ({ key: s.item_id, quantity: s.quantity, variant_id: s.variant_id })),
@@ -229,7 +237,7 @@ export async function convertReturnToExchange(
     if (quantity < 1 || quantity > max) throw new Error(`Değişim adedi geçersiz (max ${max}).`)
     return { item_id: s.item_id, variant_id: s.variant_id, quantity }
   })
-  const items = await buildExchangeItems(container, ret.order_id, selections)
+  const items = await buildExchangeItems(container, ret.order_id, selections, { includeCurrent: true })
 
   const exchange: ExchangeMeta = {
     ...newExchangeMeta(items, existing?.source || "admin", input.actor),

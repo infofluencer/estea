@@ -1,4 +1,23 @@
-import { createNotificationIdempotent } from "../notify"
+import { createNotificationIdempotent, secretIdempotencyKey } from "../notify"
+
+describe("secretIdempotencyKey", () => {
+  // Aynı JWT başlığıyla başlayan iki farklı token
+  const header = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
+  const a = `${header}payloadA.sigA`
+  const b = `${header}payloadB.sigB`
+
+  it("başı aynı olan token'lar farklı anahtar alır", () => {
+    expect(a.slice(0, 32)).toBe(b.slice(0, 32))
+    expect(secretIdempotencyKey("password-reset", a)).not.toBe(secretIdempotencyKey("password-reset", b))
+  })
+
+  it("aynı token aynı anahtarı verir, token anahtarda görünmez", () => {
+    const key = secretIdempotencyKey("password-reset", a)
+    expect(key).toBe(secretIdempotencyKey("password-reset", a))
+    expect(key).toMatch(/^password-reset:[0-9a-f]{32}$/)
+    expect(key).not.toContain(header)
+  })
+})
 
 function fakeService(existing: { id: string; idempotency_key: string; status: string }[]) {
   const created: Record<string, unknown>[] = []

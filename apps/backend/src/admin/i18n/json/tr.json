@@ -148,7 +148,9 @@
     },
     "fulfillment": {
       "error": {
-        "wrongQuantity_one": "Gönderim için yalnızca bir ürün mevcut"
+        "wrongQuantity_one": "Gönderim için yalnızca bir ürün mevcut",
+        "wrongQuantity": "Gönderilecek tek ürün var",
+        "noItems": "Gönderilecek ürün yok."
       },
       "status": {
         "notFulfilled": "Gönderi yok",
@@ -159,6 +161,20 @@
         "delivered": "Teslim edildi",
         "partiallyDelivered": "Kısmen teslim edildi",
         "awaitingShipping": "Kurye bekleniyor"
+      },
+      "number": "Gönderi #{{number}}",
+      "markAsDeliveredWarning": "Gönderiyi teslim edildi olarak işaretlemek üzeresiniz. Bu işlem geri alınamaz.",
+      "unfulfilledItems": "Gönderilmemiş ürünler",
+      "statusLabel": "Kargo durumu",
+      "statusTitle": "Kargo durumu",
+      "awaitingFulfillmentBadge": "Gönderi bekliyor",
+      "itemsToFulfill": "Gönderilecek ürünler",
+      "create": "Gönderi oluştur",
+      "itemsToFulfillDesc": "Gönderilecek ürünleri ve adetleri seçin",
+      "toast": {
+        "created": "Gönderi oluşturuldu",
+        "canceled": "Gönderi iptal edildi",
+        "fulfillmentDelivered": "Gönderi teslim edildi olarak işaretlendi"
       }
     }
   },
@@ -420,7 +436,9 @@
     "actions": "İşlemler",
     "resource": "Kaynak",
     "operation": "İşlem",
-    "fulfillment": "Kargo durumu"
+    "fulfillment": "Kargo durumu",
+    "fulfillmentProviders": "Kargo sağlayıcıları",
+    "fulfillmentProvider": "Kargo sağlayıcısı"
   },
   "permissions": {
     "accessDenied": {
@@ -472,5 +490,8 @@
       "update": "Düzenle",
       "delete": "Sil"
     }
+  },
+  "refundReasons": {
+    "domain": "Para İadesi Nedenleri"
   }
 }

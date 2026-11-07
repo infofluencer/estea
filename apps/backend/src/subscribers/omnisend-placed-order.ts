@@ -44,7 +44,7 @@ function toOmnisendAddress(a: Address) {
 
 /**
  * payment.captured → Omnisend "placed order".
- * order.placed değil: sipariş PayTR ödemesinden ÖNCE oluşuyor; ödenmeyen
+ * order.placed değil: havale siparişi ödemeden ÖNCE oluşuyor; ödenmeyen
  * siparişte Abandoned Checkout devam etmeli. Customer Reactivation da buna bağlı.
  */
 export default async function omnisendPlacedOrderHandler({

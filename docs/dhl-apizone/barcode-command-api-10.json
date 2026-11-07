@@ -1,0 +1,486 @@
+{
+ "swagger": "2.0",
+ "info": {
+  "version": "1.0",
+  "x-ibm-name": "barcode-command-api-10",
+  "title": "Barcode Command API",
+  "description": "Siparişi faturalaştırarak gönderiye çeviren, gönderiyi güncelleyen ve iptal eden metodların yer aldığı API'dır. | It is the API that converts the order to the shipment by invoicing, updating and cancelling the shipment.",
+  "termsOfService": "http://swagger.io/terms/",
+  "x-ibm-summary": ""
+ },
+ "basePath": "/mngapi/api/barcodecmdapi",
+ "paths": {
+  "/createbarcode": {
+   "post": {
+    "tags": [
+     "BarcodeCommand"
+    ],
+    "summary": "Create Barcode",
+    "description": "Siparişi faturalaştırarak gönderiye çevirir ve sonucunda bir barkod etiketi üretir. | Invoicing the order to the shipment and producing a barcode label as a result.",
+    "operationId": "CreatebarcodePost",
+    "consumes": [
+     "application/json-patch+json",
+     "application/json",
+     "text/json",
+     "application/*+json"
+    ],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "createBarcodeRequest",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/CreateBarcodeRequest"
+      }
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Shipment barcode created",
+      "schema": {
+       "$ref": "#/definitions/CreateBarcodeResponse"
+      },
+      "examples": {
+       "application/json": {
+        "referenceId": "SIPARIS34567",
+        "invoiceId": "564645774",
+        "shipmentId": "4536457657",
+        "barcodes": [
+         {
+          "pieceNumber": 1,
+          "value": "Barcode1"
+         },
+         {
+          "pieceNumber": 2,
+          "value": "Barcode2"
+         }
+        ]
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/updateshipment": {
+   "put": {
+    "tags": [
+     "BarcodeCommand"
+    ],
+    "summary": "Update Shipment",
+    "description": "İlgili referans ve gönderi numarasına ait gönderiyi günceller. | Updates the shipment of the relevant reference and shipment number.",
+    "operationId": "UpdateshipmentPut",
+    "consumes": [
+     "application/json-patch+json",
+     "application/json",
+     "text/json",
+     "application/*+json"
+    ],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "updateShipmentRequest",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/UpdateShipmentRequest"
+      }
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Shipment updated",
+      "schema": {
+       "type": "string"
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/cancelshipment": {
+   "put": {
+    "tags": [
+     "BarcodeCommand"
+    ],
+    "summary": "Cancel Shipment",
+    "description": "İlgili referans ve gönderi numarasına ait gönderiyi iptal eder. | Cancels the shipment of the relevant reference and shipment number.",
+    "operationId": "CancelshipmentPut",
+    "consumes": [
+     "application/json-patch+json",
+     "application/json",
+     "text/json",
+     "application/*+json"
+    ],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "createCustomerRequest",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/CancelShipmentRequest"
+      }
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Shipment canceled",
+      "schema": {
+       "type": "string"
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  }
+ },
+ "definitions": {
+  "CreateBarcodeRequest": {
+   "required": [
+    "referenceId"
+   ],
+   "type": "object",
+   "properties": {
+    "referenceId": {
+     "description": "Identity Number of Order\r\nSipariş Numarası",
+     "type": "string"
+    },
+    "billOfLandingId": {
+     "description": "Bill Of LandingId\r\nİrsaliye Numarası",
+     "type": "string"
+    },
+    "isCOD": {
+     "format": "int32",
+     "description": "Indicates whether it is Cash On Delivery.\r\nKapıda Ödeme mi?",
+     "type": "integer"
+    },
+    "codAmount": {
+     "format": "double",
+     "description": "Cash on Delivery Amount\r\nKapıda Ödeme Miktarı",
+     "type": "number"
+    },
+    "printReferenceBarcodeOnError": {
+     "format": "int32",
+     "description": "Create Reference Label when an error occurs creating Barcode Label\r\nBarkod Etiketi oluşturulurken hata olursa yerine Referans Etiketini oluştur.",
+     "type": "integer"
+    },
+    "message": {
+     "type": "string"
+    },
+    "additionalContent1": {
+     "type": "string"
+    },
+    "additionalContent2": {
+     "type": "string"
+    },
+    "additionalContent3": {
+     "type": "string"
+    },
+    "additionalContent4": {
+     "type": "string"
+    },
+    "orderPieceList": {
+     "uniqueItems": false,
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/OrderPieceList"
+     }
+    },
+    "packagingType": {
+     "type": "integer",
+     "format": "int32"
+    }
+   },
+   "example": {
+    "referenceId": "SIPARIS34567",
+    "billOfLandingId": "İrsaliye 1",
+    "isCOD": 0,
+    "codAmount": 0,
+    "packagingType": 2,
+    "printReferenceBarcodeOnError": 0,
+    "message": "Mesaj 1",
+    "additionalContent1": "",
+    "additionalContent2": "",
+    "additionalContent3": "",
+    "additionalContent4": "",
+    "orderPieceList": [
+     {
+      "barcode": "SIPARIS34567_PARCA1",
+      "desi": 2,
+      "kg": 1,
+      "content": "Parça açıklama 1"
+     },
+     {
+      "barcode": "SIPARIS34567_PARCA2",
+      "desi": 2,
+      "kg": 3,
+      "content": "Parça açıklama 2"
+     }
+    ]
+   }
+  },
+  "OrderPieceList": {
+   "required": [
+    "barcode",
+    "desi",
+    "kg"
+   ],
+   "type": "object",
+   "properties": {
+    "barcode": {
+     "type": "string"
+    },
+    "desi": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "kg": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "content": {
+     "type": "string"
+    }
+   }
+  },
+  "CreateBarcodeResponse": {
+   "type": "object",
+   "properties": {
+    "referenceId": {
+     "description": "Identity Number of Order\r\nSipariş Numarası",
+     "type": "string"
+    },
+    "invoiceId": {
+     "description": "Invoice Number\r\nFatura Numarası",
+     "type": "string"
+    },
+    "shipmentId": {
+     "description": "Identity Number of Shipment\r\nGönderi Numarası",
+     "type": "string"
+    },
+    "barcodes": {
+     "uniqueItems": false,
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/BarcodeInfo"
+     }
+    }
+   }
+  },
+  "BarcodeInfo": {
+   "type": "object",
+   "properties": {
+    "pieceNumber": {
+     "format": "int32",
+     "description": "Shipment Piece Number \r\nParça Sayısı",
+     "type": "integer"
+    },
+    "value": {
+     "type": "string"
+    }
+   }
+  },
+  "UpdateShipmentRequest": {
+   "required": [
+    "referenceId",
+    "shipmentId"
+   ],
+   "type": "object",
+   "properties": {
+    "referenceId": {
+     "description": "Identity Number of Order\r\nSipariş Numarası",
+     "type": "string"
+    },
+    "shipmentId": {
+     "description": "Identity Number of Shipment\r\nGönderi Numarası",
+     "type": "string"
+    },
+    "billOfLandingId": {
+     "description": "Bill Of LandingId\r\nİrsaliye Numarası",
+     "type": "string"
+    },
+    "isCOD": {
+     "format": "int32",
+     "description": "Indicates whether it is Cash On Delivery.\r\nKapıda Ödeme mi?",
+     "type": "integer"
+    },
+    "codAmount": {
+     "format": "double",
+     "description": "Cash on Delivery Amount\r\nKapıda Ödeme Miktarı",
+     "type": "number"
+    },
+    "orderPieceList": {
+     "uniqueItems": false,
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/OrderPieceList"
+     }
+    }
+   },
+   "example": {
+    "referenceId": "SIPARIS34567",
+    "shipmentId": "838302813413",
+    "billOfLandingId": "İrsaliye 1",
+    "isCOD": 0,
+    "codAmount": 0,
+    "orderPieceList": [
+     {
+      "barcode": "SIPARIS34567_PARCA1",
+      "desi": 3,
+      "kg": 1,
+      "content": "Parça açıklama 1"
+     },
+     {
+      "barcode": "SIPARIS34567_PARCA2",
+      "desi": 2,
+      "kg": 3,
+      "content": "Parça açıklama 2"
+     }
+    ]
+   }
+  },
+  "CancelShipmentRequest": {
+   "required": [
+    "referenceId",
+    "shipmentId"
+   ],
+   "type": "object",
+   "properties": {
+    "referenceId": {
+     "description": "Identity Number of Order\r\nSipariş Numarası",
+     "type": "string"
+    },
+    "shipmentId": {
+     "description": "Identity Number of Shipment\r\nGönderi Numarası",
+     "type": "string"
+    }
+   },
+   "example": {
+    "referenceId": "2315665",
+    "shipmentId": "838302813413"
+   }
+  }
+ },
+ "x-ibm-configuration": {
+  "enforced": true,
+  "testable": true,
+  "phase": "realized",
+  "cors": {
+   "enabled": true
+  },
+  "type": "rest",
+  "servers": [
+   {
+    "url": "https://api.mngkargo.com.tr/mngapi/api/barcodecmdapi",
+    "type": [
+     "development",
+     "production"
+    ]
+   }
+  ]
+ },
+ "securityDefinitions": {
+  "api-key-1": {
+   "description": "",
+   "in": "header",
+   "name": "X-IBM-Client-Id",
+   "type": "apiKey"
+  },
+  "api-key-2": {
+   "description": "",
+   "in": "header",
+   "name": "X-IBM-Client-Secret",
+   "type": "apiKey"
+  }
+ },
+ "security": [
+  {
+   "api-key-2": [],
+   "api-key-1": []
+  }
+ ],
+ "x-ibm-comment": [
+  "AMU version used to port this API: v10.0.5.3-R1-680cbea6bb81861c86dc4522ed22fba48a697875-2023-05-09T21:45:55Z",
+  "API06: Changed gateway type to `datapower-api-gateway`.",
+  "API14: Ported v5-compatible policies to work with the API Gateway and updated policy versions.",
+  "API45: Compatibility toggle: `allow-chunked-uploads` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `copy-id-headers-to-message` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `return-v5-responses` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API61: Set buffering property to true. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#SET_BUFFERING"
+ ],
+ "schemes": [
+  "https"
+ ],
+ "host": "api.mngkargo.com.tr"
+}

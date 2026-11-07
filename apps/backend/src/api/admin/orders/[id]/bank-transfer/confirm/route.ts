@@ -4,6 +4,7 @@ import {
 } from "@medusajs/framework/http"
 import { MedusaError } from "@medusajs/framework/utils"
 import { confirmBankTransferPayment } from "../../../../../../lib/bank-transfer-confirm"
+import { errorText } from "../../../../../../lib/ops-events"
 
 /**
  * Admin: POST /admin/orders/:id/bank-transfer/confirm
@@ -21,7 +22,8 @@ export const POST = async (
     )
     res.status(200).json(state)
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
+    // Workflow hataları düz nesne gelir; String() "[object Object]" yazar
+    const message = errorText(err)
     throw new MedusaError(MedusaError.Types.NOT_ALLOWED, message)
   }
 }

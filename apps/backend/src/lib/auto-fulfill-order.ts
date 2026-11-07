@@ -2,7 +2,7 @@ import { MedusaContainer } from "@medusajs/framework/types"
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
 import { createOrderFulfillmentWorkflow } from "@medusajs/medusa/core-flows"
 import { autoFulfillOnPayment, configuredCarrierCode, isCarrierConfigured } from "../modules/carrier/registry"
-import { hasCarrierShipment } from "../modules/carrier/types"
+import { CANCELED_SHIPMENT_REFS_METADATA_KEY, hasCarrierShipment, readFulfillmentData } from "../modules/carrier/types"
 import { resolveDefaultStockLocationId } from "./default-stock-location"
 
 /** Ödeme id → sipariş id (payment → collection → order). */
@@ -143,6 +143,16 @@ export async function autoFulfillPaidOrder(
   }
   if (!locationId) return { ok: false, message: "No stock location for auto-fulfill" }
 
+  // Reship: iptal edilmiş eski gönderilerin firma kimlikleri → adaptör yeni referans üretir.
+  const canceledRefs = [
+    ...new Set(
+      (order.fulfillments || [])
+        .filter((f) => f.canceled_at)
+        .map((f) => readFulfillmentData(f.data).shipment_ref || "")
+        .filter(Boolean)
+    ),
+  ]
+
   logger.info(`[auto-fulfill] Creating fulfillment — order=${orderId} items=${items.length}`)
   const { result } = await createOrderFulfillmentWorkflow(container).run({
     input: {
@@ -150,7 +160,11 @@ export async function autoFulfillPaidOrder(
       items,
       location_id: locationId,
       ...(shippingOptionId ? { shipping_option_id: shippingOptionId } : {}),
-      metadata: { ...(opts.metadata || {}), ...(recipientEmail ? { email: recipientEmail } : {}) },
+      metadata: {
+        ...(opts.metadata || {}),
+        ...(recipientEmail ? { email: recipientEmail } : {}),
+        ...(canceledRefs.length ? { [CANCELED_SHIPMENT_REFS_METADATA_KEY]: canceledRefs } : {}),
+      },
       // Fulfillment açılışı bildirimsiz; "Kargoya verildi"/"Teslim edildi" olayları bildirimli (mail oradan).
       no_notification: true,
     },

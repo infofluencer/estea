@@ -24,6 +24,10 @@ import {
   guestReturnRateLimit,
 } from "./store/returns/guest/rate-limit"
 import { paytrCallbackRateLimit } from "./paytr/callback/rate-limit"
+import {
+  paytrCheckoutRegisterRateLimit,
+  paytrCheckoutStatusRateLimit,
+} from "./store/paytr-checkout/rate-limit"
 import { ensureReturnReceiveLocation } from "./admin/returns/ensure-location"
 import { markPendingBankTransfersInList } from "./admin/orders/bank-transfer-list-status"
 import { filterOrdersByStatus } from "./admin/orders/status-filter"
@@ -176,6 +180,16 @@ export default defineMiddlewares({
         guestReturnRateLimit,
         validateAndTransformBody(StoreGuestReturn),
       ],
+    },
+    {
+      matcher: "/store/paytr-checkout/register",
+      methods: ["POST"],
+      middlewares: [paytrCheckoutRegisterRateLimit],
+    },
+    {
+      matcher: "/store/paytr-checkout/status",
+      methods: ["GET"],
+      middlewares: [paytrCheckoutStatusRateLimit],
     },
     {
       matcher: "/store/returns/exchange-options",

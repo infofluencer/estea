@@ -243,8 +243,14 @@ async function createOrder(
     input: {
       payment_collection_id: paymentCollectionId,
       provider_id: PAYTR_PROVIDER_ID,
+      // Mağazanın ilettiği alanlar (lib/payment.ts): gerçek get-token'da IP, e-posta ve
+      // telefon zorunlu; stub/mock'ta yedek değer kullanılır.
       data: {
         customer_email: email,
+        first_name: address.first_name,
+        last_name: address.last_name,
+        phone: address.phone,
+        address: `${address.address_1}, ${address.city}, ${address.postal_code}`,
         ...(process.env.PAYTR_USER_IP ? { user_ip: process.env.PAYTR_USER_IP } : {}),
       },
     },

@@ -79,6 +79,21 @@ module.exports = defineConfig({
       options: { redisUrl: process.env.REDIS_URL },
     },
     {
+      // PayTR callback / reconcile / temizlik kilitleri süreçler arasında geçerli olmalı;
+      // bellek içi sağlayıcı ttl'yi yok sayar ve ikinci replika kilidi görmez.
+      resolve: "@medusajs/medusa/locking",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/locking-redis",
+            id: "locking-redis",
+            is_default: true,
+            options: { redisUrl: process.env.REDIS_URL },
+          },
+        ],
+      },
+    },
+    {
       resolve: "@medusajs/medusa/payment",
       options: {
         providers: [
@@ -93,11 +108,14 @@ module.exports = defineConfig({
               storefrontUrl: process.env.STOREFRONT_URL ?? "http://localhost:3025",
             },
           },
-          {
-            // Havale / EFT — provider_id: pp_havale_havale (BANK_TRANSFER_* env'leri).
-            resolve: "./src/modules/bank-transfer",
-            id: "havale",
-          },
+          // Havale / EFT kapalı (2026-11-07): satış yalnız kartla (PayTR). Kod silinmedi;
+          // açmak için bu bloğu geri al + BANK_TRANSFER_* env'leri + store/bank-transfer route
+          // + storefront checkout-actions.ts loadCheckoutBootstrap.
+          // {
+          //   // Havale / EFT — provider_id: pp_havale_havale (BANK_TRANSFER_* env'leri).
+          //   resolve: "./src/modules/bank-transfer",
+          //   id: "havale",
+          // },
         ],
       },
     },
@@ -156,6 +174,10 @@ module.exports = defineConfig({
     },
     {
       resolve: "./src/modules/wishlist",
+    },
+    {
+      // PayTR ödeme denemeleri: sipariş ödeme başarılı olunca oluşur
+      resolve: "./src/modules/paytr-checkout",
     },
     {
       // Ödeme / iptal / kargo olay kaydı (admin "Logs")

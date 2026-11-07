@@ -73,6 +73,14 @@ BIZIMHESAP_SHIPPING_VAT_RATE=20
 
 SHIPPING_CARRIER=
 SHIPPING_CARRIER_TEST_MODE=true
+# DHL (SHIPPING_CARRIER=dhl olunca): DHL_ENV=prod yalnız canlıda
+# DHL_CLIENT_ID=
+# DHL_CLIENT_SECRET=
+# DHL_CUSTOMER_NUMBER=
+# DHL_PASSWORD=
+# DHL_LABEL_PDF=labelary
+# RETURN_CARRIER_NAME=DHL eCommerce
+# RETURN_CUSTOMER_NUMBER=
 ORDER_REF_PREFIX=ESC-
 SHIPPING_FLAT_PRICE=149.90
 FREE_SHIPPING_THRESHOLD=0
@@ -91,7 +99,9 @@ S3_ENDPOINT=
 ```
 npm run setup:turkey:prod
 npx medusa user -e admin@esteacay.com -p <şifre>
+npm run setup:admin-layouts:prod
 ```
+Son komut admin sipariş sayfasının ortak düzenini yazar (Es Çay kutuları iş sırasında, JSON/Meta Veriler gizli); kullanıcı oluşturulduktan sonra çalışmalı, tekrar çalıştırmak güvenli.
 Çıktıdan `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` ve `NEXT_PUBLIC_MEDUSA_REGION_ID` alınır.
 Admin: `http://<backend>/app`. Doğrulama: `http://<backend>/health`, `/health/revision`.
 

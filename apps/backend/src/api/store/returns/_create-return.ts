@@ -230,7 +230,9 @@ async function createStoreReturnRequestUnlocked(
         await buildExchangeItems(
           scope,
           order_id,
-          items.map((i) => ({ item_id: i.id, quantity: i.quantity, variant_id: String(i.exchange_variant_id) }))
+          items.map((i) => ({ item_id: i.id, quantity: i.quantity, variant_id: String(i.exchange_variant_id) })),
+          // Aynı varyantın aynısı yalnız panelden (defolu ürün); müşteri formu başka gramaj/çeşit
+          { includeCurrent: source === "admin" }
         ),
         source,
         created_by ?? null

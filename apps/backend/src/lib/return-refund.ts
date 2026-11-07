@@ -6,7 +6,7 @@ import {
 import { refundPaymentWorkflow } from "@medusajs/medusa/core-flows"
 import { isExchangeActive } from "./exchange-plan"
 import { isReturnRejected } from "./return-rejection"
-import { recordOpsEvent } from "./ops-events"
+import { errorText, recordOpsEvent } from "./ops-events"
 import { COMPANY } from "../emails/company"
 import { createNotificationIdempotent } from "./notify"
 
@@ -539,7 +539,8 @@ export async function processReturnRefund(
 
     return { ok: true, meta }
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
+    // Workflow hataları düz nesne gelir; String() "[object Object]" yazar
+    const message = errorText(err)
     const meta: ReturnRefundMeta = {
       status: "failed",
       amount,

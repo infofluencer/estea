@@ -173,6 +173,8 @@ export function mapRecipientAddress(
     districtName,
   }
   if (address2 && !address2IsDistrict) value.address2 = address2
+  const neighbourhood = readMetadataString(address.metadata, ["neighbourhood", "neighborhood", "mahalle"])
+  if (neighbourhood) value.neighbourhood = neighbourhood
   const zip = cleanText(address.postal_code)
   if (zip) value.zip = zip
 

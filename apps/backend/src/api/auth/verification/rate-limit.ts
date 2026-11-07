@@ -49,5 +49,12 @@ export function verificationRequestRateLimit(
 
   recent.push(now)
   hits.set(key, recent)
+  res.locals.verificationRateKey = key
   next()
+}
+
+/** Mail göndermeyen istek (son bağlantı korundu) sınırdan düşer. */
+export function refundVerificationRequestHit(res: MedusaResponse) {
+  const key = res.locals?.verificationRateKey as string | undefined
+  if (key) hits.get(key)?.pop()
 }

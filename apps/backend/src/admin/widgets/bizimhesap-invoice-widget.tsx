@@ -142,7 +142,7 @@ const BizimhesapInvoiceWidget = () => {
         Es Çay — Fatura (BizimHesap)
       </Heading>
       <Text size="small" className="text-ui-fg-subtle mb-3 block">
-        Kayıt ödemede açılır. e-Arşiv / e-Fatura gönderimini BizimHesap panelinden izleyin.
+        Kayıt sipariş teslim edilince açılır. e-Arşiv / e-Fatura gönderimini BizimHesap panelinden izleyin.
       </Text>
 
       <div className="rounded-md border border-ui-border-base p-3 space-y-2">
@@ -157,7 +157,7 @@ const BizimhesapInvoiceWidget = () => {
 
         {!inv ? (
           <Text size="small" className="text-ui-fg-subtle">
-            Henüz fatura kaydı yok (ödeme sonrası açılır).
+            Henüz fatura kaydı yok (teslimden sonra açılır).
           </Text>
         ) : (
           <>
@@ -263,6 +263,8 @@ const BizimhesapInvoiceWidget = () => {
 }
 
 export const config = defineWidgetConfig({
+  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
+  id: "escay-order-invoice",
   zone: "order.details.side.after",
 })
 

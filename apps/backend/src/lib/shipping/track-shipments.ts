@@ -37,13 +37,28 @@ export async function trackOpenShipments(container: MedusaContainer): Promise<{ 
     try {
       const status = await adapter.getStatus(f.data || {})
       const prev = readFulfillmentData(f.data)
-      if (prev.status_code !== status.code) {
-        await patchFulfillmentData(container, f.id, {
-          status_code: status.code,
-          status: status.description,
-          status_at: new Date().toISOString(),
-        })
+      const statusChanged = prev.status_code !== status.code
+      if (statusChanged || status.patch || status.labels?.length) {
+        await patchFulfillmentData(
+          container,
+          f.id,
+          {
+            ...(status.patch || {}),
+            ...(statusChanged ? { status_code: status.code, status: status.description, status_at: new Date().toISOString() } : {}),
+          },
+          status.labels
+        )
         changed++
+      }
+      if (status.alert) {
+        await recordOpsEvent(container, {
+          kind: "shipment.poll",
+          level: status.alert.level,
+          title: `${status.alert.title}: ${prev.order_reference || f.id}`,
+          detail: status.alert.detail,
+          data: { fulfillment_id: f.id, status: { code: status.code, description: status.description } },
+          oncePerTitle: true,
+        })
       }
       const action: FulfillmentAction = status.action
       if (action === "shipped" && f.shipped_at) continue

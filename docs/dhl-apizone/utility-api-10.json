@@ -1,0 +1,312 @@
+{
+ "swagger": "2.0",
+ "info": {
+  "version": "1.0",
+  "x-ibm-name": "utility-api-10",
+  "title": "Utility API",
+  "description": "API'lar ile ilgili bilgileri getirir. | Returns information about APIs.",
+  "termsOfService": "http://swagger.io/terms/",
+  "x-ibm-summary": ""
+ },
+ "basePath": "/mngapi/api/utilityapi",
+ "paths": {
+  "/getapierrorcodes": {
+   "get": {
+    "tags": [
+     "Utility"
+    ],
+    "summary": "Get APIs Error Codes",
+    "description": "API'larda kullanılan hata kodlarını getirir. | Gets error codes uses in APIs.",
+    "operationId": "GetapierrorcodesGet",
+    "consumes": [],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "schema": {
+       "uniqueItems": false,
+       "type": "array",
+       "items": {
+        "$ref": "#/definitions/GetErrorCodesResponse"
+       }
+      },
+      "examples": {
+       "application/json": [
+        {
+         "code": "26079",
+         "description": "Shipper. Bussiness Phone Number' boş olmalıdır.",
+         "errorType": 4
+        },
+        {
+         "code": "26105",
+         "description": "'SMS Preference1', '1' ya da '0' olmalı.",
+         "errorType": 4
+        }
+       ]
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "404": {
+      "description": "Codes not found",
+      "schema": {
+       "$ref": "#/definitions/ProblemDetails"
+      }
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/getapierrorcode/{Code}": {
+   "get": {
+    "tags": [
+     "Utility"
+    ],
+    "summary": "Get API Error By Code",
+    "description": "İlgili hata koduna göre API hatasını getirir... | Gets API error according to given code.",
+    "operationId": "GetapierrorcodeByCodeGet",
+    "consumes": [],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "Code",
+      "in": "path",
+      "description": "gets error according to given Code",
+      "required": true,
+      "type": "string"
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "schema": {
+       "uniqueItems": false,
+       "type": "array",
+       "items": {
+        "$ref": "#/definitions/GetErrorCodesResponse"
+       }
+      },
+      "examples": {
+       "application/json": [
+        {
+         "code": "26079",
+         "description": "Shipper. Bussiness Phone Number' boş olmalıdır.",
+         "errorType": 4
+        },
+        {
+         "code": "26105",
+         "description": "'SMS Preference1', '1' ya da '0' olmalı.",
+         "errorType": 4
+        }
+       ]
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "404": {
+      "description": "Error not found",
+      "schema": {
+       "$ref": "#/definitions/ProblemDetails"
+      }
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/getapistatuses": {
+   "get": {
+    "tags": [
+     "Utility"
+    ],
+    "summary": "Get APIs Statuses",
+    "description": "API'lerin durumlarını getirir. | Gets APIs' statuses.",
+    "operationId": "GetapistatusesGet",
+    "consumes": [],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "schema": {
+       "uniqueItems": false,
+       "type": "array",
+       "items": {
+        "$ref": "#/definitions/GetStatusResponse"
+       }
+      },
+      "examples": {
+       "application/json": [
+        {
+         "apiName": "CBSInfo API",
+         "status": "Operational"
+        },
+        {
+         "apiName": "Standard Query API",
+         "status": "Degraded Performance"
+        }
+       ]
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "404": {
+      "description": "API not found",
+      "schema": {
+       "$ref": "#/definitions/ProblemDetails"
+      }
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  }
+ },
+ "definitions": {
+  "GetErrorCodesResponse": {
+   "type": "object",
+   "properties": {
+    "code": {
+     "type": "string"
+    },
+    "description": {
+     "type": "string"
+    },
+    "errorType": {
+     "format": "int32",
+     "type": "integer"
+    }
+   }
+  },
+  "ProblemDetails": {
+   "type": "object",
+   "properties": {
+    "type": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "status": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "detail": {
+     "type": "string"
+    },
+    "instance": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": {
+    "type": "object"
+   }
+  },
+  "GetStatusResponse": {
+   "type": "object",
+   "properties": {
+    "apiName": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "x-ibm-configuration": {
+  "enforced": true,
+  "testable": true,
+  "phase": "realized",
+  "cors": {
+   "enabled": true
+  },
+  "type": "rest",
+  "servers": [
+   {
+    "url": "https://api.mngkargo.com.tr/mngapi/api/utilityapi",
+    "type": [
+     "development",
+     "production"
+    ]
+   }
+  ]
+ },
+ "securityDefinitions": {
+  "api-key-1": {
+   "description": "",
+   "in": "header",
+   "name": "X-IBM-Client-Id",
+   "type": "apiKey"
+  },
+  "api-key-2": {
+   "description": "",
+   "in": "header",
+   "name": "X-IBM-Client-Secret",
+   "type": "apiKey"
+  }
+ },
+ "security": [
+  {
+   "api-key-2": [],
+   "api-key-1": []
+  }
+ ],
+ "x-ibm-comment": [
+  "AMU version used to port this API: v10.0.5.3-R1-680cbea6bb81861c86dc4522ed22fba48a697875-2023-05-09T21:45:55Z",
+  "API06: Changed gateway type to `datapower-api-gateway`.",
+  "API14: Ported v5-compatible policies to work with the API Gateway and updated policy versions.",
+  "API45: Compatibility toggle: `allow-chunked-uploads` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `copy-id-headers-to-message` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `return-v5-responses` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API61: Set buffering property to true. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#SET_BUFFERING",
+  "API24: Removed redundant `parse` policy from the beginning of the assembly. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#REMOVED_REDUNDANT_FRONT_PARSE"
+ ],
+ "schemes": [
+  "https"
+ ],
+ "host": "api.mngkargo.com.tr"
+}

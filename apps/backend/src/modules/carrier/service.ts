@@ -21,6 +21,7 @@ import {
   getConfiguredCarrier,
 } from "./registry"
 import {
+  CANCELED_SHIPMENT_REFS_METADATA_KEY,
   CARRIER_FULFILLMENT_OPTION_ID,
   CARRIER_RETURN_OPTION_ID,
   CarrierError,
@@ -226,6 +227,9 @@ class CarrierFulfillmentProviderService extends AbstractFulfillmentProviderServi
           displayId: order?.display_id ?? null,
           reference,
           isExchange,
+          canceledShipmentRefs: Array.isArray(fulMeta[CANCELED_SHIPMENT_REFS_METADATA_KEY])
+            ? (fulMeta[CANCELED_SHIPMENT_REFS_METADATA_KEY] as unknown[]).map(String).filter(Boolean)
+            : [],
           currencyCode: String(order?.currency_code ?? "try").toUpperCase(),
           total: order?.total != null ? Number(order.total) : null,
         },

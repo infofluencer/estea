@@ -1,7 +1,7 @@
 import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework"
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
 import { buildPasswordResetEmail } from "../emails/password-reset"
-import { createNotificationIdempotent } from "../lib/notify"
+import { createNotificationIdempotent, secretIdempotencyKey } from "../lib/notify"
 
 type PasswordResetEvent = {
   entity_id: string
@@ -48,15 +48,21 @@ export default async function passwordResetHandler({
 
     const notificationService = container.resolve(Modules.NOTIFICATION)
 
-    await createNotificationIdempotent(notificationService, {
+    const result = await createNotificationIdempotent(notificationService, {
       to: email,
       channel: "email",
       template: "password-reset",
       content: { subject, html, text },
-      idempotency_key: `password-reset:${data.token.slice(0, 32)}`,
+      idempotency_key: secretIdempotencyKey("password-reset", data.token),
     })
 
-    logger.info(`[password-reset-email] Reset email sent to ${email}`)
+    if (result.sent) {
+      logger.info(`[password-reset-email] Reset email sent to ${email}`)
+    } else {
+      logger.warn(
+        `[password-reset-email] Reset email NOT sent to ${email} (${result.skipped}, key=${result.idempotency_key})`
+      )
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     logger.error(

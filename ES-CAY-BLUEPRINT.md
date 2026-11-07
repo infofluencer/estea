@@ -163,7 +163,7 @@ Modül kayıtları (sırayla):
 | `src/subscribers` | 1.6k | 20 subscriber |
 | `src/emails` | 1.5k | 10 şablon dosyası |
 | `src/jobs` | 0.6k | 6 cron job |
-| `src/workflows/hooks` | 17 | `require-cart-email` |
+| `src/workflows/hooks` | 17 | `validate-cart-checkout` |
 | `src/scripts` | — | ~60 operasyon/test script'i |
 
 ### 3.3 Middleware kuralları (`src/api/middlewares.ts`) — sırayla
@@ -209,7 +209,7 @@ Rate-limiter: `src/api/store/_rate-limit.ts` `createRateLimiter({name, maxAttemp
 | `order.placed` | `order-placed.ts` | Yalnızca havale siparişinde "Ödemeniz Bekleniyor" (IBAN) maili + `payment.pending` olayı; kart siparişinde **mail yok** (ödeme henüz yok) | Aynen |
 | `payment.captured` | `payment-captured-email.ts` | "Siparişiniz Alındı" / "Havale Ödemeniz Alındı" (idempotent `order-confirmation:<orderId>`) | Aynen |
 | `payment.captured` | `payment-captured-geliver.ts` | Otomatik fulfillment + kargo gönderisi | Kargo adaptörüne göre |
-| `payment.captured` | `payment-captured-bizimhesap.ts` | BizimHesap satış faturası | Paraşüt yerine |
+| `delivery.created` | `delivery-created-bizimhesap.ts` | BizimHesap satış faturası (teslimden sonra; tahsilat yoksa kesilmez) | Paraşüt yerine; 2026-11-07'de ödemeden teslime alındı |
 | `payment.captured` | `omnisend-placed-order.ts` | Omnisend `placed order` (v2) | Aynen |
 | `payment.captured` | `meta-capi-purchase.ts` | Meta CAPI Purchase (yalnızca `tracking_consent`, yalnızca prod) | Aynen |
 | `cart.updated` | `omnisend-started-checkout.ts` | E-posta + ürün varsa `started checkout` (24 saat Redis dedupe), izinliyse contact `subscribed` | Aynen |
@@ -225,13 +225,13 @@ Rate-limiter: `src/api/store/_rate-limit.ts` `createRateLimiter({name, maxAttemp
 | Job | Zamanlama | İş | Es Çay |
 |---|---|---|---|
 | `cancel-unpaid-paytr-orders` | `*/10 * * * *` | `status=pending`, `created_at ≤ now-30dk`, PayTR session'ı pending/error olan siparişi `cancelOrderWorkflow` ile iptal (stok serbest). Havale siparişlerine dokunmaz. PayTR callback kilidiyle aynı lock | Aynen |
-| `retry-bizimhesap-invoices` | periyodik | Reddedilen faturaları 8 denemeye kadar, 72 saat geriye; belirsizleri denemez | Paraşüt yerine |
+| `retry-bizimhesap-invoices` | periyodik | Reddedilen faturaları 8 denemeye kadar, son güncellemeden 72 saat geriye; belirsizleri denemez | Paraşüt yerine |
 | `dhl-track-shipments` | 30 dk | DHL durum sorgusu → shipped/delivered | Adaptöre göre (webhook yoksa polling şablonu olarak değerli) |
 | `trendyol-push-stock` (5 dk), `trendyol-pull-orders` (15 dk), `trendyol-reconcile-stock` (15 dk) | | | Sil |
 
 ### 3.6 Workflow hook
 
-`src/workflows/hooks/require-cart-email.ts`: `completeCartWorkflow.hooks.validate` → e-posta yoksa/geçersizse sipariş oluşmaz.
+`src/workflows/hooks/validate-cart-checkout.ts`: `completeCartWorkflow.hooks.validate` → e-posta yoksa/geçersizse, teslimat adresi (resmi il/ilçe, posta kodu, telefon) ya da fatura kimliği (kontrol basamaklı VKN/TCKN, kurumsalda vergi dairesi + unvan) tutmuyorsa sipariş oluşmaz; kurallar `shared/checkout-address.ts`, mağaza formu aynı modülü kullanır.
 
 ---
 
@@ -280,6 +280,8 @@ Dosyalar: `src/modules/paytr/{service,hash,order-guards,mock-iade}.ts`, `src/api
 
 ### 4.2 Havale / EFT — aynen kopyalanır
 
+> **2026-11-07: devre dışı** (K3). Satış yalnız kartla; aşağıdaki akış kodda duruyor, giriş noktaları yorum satırında.
+
 Provider `src/modules/bank-transfer` (`pp_havale_havale`): `initiatePayment` → `bank_transfer_status: pending`; `authorizePayment` yalnızca `received` ise AUTHORIZED, aksi halde PENDING_AUTHORIZATION (sipariş ödenmemiş oluşur, stok rezerve edilir); `capturePayment` → `received`; `refundPayment` para hareketi yapmaz, `data.manual_refunds[]`'a yazar (banka elle); webhook yok.
 
 Akış:
@@ -288,7 +290,7 @@ Akış:
 3. `order.placed` → "Ödemeniz Bekleniyor" (IBAN, kuruşlu tutar, açıklama = sipariş no) + ops `payment.pending` (sipariş başına bir kez).
 4. `GET /store/orders/:id` ve `lookup` yanıtına `bank_transfer` bilgisi eklenir (onay + takip sayfasında IBAN kutusu).
 5. Admin liste: `awaiting` + `payment_method=bank_transfer` → `requires_action` ("Havale onayı bekleniyor").
-6. Admin widget (`order.details.side.before`) "Havale alındı" → `POST /admin/orders/:id/bank-transfer/confirm` → `confirmBankTransferPayment` (lock, idempotent) → `processPaymentWorkflow(SUCCESSFUL)` → `payment.captured` → onay maili + fatura + kargo + Omnisend/CAPI. Ops `payment.succeeded {method: bank_transfer}`.
+6. Admin widget (`order.details.side.before`) "Havale alındı" → `POST /admin/orders/:id/bank-transfer/confirm` → `confirmBankTransferPayment` (lock, idempotent) → `processPaymentWorkflow(SUCCESSFUL)` → `payment.captured` → onay maili + kargo + Omnisend/CAPI (fatura teslimde). Ops `payment.succeeded {method: bank_transfer}`.
 7. Otomatik iptal yok. BizimHesap fatura açıklamasında ödeme EFT/HAVALE + `BANK_TRANSFER_BANK_NAME`.
 
 Kurulum: env → redeploy → `npm run enable:bank-transfer:prod` (provider'ı Türkiye region'a bağlar, idempotent) → `BANK_TRANSFER_ENABLED=1`. Test: `test:bank-transfer` (sipariş açar, doğrular, iptal eder).
@@ -397,7 +399,7 @@ Veri modeli: özel tablo **yok**; her şey Medusa `return`/`order` `metadata`'s�
 Modül `src/modules/bizimhesap` (DB modeli yok; durum `order.metadata.bizimhesap_invoice`). Karar ve açık sorular: `docs/ESCAY-KARARLAR.md` K14.
 
 - **API:** yalnız `POST https://bizimhesap.com/api/b2b/addinvoice`, kimlik gövdede `firmId`. Müşteri ve ürün yoksa BizimHesap açar. Test ortamı, sorgu, düzeltme, silme, idempotency ve iade tipi yok.
-- **Akış:** `payment.captured` → kilit → `pending` → istek → `created` (`guid`, `url`). `BIZIMHESAP_FIRM_ID` boşsa mock; `BIZIMHESAP_DRY_RUN` veya `PAYTR_OID_PREFIX` doluysa `dry_run`, istek atılmaz.
+- **Akış:** `delivery.created` (kargo takibi ya da admin "Teslim edildi") → tahsilat kontrolü → kilit → `pending` → istek → `created` (`guid`, `url`). `BIZIMHESAP_FIRM_ID` boşsa mock; `BIZIMHESAP_DRY_RUN` veya `PAYTR_OID_PREFIX` doluysa `dry_run`, istek atılmaz.
 - **KDV:** Medusa fiyatları KDV dahil; net ve vergi satır toplamından hesaplanır, dip toplam siparişle kuruşu kuruşuna tutar. Fark 0,05 TL'yi aşarsa gönderilmez. Satır KDV `tax_lines[0].rate`, yoksa `BIZIMHESAP_DEFAULT_VAT_RATE`/`KDV_RATE`; kargo `BIZIMHESAP_SHIPPING_VAT_RATE`.
 - **Hata:** reddedilen istek `error`, job `retry-bizimhesap-invoices` 8 denemeye kadar dener. Zaman aşımı, 5xx ve okunamayan yanıt `unknown`: kayıt oluşmuş olabilir, otomatik denenmez; admin panelden kontrol edip widget'tan onaylayarak gönderir. Takılı `pending` 10 dk sonra `unknown` olur. İkisinde de admin maili + `invoice.failed` olayı.
 - **İade faturası:** API desteklemez. `escay.return_refunded` → `metadata.bizimhesap_refund_invoices[return_id]` `manual_required` + admin maili + `invoice.refund_manual` olayı; panelden elle kesilir.
@@ -459,7 +461,7 @@ payment.captured
 Taşıyıcı durum güncellemesi (webhook VEYA polling job)
   └─ applyGeliverFulfillmentAction(fulfillmentId, "shipped" | "delivered" | "failed" | "returned")
         ├─ shipped  → createOrderShipmentWorkflow(labels) → Medusa shipment.created → "Kargoya verildi" maili
-        ├─ delivered → (önce shipped) markOrderFulfillmentAsDeliveredWorkflow → delivery.created → "Teslim edildi" maili
+        ├─ delivered → (önce shipped) markOrderFulfillmentAsDeliveredWorkflow → delivery.created → "Teslim edildi" maili + BizimHesap faturası
         ├─ failed/returned → ops shipment.problem
         └─ isAlreadyDone(): webhook + job yarışında "already shipped/delivered" yutulur (çift mail yok)
 
@@ -621,6 +623,8 @@ Bilinen boşluk: onay sayfası PayTR iframe'i **içinde** render olur, `target=_
 ---
 
 ## 6. Sipariş yaşam döngüsü — uçtan uca olay zinciri
+
+> **Es Çay farkı (2026-11-05):** kart ödemesinde sipariş ödeme başarılı olunca oluşur; aşağıdaki zincirde `cart.complete` adımı PayTR bildiriminden sonra backend'de çalışır. Havale aynen. Ayrıntı: `docs/ESCAY-KARARLAR.md` K11.
 
 ```
 [Storefront]                                   [Backend olayları]                        [Yan etkiler]
@@ -887,7 +891,7 @@ Lokal mail: Mailpit (`SMTP_HOST=localhost:1025`, UI 8025). PayTR lokal: `PAYTR_M
 Bu liste `docs/CUTOVER.md`'deki 25 bölümün ve commit geçmişinin damıtılmış hâli. Her madde Mareen'de gerçekten yaşandı.
 
 ### Ödeme
-1. **Sipariş ödeme öncesi oluşur** (cart.complete → iframe). Bu yüzden `cancel-unpaid-paytr-orders` job'u (10 dk, 30 dk eşiği) şart; stok rezervasyonu iptalle serbest kalır. Havale siparişlerine job dokunmaz.
+1. *(Es Çay'da değişti: K11, sipariş ödeme başarılı olunca oluşur.)* **Mareen'de sipariş ödeme öncesi oluşur** (cart.complete → iframe). Bu yüzden `cancel-unpaid-paytr-orders` job'u (10 dk, 30 dk eşiği) şart; stok rezervasyonu iptalle serbest kalır. Havale siparişlerine job dokunmaz.
 2. PayTR **bildirim URL'i panelde tektir**. Eski site aynı mağazayı kullanıyorsa callback geçişi atomik yapılmalı; DNS yayılırken callback ulaşamazsa sipariş 30 dk'da iptal olur ama para çekilmiş olur (Mareen #9). Geç gelen success artık **otomatik iade etmez**, alarm maili + `manual_review`.
 3. Callback'te `payment_amount` kontrolü taksitli ödemede fark yaratır (düzeltildi); hash doğrulaması zorunlu; tanınmayan `merchant_oid`'e `OK` döner (PayTR tekrar denemesin).
 4. `PAYTR_TEST_MODE` tanımsız = test. Prod'a geçerken açıkça `0`.

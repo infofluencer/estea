@@ -39,9 +39,11 @@ export default async function retryBizimhesapInvoicesJob(
   const query = container.resolve(ContainerRegistrationKeys.QUERY)
   const { data: orders } = await query.graph({
     entity: "order",
-    fields: ["id", "status", "created_at", "metadata"],
+    fields: ["id", "status", "updated_at", "metadata"],
+    // Fatura teslimde kesilir; sipariş tarihi günler önce olabilir. Fatura her
+    // denemede metadata'ya yazıldığı için pencere son güncellemeden sayılır.
     filters: {
-      created_at: { $gte: cutoff },
+      updated_at: { $gte: cutoff },
       status: { $nin: ["canceled"] },
     },
   })

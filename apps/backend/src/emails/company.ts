@@ -8,9 +8,9 @@ export const COMPANY = {
   emailOps: "info@esteacay.com",
   emailKvkk: "info@esteacay.com",
   /**
-   * Kodlu iadede müşterinin şubede söyleyeceği firma bilgisi — TODO(K1):
-   * kargo firması seçilince doldur (ör. "Aras Kargo", müşteri/cari no).
+   * Kodlu iadede müşterinin şubede söyleyeceği firma bilgisi (env). DHL'de:
+   * RETURN_CARRIER_NAME="DHL eCommerce", RETURN_CUSTOMER_NUMBER=<DHL müşteri no>.
    */
-  returnCarrierName: "anlaşmalı kargo firmamız",
-  returnCustomerNumber: "",
+  returnCarrierName: process.env.RETURN_CARRIER_NAME?.trim() || "anlaşmalı kargo firmamız",
+  returnCustomerNumber: process.env.RETURN_CUSTOMER_NUMBER?.trim() || "",
 } as const

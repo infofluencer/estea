@@ -1,0 +1,722 @@
+{
+ "swagger": "2.0",
+ "info": {
+  "version": "1.0",
+  "x-ibm-name": "standard-command-api-10",
+  "title": "Standard Command API",
+  "description": "'Normal', 'İade' siparişleri oluşturan, siparişi güncelleyen ve siparişi iptal eden metodların bulunduğu API'dir. |This API inculdes methods that creates Normal, Return types of order, updates order and cancels order.",
+  "termsOfService": "http://swagger.io/terms/",
+  "x-ibm-summary": ""
+ },
+ "basePath": "/mngapi/api/standardcmdapi",
+ "paths": {
+  "/createOrder": {
+   "post": {
+    "tags": [
+     "StandardCommand"
+    ],
+    "summary": "Create Order",
+    "description": "'Normal' sipariş oluşturur. Alıcı bilgisi değerleri doldurulurken ya CustomerId verilir ya da Alıcı FullName, CityCode, DistrictCode, Address alanları ve MobilePhoneNumber, HomePhoneNumber, BussinessPhoneNumber'dan herhangi biri girilmelidir. | Creates normal type of order. When you fill Recipient areas either you set CustomerId or Recipient' s FullName, CityCode, DistrictCode, Address and one of the MobilePhoneNumber, HomePhoneNumber, BussinessPhoneNumber.",
+    "operationId": "CreateOrderPost",
+    "consumes": [
+     "application/json-patch+json",
+     "application/json",
+     "text/json",
+     "application/*+json"
+    ],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "createOrderRequest",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/CreateOrderRequest"
+      }
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Order created",
+      "schema": {
+       "$ref": "#/definitions/CreateOrderResponse"
+      },
+      "examples": {
+       "application/json": {
+        "orderInvoiceId": "456764543",
+        "orderInvoiceDetailId": "25423565",
+        "shipperBranchCode": "1345",
+        "referenceId": "YourReferenceId"
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/createReturnOrder": {
+   "post": {
+    "tags": [
+     "StandardCommand"
+    ],
+    "summary": "Create Return Order",
+    "description": "'İade' sipariş oluşturur. Gönderici bilgisi değerleri doldurulurken ya CustomerId verilir ya da Gönderici FullName, CityCode, DistrictCode, Address alanları ve MobilePhoneNumber, HomePhoneNumber, BussinessPhoneNumber'dan herhangi biri girilmelidir. | Creates return type of order. When you fill shipper areas either you set CustomerId or Shipper's FullName, CityCode, DistrictCode, Address and one of the MobilePhoneNumber, HomePhoneNumber, BussinessPhoneNumber.",
+    "operationId": "CreateReturnOrderPost",
+    "consumes": [
+     "application/json-patch+json",
+     "application/json",
+     "text/json",
+     "application/*+json"
+    ],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "createReturnOrderRequest",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/CreateReturnOrderRequest"
+      }
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Return order created",
+      "schema": {
+       "$ref": "#/definitions/CreateReturnOrderResponse"
+      },
+      "examples": {
+       "application/json": {
+        "orderInvoiceId": "456764543",
+        "orderInvoiceDetailId": "25423565",
+        "shipperBranchCode": "1345",
+        "referenceId": "YourReferenceId",
+        "returnOrderLabelURL": "https://mn.tc?rtnid=EPPSVVXJ"
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/updateorder": {
+   "put": {
+    "tags": [
+     "StandardCommand"
+    ],
+    "summary": "Update Order",
+    "description": "İlgili referans numarasına ait siparişi günceller. | Updates the order of the relevant reference number.",
+    "operationId": "UpdateorderPut",
+    "consumes": [
+     "application/json-patch+json",
+     "application/json",
+     "text/json",
+     "application/*+json"
+    ],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "updatePieceRequest",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/UpdateOrderRequest"
+      }
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Order updated",
+      "schema": {
+       "type": "string"
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/cancelorder/{refrenceId}": {
+   "put": {
+    "tags": [
+     "StandardCommand"
+    ],
+    "summary": "Cancel Order",
+    "description": "İlgili referans numarasına ait siparişi iptal eder. | Cancels the order of the relevant reference number.",
+    "operationId": "CancelorderByRefrenceIdPut",
+    "consumes": [],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "refrenceId",
+      "in": "path",
+      "description": "cancels order according to given referenceId",
+      "required": true,
+      "type": "string"
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+      "required": true,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Order canceled",
+      "schema": {
+       "type": "string"
+      }
+     },
+     "400": {
+      "description": "Bad Request"
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  }
+ },
+ "definitions": {
+  "CreateOrderRequest": {
+   "type": "object",
+   "properties": {
+    "order": {
+     "$ref": "#/definitions/Order"
+    },
+    "orderPieceList": {
+     "uniqueItems": false,
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/OrderPieceList"
+     }
+    },
+    "recipient": {
+     "$ref": "#/definitions/Customer"
+    }
+   },
+   "example": {
+    "order": {
+     "referenceId": "SIPARIS34567",
+     "barcode": "SIPARIS34567",
+     "billOfLandingId": "İrsaliye 1",
+     "isCOD": 0,
+     "codAmount": 0,
+     "shipmentServiceType": 1,
+     "packagingType": 1,
+     "content": "İçerik 1",
+     "smsPreference1": 1,
+     "smsPreference2": 0,
+     "smsPreference3": 0,
+     "paymentType": 1,
+     "deliveryType": 1,
+     "description": "Açıklama 1",
+     "marketPlaceShortCode": "",
+     "marketPlaceSaleCode": "",
+     "pudoId": ""
+    },
+    "orderPieceList": [
+     {
+      "barcode": "SIPARIS34567_PARCA1",
+      "desi": 2,
+      "kg": 1,
+      "content": "Parça açıklama 1"
+     },
+     {
+      "barcode": "SIPARIS34567_PARCA2",
+      "desi": 2,
+      "kg": 3,
+      "content": "Parça açıklama 2"
+     }
+    ],
+    "recipient": {
+     "customerId": 58513278,
+     "refCustomerId": "",
+     "cityCode": 0,
+     "districtCode": 0,
+     "cityName": "",
+     "districtName": "",
+     "address": "",
+     "bussinessPhoneNumber": "",
+     "email": "",
+     "taxOffice": "",
+     "taxNumber": "",
+     "fullName": "",
+     "homePhoneNumber": "",
+     "mobilePhoneNumber": ""
+    }
+   }
+  },
+  "Order": {
+   "required": [
+    "referenceId",
+    "shipmentServiceType",
+    "packagingType",
+    "content",
+    "smsPreference1",
+    "smsPreference2",
+    "smsPreference3",
+    "paymentType",
+    "deliveryType",
+    "description"
+   ],
+   "type": "object",
+   "properties": {
+    "referenceId": {
+     "description": "Identity Number of Order, ReferenceId must be unique foreach order. ReferenceId must be uppercase.\r\nSipariş Numarası, Sipariş numarası her sipariş için benzersiz olmalıdır. Sipariş numarası büyükharflerden oluşmalıdır.",
+     "type": "string"
+    },
+    "barcode": {
+     "description": "Barcode must be same with ReferenceId. Barcode must be uppercase.\r\nBarkod ReferenceId ile aynı olmalıdır. Barkod büyükharflerden oluşmalıdır.",
+     "type": "string"
+    },
+    "billOfLandingId": {
+     "description": "Bill Of LandingId\r\nİrsaliye Numarası",
+     "type": "string"
+    },
+    "isCOD": {
+     "format": "int32",
+     "description": "Indicates whether it is Cash On Delivery.\r\nKapıda Ödeme mi?",
+     "type": "integer"
+    },
+    "codAmount": {
+     "format": "double",
+     "description": "Cash on Delivery Amount\r\nKapıda Ödeme Miktarı",
+     "type": "number"
+    },
+    "shipmentServiceType": {
+     "format": "int32",
+     "description": "Shipment Service Type: 1:STANDART_TESLİMAT, 7:GUNİCİ_TESLİMAT, 8:AKŞAM_TESLİMAT\r\nGönderi Tipi",
+     "type": "integer"
+    },
+    "packagingType": {
+     "format": "int32",
+     "description": "Package Type of Order:  1:DOSYA, 2:Mİ, 3:PAKET, 4:KOLİ\r\nKargo Cinsi",
+     "type": "integer"
+    },
+    "content": {
+     "description": "Content\r\nGenel İçerik Bilgisi",
+     "type": "string"
+    },
+    "smsPreference1": {
+     "format": "int32",
+     "description": "SMSPreference Is Send SMS to Recipient When Shipment Reached to Destination Branch\r\nKargo varış şubesine ulaştığında alıcıya SMS gitsin mi?",
+     "type": "integer"
+    },
+    "smsPreference2": {
+     "format": "int32",
+     "description": "Is Send SMS to Recipient When Shpiment First Prepare\r\nKargo ilk hazırlandığında alıcıya SMS gitsin mi?",
+     "type": "integer"
+    },
+    "smsPreference3": {
+     "format": "int32",
+     "description": "Is Send SMS to Shipper When Shipment Delivered\r\nKargo teslim edildiğinde göndericiye SMS gitsin mi?",
+     "type": "integer"
+    },
+    "paymentType": {
+     "format": "int32",
+     "description": "Payment Type of Order: 1:GONDERICI_ODER, 2:ALICI_ODER,3:PLATFORM_ODER. Method CreateOrder does not apply to payment type 3. \r\nÖdeme Şekli, CreateOrder metodunda 3 tipindeki ödeme şekli geçerli değildir.",
+     "type": "integer"
+    },
+    "deliveryType": {
+     "format": "int32",
+     "description": "Delivery Type of Order: 1:ADRESE_TESLIM, 2:ALICISI_HABERLİ \r\nTeslim Şekli",
+     "type": "integer"
+    },
+    "description": {
+     "type": "string"
+    },
+    "marketPlaceShortCode": {
+     "description": "Short MarketPlace Code of Order : ex: TRND, N11, GG, VIVE\r\nPazaryeri Kodu  örneğin: TRND, N11, GG, VIVE",
+     "type": "string"
+    },
+    "marketPlaceSaleCode": {
+     "description": "Sale Code of MarketPlace\r\nPazaryeri Satış Kodu",
+     "type": "string"
+    },
+    "pudoId": {
+     "description": " ",
+     "type": "string"
+    }
+   }
+  },
+  "OrderPieceList": {
+   "required": [
+    "barcode",
+    "desi",
+    "kg"
+   ],
+   "type": "object",
+   "properties": {
+    "barcode": {
+     "type": "string"
+    },
+    "desi": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "kg": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "content": {
+     "type": "string"
+    }
+   }
+  },
+  "Customer": {
+   "type": "object",
+   "properties": {
+    "customerId": {
+     "format": "int64",
+     "description": "Identity Number of Customer \r\nMüşteri Numarası",
+     "type": "integer"
+    },
+    "refCustomerId": {
+     "description": "Identity Number of Customer in their's own system.\r\nMüşterinin kendi sistemindeki numarası",
+     "type": "string"
+    },
+    "cityCode": {
+     "format": "int32",
+     "description": "Code of City you can provide code information from CBS Info API.\r\nŞehir Kodu, CBS Info API'den kod bilgisi alınabilir.",
+     "type": "integer"
+    },
+    "districtCode": {
+     "format": "int32",
+     "description": "Code of District you can provide code information from CBS Info API.\r\nİlçe Kodu, CBS Info API'den kod bilgisi alınabilir.",
+     "type": "integer"
+    },
+    "address": {
+     "type": "string"
+    },
+    "bussinessPhoneNumber": {
+     "type": "string"
+    },
+    "email": {
+     "type": "string"
+    },
+    "taxOffice": {
+     "description": "Tax Office\r\nVergi Dairesi",
+     "type": "string"
+    },
+    "taxNumber": {
+     "description": "Tax Number\r\nVergi Numarası",
+     "type": "string"
+    },
+    "fullName": {
+     "description": "Full Name of Customer\r\nMüşterinin Tam Adı",
+     "type": "string"
+    },
+    "homePhoneNumber": {
+     "type": "string"
+    },
+    "mobilePhoneNumber": {
+     "type": "string"
+    }
+   }
+  },
+  "CreateOrderResponse": {
+   "type": "object",
+   "properties": {
+    "orderInvoiceId": {
+     "description": "Order Invoice Id \r\nSipariş Fatura Numarası",
+     "type": "string"
+    },
+    "orderInvoiceDetailId": {
+     "description": "Order Invoice Detail Id\r\nSipariş Detay Fatura Numarası",
+     "type": "string"
+    },
+    "shipperBranchCode": {
+     "description": "Shipper Branch Code\r\nGönderici Şube Kodu",
+     "type": "string"
+    },
+    "referenceId": {
+     "description": "Customer Reference Id\r\nMüşteri Referans Numarası",
+     "type": "string"
+    }
+   }
+  },
+  "CreateReturnOrderResponse": {
+   "type": "object",
+   "properties": {
+    "orderInvoiceId": {
+     "description": "Order Invoice Id \r\nSipariş Fatura Numarası",
+     "type": "string"
+    },
+    "orderInvoiceDetailId": {
+     "description": "Order Invoice Detail Id\r\nSipariş Detay Fatura Numarası",
+     "type": "string"
+    },
+    "shipperBranchCode": {
+     "description": "Shipper Branch Code\r\nGönderici Şube Kodu",
+     "type": "string"
+    },
+    "referenceId": {
+     "description": "Customer Reference Id\r\nMüşteri Referans Numarası",
+     "type": "string"
+    },
+    "returnOrderLabelURL": {
+     "description": "Return Order Label URL\r\nİade Sipariş Etiket URL'i",
+     "type": "string"
+    }
+   }
+  },
+  "CreateReturnOrderRequest": {
+   "type": "object",
+   "properties": {
+    "order": {
+     "$ref": "#/definitions/Order"
+    },
+    "orderPieceList": {
+     "uniqueItems": false,
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/OrderPieceList"
+     }
+    },
+    "shipper": {
+     "$ref": "#/definitions/Customer"
+    }
+   },
+   "example": {
+    "order": {
+     "referenceId": "SIPARIS34567",
+     "barcode": "SIPARIS34567",
+     "billOfLandingId": "İrsaliye 1",
+     "isCOD": 0,
+     "codAmount": 0,
+     "shipmentServiceType": 1,
+     "packagingType": 1,
+     "content": "İçerik 1",
+     "smsPreference1": 1,
+     "smsPreference2": 0,
+     "smsPreference3": 0,
+     "paymentType": 1,
+     "deliveryType": 1,
+     "description": "Açıklama 1",
+     "marketPlaceShortCode": "",
+     "marketPlaceSaleCode": "",
+     "pudoId": ""
+    },
+    "orderPieceList": [
+     {
+      "barcode": "SIPARIS34567_PARCA1",
+      "desi": 2,
+      "kg": 1,
+      "content": "Parça açıklama 1"
+     },
+     {
+      "barcode": "SIPARIS34567_PARCA2",
+      "desi": 2,
+      "kg": 3,
+      "content": "Parça açıklama 2"
+     }
+    ],
+    "shipper": {
+     "customerId": 58513278,
+     "refCustomerId": "",
+     "cityCode": 0,
+     "districtCode": 0,
+     "cityName": "",
+     "districtName": "",
+     "address": "",
+     "bussinessPhoneNumber": "",
+     "email": "",
+     "taxOffice": "",
+     "taxNumber": "",
+     "fullName": "",
+     "homePhoneNumber": "",
+     "mobilePhoneNumber": ""
+    }
+   }
+  },
+  "UpdateOrderRequest": {
+   "required": [
+    "referenceId"
+   ],
+   "type": "object",
+   "properties": {
+    "referenceId": {
+     "description": "Identity Number of Order, ReferenceId must be unique foreach order.\r\nSipariş Numarası , Sipariş numarası her sipariş için benzersiz olmalıdır.",
+     "type": "string"
+    },
+    "billOfLandingId": {
+     "description": "Bill Of LandingId\r\nİrsaliye Numarası",
+     "type": "string"
+    },
+    "isCOD": {
+     "format": "int32",
+     "description": "Indicates whether it is Cash On Delivery.\r\nKapıda Ödeme mi?",
+     "type": "integer"
+    },
+    "codAmount": {
+     "format": "double",
+     "description": "Cash on Delivery Amount\r\nKapıda Ödeme Miktarı",
+     "type": "number"
+    },
+    "orderPieceList": {
+     "uniqueItems": false,
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/OrderPieceList"
+     }
+    }
+   },
+   "example": {
+    "referenceId": "SIPARIS34567",
+    "billOfLandingId": "İrsaliye 2",
+    "isCOD": 0,
+    "codAmount": 0,
+    "orderPieceList": [
+     {
+      "barcode": "SIPARIS34567_PARCA1",
+      "desi": 3,
+      "kg": 1,
+      "content": "Parça açıklama 1"
+     },
+     {
+      "barcode": "SIPARIS34567_PARCA2",
+      "desi": 2,
+      "kg": 3,
+      "content": "Parça açıklama 2"
+     }
+    ]
+   }
+  }
+ },
+ "x-ibm-configuration": {
+  "enforced": true,
+  "testable": true,
+  "phase": "realized",
+  "cors": {
+   "enabled": true
+  },
+  "type": "rest",
+  "servers": [
+   {
+    "url": "https://api.mngkargo.com.tr/mngapi/api/standardcmdapi",
+    "type": [
+     "development",
+     "production"
+    ]
+   }
+  ]
+ },
+ "securityDefinitions": {
+  "api-key-1": {
+   "description": "asepetcioglu@mngkargo.com.tr",
+   "in": "header",
+   "name": "X-IBM-Client-Id",
+   "type": "apiKey"
+  },
+  "api-key-2": {
+   "description": "",
+   "in": "header",
+   "name": "X-IBM-Client-Secret",
+   "type": "apiKey"
+  }
+ },
+ "security": [
+  {
+   "api-key-2": [],
+   "api-key-1": []
+  }
+ ],
+ "produces": [
+  "asepetcioglu@mngkargo.com.tr"
+ ],
+ "x-ibm-comment": [
+  "AMU version used to port this API: v10.0.5.3-R1-680cbea6bb81861c86dc4522ed22fba48a697875-2023-05-09T21:45:55Z",
+  "API06: Changed gateway type to `datapower-api-gateway`.",
+  "API14: Ported v5-compatible policies to work with the API Gateway and updated policy versions.",
+  "API45: Compatibility toggle: `allow-chunked-uploads` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `copy-id-headers-to-message` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `return-v5-responses` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API61: Set buffering property to true. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#SET_BUFFERING"
+ ],
+ "schemes": [
+  "https"
+ ],
+ "host": "api.mngkargo.com.tr"
+}

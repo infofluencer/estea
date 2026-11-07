@@ -62,7 +62,7 @@ const OpsEventsPage = () => {
     <Container ref={rootRef} className="divide-y p-0">
       <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
         <div>
-          <Heading level="h1">Logs</Heading>
+          <Heading level="h1">Olay kaydı</Heading>
           <Text size="small" className="text-ui-fg-subtle">
             Ödeme, iptal, kargo ve iade olayları. Hatalar kırmızı etiketle işaretlenir.
           </Text>
@@ -147,7 +147,7 @@ const OpsEventsPage = () => {
 }
 
 export const config = defineRouteConfig({
-  label: "Logs",
+  label: "Olay kaydı",
   icon: BellAlert,
 })
 

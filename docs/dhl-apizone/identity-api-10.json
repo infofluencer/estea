@@ -1,0 +1,194 @@
+{
+ "swagger": "2.0",
+ "info": {
+  "version": "1.0",
+  "x-ibm-name": "identity-api-10",
+  "title": "Identity API",
+  "description": "Diğer API'leri kullanabilmek için, kimliklendirme yetkilendirme sağlar.|Provides authentication and authorization to use other APIs.",
+  "termsOfService": "http://swagger.io/terms/",
+  "x-ibm-summary": ""
+ },
+ "paths": {
+  "/token": {
+   "post": {
+    "tags": [
+     "User"
+    ],
+    "summary": "Generate Token",
+    "description": "Api'lerimizi kullanabilmeniz için JWT Token gerekmektedir. | JWT Token is required to use our APIs.",
+    "operationId": "TokenPost",
+    "consumes": [
+     "application/json-patch+json",
+     "application/json",
+     "text/json",
+     "application/*+json"
+    ],
+    "produces": [
+     "application/json"
+    ],
+    "parameters": [
+     {
+      "name": "request",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/GenerateTokenRequest"
+      }
+     },
+     {
+      "name": "x-api-version",
+      "in": "header",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "schema": {
+       "$ref": "#/definitions/GenerateTokenResponseExample"
+      },
+      "examples": {
+       "application/json": {
+        "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "refreshToken": "f41c92bf-cc20-491b-9e4c-efc1b253e43a",
+        "jwtExpireDate": "10.03.2020 16:05:00",
+        "refreshTokenExpireDate": "09.04.2020 15:04:31"
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "schema": {
+       "$ref": "#/definitions/ProblemDetails"
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     },
+     "500": {
+      "description": "Server Error"
+     }
+    }
+   }
+  },
+  "/refresh": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "200 OK"
+     }
+    }
+   }
+  }
+ },
+ "definitions": {
+  "GenerateTokenRequest": {
+   "required": [
+    "customerNumber",
+    "password",
+    "identityType"
+   ],
+   "type": "object",
+   "properties": {
+    "customerNumber": {
+     "description": "Number of MNG Customer \r\nMNG Müşteri Numarası",
+     "type": "string"
+    },
+    "password": {
+     "description": "Password of MNG Customer \r\nMNG Müşteri Şifresi",
+     "type": "string"
+    },
+    "identityType": {
+     "format": "int32",
+     "description": "Identity Type of Customer, for default set 1. \r\nMüşteri kimlik tipi varsayılan olarak 1'e setleyiniz.",
+     "type": "integer"
+    }
+   },
+   "example": {
+    "customerNumber": "312947702",
+    "password": "ABCD1234",
+    "identityType": 1
+   }
+  },
+  "GenerateTokenResponseExample": {
+   "type": "object"
+  },
+  "ProblemDetails": {
+   "type": "object",
+   "properties": {
+    "type": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "status": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "detail": {
+     "type": "string"
+    },
+    "instance": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": {
+    "type": "object"
+   }
+  }
+ },
+ "basePath": "/mngapi/api",
+ "x-ibm-configuration": {
+  "enforced": true,
+  "testable": true,
+  "phase": "realized",
+  "cors": {
+   "enabled": true
+  },
+  "type": "rest",
+  "servers": [
+   {
+    "url": "https://api.mngkargo.com.tr/mngapi/api",
+    "type": [
+     "development",
+     "production"
+    ]
+   }
+  ]
+ },
+ "securityDefinitions": {
+  "api-key-1": {
+   "type": "apiKey",
+   "in": "header",
+   "name": "X-IBM-Client-Id",
+   "x-key-type": "client_id"
+  },
+  "api-key-2": {
+   "type": "apiKey",
+   "in": "header",
+   "name": "X-IBM-Client-Secret",
+   "x-key-type": "client_secret"
+  }
+ },
+ "security": {
+  "1": {
+   "api-key-1": [],
+   "api-key-2": []
+  }
+ },
+ "schemes": [
+  "https"
+ ],
+ "x-ibm-comment": [
+  "AMU version used to port this API: v10.0.5.3-R1-680cbea6bb81861c86dc4522ed22fba48a697875-2023-05-09T21:45:55Z",
+  "API06: Changed gateway type to `datapower-api-gateway`.",
+  "API14: Ported v5-compatible policies to work with the API Gateway and updated policy versions.",
+  "API45: Compatibility toggle: `allow-chunked-uploads` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `copy-id-headers-to-message` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API45: Compatibility toggle: `return-v5-responses` set to value: `false`, which is the same as the API Gateway default. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#COMPAT_TOGGLE_MATCHES_APIGW_DEFAULT",
+  "API61: Set buffering property to true. For details, see: https://www.ibm.com/docs/en/api-connect/10.0.x?topic=cadag-messages-generated-during-conversion-apis-datapower-api-gateway#SET_BUFFERING"
+ ],
+ "host": "api.mngkargo.com.tr"
+}

@@ -6,6 +6,7 @@ import {
   describeError,
   isOrderUnpaidSafeToCancel,
   paytrCallbackLockKey,
+  resolveLocking,
 } from "../modules/paytr/order-guards"
 import { isCallbackSettled, isRetryingSince } from "../modules/paytr/callback-state"
 import { recordOpsEvent } from "../lib/ops-events"
@@ -14,13 +15,13 @@ import { recordOpsEvent } from "../lib/ops-events"
  * PayTR iframe vazgeçme / timeout: callback gelmeyen unpaid siparişleri iptal et.
  * Stok, cancelOrderWorkflow → Medusa reservation release ile serbest kalır.
  *
- * Ödenmemiş sipariş yaşam döngüsü (docs/ESCAY-KARARLAR.md K11):
- *   cart.complete → sipariş pending (stok rezerve) → PayTR iframe
+ * Kart ödemesinde sipariş artık ödeme başarılı olunca oluşur (docs/ESCAY-KARARLAR.md K11;
+ * lib/paytr-checkout.ts), canlıda bu işin iptal edeceği sipariş kalmaz. Yalnız kimliksiz /
+ * mock stub oturumlarla (yerel test) açılan ödenmemiş siparişler için durur:
  *   - success callback → capture, iş dokunmaz
  *   - failed callback → yalnızca sayaç; son denemeden itibaren süre yeniden işler
  *   - callback sonuçlanmış (manual_review / callback_processed) → iş dokunmaz
  *   - süre dolunca → cancelOrderWorkflow (stok serbest), ops event
- *   İptalden sonra geç success gelirse route iade YAPMAZ, elle inceleme ister.
  *
  * Env:
  *   UNPAID_ORDER_TIMEOUT_MINUTES (default 30)
@@ -151,15 +152,7 @@ export default async function cancelUnpaidPaytrOrdersJob(
         cancelUnpaidOrderIfSafe(container, order.id, "[unpaid-paytr-cleanup]")
 
       const result = oid
-        ? await (
-            container.resolve(Modules.LOCKING) as {
-              execute: <T>(
-                keys: string | string[],
-                job: () => Promise<T>,
-                args?: { timeout?: number; ttl?: number }
-              ) => Promise<T>
-            }
-          ).execute(paytrCallbackLockKey(oid), runCancel, {
+        ? await resolveLocking(container).execute(paytrCallbackLockKey(oid), runCancel, {
             timeout: 30,
             ttl: 120,
           })

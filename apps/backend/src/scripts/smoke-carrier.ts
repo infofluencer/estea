@@ -99,8 +99,17 @@ export default async function smokeCarrier({ container }: ExecArgs) {
   }
   if (adapter.getLabel) {
     try {
-      const label = await adapter.getLabel(data, "pdf")
-      const file = join(process.cwd(), `smoke-carrier-label-${Date.now()}.pdf`)
+      // PDF çevrimi kapalıysa (ör. DHL ZPL + DHL_LABEL_PDF yok) ham ZPL yazılır.
+      let file = join(process.cwd(), `smoke-carrier-label-${Date.now()}.pdf`)
+      let label: Buffer | string
+      try {
+        label = await adapter.getLabel(data, "pdf")
+      } catch (pdfError) {
+        if (typeof data.label_zpl !== "string" || !data.label_zpl) throw pdfError
+        logger.warn(`[smoke-carrier] PDF etiket yok (${carrierErrorText(pdfError)}) — ZPL yazılıyor`)
+        label = Buffer.from(String(await adapter.getLabel(data, "zpl")))
+        file = file.replace(/\.pdf$/, ".zpl")
+      }
       writeFileSync(file, typeof label === "string" ? Buffer.from(label, "base64") : label)
       step("getLabel", `yazıldı: ${file} — şubede kabul testi için yazdırın`)
       outcome.label = "ok"

@@ -143,7 +143,7 @@ const OrderExchangeWidget = () => {
         ) : null}
       </div>
       <Text size="small" className="text-ui-fg-subtle mb-3 block">
-        Aynı ürün, başka gramaj/çeşit. Para iadesi yok: ürün gelip &quot;İade&quot; kutusundan teslim alınınca yeni ürünün
+        Aynı ürün, başka gramaj/çeşit ya da aynısı (defolu / hasarlı ürün). Para iadesi yok: ürün gelip &quot;İade&quot; kutusundan teslim alınınca yeni ürünün
         gönderisi otomatik açılır; etiketi buradan ya da Değişimler sayfasından basın.
       </Text>
 
@@ -310,6 +310,8 @@ const OrderExchangeWidget = () => {
 }
 
 export const config = defineWidgetConfig({
+  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
+  id: "escay-order-exchange",
   zone: "order.details.side.before",
 })
 

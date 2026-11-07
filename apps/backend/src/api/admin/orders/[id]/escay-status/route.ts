@@ -7,6 +7,7 @@ import {
   advanceOrderStatus,
   type OrderStatusAction,
 } from "../../../../../lib/order-status"
+import { errorText } from "../../../../../lib/ops-events"
 
 type Body = {
   action?: OrderStatusAction
@@ -47,7 +48,8 @@ export const POST = async (
     })
     res.status(200).json(result)
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
+    // Workflow hataları düz nesne gelir; String() "[object Object]" yazar
+    const message = errorText(err)
     throw new MedusaError(MedusaError.Types.INVALID_DATA, message)
   }
 }

@@ -50,6 +50,15 @@ admin widget'ları, `shared/order-timeline.ts`, storefront `OrderDetail.tsx`.
 | Admin → "Kargo uzlaştırma" | Firma raporu satırları (`ESC-65;TAKIP;teslim`) → kuru çalışma → uygula (bağla / kargoya verildi / teslim; idempotent) |
 | `npm run smoke:carrier` | Canlı/sandbox anahtarla tek paket: healthCheck → aç → durum → etiket → iptal. Cutover'dan günler önce; `SMOKE_CARRIER_KEEP=1` ile şube testi için açık bırakır |
 
+## DHL eCommerce (`SHIPPING_CARRIER=dhl`, `adapters/dhl/`)
+
+K1 (2026-11-04): doğrudan Apizone, aracı yok. Resmi swagger, 39 senaryonun davranışı, hesap kurulumu
+ve teyit listesi: **`docs/DHL-APIZONE.md`**. Dosyalar: `client.ts` (uçlar, JWT, okuma tekrarı),
+`errors.ts` (hata biçimleri + sınıflandırma), `shipment.ts` (akış, CBS, gövdeler, durum),
+`index.ts` (adaptör). Sözleşme ekleri: `CarrierStatus.patch/labels/alert` (gecikmeli etiket,
+takip linki, Logs uyarısı), `order.canceledShipmentRefs` (reship'te yeni referans),
+`Recipient.neighbourhood` (servis dışı bölge).
+
 ## Yeni firma eklemek
 
 1. `adapters/<kod>.ts` → `CarrierAdapter` (types.ts) uygula. `createShipment` sipariş başına sabit

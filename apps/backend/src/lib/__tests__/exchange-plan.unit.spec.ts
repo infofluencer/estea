@@ -88,6 +88,22 @@ describe("variant choices", () => {
     ).toBe(5)
   })
 
+  it("includeCurrent: mevcut varyant en başta '(aynısı)' olarak, stokuyla", () => {
+    const choices = exchangeChoices(variants as never, "var_M", "loc", { includeCurrent: true })
+    expect(choices[0]).toMatchObject({ variant_id: "var_M", same: true })
+    expect(choices[0].title).toMatch(/\(aynısı\)$/)
+    expect(choices.slice(1)).toEqual(exchangeChoices(variants as never, "var_M", "loc"))
+    expect(exchangeChoices(variants as never, "var_M", "loc").some((c) => c.variant_id === "var_M")).toBe(false)
+  })
+
+  it("available_quantity gelmezse stocked − reserved (stok 5 → 'stok yok' denmesin)", () => {
+    const level = (l: Record<string, unknown>) =>
+      ({ id: "v", inventory_items: [{ inventory: { location_levels: [{ location_id: "loc", ...l }] } }] }) as never
+    expect(variantAvailable(level({ stocked_quantity: 5, reserved_quantity: 0 }), "loc")).toBe(5)
+    expect(variantAvailable(level({ stocked_quantity: { value: "5" }, reserved_quantity: { value: "2" } }), "loc")).toBe(3)
+    expect(variantAvailable(level({ available_quantity: 0, stocked_quantity: 5, reserved_quantity: 5 }), "loc")).toBe(0)
+  })
+
   it("stok yetmezse / yabancı varyantsa hata; toplam adet aynı varyantta birleşir", () => {
     const choices = new Map([["li_1", exchangeChoices(variants as never, "var_M", "loc")]])
     expect(() => validateExchangeChoices([{ key: "li_1", quantity: 1, variant_id: "var_L" }], choices)).toThrow(/stokta yok/)

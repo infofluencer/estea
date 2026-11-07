@@ -26,6 +26,7 @@ import {
   roundMoney,
   type BizimhesapLineInput,
 } from "../modules/bizimhesap/payload"
+import { resolveInvoiceCustomer } from "../modules/bizimhesap/customer"
 import BizimhesapModuleService from "../modules/bizimhesap/service"
 import { isBankTransferOrder } from "./bank-transfer"
 import { notifyBizimhesapInvoiceProblem } from "./bizimhesap-invoice-admin-notify"
@@ -44,32 +45,6 @@ export type IssueSalesInvoiceOptions = {
 
 /** Sipariş toplamı ile fatura toplamı arasında kabul edilen fark (TL). */
 const TOTAL_TOLERANCE = 0.05
-
-function extractTaxNumber(
-  ...sources: (Record<string, unknown> | null | undefined)[]
-): string | null {
-  for (const src of sources) {
-    for (const key of ["tax_number", "vkn", "tckn", "identity_number"]) {
-      const c = src?.[key]
-      if (typeof c === "string" && c.replace(/\D/g, "").length >= 10) {
-        return c.replace(/\D/g, "")
-      }
-    }
-  }
-  return null
-}
-
-function metaString(
-  ...sources: (Record<string, unknown> | null | undefined)[]
-): (key: string) => string | null {
-  return (key: string) => {
-    for (const src of sources) {
-      const v = src?.[key]
-      if (typeof v === "string" && v.trim()) return v.trim()
-    }
-    return null
-  }
-}
 
 function lineDiscountAmount(item: {
   discount_total?: unknown
@@ -156,7 +131,7 @@ async function reportProblem(
   }
 }
 
-/** Ödeme yakalandıktan sonra BizimHesap satış faturası aç. */
+/** Sipariş teslim edildikten sonra BizimHesap satış faturası aç. */
 export async function issueSalesInvoiceForOrder(
   scope: MedusaContainer,
   orderId: string,
@@ -215,6 +190,7 @@ async function issueUnderLock(
       "shipping_address.city",
       "shipping_address.province",
       "shipping_address.address_1",
+      "shipping_address.address_2",
       "shipping_address.metadata",
       "billing_address.first_name",
       "billing_address.last_name",
@@ -222,6 +198,7 @@ async function issueUnderLock(
       "billing_address.city",
       "billing_address.province",
       "billing_address.address_1",
+      "billing_address.address_2",
       "billing_address.metadata",
       "customer.id",
       "customer.email",
@@ -239,6 +216,7 @@ async function issueUnderLock(
     city?: string | null
     province?: string | null
     address_1?: string | null
+    address_2?: string | null
     metadata?: Record<string, unknown> | null
   }
   const order = orders?.[0] as
@@ -325,32 +303,9 @@ async function issueUnderLock(
   const displayId =
     formatOrderNumber(order.display_id) || String(order.display_id ?? order.id)
 
-  const addr = order.billing_address || order.shipping_address
-  const billMeta = order.billing_address?.metadata || null
-  const shipMeta = order.shipping_address?.metadata || null
-  const readMeta = metaString(
-    order.customer?.metadata || null,
-    billMeta,
-    shipMeta,
-    order.metadata || null
-  )
-  const taxNumber = extractTaxNumber(
-    order.customer?.metadata || null,
-    billMeta || order.metadata || null
-  )
-  const companyName = readMeta("company_name")
-  // Checkout ilçeyi metadata.district yazar (province çoğu boş)
-  const district = readMeta("district") || addr?.province || null
-  const email = order.email || order.customer?.email || null
-  const title =
-    companyName ||
-    [addr?.first_name, addr?.last_name].filter(Boolean).join(" ").trim() ||
-    [order.customer?.first_name, order.customer?.last_name]
-      .filter(Boolean)
-      .join(" ")
-      .trim() ||
-    email ||
-    "Müşteri"
+  // Fatura adresi metadata'sı önce; müşteri kartı yalnız invoice_type'sız eski siparişte.
+  const invoiceCustomer = resolveInvoiceCustomer(order)
+  const taxNumber = invoiceCustomer.taxNo
 
   const prevFields = {
     retry_count: existing?.retry_count,
@@ -386,15 +341,7 @@ async function issueUnderLock(
         bankTransfer: isBankTransferOrder(order),
       }),
       currencyCode: order.currency_code,
-      customer: {
-        customerId: order.customer?.id || order.id,
-        title,
-        address: [addr?.address_1, district, addr?.city].filter(Boolean).join(", "),
-        taxOffice: readMeta("tax_office"),
-        taxNo: taxNumber,
-        email,
-        phone: addr?.phone,
-      },
+      customer: invoiceCustomer.customer,
       lines,
       shipping: {
         grossAmount: roundMoney(asNumber(order.shipping_total)),

@@ -138,6 +138,8 @@ const OrderContractsWidget = () => {
 }
 
 export const config = defineWidgetConfig({
+  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
+  id: "escay-order-contracts",
   zone: "order.details.side.after",
 })
 

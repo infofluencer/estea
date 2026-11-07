@@ -5,7 +5,7 @@ type Counts = { returns: number; orders: number }
 /** Kenar çubuğu linki (href sonu) → sayaç alanı. */
 const TARGETS: { suffix: string; key: keyof Counts; title: string }[] = [
   { suffix: "/iadeler", key: "returns", title: "Bekleyen / sorunlu iade" },
-  { suffix: "/orders", key: "orders", title: "Kargolanacak + havale bekleyen sipariş" },
+  { suffix: "/orders", key: "orders", title: "Kargolanacak sipariş" },
 ]
 
 const BADGE_CLASS = "escay-nav-badge"

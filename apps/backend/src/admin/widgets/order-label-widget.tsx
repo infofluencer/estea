@@ -157,6 +157,8 @@ const OrderLabelWidget = () => {
 }
 
 export const config = defineWidgetConfig({
+  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
+  id: "escay-order-label",
   zone: "order.details.side.before",
 })
 

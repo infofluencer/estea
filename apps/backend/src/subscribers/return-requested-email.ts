@@ -94,7 +94,7 @@ export default async function returnRequestedEmailHandler({
 
     if (ctx.email) {
       const customerMail = returnCode
-        ? buildReturnCodeCustomerEmail({ orderDisplayId: ctx.orderDisplayId, code: returnCode, items: ctx.items })
+        ? buildReturnCodeCustomerEmail({ orderDisplayId: ctx.orderDisplayId, code: returnCode, items: ctx.items, labelUrl: tracking.labelUrl })
         : buildReturnRequestedCustomerEmail({
             returnId: ctx.returnId,
             orderDisplayId: ctx.orderDisplayId,

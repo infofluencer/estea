@@ -116,6 +116,8 @@ const BankTransferWidget = () => {
 }
 
 export const config = defineWidgetConfig({
+  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
+  id: "escay-order-bank-transfer",
   zone: "order.details.side.before",
 })
 

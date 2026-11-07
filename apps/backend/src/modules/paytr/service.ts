@@ -36,6 +36,7 @@ import {
   formatPaytrReturnAmount,
   paytrOidPrefix,
   sanitizeEmail,
+  verifyAdoptToken,
 } from "./hash"
 import {
   isPaytrMockEnabled,
@@ -159,6 +160,31 @@ class PaytrProviderService extends AbstractPaymentProvider<PaytrOptions> {
     const data = (input.data || {}) as Record<string, unknown>
     const customer = input.context?.customer
 
+    // Parayı almış ama oturumu silinmiş numara (lib/paytr-checkout.ts adoptSession):
+    // aynı numarayla oturum açılır, PayTR'ye istek gitmez. Ödeme işareti burada verilmez.
+    const adoptOid = data["adopt_merchant_oid"]
+    if (typeof adoptOid === "string" && adoptOid) {
+      if (
+        !verifyAdoptToken(adoptOid, data["adopt_token"], {
+          allowWithoutSecret: isPaytrMockEnabled(),
+        })
+      ) {
+        throw new Error("[paytr] Geçersiz oturum devri isteği.")
+      }
+      const adoptedId = `payses_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+      return {
+        id: adoptedId,
+        status: PaymentSessionStatus.PENDING,
+        data: {
+          session_id: adoptedId,
+          merchant_oid: adoptOid,
+          paytr_status: "pending",
+          callback_processed: false,
+          adopted: true,
+        } satisfies Partial<PaytrSessionData>,
+      }
+    }
+
     // session_id: Medusa tarafından dışarıdan atanmaz; benzersiz id üretiyoruz
     const sessionId = `payses_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
     const merchantOid = buildMerchantOid(sessionId)
@@ -166,26 +192,32 @@ class PaytrProviderService extends AbstractPaymentProvider<PaytrOptions> {
     // payment_amount: kuruş (TL × 100, tamsayı)
     const amountNum = typeof amount === "number" ? amount : Number(amount)
     const paymentAmount = Math.round(amountNum * 100)
+    if (!Number.isFinite(paymentAmount) || paymentAmount <= 0) {
+      throw new Error(`[paytr] Geçersiz ödeme tutarı: ${String(amount)}`)
+    }
 
     // email — Türkçe karakter temizle
-    const rawEmail =
-      (data["customer_email"] as string) ||
-      customer?.email ||
-      "no-reply@esteacay.com"
-    const email = sanitizeEmail(rawEmail)
+    const rawEmail = (data["customer_email"] as string) || customer?.email || ""
+    const email = sanitizeEmail(rawEmail || "no-reply@esteacay.com")
 
     // kullanıcı bilgileri
     const firstName = customer?.first_name || (data["first_name"] as string) || ""
     const lastName = customer?.last_name || (data["last_name"] as string) || ""
     const userName = `${firstName} ${lastName}`.trim() || "Müşteri"
-    const userPhone = (data["phone"] as string) || customer?.phone || "05000000000"
+    const rawPhone = (data["phone"] as string) || customer?.phone || ""
+    const userPhone = rawPhone || "05000000000"
     const userAddress = (data["address"] as string) || "Türkiye"
 
-    // user_ip: dış IP. Lokal testte PAYTR_USER_IP env ile override edilebilir.
-    const userIp =
-      (data["user_ip"] as string) ||
-      process.env.PAYTR_USER_IP ||
-      "1.2.3.4"
+    // user_ip: müşterinin dış IP'si (mağaza x-forwarded-for'dan iletir). Lokal testte
+    // PAYTR_USER_IP env ile verilebilir. Gelmezse ödeme durmaz: yer tutucuyla devam edilir
+    // ve hata günlüğüne düşer (proxy başlığı eksik demektir, altyapı sorunu).
+    const forwardedIp = (data["user_ip"] as string) || process.env.PAYTR_USER_IP || ""
+    if (!forwardedIp && !isPaytrMockEnabled() && this.merchantId) {
+      this.logger_.error(
+        "[paytr] user_ip gelmedi (x-forwarded-for yok?) — yer tutucu IP ile devam ediliyor; proxy ayarını kontrol edin."
+      )
+    }
+    const userIp = forwardedIp || "1.2.3.4"
 
     // user_basket — cart items varsa kullan
     const cartItems = data["cart_items"] as
@@ -255,6 +287,15 @@ class PaytrProviderService extends AbstractPaymentProvider<PaytrOptions> {
       throw new Error(
         `[paytr] PAYTR_OID_PREFIX=${paytrOidPrefix()} (canlı dışı ortam) iken ` +
           `test_mode=${this.testMode} ile get-token reddedildi — PAYTR_TEST_MODE=1 olmalı.`
+      )
+    }
+
+    // Gerçek PayTR isteğinde uydurma e-posta / telefon gitmez (müşteri bildirimine girer).
+    // Mağaza bunları sepet doğrulamasından geçmiş adresle her zaman iletir; eksikse hata.
+    const missing = [!rawEmail && "email", !rawPhone && "phone"].filter(Boolean)
+    if (missing.length) {
+      throw new Error(
+        `[paytr] get-token için zorunlu müşteri bilgisi eksik: ${missing.join(", ")}`
       )
     }
 
@@ -336,9 +377,10 @@ class PaytrProviderService extends AbstractPaymentProvider<PaytrOptions> {
   // ─────────────────────────────────────────────────────────────────
 
   /**
-   * Checkout cart complete'de çağrılır.
-   * PayTR asenkron çalışır — gerçek onay callback'te gelir.
-   * pending_authorization döndürerek Medusa'ya "webhook bekle" deriz.
+   * Cart complete'de çağrılır. Sipariş yalnız ödeme başarılıysa oluşur: sepet
+   * lib/paytr-checkout.ts tarafından, paytr_status "success" yazıldıktan sonra tamamlanır.
+   * Ödenmemiş oturumla gelen complete isteği (doğrudan mağaza API'si) reddedilir.
+   * Kimliksiz / mock stub oturumlar yerel test için eski yolda kalır (pending_authorization).
    */
   async authorizePayment(
     input: AuthorizePaymentInput
@@ -357,8 +399,18 @@ class PaytrProviderService extends AbstractPaymentProvider<PaytrOptions> {
       }
     }
 
+    if (data._stub !== true) {
+      this.logger_.warn(
+        `[paytr] authorizePayment: ödenmemiş oturumla sipariş isteği reddedildi (merchant_oid=${data.merchant_oid})`
+      )
+      return {
+        status: PaymentSessionStatus.REQUIRES_MORE,
+        data: { ...data },
+      }
+    }
+
     this.logger_.info(
-      `[paytr] authorizePayment: pending_authorization — webhook bekleniyor (merchant_oid=${data.merchant_oid})`
+      `[paytr] authorizePayment: pending_authorization — stub oturum (merchant_oid=${data.merchant_oid})`
     )
     return {
       status: PaymentSessionStatus.PENDING_AUTHORIZATION,
@@ -405,7 +457,11 @@ class PaytrProviderService extends AbstractPaymentProvider<PaytrOptions> {
       )
     }
 
-    if (!this.merchantId || !this.merchantKey || !this.merchantSalt) {
+    // Mock'ta istek mock-iade katmanına gider; kimlik şart değil (initiatePayment ile aynı).
+    if (
+      (!this.merchantId || !this.merchantKey || !this.merchantSalt) &&
+      !isPaytrMockEnabled()
+    ) {
       throw new Error(
         "PayTR iade başarısız: merchant credentials eksik (PAYTR_* env)."
       )

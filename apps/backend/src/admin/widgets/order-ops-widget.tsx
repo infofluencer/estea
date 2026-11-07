@@ -231,6 +231,10 @@ const OrderOpsWidget = () => {
   )
 }
 
-export const config = defineWidgetConfig({ zone: "order.details.side.before" })
+export const config = defineWidgetConfig({
+  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
+  id: "escay-order-events",
+  zone: "order.details.side.before",
+})
 
 export default OrderOpsWidget

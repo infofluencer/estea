@@ -45,7 +45,18 @@ const MAILPIT = process.env.MAILPIT_URL || "http://localhost:8025"
 const ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || "admin@market.esteacay.com"
 const ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || ""
 if (!ADMIN_PASSWORD) throw new Error("TEST_ADMIN_PASSWORD env gerekli (sabit yedek şifre kaldırıldı)")
-const REASON_MIND = "rr_01M22XV09PVZT2W627JERSC836"
+/** İade sebebi kimliği tohumlamaya göre değişir; "changed_mind" değeriyle çözülür. */
+async function resolveReturnReasonId(container: MedusaContainer): Promise<string> {
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const { data } = await query.graph({
+    entity: "return_reason",
+    fields: ["id", "value"],
+    filters: { value: "changed_mind" },
+  })
+  const id = (data?.[0] as { id?: string } | undefined)?.id
+  if (!id) throw new Error("return_reason value=changed_mind bulunamadı (seed-escay çalıştırın)")
+  return id
+}
 const FALLBACK_VARIANT =
   process.env.TEST_VARIANT_ID || "variant_01M25MQGSQQZXRC324EDD7162Y"
 
@@ -482,6 +493,7 @@ function add(
 }
 
 export default async function smokeFullFlow({ container }: ExecArgs) {
+  const reasonMind = await resolveReturnReasonId(container)
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
   const checks: Check[] = []
 
@@ -528,7 +540,7 @@ export default async function smokeFullFlow({ container }: ExecArgs) {
   const variantId = await resolveVariantId(container)
   logger.info(`[smoke-full] variant=${variantId}`)
 
-  // ---------- 1+2+3: order + payment + invoice + kargo ----------
+  // ---------- 1+2+3: order + payment + kargo + teslim + invoice ----------
   const emailA = `full-flow-${Date.now()}@escay.local`
   logger.info(`[smoke-full] STEP1 create+pay email=${emailA}`)
   const paid = await createPaidOrder(container, emailA, variantId)
@@ -547,6 +559,19 @@ export default async function smokeFullFlow({ container }: ExecArgs) {
     `payment=${paid.paymentId || "MISSING"}`,
     logger
   )
+
+  // Fatura teslimde kesilir: ödeme sonrası kayıt olmamalı.
+  const beforeDelivery = await readInvoiceMeta(container, paid.orderId)
+  add(
+    checks,
+    "bizimhesap_no_invoice_before_delivery",
+    !beforeDelivery.invoice,
+    `status=${beforeDelivery.invoice?.status || "yok"}`,
+    logger
+  )
+
+  await fulfillDeliver(container, paid.orderId, paid.itemId)
+  await sleep(1500)
 
   // Wait a bit more if invoice not yet written by HTTP-side subscriber
   let { invoice } = await readInvoiceMeta(container, paid.orderId)
@@ -616,7 +641,7 @@ export default async function smokeFullFlow({ container }: ExecArgs) {
     checks,
     "carrier_did_not_break_invoice",
     afterIdem.invoice?.status === "created",
-    "invoice still issued after capture/carrier chain",
+    "invoice issued after capture/carrier/delivery chain",
     logger
   )
 
@@ -638,18 +663,17 @@ export default async function smokeFullFlow({ container }: ExecArgs) {
     checks,
     "subscriber_isolation_capture",
     confirmMails >= 1 && afterIdem.invoice?.status === "created",
-    "email + bizimhesap_invoice both present after payment.captured",
+    "email after payment.captured + bizimhesap_invoice after delivery.created",
     logger
   )
 
   // ---------- 4: return + refund invoice ----------
-  logger.info("[smoke-full] STEP3 fulfill/deliver + return + manual refund invoice flag")
-  await fulfillDeliver(container, paid.orderId, paid.itemId)
+  logger.info("[smoke-full] STEP3 return + manual refund invoice flag (order delivered in STEP2)")
 
   const created = await createStoreReturnRequest(container, {
     order_id: paid.orderId,
     items: [{ id: paid.itemId, quantity: 1 }],
-    reason_id: REASON_MIND,
+    reason_id: reasonMind,
     note: "smoke-full-flow",
     source: "guest",
   })
@@ -747,14 +771,14 @@ export default async function smokeFullFlow({ container }: ExecArgs) {
   logger.info("[smoke-full] STEP4 reject guard (2nd order)")
   const emailB = `full-reject-${Date.now()}@escay.local`
   const paidB = await createPaidOrder(container, emailB, variantId)
+  await fulfillDeliver(container, paidB.orderId, paidB.itemId)
   // Ensure sales invoice exists (for fair comparison — reject must NOT write refund invoice)
   await issueSalesInvoiceForOrder(container, paidB.orderId)
-  await fulfillDeliver(container, paidB.orderId, paidB.itemId)
 
   const rejReturn = await createStoreReturnRequest(container, {
     order_id: paidB.orderId,
     items: [{ id: paidB.itemId, quantity: 1 }],
-    reason_id: REASON_MIND,
+    reason_id: reasonMind,
     note: "smoke-full-reject",
     source: "guest",
   })

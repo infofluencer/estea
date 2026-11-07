@@ -11,6 +11,24 @@
  *    son başarısız deneme eşiğin içindeyse müşteri hâlâ deniyordur, iş bekler.
  */
 
+/**
+ * Callback'te hash yalnız total_amount'u (taksit/vade farkı dahil çekilen tutar) kapsar;
+ * payment_amount (sipariş tutarı) imzasızdır. Tutar kontrolünde payment_amount kullanılır ama
+ * yalnız pozitif tamsayı kuruş ve total_amount'u aşmıyorsa; aksi halde imzalı tutara dönülür.
+ */
+export function pickCallbackPaymentAmount(
+  paymentAmount: unknown,
+  totalAmount: string
+): string {
+  const raw = typeof paymentAmount === "string" ? paymentAmount.trim() : ""
+  if (!/^\d+$/.test(raw)) return totalAmount
+  const payment = Number(raw)
+  const total = Number(totalAmount)
+  if (payment <= 0) return totalAmount
+  if (Number.isFinite(total) && payment > total) return totalAmount
+  return raw
+}
+
 export type PaytrFailedReason = {
   code?: string | null
   msg?: string | null

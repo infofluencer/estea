@@ -1,5 +1,6 @@
 import type { CreateNotificationDTO, INotificationModuleService } from "@medusajs/framework/types"
 import { NotificationStatus } from "@medusajs/framework/utils"
+import { createHash } from "crypto"
 
 type NotificationLike = { id: string; idempotency_key?: string | null; status?: string | null }
 
@@ -12,6 +13,16 @@ type NotificationServiceLike =
     }
 
 export type NotifyResult = { sent: boolean; skipped?: "already_sent"; idempotency_key?: string }
+
+/**
+ * Gizli token'dan (JWT vb.) idempotency anahtarı. Token'ın başını kesmek yanlış:
+ * her JWT aynı başlıkla başlar, tüm mailler aynı anahtarı alır ve ilk gönderimden
+ * sonra "zaten gönderildi" sayılıp atlanır (Mareen, 30.10 şifre sıfırlama).
+ * Token'ın kendisi veritabanına yazılmasın diye özeti kullanılır.
+ */
+export function secretIdempotencyKey(prefix: string, secret: string): string {
+  return `${prefix}:${createHash("sha256").update(secret).digest("hex").slice(0, 32)}`
+}
 
 /**
  * `createNotifications` sarmalayıcısı — Medusa'nın idempotency hatasını aşar.

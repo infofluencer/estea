@@ -5,7 +5,9 @@
     "./tr-address": "./tr-address.js",
     "./order-number": "./order-number.js",
     "./tr-districts": "./tr-districts.js",
+    "./checkout-address": "./checkout-address.js",
     "./order-timeline": "./order-timeline.js",
-    "./legal-contracts": "./legal-contracts.js"
+    "./legal-contracts": "./legal-contracts.js",
+    "./return-status": "./return-status.js"
   }
 }
