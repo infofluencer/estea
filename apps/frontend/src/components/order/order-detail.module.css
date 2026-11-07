@@ -408,14 +408,86 @@
   opacity: 0.85;
 }
 
-.returnBadge {
-  display: inline-block;
+/* İade / değişim kaydı — hesap sayfasıyla aynı etiket ve renk dili (DESIGN.md). */
+.returnEntry {
+  display: grid;
+  gap: 0.4rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--color-line);
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  color: var(--brand-deep);
-  border-bottom: 1px solid color-mix(in srgb, var(--brand-deep) 35%, transparent);
-  padding-bottom: 0.1rem;
 }
+
+.returnEntry:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.returnHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.returnPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.625rem;
+  padding: 0 0.6rem;
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.returnPill[data-tone="pending"],
+.returnPill[data-tone="progress"] {
+  background: var(--color-gold-soft);
+  color: #7a5a14;
+}
+
+.returnPill[data-tone="done"] {
+  background: #e7f3eb;
+  color: #1c5a32;
+}
+
+.returnPill[data-tone="rejected"] {
+  background: var(--color-accent-soft);
+  color: var(--color-brand-dark);
+}
+
+.returnPill[data-tone="canceled"] {
+  color: var(--color-muted);
+}
+
+.returnDate {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.returnItems,
+.returnAmount,
+.returnNote {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.returnItems {
+  color: var(--color-ink);
+}
+
+.returnAmount {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.returnNote {
+  max-width: 52ch;
+  color: var(--color-ink-soft);
+}
+
 
 .statusBadge {
   display: inline-block;

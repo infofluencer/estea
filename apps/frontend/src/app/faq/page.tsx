@@ -37,7 +37,7 @@ const FAQ_ITEMS: { id: string; q: string; a: ReactNode }[] = [
     a: (
       <>
         Ödemeler PayTR güvenli altyapısı ile alınır. Kredi kartı bilgileriniz yalnızca ödeme anında kullanılır; veri
-        tabanında saklanmaz. Havale ile de ödeyebilirsiniz. Ön bilgilendirme:{" "}
+        tabanında saklanmaz. Ön bilgilendirme:{" "}
         <Link href="/legal/on-bilgilendirme-formu">Ön Bilgilendirme Formu</Link>.
       </>
     ),

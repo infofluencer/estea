@@ -29,12 +29,9 @@ export default async function AccountPage() {
     created_at?: string | null
     total?: number | null
     status?: string | null
+    metadata?: Record<string, unknown> | null
     return_status?: string | null
-    return_meta?: {
-      rejected?: boolean
-      escay_rejection?: { rejected?: boolean } | null
-      paytr_refund?: { status?: string | null } | null
-    } | null
+    return_meta?: Record<string, unknown> | null
     items: {
       id?: string
       title?: string | null
@@ -63,11 +60,7 @@ export default async function AccountPage() {
             returns?: {
               status?: string | null
               created_at?: string | null
-              metadata?: {
-                rejected?: boolean
-                escay_rejection?: { rejected?: boolean } | null
-                paytr_refund?: { status?: string | null } | null
-              } | null
+              metadata?: Record<string, unknown> | null
             }[]
           }
         ).returns
@@ -107,6 +100,8 @@ export default async function AccountPage() {
               : o.created_at ?? null,
           total: o.total,
           status: o.status,
+          // "Hazırlandı" adımı metadata'daki etiket/hazırlık tarihinden okunur.
+          metadata: (o as { metadata?: Record<string, unknown> | null }).metadata ?? null,
           return_status: latest?.status ?? null,
           return_meta: latest?.metadata ?? null,
           items: rawItems,
@@ -141,6 +136,10 @@ export default async function AccountPage() {
           email: customer.email,
           first_name: customer.first_name,
           last_name: customer.last_name,
+          created_at:
+            customer.created_at instanceof Date
+              ? customer.created_at.toISOString()
+              : (customer.created_at as string | null | undefined) ?? null,
         }}
         orders={orders}
         addresses={(customer.addresses || []).map((a) => ({

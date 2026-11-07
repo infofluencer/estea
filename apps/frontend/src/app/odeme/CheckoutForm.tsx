@@ -5,7 +5,10 @@ import { readConsent } from "@/lib/consent"
 import Link from "next/link"
 import { CheckoutProgress } from "@/components/cart/CheckoutProgress"
 import { CheckoutAlertDialog } from "@/components/checkout/CheckoutAlertDialog"
-import { CheckoutOrderSummary } from "@/components/checkout/CheckoutOrderSummary"
+import {
+  CheckoutOrderSummary,
+  computeCheckoutTotals,
+} from "@/components/checkout/CheckoutOrderSummary"
 import { formatTry } from "@/lib/medusa"
 import {
   applyShippingOptionAction,
@@ -369,6 +372,28 @@ export function CheckoutForm({
       .join(" ")
   }
 
+  /** Uyarı penceresi kapanınca hata alanın altında kalır. */
+  function fieldMessage(field: FormField) {
+    if (fieldError !== field || !error) return null
+    return (
+      <span className="checkout-field__error" role="alert">
+        {error}
+      </span>
+    )
+  }
+
+  // Özet paneli ve "Ödemeye geç" düğmesi aynı toplamı gösterir.
+  const shippingEstimate =
+    shipOptions.find((o) => o.id === selectedShip)?.amount ??
+    shipOptions[0]?.amount ??
+    null
+  const useAppliedShipping =
+    (cart.shipping_total ?? 0) > 0 || (cart.shipping_methods?.length ?? 0) > 0
+  const totals = computeCheckoutTotals(cart, {
+    useAppliedShipping,
+    shippingEstimate,
+  })
+
   async function syncShippingWithCart(
     options: { id: string; name: string; amount: number | null }[],
     currentCart: CartSummary
@@ -667,23 +692,36 @@ export function CheckoutForm({
         <div className="checkout-main">
           <h1 className="checkout-main__title">Adres</h1>
 
-          {customer && (
-            <p className="checkout-account">
-              Giriş yapıldı: <strong>{customer.email}</strong>
-            </p>
-          )}
-
           <form
             onSubmit={onContinueToPayment}
             className="checkout-form"
             noValidate
           >
+            <section className="checkout-section" aria-labelledby="co-contact">
+              <div className="checkout-section__head">
+                <h2 id="co-contact" className="checkout-section-title">
+                  İletişim
+                </h2>
+                <p className="checkout-section__hint">
+                  Sipariş onayı ve kargo takibi bu adrese gider.
+                </p>
+              </div>
+
+              {customer ? (
+                <p className="checkout-account">
+                  Giriş yapıldı: <strong>{customer.email}</strong>
+                </p>
+              ) : null}
+
               <label className="checkout-field">
-                <span className="checkout-label">E-posta (zorunlu)</span>
+                <span className="checkout-label">E-posta</span>
                 <input
                   ref={emailRef}
                   data-testid="checkout-email"
                   type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder="ornek@eposta.com"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value)
@@ -693,6 +731,7 @@ export function CheckoutForm({
                   aria-invalid={fieldError === "email"}
                   disabled={Boolean(customer?.email)}
                 />
+                {fieldMessage("email")}
               </label>
 
               <label className="checkout-legal">
@@ -704,9 +743,20 @@ export function CheckoutForm({
                   onChange={(e) => setMarketingConsent(e.target.checked)}
                 />
                 <span className="checkout-label checkout-legal__text">
-                  Teklifler için bana e-posta gönderin
+                  Yeni harman ve kampanya haberleri için bana e-posta gönderin
                 </span>
               </label>
+            </section>
+
+            <section className="checkout-section" aria-labelledby="co-ship">
+              <div className="checkout-section__head">
+                <h2 id="co-ship" className="checkout-section-title">
+                  Teslimat adresi
+                </h2>
+                <p className="checkout-section__hint">
+                  Yalnızca Türkiye içine gönderim yapıyoruz.
+                </p>
+              </div>
 
               {savedAddresses.length > 0 && (
                 <label className="checkout-field">
@@ -739,6 +789,7 @@ export function CheckoutForm({
                     ref={firstNameRef}
                     data-testid="checkout-first-name"
                     placeholder="Ad"
+                    autoComplete="given-name"
                     value={addr.first_name}
                     onChange={(e) => {
                       setAddr({ ...addr, first_name: e.target.value })
@@ -747,6 +798,7 @@ export function CheckoutForm({
                     className={inputClass("first_name")}
                     aria-invalid={fieldError === "first_name"}
                   />
+                  {fieldMessage("first_name")}
                 </label>
                 <label className="checkout-field">
                   <span className="checkout-label">Soyad</span>
@@ -754,6 +806,7 @@ export function CheckoutForm({
                     ref={lastNameRef}
                     data-testid="checkout-last-name"
                     placeholder="Soyad"
+                    autoComplete="family-name"
                     value={addr.last_name}
                     onChange={(e) => {
                       setAddr({ ...addr, last_name: e.target.value })
@@ -762,12 +815,13 @@ export function CheckoutForm({
                     className={inputClass("last_name")}
                     aria-invalid={fieldError === "last_name"}
                   />
+                  {fieldMessage("last_name")}
                 </label>
               </div>
 
               <div className="checkout-form__row">
                 <label className="checkout-field">
-                  <span className="checkout-label">İl (zorunlu)</span>
+                  <span className="checkout-label">İl</span>
                   <select
                     ref={cityRef}
                     data-testid="checkout-city"
@@ -792,6 +846,7 @@ export function CheckoutForm({
                       </option>
                     ))}
                   </select>
+                  {fieldMessage("city")}
                 </label>
                 <label className="checkout-field">
                   <span className="checkout-label">İlçe</span>
@@ -821,6 +876,7 @@ export function CheckoutForm({
                       </option>
                     ))}
                   </select>
+                  {fieldMessage("district")}
                 </label>
               </div>
 
@@ -842,13 +898,15 @@ export function CheckoutForm({
                     inputClassName={inputClass("neighbourhood")}
                     invalid={fieldError === "neighbourhood"}
                   />
+                  {fieldMessage("neighbourhood")}
                 </label>
                 <label className="checkout-field">
                   <span className="checkout-label">Posta kodu</span>
                   <input
                     ref={postalRef}
                     data-testid="checkout-postal"
-                    placeholder="Posta kodu"
+                    placeholder="5 haneli"
+                    autoComplete="postal-code"
                     inputMode="numeric"
                     pattern="\d{5}"
                     maxLength={5}
@@ -860,15 +918,17 @@ export function CheckoutForm({
                     className={inputClass("postal_code")}
                     aria-invalid={fieldError === "postal_code"}
                   />
+                  {fieldMessage("postal_code")}
                 </label>
               </div>
 
               <label className="checkout-field">
-                <span className="checkout-label">Adres</span>
+                <span className="checkout-label">Açık adres</span>
                 <input
                   ref={address1Ref}
                   data-testid="checkout-address"
-                  placeholder="Cadde, sokak, bina no, daire"
+                  autoComplete="street-address"
+                  placeholder="Cadde / sokak, bina no, daire"
                   value={addr.address_1}
                   onChange={(e) => {
                     setAddr({ ...addr, address_1: e.target.value })
@@ -877,6 +937,7 @@ export function CheckoutForm({
                   className={inputClass("address_1")}
                   aria-invalid={fieldError === "address_1"}
                 />
+                {fieldMessage("address_1")}
               </label>
 
               <label className="checkout-field">
@@ -884,7 +945,7 @@ export function CheckoutForm({
                 <input
                   ref={phoneRef}
                   data-testid="checkout-phone"
-                  placeholder="Telefon"
+                  placeholder="05xx xxx xx xx"
                   type="tel"
                   autoComplete="tel"
                   value={addr.phone}
@@ -896,41 +957,59 @@ export function CheckoutForm({
                   className={inputClass("phone")}
                   aria-invalid={fieldError === "phone"}
                 />
+                {fieldMessage("phone")}
               </label>
 
-              <label className="checkout-field">
-                <span className="checkout-label">Ülke</span>
-                <input
-                  value="Türkiye"
-                  disabled
-                  className="checkout-input checkout-input--disabled"
-                />
-              </label>
+              <details className="checkout-note" open={Boolean(orderNote)}>
+                <summary className="checkout-note__toggle">
+                  <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden>
+                    <path
+                      d="M6 1.5v9M1.5 6h9"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Sipariş notu ekle
+                </summary>
+                <label className="checkout-field">
+                  <span className="checkout-label">Sipariş notu (opsiyonel)</span>
+                  <textarea
+                    data-testid="checkout-order-note"
+                    placeholder="Kapıcıya teslim, zil çalışmıyor, hediye paketi…"
+                    rows={3}
+                    maxLength={500}
+                    value={orderNote}
+                    onChange={(e) => setOrderNote(e.target.value)}
+                    className="checkout-input checkout-textarea"
+                  />
+                </label>
+              </details>
+            </section>
 
-              <label className="checkout-field">
-                <span className="checkout-label">Sipariş notu (opsiyonel)</span>
-                <textarea
-                  data-testid="checkout-order-note"
-                  placeholder="Siparişinizle ilgili eklemek istediğiniz bir not varsa yazın"
-                  rows={3}
-                  maxLength={500}
-                  value={orderNote}
-                  onChange={(e) => setOrderNote(e.target.value)}
-                  className="checkout-input checkout-textarea"
-                />
-              </label>
-
-              <div className="checkout-invoice-section">
-                <h2 className="checkout-section-title">Fatura Detayları</h2>
+            <section
+              className="checkout-section checkout-invoice-section"
+              aria-labelledby="co-invoice"
+            >
+              <div className="checkout-section__head">
+                <h2 id="co-invoice" className="checkout-section-title">
+                  Fatura
+                </h2>
+                <p className="checkout-section__hint">
+                  Bireysel faturada TCKN isteğe bağlıdır; kurumsal faturada VKN,
+                  vergi dairesi ve unvan gerekir.
+                </p>
+              </div>
 
                 <fieldset className="checkout-invoice-type">
                   <legend className="checkout-label">Fatura tipi</legend>
-                  <div className="checkout-radio-row">
-                    <label className="checkout-radio-option">
+                  <div className="checkout-segment">
+                    <label className="checkout-segment__option">
                       <input
                         type="radio"
                         name="invoice_type"
-                        className="checkout-ship-radio"
+                        className="checkout-segment__input"
                         data-testid="checkout-invoice-individual"
                         checked={invoiceType === "individual"}
                         onChange={() => {
@@ -942,11 +1021,11 @@ export function CheckoutForm({
                       />
                       <span>Bireysel</span>
                     </label>
-                    <label className="checkout-radio-option">
+                    <label className="checkout-segment__option">
                       <input
                         type="radio"
                         name="invoice_type"
-                        className="checkout-ship-radio"
+                        className="checkout-segment__input"
                         data-testid="checkout-invoice-corporate"
                         checked={invoiceType === "corporate"}
                         onChange={() => {
@@ -979,6 +1058,7 @@ export function CheckoutForm({
                         className={inputClass("tckn")}
                         aria-invalid={fieldError === "tckn"}
                       />
+                      {fieldMessage("tckn")}
                     </label>
                   </>
                 ) : (
@@ -997,6 +1077,7 @@ export function CheckoutForm({
                         className={inputClass("company_name")}
                         aria-invalid={fieldError === "company_name"}
                       />
+                      {fieldMessage("company_name")}
                     </label>
                     <div className="checkout-form__row">
                       <label className="checkout-field">
@@ -1017,6 +1098,7 @@ export function CheckoutForm({
                           className={inputClass("vkn")}
                           aria-invalid={fieldError === "vkn"}
                         />
+                        {fieldMessage("vkn")}
                       </label>
                       <label className="checkout-field">
                         <span className="checkout-label">Vergi dairesi</span>
@@ -1032,6 +1114,7 @@ export function CheckoutForm({
                           className={inputClass("tax_office")}
                           aria-invalid={fieldError === "tax_office"}
                         />
+                        {fieldMessage("tax_office")}
                       </label>
                     </div>
                   </>
@@ -1070,9 +1153,7 @@ export function CheckoutForm({
                     className="checkout-billing-fields"
                     data-testid="checkout-billing-fields"
                   >
-                    <p className="checkout-muted">
-                      Fatura adresi (teslimat adresinden farklı)
-                    </p>
+                    <p className="checkout-billing-fields__title">Fatura adresi</p>
                     <div className="checkout-form__row">
                       <label className="checkout-field">
                         <span className="checkout-label">Ad</span>
@@ -1241,24 +1322,28 @@ export function CheckoutForm({
                     </label>
                   </div>
                 ) : null}
-              </div>
+            </section>
 
               <div
                 ref={shippingRef}
                 tabIndex={-1}
-                className={`checkout-ship-section${
+                className={`checkout-section checkout-ship-section${
                   fieldError === "shipping" ? " checkout-ship-section--error" : ""
                 }`}
               >
-                <h2 className="checkout-section-title">Kargo</h2>
+                <div className="checkout-section__head">
+                  <h2 className="checkout-section-title">Kargo</h2>
+                </div>
                 {shippingLoading && !shipOptions.length ? (
-                  <p className="checkout-muted">Kargo seçenekleri yükleniyor…</p>
+                  <div className="checkout-ship-skeleton" aria-hidden>
+                    <span />
+                  </div>
                 ) : null}
                 {!shippingLoading &&
                   !shipOptions.length &&
                   validateContactForm() ? (
-                  <p className="checkout-muted">
-                    Kargo seçenekleri için adres bilgilerinizi tamamlayın.
+                  <p className="checkout-ship-empty">
+                    Kargo seçenekleri adres tamamlanınca burada listelenir.
                   </p>
                 ) : null}
                 {shipOptions.length > 0 ? (
@@ -1289,11 +1374,17 @@ export function CheckoutForm({
                     ))}
                   </div>
                 ) : null}
+                {fieldMessage("shipping")}
               </div>
 
               {bankTransfer ? (
-                <div className="checkout-ship-section" data-testid="checkout-payment-method">
-                  <h2 className="checkout-section-title">Ödeme yöntemi</h2>
+                <div
+                  className="checkout-section checkout-ship-section"
+                  data-testid="checkout-payment-method"
+                >
+                  <div className="checkout-section__head">
+                    <h2 className="checkout-section-title">Ödeme yöntemi</h2>
+                  </div>
                   <div className="checkout-ship-list">
                     <label className="checkout-ship-option">
                       <input
@@ -1306,10 +1397,30 @@ export function CheckoutForm({
                       <span className="checkout-ship-option__name">
                         Kredi / banka kartı
                         <span className="checkout-pay-option__hint">
-                          PayTR güvenli ödeme sayfasında
+                          PayTR güvenli ödeme sayfasında, 3D Secure ile
                         </span>
                       </span>
-                      <span />
+                      <span className="checkout-pay-option__icon" aria-hidden>
+                        <svg viewBox="0 0 24 24" width="22" height="22">
+                          <rect
+                            x="2.5"
+                            y="5.5"
+                            width="19"
+                            height="13"
+                            rx="2"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                          />
+                          <path d="M2.5 9.5h19" stroke="currentColor" strokeWidth="1.5" />
+                          <path
+                            d="M6 14.5h4"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </span>
                     </label>
                     <label className="checkout-ship-option">
                       <input
@@ -1327,7 +1438,18 @@ export function CheckoutForm({
                           Ödeme hesabımıza geçince siparişiniz hazırlanır.
                         </span>
                       </span>
-                      <span />
+                      <span className="checkout-pay-option__icon" aria-hidden>
+                        <svg viewBox="0 0 24 24" width="22" height="22">
+                          <path
+                            d="M3 9.5L12 4l9 5.5M4.5 10v8M9.5 10v8M14.5 10v8M19.5 10v8M3 20h18"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -1366,31 +1488,34 @@ export function CheckoutForm({
                 <button
                   type="submit"
                   data-testid="checkout-submit"
-                  className="cart-cta cart-cta--primary"
+                  className="cart-cta cart-cta--primary checkout-submit"
                   disabled={pending || submitLocked}
                 >
-                  {pending
-                    ? "İşleniyor…"
-                    : isBankTransfer
-                      ? "Siparişi tamamla"
-                      : "Ödemeye geç"}
+                  <span>
+                    {pending
+                      ? "İşleniyor…"
+                      : isBankTransfer
+                        ? "Siparişi tamamla"
+                        : "Ödemeye geç"}
+                  </span>
+                  <span className="checkout-submit__total">
+                    {formatTry(totals.total)}
+                  </span>
                 </button>
+                <p className="checkout-form__note">
+                  {isBankTransfer
+                    ? "Sipariş sonrası IBAN bilgileri ekranda ve e-postada olacak."
+                    : "Kart bilgileri bir sonraki adımda, PayTR\u2019nin güvenli sayfasında girilir."}
+                </p>
               </div>
             </form>
         </div>
 
         <CheckoutOrderSummary
-        cart={cart}
-        shippingEstimate={
-          shipOptions.find((o) => o.id === selectedShip)?.amount ??
-          shipOptions[0]?.amount ??
-          null
-        }
-        useAppliedShipping={
-          (cart.shipping_total ?? 0) > 0 ||
-          ((cart.shipping_methods?.length ?? 0) > 0)
-        }
-      />
+          cart={cart}
+          shippingEstimate={shippingEstimate}
+          useAppliedShipping={useAppliedShipping}
+        />
       </div>
     </>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState, useTransition, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, useState, useTransition, type ReactNode } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
@@ -21,11 +21,17 @@ import {
   type TrCityOption,
 } from "@/lib/checkout-address"
 import { NeighbourhoodSelect } from "@/components/checkout/NeighbourhoodSelect"
-import { trCityCodeForName } from "@escay/shared/tr-address"
+import { normalizeTrPhone, trCityCodeForName } from "@escay/shared/tr-address"
 import { useFavorites } from "@/components/FavoritesProvider"
 import { formatTry, PRODUCT_IMAGE } from "@/lib/medusa"
+import { COMPANY } from "@/lib/company"
 import { resolveOrderNumberLabel } from "@escay/shared/order-number"
-import { formatOrderStatusLabel } from "@escay/shared/order-timeline"
+import {
+  ORDER_STATUS_BADGE,
+  formatOrderStatusLabel,
+  resolveOrderTimeline,
+} from "@escay/shared/order-timeline"
+import { isReturnRejected, resolveReturnStatus } from "@escay/shared/return-status"
 import styles from "./account.module.css"
 import { productPath } from "@/lib/urls"
 
@@ -34,6 +40,7 @@ type CustomerView = {
   email?: string | null
   first_name?: string | null
   last_name?: string | null
+  created_at?: string | null
 }
 
 type OrderView = {
@@ -42,12 +49,9 @@ type OrderView = {
   created_at?: string | null
   total?: number | null
   status?: string | null
+  metadata?: Record<string, unknown> | null
   return_status?: string | null
-  return_meta?: {
-    rejected?: boolean
-    escay_rejection?: { rejected?: boolean } | null
-    paytr_refund?: { status?: string | null } | null
-  } | null
+  return_meta?: Record<string, unknown> | null
   items?: {
     id?: string
     title?: string | null
@@ -79,6 +83,22 @@ type AddressView = {
 
 type Tab = "dashboard" | "orders" | "returns" | "addresses" | "details" | "favorites"
 
+type Feedback = {
+  scope: "address" | "profile" | "password"
+  kind: "error" | "success"
+  text: string
+}
+
+/** Sekme ↔ adres çubuğu karşılığı; yenilemede ve paylaşılan bağlantıda aynı bölüm açılır. */
+const TAB_HASH: Record<Tab, string> = {
+  dashboard: "",
+  orders: "siparisler",
+  returns: "iadeler",
+  addresses: "adresler",
+  details: "bilgiler",
+  favorites: "favoriler",
+}
+
 const emptyAddress = (): AddressInput => ({
   first_name: "",
   last_name: "",
@@ -104,42 +124,56 @@ function formatOrderDate(value?: string | null) {
   }
 }
 
-function formatStatus(order: {
-  status?: string | null
-  fulfillments?: {
-    shipped_at?: string | null
-    delivered_at?: string | null
-    labels?: { tracking_number?: string | null }[] | null
-  }[]
-  payment_collections?: { status?: string | null }[] | null
-}) {
-  return formatOrderStatusLabel(order)
+function formatMemberSince(value?: string | null) {
+  if (!value) return null
+  try {
+    return new Intl.DateTimeFormat("tr-TR", {
+      month: "long",
+      year: "numeric",
+    }).format(new Date(value))
+  } catch {
+    return null
+  }
 }
 
-function formatReturnStatus(
-  status?: string | null,
-  meta?: {
-    rejected?: boolean
-    escay_rejection?: { rejected?: boolean } | null
-    paytr_refund?: { status?: string | null } | null
-  } | null
-) {
-  if (!status && !meta) return null
-  if (meta?.escay_rejection?.rejected === true || meta?.rejected === true) {
-    return "İade reddedildi"
+function returnStatusOf(order: OrderView) {
+  return resolveReturnStatus({ status: order.return_status, metadata: order.return_meta })
+}
+
+type OrderState = "canceled" | "delivered" | "active"
+
+function orderState(order: OrderView): OrderState {
+  const status = (order.status || "").toLowerCase()
+  if (status === "canceled" || status === "archived") return "canceled"
+  const tl = resolveOrderTimeline(order)
+  return tl.currentKey === "delivered" ? "delivered" : "active"
+}
+
+function orderNumber(order: OrderView) {
+  return resolveOrderNumberLabel({ id: order.id, display_id: order.display_id })
+}
+
+function itemSummary(order: OrderView) {
+  const items = order.items || []
+  if (items.length === 0) return null
+  const first = items[0].title || "Ürün"
+  return items.length > 1 ? `${first} ve ${items.length - 1} ürün daha` : first
+}
+
+function trackingNumber(order: OrderView) {
+  for (const f of order.fulfillments || []) {
+    const no = f.labels?.find((l) => l.tracking_number?.trim())?.tracking_number
+    if (no) return no.trim()
   }
-  if (meta?.paytr_refund?.status === "success") {
-    return "Para iade edildi"
-  }
-  if (!status) return null
-  const map: Record<string, string> = {
-    open: "İade açık",
-    requested: "İade talebi",
-    received: "İade alındı",
-    partially_received: "İade kısmen alındı",
-    canceled: "İade iptal",
-  }
-  return map[status] || `İade: ${status}`
+  return null
+}
+
+/** "+905321234567" → "0532 123 45 67"; tanınmayan biçim olduğu gibi kalır. */
+function formatPhone(phone?: string | null) {
+  const e164 = normalizeTrPhone(phone)
+  if (!e164) return phone || ""
+  const d = `0${e164.slice(3)}`
+  return `${d.slice(0, 4)} ${d.slice(4, 7)} ${d.slice(7, 9)} ${d.slice(9)}`
 }
 
 function districtsFor(cityName: string): string[] {
@@ -158,39 +192,37 @@ function addressToForm(a: AddressView): AddressInput {
     district: districtsFor(city).includes(district) ? district : "",
     neighbourhood: a.metadata?.neighbourhood || a.address_2 || "",
     postal_code: a.postal_code || "",
-    phone: a.phone || "",
+    phone: formatPhone(a.phone),
     country_code: "tr",
   }
 }
 
-function IconDashboard({ size = 28 }: { size?: number }) {
+function IconDashboard({ size = 18 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="3.5" y="3.5" width="7.5" height="7.5" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="13" y="3.5" width="7.5" height="4.5" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="13" y="10.5" width="7.5" height="10" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="3.5" y="13.5" width="7.5" height="7" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="13" y="3.5" width="7.5" height="4.5" rx="1" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="13" y="10.5" width="7.5" height="10" rx="1" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="3.5" y="13.5" width="7.5" height="7" rx="1" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   )
 }
 
-function IconOrders({ size = 28 }: { size?: number }) {
+function IconOrders({ size = 18 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
-        d="M7 7h13l-1.4 8.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.6L5.5 3H3"
+        d="M4 7.5 12 3.5l8 4v9l-8 4-8-4v-9Z"
         stroke="currentColor"
         strokeWidth="1.5"
-        strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="9.5" cy="20" r="1.2" fill="currentColor" />
-      <circle cx="17.5" cy="20" r="1.2" fill="currentColor" />
+      <path d="m4 7.5 8 4 8-4M12 11.5v9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
     </svg>
   )
 }
 
-function IconAddresses({ size = 28 }: { size?: number }) {
+function IconAddresses({ size = 18 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -204,7 +236,7 @@ function IconAddresses({ size = 28 }: { size?: number }) {
   )
 }
 
-function IconDetails({ size = 28 }: { size?: number }) {
+function IconDetails({ size = 18 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <circle cx="12" cy="8" r="3.25" stroke="currentColor" strokeWidth="1.5" />
@@ -218,7 +250,7 @@ function IconDetails({ size = 28 }: { size?: number }) {
   )
 }
 
-function IconLogout({ size = 28 }: { size?: number }) {
+function IconLogout({ size = 18 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -238,7 +270,7 @@ function IconLogout({ size = 28 }: { size?: number }) {
   )
 }
 
-function IconFavorites({ size = 28 }: { size?: number }) {
+function IconFavorites({ size = 18 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -251,7 +283,7 @@ function IconFavorites({ size = 28 }: { size?: number }) {
   )
 }
 
-function IconReturns({ size = 28 }: { size?: number }) {
+function IconReturns({ size = 18 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -272,6 +304,120 @@ function IconReturns({ size = 28 }: { size?: number }) {
   )
 }
 
+function IconChevron() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="m9 6 6 6-6 6"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function StatusPill({ order }: { order: OrderView }) {
+  const ret = returnStatusOf(order)
+  // Satırda tek durum işareti: iade varsa siparişin kendi durumunun yerini alır.
+  const tone = ret
+    ? ret.tone === "rejected" || ret.tone === "canceled"
+      ? "canceled"
+      : ret.tone === "done"
+        ? "delivered"
+        : "return"
+    : orderState(order)
+  return (
+    <span className={styles.pill} data-tone={tone}>
+      {ret?.label || formatOrderStatusLabel(order)}
+    </span>
+  )
+}
+
+function OrderRow({ order, detail }: { order: OrderView; detail?: string | null }) {
+  const thumb = order.items?.[0]?.thumbnail || PRODUCT_IMAGE
+  const extra = Math.max(0, (order.items || []).length - 1)
+  const summary = itemSummary(order)
+  return (
+    <li className={styles.row}>
+      <Link
+        href={`/hesabim/orders/${order.id}`}
+        className={styles.rowLink}
+        data-testid="account-order-link"
+      >
+        <span className={styles.rowMedia}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={thumb} alt="" className={styles.rowThumb} />
+          {extra > 0 ? <span className={styles.rowMore}>+{extra}</span> : null}
+        </span>
+        <span className={styles.rowMain}>
+          <span className={styles.rowTitle}>Sipariş #{orderNumber(order)}</span>
+          <span className={styles.rowSub}>
+            {formatOrderDate(order.created_at)}
+            {summary ? `, ${summary}` : ""}
+          </span>
+          {detail ? <span className={styles.rowDetail}>{detail}</span> : null}
+        </span>
+        <span className={styles.rowStatus}>
+          <StatusPill order={order} />
+        </span>
+        <span className={styles.rowTotal}>{formatTry(order.total)}</span>
+        <span className={styles.rowChevron}>
+          <IconChevron />
+        </span>
+      </Link>
+    </li>
+  )
+}
+
+function OrderProgress({ order }: { order: OrderView }) {
+  const tl = resolveOrderTimeline(order)
+  if (orderState(order) === "canceled") {
+    return <p className={styles.progressCanceled}>Bu sipariş iptal edildi.</p>
+  }
+  return (
+    <div className={styles.progress}>
+      <ol className={styles.progressSteps} aria-label="Sipariş durumu">
+        {tl.steps.map((step, i) => (
+          <li
+            key={step.key}
+            className={styles.progressStep}
+            style={{ "--step": i } as React.CSSProperties}
+            data-state={
+              i < tl.currentIndex || step.done
+                ? "done"
+                : step.current
+                  ? "current"
+                  : "todo"
+            }
+            aria-current={step.current ? "step" : undefined}
+          >
+            <span className={styles.progressDot} />
+            <span className={styles.progressLabel}>{ORDER_STATUS_BADGE[step.key]}</span>
+          </li>
+        ))}
+      </ol>
+      <p className={styles.progressNow}>{ORDER_STATUS_BADGE[tl.currentKey]}</p>
+    </div>
+  )
+}
+
+function EmptyFrame({
+  children,
+  action,
+}: {
+  children: ReactNode
+  action?: ReactNode
+}) {
+  return (
+    <div className={styles.emptyFrame}>
+      <p className={styles.emptyText}>{children}</p>
+      {action}
+    </div>
+  )
+}
+
 export function AccountDashboard({
   customer,
   orders,
@@ -286,10 +432,18 @@ export function AccountDashboard({
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [tab, setTab] = useState<Tab>("dashboard")
+  const navRef = useRef<HTMLElement>(null)
   const addresses = initialAddresses
-  const { items: favoriteItems, toggleFavorite } = useFavorites()
-  const [error, setError] = useState<string | null>(null)
-  const [info, setInfo] = useState<string | null>(null)
+  const {
+    items: favoriteItems,
+    toggleFavorite,
+    hydrated: favoritesHydrated,
+    pending: favoritesPending,
+  } = useFavorites()
+  // Hesap listesi sunucudan gelirken boş liste henüz "favori yok" demek değil.
+  const favoritesReady =
+    favoritesHydrated && !(favoritesPending && favoriteItems.length === 0)
+  const [feedback, setFeedback] = useState<Feedback | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState<AddressInput>(emptyAddress())
@@ -310,81 +464,111 @@ export function AccountDashboard({
     })
   }, [customer.first_name, customer.last_name])
 
+  useEffect(() => {
+    function fromHash() {
+      const hash = window.location.hash.replace("#", "")
+      const match = (Object.keys(TAB_HASH) as Tab[]).find(
+        (t) => TAB_HASH[t] === hash
+      )
+      setTab(match || "dashboard")
+    }
+    fromHash()
+    window.addEventListener("hashchange", fromHash)
+    return () => window.removeEventListener("hashchange", fromHash)
+  }, [])
+
+  // Dar ekranda sekmeler yatay kayar; seçili olan görünür kalsın.
+  useEffect(() => {
+    const nav = navRef.current
+    const active = nav?.querySelector<HTMLElement>('[aria-current="page"]')
+    if (!nav || !active || nav.scrollWidth <= nav.clientWidth) return
+    nav.scrollTo({
+      left: active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2,
+    })
+  }, [tab])
+
+  const fullName =
+    [customer.first_name, customer.last_name].filter(Boolean).join(" ").trim() ||
+    null
   const greetingName = customer.first_name?.trim() || null
+  const memberSince = formatMemberSince(customer.created_at)
 
   const navItems: { id: Tab; label: string; icon: ReactNode }[] = [
-    { id: "dashboard", label: "Pano", icon: <IconDashboard size={18} /> },
-    { id: "orders", label: "Siparişler", icon: <IconOrders size={18} /> },
-    { id: "returns", label: "İadeler", icon: <IconReturns size={18} /> },
-    { id: "addresses", label: "Adresler", icon: <IconAddresses size={18} /> },
-    { id: "details", label: "Hesap Detayları", icon: <IconDetails size={18} /> },
-    { id: "favorites", label: "Favori Listesi", icon: <IconFavorites size={18} /> },
+    { id: "dashboard", label: "Genel bakış", icon: <IconDashboard /> },
+    { id: "orders", label: "Siparişlerim", icon: <IconOrders /> },
+    { id: "returns", label: "İadeler", icon: <IconReturns /> },
+    { id: "addresses", label: "Adreslerim", icon: <IconAddresses /> },
+    { id: "details", label: "Hesap bilgileri", icon: <IconDetails /> },
+    { id: "favorites", label: "Favorilerim", icon: <IconFavorites /> },
   ]
 
-  const dashboardCards: {
-    id: Tab
-    title: string
-    description: string
-    icon: ReactNode
-  }[] = [
-    {
-      id: "orders",
-      title: "Siparişler",
-      description: "Siparişlerini takip et, geçmiş siparişlerini gör.",
-      icon: <IconOrders />,
-    },
-    {
-      id: "returns",
-      title: "İadeler",
-      description: "İade taleplerini görüntüle veya yeni talep oluştur.",
-      icon: <IconReturns />,
-    },
-    {
-      id: "addresses",
-      title: "Adresler",
-      description: "Teslimat adreslerini ekle, düzenle veya sil.",
-      icon: <IconAddresses />,
-    },
-    {
-      id: "details",
-      title: "Hesap Detayları",
-      description: "Profil bilgilerini ve şifreni güncelle.",
-      icon: <IconDetails />,
-    },
-    {
-      id: "favorites",
-      title: "Favori Listesi",
-      description: "Beğendiğin ürünleri görüntüle ve yönet.",
-      icon: <IconFavorites />,
-    },
-  ]
+  const activeOrders = useMemo(
+    () => orders.filter((o) => orderState(o) === "active"),
+    [orders]
+  )
+  // Genel bakışta takip edilecek sipariş: en yeni devam eden, yoksa en yeni.
+  const featuredOrder = activeOrders[0] || orders[0] || null
+  const recentOrders = useMemo(
+    () => orders.filter((o) => o.id !== featuredOrder?.id).slice(0, 4),
+    [orders, featuredOrder]
+  )
 
   const ordersWithReturn = useMemo(
     () =>
-      orders.filter(
-        (o) => formatReturnStatus(o.return_status, o.return_meta) != null
-      ),
+      orders.filter((o) => returnStatusOf(o) != null),
+    [orders]
+  )
+  // Backend iadeyi yalnız teslim edilen üründe açar. Açık, tamamlanmış ya da
+  // reddedilmiş bir iadesi olan sipariş listede durmaz; iptal edilen iade yeniden açılabilir.
+  const returnableOrders = useMemo(
+    () =>
+      orders.filter((o) => {
+        if (orderState(o) !== "delivered") return false
+        if (!o.return_status && !o.return_meta) return true
+        return o.return_status === "canceled" && !isReturnRejected(o.return_meta)
+      }),
     [orders]
   )
 
+  const dashboardLead =
+    orders.length === 0
+      ? "Henüz siparişin yok. İlk siparişini verdiğinde burada adım adım takip edebilirsin."
+      : activeOrders.length > 0
+        ? `Devam eden ${activeOrders.length} siparişin var.`
+        : "Devam eden siparişin yok."
+
   function go(next: Tab) {
-    setError(null)
-    setInfo(null)
+    setFeedback(null)
     setTab(next)
+    const hash = TAB_HASH[next]
+    const url = hash ? `#${hash}` : window.location.pathname + window.location.search
+    window.history.replaceState(null, "", url)
+    // Sitede kaydırma yumuşak; sekme değişimi animasyonsuz ve yalnız gerekince atlar.
+    const top = navRef.current?.closest("aside")?.parentElement?.getBoundingClientRect().top
+    if (top !== undefined && top < 0) {
+      window.scrollTo({ top: window.scrollY + top - 16, behavior: "instant" })
+    }
   }
 
   function resetAddressForm() {
     setForm(emptyAddress())
     setEditingId(null)
     setShowForm(false)
-    setError(null)
+    setFeedback(null)
+  }
+
+  function startNewAddress() {
+    setForm(emptyAddress())
+    setEditingId(null)
+    setShowForm(true)
+    setFeedback(null)
   }
 
   function startEdit(address: AddressView) {
     setEditingId(address.id)
     setForm(addressToForm(address))
     setShowForm(true)
-    setError(null)
+    setFeedback(null)
   }
 
   function onLogout() {
@@ -395,13 +579,13 @@ export function AccountDashboard({
 
   function onSaveAddress(e: React.FormEvent) {
     e.preventDefault()
-    setError(null)
+    setFeedback(null)
     startTransition(async () => {
       const result = editingId
         ? await updateCustomerAddressAction(editingId, form)
         : await createCustomerAddressAction(form)
       if (!result.ok) {
-        setError(result.message)
+        setFeedback({ scope: "address", kind: "error", text: result.message })
         return
       }
       resetAddressForm()
@@ -411,11 +595,11 @@ export function AccountDashboard({
 
   function onDeleteAddress(id: string) {
     if (!window.confirm("Bu adresi silmek istediğinize emin misiniz?")) return
-    setError(null)
+    setFeedback(null)
     startTransition(async () => {
       const result = await deleteCustomerAddressAction(id)
       if (!result.ok) {
-        setError(result.message)
+        setFeedback({ scope: "address", kind: "error", text: result.message })
         return
       }
       router.refresh()
@@ -424,37 +608,43 @@ export function AccountDashboard({
 
   function onSaveProfile(e: React.FormEvent) {
     e.preventDefault()
-    setError(null)
-    setInfo(null)
+    setFeedback(null)
     startTransition(async () => {
       const result = await updateCustomerProfileAction(profileForm)
       if (!result.ok) {
-        setError(result.message)
+        setFeedback({ scope: "profile", kind: "error", text: result.message })
         return
       }
-      setInfo(result.message || "Profil güncellendi.")
+      setFeedback({
+        scope: "profile",
+        kind: "success",
+        text: result.message || "Profil güncellendi.",
+      })
       router.refresh()
     })
   }
 
   function onChangePassword(e: React.FormEvent) {
     e.preventDefault()
-    setError(null)
-    setInfo(null)
+    setFeedback(null)
 
     if (passwordForm.new_password.length < AUTH_PASSWORD_MIN_LENGTH) {
-      setError(authPasswordTooShortMessage())
+      setFeedback({
+        scope: "password",
+        kind: "error",
+        text: authPasswordTooShortMessage(),
+      })
       return
     }
     if (passwordForm.new_password !== passwordForm.new_password_confirm) {
-      setError("Yeni şifreler eşleşmiyor.")
+      setFeedback({ scope: "password", kind: "error", text: "Yeni şifreler eşleşmiyor." })
       return
     }
 
     startTransition(async () => {
       const result = await changePasswordAction(passwordForm)
       if (!result.ok) {
-        setError(result.message)
+        setFeedback({ scope: "password", kind: "error", text: result.message })
         return
       }
       setPasswordForm({
@@ -462,22 +652,66 @@ export function AccountDashboard({
         new_password: "",
         new_password_confirm: "",
       })
-      setInfo(result.message || "Şifreniz güncellendi.")
+      setFeedback({
+        scope: "password",
+        kind: "success",
+        text: result.message || "Şifreniz güncellendi.",
+      })
     })
   }
+
+  function feedbackFor(scope: Feedback["scope"]) {
+    if (!feedback || feedback.scope !== scope) return null
+    return (
+      <p
+        className={feedback.kind === "error" ? styles.error : styles.success}
+        role={feedback.kind === "error" ? "alert" : "status"}
+      >
+        {feedback.text}
+      </p>
+    )
+  }
+
+  const helpBox = (
+    <div className={styles.help}>
+      <p className={styles.helpTitle}>Yardım mı gerekiyor?</p>
+      <a href={COMPANY.phoneHref} className={styles.helpPhone}>
+        {COMPANY.phone}
+      </a>
+      <p className={styles.helpMeta}>{COMPANY.hours}</p>
+      <a href={`mailto:${COMPANY.emailOps}`} className={styles.helpMail}>
+        {COMPANY.emailOps}
+      </a>
+    </div>
+  )
 
   return (
     <div className={styles.page}>
       <div className={styles.layout}>
         <aside className={styles.sidebar}>
-          <h1 className={styles.title}>Hesabım</h1>
-          <nav className={styles.nav} aria-label="Hesap bölümleri">
+          <div className={styles.identity}>
+            <span className={styles.identityText}>
+              <span className={styles.identityName}>{fullName || "Hesabım"}</span>
+              <span className={styles.identityMail}>{customer.email}</span>
+            </span>
+            <button
+              type="button"
+              className={styles.identityLogout}
+              onClick={onLogout}
+              disabled={pending}
+            >
+              Çıkış yap
+            </button>
+          </div>
+
+          <nav ref={navRef} className={styles.nav} aria-label="Hesap bölümleri">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 data-testid={`account-tab-${item.id}`}
-                className={tab === item.id ? styles.navBtnActive : styles.navBtn}
+                className={styles.navBtn}
+                aria-current={tab === item.id ? "page" : undefined}
                 onClick={() => go(item.id)}
               >
                 <span className={styles.navIcon}>{item.icon}</span>
@@ -486,399 +720,460 @@ export function AccountDashboard({
             ))}
             <button
               type="button"
-              className={`${styles.navBtn} ${styles.logout}`}
+              className={`${styles.navBtn} ${styles.navLogout}`}
               onClick={onLogout}
               disabled={pending}
             >
               <span className={styles.navIcon}>
-                <IconLogout size={18} />
+                <IconLogout />
               </span>
-              Çıkış Yap
+              Çıkış yap
             </button>
           </nav>
+
+          <div className={styles.sidebarHelp}>{helpBox}</div>
         </aside>
 
         <div className={styles.content}>
-          <div className={styles.mobileBar}>
-            {tab !== "dashboard" ? (
-              <button
-                type="button"
-                className={styles.mobileBack}
-                onClick={() => go("dashboard")}
-              >
-                ← Hesabıma dön
-              </button>
-            ) : null}
-            <h1 className={styles.title}>Hesabım</h1>
-          </div>
-
           {tab === "dashboard" ? (
-            <section
-              className={styles.section}
-              aria-labelledby="dashboard-heading"
-            >
-              <div className={styles.welcome}>
-                <h2 id="dashboard-heading" className={styles.welcomeTitle}>
+            <section className={styles.view} aria-labelledby="dashboard-heading">
+              <header className={styles.viewHead}>
+                <h1 id="dashboard-heading" className={styles.viewTitle}>
                   Merhaba{greetingName ? `, ${greetingName}` : ""}
-                </h2>
-                <p className={styles.welcomeLead}>
-                  Hesap panondan siparişlerini ve iadelerini görüntüleyebilir,
-                  adreslerini yönetebilir, hesap bilgilerini düzenleyebilirsin.
-                </p>
+                </h1>
+                <p className={styles.viewLead}>{dashboardLead}</p>
+              </header>
+
+              <div className={styles.overview}>
+                <div className={styles.overviewMain}>
+                  <section className={styles.panel} aria-labelledby="featured-heading">
+                    <div className={styles.panelHead}>
+                      <h2 id="featured-heading" className={styles.panelTitle}>
+                        {featuredOrder && orderState(featuredOrder) === "active"
+                          ? "Devam eden siparişin"
+                          : "Son siparişin"}
+                      </h2>
+                      {orders.length > 0 ? (
+                        <button
+                          type="button"
+                          className={styles.panelLink}
+                          data-testid="account-card-orders"
+                          onClick={() => go("orders")}
+                        >
+                          Tüm siparişler
+                        </button>
+                      ) : null}
+                    </div>
+
+                    {featuredOrder ? (
+                      <div className={styles.featured}>
+                        <div className={styles.featuredTop}>
+                          <div className={styles.featuredId}>
+                            <p className={styles.featuredNumber}>
+                              Sipariş #{orderNumber(featuredOrder)}
+                            </p>
+                            <p className={styles.featuredMeta}>
+                              {formatOrderDate(featuredOrder.created_at)}
+                              {featuredOrder.item_count
+                                ? `, ${featuredOrder.item_count} ürün`
+                                : ""}
+                            </p>
+                          </div>
+                          <p className={styles.featuredTotal}>
+                            {formatTry(featuredOrder.total)}
+                          </p>
+                        </div>
+
+                        <OrderProgress order={featuredOrder} />
+
+                        {trackingNumber(featuredOrder) ? (
+                          <p className={styles.featuredTracking}>
+                            Kargo takip no{" "}
+                            <span className={styles.featuredTrackingNo}>
+                              {trackingNumber(featuredOrder)}
+                            </span>
+                          </p>
+                        ) : null}
+
+                        <div className={styles.featuredFoot}>
+                          <ul className={styles.featuredItems}>
+                            {(featuredOrder.items || []).slice(0, 4).map((item, i) => (
+                              <li key={item.id || i} className={styles.featuredItem}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={item.thumbnail || PRODUCT_IMAGE}
+                                  alt=""
+                                  className={styles.featuredThumb}
+                                />
+                                <span className={styles.featuredItemText}>
+                                  <span className={styles.featuredItemTitle}>
+                                    {item.title || "Ürün"}
+                                  </span>
+                                  <span className={styles.featuredItemQty}>
+                                    {item.variant_title
+                                      ? `${item.variant_title}, `
+                                      : ""}
+                                    {item.quantity || 1} adet
+                                  </span>
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                          <Link
+                            href={`/hesabim/orders/${featuredOrder.id}`}
+                            className={styles.inkBtn}
+                          >
+                            Siparişi görüntüle
+                          </Link>
+                        </div>
+                      </div>
+                    ) : (
+                      <EmptyFrame
+                        action={
+                          <Link href="/urun-kategori" className={styles.inkBtn}>
+                            Alışverişe başla
+                          </Link>
+                        }
+                      >
+                        Siparişlerin burada hazırlanmadan teslimata kadar adım adım
+                        görünür.
+                      </EmptyFrame>
+                    )}
+                  </section>
+
+                  {recentOrders.length > 0 ? (
+                    <section className={styles.panel} aria-labelledby="recent-heading">
+                      <div className={styles.panelHead}>
+                        <h2 id="recent-heading" className={styles.panelTitle}>
+                          Önceki siparişler
+                        </h2>
+                        {orders.length > recentOrders.length + 1 ? (
+                          <button
+                            type="button"
+                            className={styles.panelLink}
+                            onClick={() => go("orders")}
+                          >
+                            Tümünü gör ({orders.length})
+                          </button>
+                        ) : null}
+                      </div>
+                      <ul className={styles.rows}>
+                        {recentOrders.map((order) => (
+                          <OrderRow key={order.id} order={order} />
+                        ))}
+                      </ul>
+                    </section>
+                  ) : null}
+                </div>
+
+                <div className={styles.overviewSide}>
+                  <section className={styles.panel} aria-labelledby="ov-address-heading">
+                    <div className={styles.panelHead}>
+                      <h2 id="ov-address-heading" className={styles.panelTitle}>
+                        Teslimat adresi
+                      </h2>
+                      {addresses.length > 0 ? (
+                        <button
+                          type="button"
+                          className={styles.panelLink}
+                          data-testid="account-card-addresses"
+                          onClick={() => go("addresses")}
+                        >
+                          Yönet
+                        </button>
+                      ) : null}
+                    </div>
+                    {addresses[0] ? (
+                      <address className={styles.addressBlock}>
+                        <span className={styles.addressName}>
+                          {addresses[0].first_name} {addresses[0].last_name}
+                        </span>
+                        <span>
+                          {addresses[0].metadata?.neighbourhood
+                            ? `${addresses[0].metadata.neighbourhood}, `
+                            : ""}
+                          {addresses[0].address_1}
+                        </span>
+                        <span>
+                          {addresses[0].metadata?.district
+                            ? `${addresses[0].metadata.district}, `
+                            : ""}
+                          {addresses[0].city}
+                        </span>
+                        {addresses.length > 1 ? (
+                          <span className={styles.addressMore}>
+                            ve {addresses.length - 1} adres daha
+                          </span>
+                        ) : null}
+                      </address>
+                    ) : (
+                      <>
+                        <p className={styles.panelNote}>
+                          Kayıtlı adresin yok. Bir adres eklersen ödemede yeniden
+                          yazman gerekmez.
+                        </p>
+                        <button
+                          type="button"
+                          className={`${styles.outlineBtn} ${styles.panelAction}`}
+                          data-testid="account-card-addresses"
+                          onClick={() => {
+                            go("addresses")
+                            startNewAddress()
+                          }}
+                        >
+                          Adres ekle
+                        </button>
+                      </>
+                    )}
+                  </section>
+
+                  <section className={styles.panel} aria-labelledby="ov-details-heading">
+                    <div className={styles.panelHead}>
+                      <h2 id="ov-details-heading" className={styles.panelTitle}>
+                        Hesap bilgileri
+                      </h2>
+                      <button
+                        type="button"
+                        className={styles.panelLink}
+                        onClick={() => go("details")}
+                      >
+                        Düzenle
+                      </button>
+                    </div>
+                    <dl className={styles.kv}>
+                      <div className={styles.kvRow}>
+                        <dt>Ad soyad</dt>
+                        <dd>{fullName || "—"}</dd>
+                      </div>
+                      <div className={styles.kvRow}>
+                        <dt>E-posta</dt>
+                        <dd>{customer.email || "—"}</dd>
+                      </div>
+                      {memberSince ? (
+                        <div className={styles.kvRow}>
+                          <dt>Üyelik</dt>
+                          <dd>{memberSince}</dd>
+                        </div>
+                      ) : null}
+                    </dl>
+                  </section>
+
+                  <section className={styles.panel} aria-labelledby="ov-links-heading">
+                    <h2 id="ov-links-heading" className={styles.panelTitle}>
+                      Diğer işlemler
+                    </h2>
+                    <ul className={styles.links}>
+                      {[
+                        {
+                          id: "returns" as Tab,
+                          label: "İade talebi",
+                          desc: "Kargolanan siparişte ürün iade et.",
+                        },
+                        {
+                          id: "details" as Tab,
+                          label: "Şifre değiştir",
+                          desc: "Giriş şifreni güncelle.",
+                        },
+                      ].map((link) => (
+                        <li key={link.id}>
+                          <button
+                            type="button"
+                            className={styles.linkRow}
+                            data-testid={`account-card-${link.id}`}
+                            onClick={() => go(link.id)}
+                          >
+                            <span className={styles.linkText}>
+                              <span className={styles.linkLabel}>{link.label}</span>
+                              <span className={styles.linkDesc}>{link.desc}</span>
+                            </span>
+                            <IconChevron />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section className={styles.panel} aria-labelledby="ov-fav-heading">
+                    <div className={styles.panelHead}>
+                      <h2 id="ov-fav-heading" className={styles.panelTitle}>
+                        Favorilerin
+                      </h2>
+                      {favoriteItems.length > 0 ? (
+                        <button
+                          type="button"
+                          className={styles.panelLink}
+                          data-testid="account-card-favorites"
+                          onClick={() => go("favorites")}
+                        >
+                          Tümü ({favoriteItems.length})
+                        </button>
+                      ) : null}
+                    </div>
+                    {favoriteItems.length > 0 ? (
+                      <ul className={styles.favMini}>
+                        {favoriteItems.slice(0, 3).map((item) => (
+                          <li key={item.id}>
+                            <Link
+                              href={productPath(item.handle)}
+                              className={styles.favMiniLink}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={item.image || PRODUCT_IMAGE}
+                                alt=""
+                                className={styles.favMiniThumb}
+                              />
+                              <span className={styles.favMiniTitle}>{item.title}</span>
+                              <span className={styles.favMiniPrice}>
+                                {formatTry(item.price)}
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : !favoritesReady ? null : (
+                      <p className={styles.panelNote}>
+                        Beğendiğin çayları ürün kartındaki kalple kaydet, burada
+                        dursun.
+                      </p>
+                    )}
+                  </section>
+                </div>
               </div>
-
-              {addresses.length === 0 ? (
-                <p className={styles.notice} role="status">
-                  Henüz kayıtlı teslimat adresin yok.{" "}
-                  <button
-                    type="button"
-                    className={styles.noticeAction}
-                    onClick={() => go("addresses")}
-                  >
-                    Adres ekle
-                  </button>
-                </p>
-              ) : null}
-
-              <div className={styles.cardGrid}>
-                {dashboardCards.map((card) => (
-                  <button
-                    key={card.id}
-                    type="button"
-                    className={styles.dashCard}
-                    data-testid={`account-card-${card.id}`}
-                    onClick={() => go(card.id)}
-                  >
-                    <span className={styles.dashCardIcon}>{card.icon}</span>
-                    <span className={styles.dashCardTitle}>{card.title}</span>
-                    <span className={styles.dashCardDesc}>
-                      {card.description}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              <button
-                type="button"
-                className={styles.mobileLogout}
-                onClick={onLogout}
-                disabled={pending}
-              >
-                <IconLogout size={18} />
-                Çıkış Yap
-              </button>
             </section>
           ) : null}
 
           {tab === "orders" ? (
-            <section className={styles.section} aria-labelledby="orders-heading">
-              <h2 id="orders-heading" className={styles.sectionTitle}>
-                Siparişler
-              </h2>
+            <section className={styles.view} aria-labelledby="orders-heading">
+              <header className={styles.viewHead}>
+                <h1 id="orders-heading" className={styles.viewTitle}>
+                  Siparişlerim
+                </h1>
+                <p className={styles.viewLead}>
+                  {orders.length > 0
+                    ? `${orders.length} sipariş, en yenisi üstte.`
+                    : "Verdiğin siparişler burada listelenir."}
+                </p>
+              </header>
               {orders.length === 0 ? (
-                <div className={styles.emptyBlock} data-testid="account-orders-empty">
-                  <p className={styles.empty}>
+                <div data-testid="account-orders-empty">
+                  <EmptyFrame
+                    action={
+                      <Link href="/urun-kategori" className={styles.inkBtn}>
+                        Alışverişe başla
+                      </Link>
+                    }
+                  >
                     Henüz siparişin yok.
-                  </p>
-                  <Link href="/urun-kategori" className={styles.emptyLink}>
-                    Alışverişe başla
-                  </Link>
+                  </EmptyFrame>
                 </div>
               ) : (
-                <ul className={styles.orderList} data-testid="account-orders-list">
-                  {orders.map((order) => {
-                    const returnLabel = formatReturnStatus(
-                      order.return_status,
-                      order.return_meta
-                    )
-                    const previews = (order.items || []).slice(0, 4)
-                    const extraCount = Math.max(
-                      0,
-                      (order.items || []).length - previews.length
-                    )
-                    return (
-                      <li key={order.id} className={styles.orderItem}>
-                        <Link
-                          href={`/hesabim/orders/${order.id}`}
-                          className={styles.orderCard}
-                          data-testid="account-order-link"
-                        >
-                          <div className={styles.orderThumbs}>
-                            {previews.length === 0 ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={PRODUCT_IMAGE}
-                                alt=""
-                                className={styles.orderThumb}
-                              />
-                            ) : (
-                              previews.map((item, i) => (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                  key={item.id || `${order.id}-${i}`}
-                                  src={item.thumbnail || PRODUCT_IMAGE}
-                                  alt=""
-                                  className={styles.orderThumb}
-                                />
-                              ))
-                            )}
-                            {extraCount > 0 ? (
-                              <span className={styles.orderThumbMore}>
-                                +{extraCount}
-                              </span>
-                            ) : null}
-                          </div>
-                          <div className={styles.orderCardBody}>
-                            <div className={styles.orderCardTop}>
-                              <span className={styles.orderCardTitle}>
-                                Sipariş #
-                                {resolveOrderNumberLabel({
-                                  id: order.id,
-                                  display_id: order.display_id,
-                                })}
-                              </span>
-                              <span className={styles.orderCardTotal}>
-                                {formatTry(order.total)}
-                              </span>
-                            </div>
-                            <div className={styles.orderCardMeta}>
-                              <span>{formatOrderDate(order.created_at)}</span>
-                              <span className={styles.statusPill}>
-                                {formatStatus(order)}
-                              </span>
-                              {returnLabel ? (
-                                <span className={styles.returnBadge}>
-                                  {returnLabel}
-                                </span>
-                              ) : null}
-                            </div>
-                            {(order.items || []).length > 0 ? (
-                              <p className={styles.orderCardItems}>
-                                {(order.items || [])
-                                  .slice(0, 2)
-                                  .map((it) => it.title || "Ürün")
-                                  .join(" · ")}
-                                {(order.items || []).length > 2
-                                  ? ` · +${(order.items || []).length - 2}`
-                                  : ""}
-                                {order.item_count
-                                  ? ` · ${order.item_count} adet`
-                                  : ""}
-                              </p>
-                            ) : null}
-                            <span className={styles.orderCardCta}>Detayı gör →</span>
-                          </div>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
+                <div className={styles.panelFlush}>
+                  <div className={styles.rowsHead} aria-hidden>
+                    <span>Sipariş</span>
+                    <span>Durum</span>
+                    <span className={styles.rowsHeadNum}>Tutar</span>
+                  </div>
+                  <ul className={styles.rows} data-testid="account-orders-list">
+                    {orders.map((order) => (
+                      <OrderRow key={order.id} order={order} />
+                    ))}
+                  </ul>
+                </div>
               )}
             </section>
           ) : null}
 
           {tab === "returns" ? (
             <section
-              className={styles.section}
+              className={styles.view}
               aria-labelledby="returns-heading"
               data-testid="account-returns"
             >
-              <h2 id="returns-heading" className={styles.sectionTitle}>
-                İadeler
-              </h2>
-              <p className={styles.welcomeLead} style={{ marginTop: 0 }}>
-                İade talebi oluşturmak için sipariş detayına git. Ürün
-                kargolandıktan sonra iade edilebilir hale gelir.
-              </p>
+              <header className={styles.viewHead}>
+                <h1 id="returns-heading" className={styles.viewTitle}>
+                  İadeler
+                </h1>
+                <p className={styles.viewLead}>
+                  Teslim edilen siparişlerde iade ya da değişim talebi açabilirsin.
+                  Siparişi aç, iade etmek istediğin ürünleri seç.
+                </p>
+              </header>
 
-              {ordersWithReturn.length > 0 ? (
-                <>
-                  <h3 className={styles.subSectionTitle}>Aktif / geçmiş talepler</h3>
-                  <ul className={styles.orderList} data-testid="account-returns-list">
-                    {ordersWithReturn.map((order) => {
-                      const returnLabel = formatReturnStatus(
-                        order.return_status,
-                        order.return_meta
-                      )
-                      const thumb = order.items?.[0]?.thumbnail || PRODUCT_IMAGE
-                      return (
-                        <li key={order.id} className={styles.orderItem}>
-                          <Link
-                            href={`/hesabim/orders/${order.id}`}
-                            className={styles.orderCard}
-                          >
-                            <div className={styles.orderThumbs}>
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={thumb}
-                                alt=""
-                                className={styles.orderThumb}
-                              />
-                            </div>
-                            <div className={styles.orderCardBody}>
-                              <div className={styles.orderCardTop}>
-                                <span className={styles.orderCardTitle}>
-                                  Sipariş #
-                                  {resolveOrderNumberLabel({
-                                    id: order.id,
-                                    display_id: order.display_id,
-                                  })}
-                                </span>
-                                <span className={styles.orderCardTotal}>
-                                  {formatTry(order.total)}
-                                </span>
-                              </div>
-                              <div className={styles.orderCardMeta}>
-                                <span>{formatOrderDate(order.created_at)}</span>
-                                {returnLabel ? (
-                                  <span className={styles.returnBadge}>
-                                    {returnLabel}
-                                  </span>
-                                ) : null}
-                              </div>
-                            </div>
-                          </Link>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </>
-              ) : null}
-
-              <h3 className={styles.subSectionTitle}>
-                {ordersWithReturn.length > 0
-                  ? "Siparişlerden iade oluştur"
-                  : "Siparişlerin"}
-              </h3>
-              {orders.length === 0 ? (
-                <div className={styles.emptyBlock}>
-                  <p className={styles.empty}>
-                    İade için önce bir siparişin olmalı.
-                  </p>
-                  <Link href="/urun-kategori" className={styles.emptyLink}>
-                    Alışverişe başla
-                  </Link>
+              <section className={styles.panel} aria-labelledby="return-requests-heading">
+                <div className={styles.panelHead}>
+                  <h2 id="return-requests-heading" className={styles.panelTitle}>
+                    İade taleplerin
+                  </h2>
                 </div>
-              ) : (
-                <ul className={styles.orderList}>
-                  {orders.map((order) => {
-                    const thumb = order.items?.[0]?.thumbnail || PRODUCT_IMAGE
-                    return (
-                      <li key={`ret-${order.id}`} className={styles.orderItem}>
-                        <Link
-                          href={`/hesabim/orders/${order.id}`}
-                          className={styles.orderCard}
-                        >
-                          <div className={styles.orderThumbs}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={thumb}
-                              alt=""
-                              className={styles.orderThumb}
-                            />
-                          </div>
-                          <div className={styles.orderCardBody}>
-                            <div className={styles.orderCardTop}>
-                              <span className={styles.orderCardTitle}>
-                                Sipariş #
-                                {resolveOrderNumberLabel({
-                                  id: order.id,
-                                  display_id: order.display_id,
-                                })}
-                              </span>
-                              <span className={styles.orderCardTotal}>
-                                {formatTry(order.total)}
-                              </span>
-                            </div>
-                            <div className={styles.orderCardMeta}>
-                              <span>{formatOrderDate(order.created_at)}</span>
-                              <span className={styles.orderCardCta}>
-                                İade / detay →
-                              </span>
-                            </div>
-                          </div>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
+                {ordersWithReturn.length > 0 ? (
+                  <ul className={styles.rows} data-testid="account-returns-list">
+                    {ordersWithReturn.map((order) => (
+                      <OrderRow
+                        key={order.id}
+                        order={order}
+                        detail={returnStatusOf(order)?.note}
+                      />
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={styles.panelNote}>Açık ya da geçmiş bir iade talebin yok.</p>
+                )}
+              </section>
+
+              <section className={styles.panel} aria-labelledby="returnable-heading">
+                <div className={styles.panelHead}>
+                  <h2 id="returnable-heading" className={styles.panelTitle}>
+                    İade başlatılabilecek siparişler
+                  </h2>
+                </div>
+                {returnableOrders.length > 0 ? (
+                  <ul className={styles.rows}>
+                    {returnableOrders.map((order) => (
+                      <OrderRow key={`ret-${order.id}`} order={order} />
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={styles.panelNote}>
+                    {orders.length === 0
+                      ? "İade için önce bir siparişin olmalı."
+                      : "İade açılabilecek bir siparişin yok. Siparişin teslim edilince burada görünür."}
+                  </p>
+                )}
+              </section>
             </section>
           ) : null}
 
           {tab === "addresses" ? (
-            <section
-              className={styles.section}
-              aria-labelledby="addresses-heading"
-            >
-              <h2 id="addresses-heading" className={styles.sectionTitle}>
-                Adresler
-              </h2>
-
-              {error ? <p className={styles.error}>{error}</p> : null}
-
-              <div className={styles.addressList}>
-                {addresses.length === 0 && !showForm ? (
-                  <p className={styles.empty}>Kayıtlı adres yok.</p>
+            <section className={styles.view} aria-labelledby="addresses-heading">
+              <header className={styles.viewHeadRow}>
+                <div className={styles.viewHead}>
+                  <h1 id="addresses-heading" className={styles.viewTitle}>
+                    Adreslerim
+                  </h1>
+                  <p className={styles.viewLead}>
+                    {addresses.length > 0
+                      ? `${addresses.length} kayıtlı teslimat adresi. Ödemede bunlardan birini seçebilirsin.`
+                      : "Kayıtlı adresler ödemede hazır gelir."}
+                  </p>
+                </div>
+                {!showForm ? (
+                  <button type="button" className={styles.inkBtn} onClick={startNewAddress}>
+                    Yeni adres ekle
+                  </button>
                 ) : null}
-                {addresses.map((address) => (
-                  <div key={address.id} className={styles.addressCard}>
-                    <div className={styles.addressCardHead}>
-                      <p className={styles.addressName}>
-                        {address.first_name} {address.last_name}
-                      </p>
-                      <span className={styles.addressTag}>Teslimat</span>
-                    </div>
-                    <p className={styles.addressLines}>
-                      {address.metadata?.neighbourhood || address.address_2
-                        ? `${address.metadata?.neighbourhood || address.address_2}, `
-                        : ""}
-                      {address.address_1}
-                      <br />
-                      {address.metadata?.district
-                        ? `${address.metadata.district}, `
-                        : ""}
-                      {address.city} {address.postal_code}
-                      <br />
-                      {address.phone}
-                    </p>
-                    <div className={styles.addressActions}>
-                      <button
-                        type="button"
-                        className={styles.textBtn}
-                        onClick={() => startEdit(address)}
-                      >
-                        Düzenle
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.textBtnDanger}
-                        onClick={() => onDeleteAddress(address.id)}
-                        disabled={pending}
-                      >
-                        Sil
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              </header>
 
-              {!showForm ? (
-                <button
-                  type="button"
-                  className={styles.secondaryBtn}
-                  onClick={() => {
-                    setShowForm(true)
-                    setForm(emptyAddress())
-                    setEditingId(null)
-                    setError(null)
-                  }}
-                >
-                  Yeni adres ekle
-                </button>
-              ) : (
-                <form className={styles.form} onSubmit={onSaveAddress}>
-                  <div className={styles.row2}>
+              {!showForm ? feedbackFor("address") : null}
+
+              {showForm ? (
+                <form className={styles.panel} onSubmit={onSaveAddress}>
+                  <div className={styles.panelHead}>
+                    <h2 className={styles.panelTitle}>
+                      {editingId ? "Adresi düzenle" : "Yeni adres"}
+                    </h2>
+                  </div>
+                  <div className={styles.formGrid}>
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="addr-first">
                         Ad
@@ -886,6 +1181,7 @@ export function AccountDashboard({
                       <input
                         id="addr-first"
                         className={styles.input}
+                        autoComplete="given-name"
                         value={form.first_name}
                         onChange={(e) =>
                           setForm((f) => ({ ...f, first_name: e.target.value }))
@@ -900,6 +1196,7 @@ export function AccountDashboard({
                       <input
                         id="addr-last"
                         className={styles.input}
+                        autoComplete="family-name"
                         value={form.last_name}
                         onChange={(e) =>
                           setForm((f) => ({ ...f, last_name: e.target.value }))
@@ -907,9 +1204,6 @@ export function AccountDashboard({
                         required
                       />
                     </div>
-                  </div>
-
-                  <div className={styles.row2}>
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="addr-city">
                         İl
@@ -964,42 +1258,38 @@ export function AccountDashboard({
                         ))}
                       </select>
                     </div>
-                  </div>
-
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="addr-neighbourhood">
-                      Mahalle
-                    </label>
-                    <NeighbourhoodSelect
-                      id="addr-neighbourhood"
-                      city={form.city}
-                      district={form.district}
-                      value={form.neighbourhood}
-                      onChange={(neighbourhood) =>
-                        setForm((f) => ({ ...f, neighbourhood }))
-                      }
-                      className={styles.select}
-                      inputClassName={styles.input}
-                    />
-                  </div>
-
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="addr-line">
-                      Adres
-                    </label>
-                    <input
-                      id="addr-line"
-                      className={styles.input}
-                      placeholder="Cadde, sokak, bina no, daire"
-                      value={form.address_1}
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, address_1: e.target.value }))
-                      }
-                      required
-                    />
-                  </div>
-
-                  <div className={styles.row2}>
+                    <div className={`${styles.field} ${styles.fieldWide}`}>
+                      <label className={styles.label} htmlFor="addr-neighbourhood">
+                        Mahalle
+                      </label>
+                      <NeighbourhoodSelect
+                        id="addr-neighbourhood"
+                        city={form.city}
+                        district={form.district}
+                        value={form.neighbourhood}
+                        onChange={(neighbourhood) =>
+                          setForm((f) => ({ ...f, neighbourhood }))
+                        }
+                        className={styles.select}
+                        inputClassName={styles.input}
+                      />
+                    </div>
+                    <div className={`${styles.field} ${styles.fieldWide}`}>
+                      <label className={styles.label} htmlFor="addr-line">
+                        Adres
+                      </label>
+                      <input
+                        id="addr-line"
+                        className={styles.input}
+                        placeholder="Cadde, sokak, bina no, daire"
+                        autoComplete="address-line1"
+                        value={form.address_1}
+                        onChange={(e) =>
+                          setForm((f) => ({ ...f, address_1: e.target.value }))
+                        }
+                        required
+                      />
+                    </div>
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="addr-postal">
                         Posta kodu
@@ -1008,6 +1298,7 @@ export function AccountDashboard({
                         id="addr-postal"
                         className={styles.input}
                         inputMode="numeric"
+                        autoComplete="postal-code"
                         maxLength={5}
                         value={form.postal_code}
                         onChange={(e) =>
@@ -1027,6 +1318,7 @@ export function AccountDashboard({
                         id="addr-phone"
                         className={styles.input}
                         type="tel"
+                        autoComplete="tel"
                         value={form.phone}
                         onChange={(e) =>
                           setForm((f) => ({ ...f, phone: e.target.value }))
@@ -1036,227 +1328,288 @@ export function AccountDashboard({
                     </div>
                   </div>
 
+                  {feedbackFor("address")}
+
                   <div className={styles.formActions}>
                     <button
-                      type="submit"
-                      className={styles.submit}
-                      disabled={pending}
-                    >
-                      {pending ? "Kaydediliyor…" : "Kaydet"}
-                    </button>
-                    <button
                       type="button"
-                      className={styles.secondaryBtn}
+                      className={styles.outlineBtn}
                       onClick={resetAddressForm}
                       disabled={pending}
                     >
-                      İptal
+                      Vazgeç
+                    </button>
+                    <button type="submit" className={styles.inkBtn} disabled={pending}>
+                      {pending ? "Kaydediliyor…" : "Adresi kaydet"}
                     </button>
                   </div>
                 </form>
-              )}
+              ) : null}
+
+              {addresses.length > 0 ? (
+                <ul className={styles.addressGrid}>
+                  {addresses.map((address) => (
+                    <li key={address.id} className={styles.addressCard}>
+                      <address className={styles.addressBlock}>
+                        <span className={styles.addressName}>
+                          {address.first_name} {address.last_name}
+                        </span>
+                        <span>
+                          {address.metadata?.neighbourhood || address.address_2
+                            ? `${address.metadata?.neighbourhood || address.address_2}, `
+                            : ""}
+                          {address.address_1}
+                        </span>
+                        <span>
+                          {address.metadata?.district
+                            ? `${address.metadata.district}, `
+                            : ""}
+                          {address.city} {address.postal_code}
+                        </span>
+                        <span className={styles.addressPhone}>{formatPhone(address.phone)}</span>
+                      </address>
+                      <div className={styles.addressActions}>
+                        <button
+                          type="button"
+                          className={styles.textBtn}
+                          onClick={() => startEdit(address)}
+                        >
+                          Düzenle
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.textBtnDanger}
+                          onClick={() => onDeleteAddress(address.id)}
+                          disabled={pending}
+                        >
+                          Sil
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : !showForm ? (
+                <EmptyFrame>Kayıtlı adresin yok.</EmptyFrame>
+              ) : null}
             </section>
           ) : null}
 
           {tab === "details" ? (
-            <section
-              className={styles.section}
-              aria-labelledby="details-heading"
-            >
-              <h2 id="details-heading" className={styles.sectionTitle}>
-                Hesap Detayları
-              </h2>
+            <section className={styles.view} aria-labelledby="details-heading">
+              <header className={styles.viewHead}>
+                <h1 id="details-heading" className={styles.viewTitle}>
+                  Hesap bilgileri
+                </h1>
+                <p className={styles.viewLead}>
+                  {memberSince
+                    ? `${memberSince} tarihinden beri Es Çay üyesisin.`
+                    : "Ad, soyad ve şifreni buradan güncelleyebilirsin."}
+                </p>
+              </header>
 
-              {error ? <p className={styles.error}>{error}</p> : null}
-              {info ? <p className={styles.success}>{info}</p> : null}
-
-              <form className={styles.form} onSubmit={onSaveProfile}>
-                <div className={styles.row2}>
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="profile-first">
-                      Ad
-                    </label>
-                    <input
-                      id="profile-first"
-                      className={styles.input}
-                      value={profileForm.first_name}
-                      onChange={(e) =>
-                        setProfileForm((f) => ({
-                          ...f,
-                          first_name: e.target.value,
-                        }))
-                      }
-                      autoComplete="given-name"
-                    />
-                  </div>
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="profile-last">
-                      Soyad
-                    </label>
-                    <input
-                      id="profile-last"
-                      className={styles.input}
-                      value={profileForm.last_name}
-                      onChange={(e) =>
-                        setProfileForm((f) => ({
-                          ...f,
-                          last_name: e.target.value,
-                        }))
-                      }
-                      autoComplete="family-name"
-                    />
-                  </div>
+              <div className={styles.settingsRow}>
+                <div className={styles.settingsLabel}>
+                  <h2 className={styles.panelTitle}>Kişisel bilgiler</h2>
+                  <p className={styles.settingsDesc}>
+                    Siparişlerde ve faturalarda görünen adın.
+                  </p>
                 </div>
+                <form className={styles.panel} onSubmit={onSaveProfile}>
+                  <div className={styles.formGrid}>
+                    <div className={styles.field}>
+                      <label className={styles.label} htmlFor="profile-first">
+                        Ad
+                      </label>
+                      <input
+                        id="profile-first"
+                        className={styles.input}
+                        value={profileForm.first_name}
+                        onChange={(e) =>
+                          setProfileForm((f) => ({
+                            ...f,
+                            first_name: e.target.value,
+                          }))
+                        }
+                        autoComplete="given-name"
+                      />
+                    </div>
+                    <div className={styles.field}>
+                      <label className={styles.label} htmlFor="profile-last">
+                        Soyad
+                      </label>
+                      <input
+                        id="profile-last"
+                        className={styles.input}
+                        value={profileForm.last_name}
+                        onChange={(e) =>
+                          setProfileForm((f) => ({
+                            ...f,
+                            last_name: e.target.value,
+                          }))
+                        }
+                        autoComplete="family-name"
+                      />
+                    </div>
+                    <div className={`${styles.field} ${styles.fieldWide}`}>
+                      <label className={styles.label} htmlFor="profile-email">
+                        E-posta
+                      </label>
+                      <input
+                        id="profile-email"
+                        className={styles.input}
+                        value={customer.email || ""}
+                        disabled
+                        readOnly
+                      />
+                      <p className={styles.hint}>
+                        E-posta adresi giriş için kullanılır ve değiştirilemez.
+                      </p>
+                    </div>
+                  </div>
+                  {feedbackFor("profile")}
+                  <div className={styles.formActions}>
+                    <button type="submit" className={styles.inkBtn} disabled={pending}>
+                      {pending ? "Kaydediliyor…" : "Bilgileri kaydet"}
+                    </button>
+                  </div>
+                </form>
+              </div>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="profile-email">
-                    E-posta
-                  </label>
-                  <input
-                    id="profile-email"
-                    className={styles.input}
-                    value={customer.email || ""}
-                    disabled
-                    readOnly
-                  />
-                  <p className={styles.hint}>E-posta adresi değiştirilemez.</p>
+              <div className={styles.settingsRow}>
+                <div className={styles.settingsLabel}>
+                  <h2 className={styles.panelTitle}>Şifre</h2>
+                  <p className={styles.settingsDesc}>
+                    Yeni şifren en az {AUTH_PASSWORD_MIN_LENGTH} karakter olmalı.
+                  </p>
                 </div>
-
-                <button
-                  type="submit"
-                  className={styles.submit}
-                  disabled={pending}
-                >
-                  {pending ? "Kaydediliyor…" : "Profili kaydet"}
-                </button>
-              </form>
-
-              <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Şifre değiştir</h3>
-                <form className={styles.form} onSubmit={onChangePassword}>
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="pw-current">
-                      Mevcut şifre
-                    </label>
-                    <input
-                      id="pw-current"
-                      type="password"
-                      className={styles.input}
-                      autoComplete="current-password"
-                      value={passwordForm.current_password}
-                      onChange={(e) =>
-                        setPasswordForm((f) => ({
-                          ...f,
-                          current_password: e.target.value,
-                        }))
-                      }
-                      required
-                    />
+                <form className={styles.panel} onSubmit={onChangePassword}>
+                  <div className={styles.formGrid}>
+                    <div className={`${styles.field} ${styles.fieldWide}`}>
+                      <label className={styles.label} htmlFor="pw-current">
+                        Mevcut şifre
+                      </label>
+                      <input
+                        id="pw-current"
+                        type="password"
+                        className={styles.input}
+                        autoComplete="current-password"
+                        value={passwordForm.current_password}
+                        onChange={(e) =>
+                          setPasswordForm((f) => ({
+                            ...f,
+                            current_password: e.target.value,
+                          }))
+                        }
+                        required
+                      />
+                    </div>
+                    <div className={styles.field}>
+                      <label className={styles.label} htmlFor="pw-new">
+                        Yeni şifre
+                      </label>
+                      <input
+                        id="pw-new"
+                        type="password"
+                        className={styles.input}
+                        autoComplete="new-password"
+                        minLength={AUTH_PASSWORD_MIN_LENGTH}
+                        value={passwordForm.new_password}
+                        onChange={(e) =>
+                          setPasswordForm((f) => ({
+                            ...f,
+                            new_password: e.target.value,
+                          }))
+                        }
+                        required
+                      />
+                    </div>
+                    <div className={styles.field}>
+                      <label className={styles.label} htmlFor="pw-confirm">
+                        Yeni şifre (tekrar)
+                      </label>
+                      <input
+                        id="pw-confirm"
+                        type="password"
+                        className={styles.input}
+                        autoComplete="new-password"
+                        minLength={AUTH_PASSWORD_MIN_LENGTH}
+                        value={passwordForm.new_password_confirm}
+                        onChange={(e) =>
+                          setPasswordForm((f) => ({
+                            ...f,
+                            new_password_confirm: e.target.value,
+                          }))
+                        }
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="pw-new">
-                      Yeni şifre
-                    </label>
-                    <input
-                      id="pw-new"
-                      type="password"
-                      className={styles.input}
-                      autoComplete="new-password"
-                      minLength={AUTH_PASSWORD_MIN_LENGTH}
-                      value={passwordForm.new_password}
-                      onChange={(e) =>
-                        setPasswordForm((f) => ({
-                          ...f,
-                          new_password: e.target.value,
-                        }))
-                      }
-                      required
-                    />
+                  {feedbackFor("password")}
+                  <div className={styles.formActions}>
+                    <button type="submit" className={styles.inkBtn} disabled={pending}>
+                      {pending ? "Güncelleniyor…" : "Şifreyi güncelle"}
+                    </button>
                   </div>
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="pw-confirm">
-                      Yeni şifre (tekrar)
-                    </label>
-                    <input
-                      id="pw-confirm"
-                      type="password"
-                      className={styles.input}
-                      autoComplete="new-password"
-                      minLength={AUTH_PASSWORD_MIN_LENGTH}
-                      value={passwordForm.new_password_confirm}
-                      onChange={(e) =>
-                        setPasswordForm((f) => ({
-                          ...f,
-                          new_password_confirm: e.target.value,
-                        }))
-                      }
-                      required
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className={styles.submit}
-                    disabled={pending}
-                  >
-                    {pending ? "Güncelleniyor…" : "Şifreyi güncelle"}
-                  </button>
                 </form>
               </div>
             </section>
           ) : null}
 
           {tab === "favorites" ? (
-            <section
-              className={styles.section}
-              aria-labelledby="favorites-heading"
-            >
-              <h2 id="favorites-heading" className={styles.sectionTitle}>
-                Favori Listesi
-              </h2>
-              {favoriteItems.length === 0 ? (
-                <div className={styles.emptyBlock}>
-                  <p className={styles.empty}>Henüz favori ürünün yok.</p>
-                  <Link href="/" className={styles.emptyLink}>
-                    Ürünlere göz at
-                  </Link>
-                </div>
+            <section className={styles.view} aria-labelledby="favorites-heading">
+              <header className={styles.viewHead}>
+                <h1 id="favorites-heading" className={styles.viewTitle}>
+                  Favorilerim
+                </h1>
+                <p className={styles.viewLead}>
+                  {!favoritesReady
+                    ? "Favorilerin yükleniyor…"
+                    : favoriteItems.length > 0
+                      ? `${favoriteItems.length} ürün kayıtlı.`
+                      : "Beğendiğin ürünleri kalple kaydet, burada dursun."}
+                </p>
+              </header>
+              {!favoritesReady ? null : favoriteItems.length === 0 ? (
+                <EmptyFrame
+                  action={
+                    <Link href="/urun-kategori" className={styles.inkBtn}>
+                      Ürünlere göz at
+                    </Link>
+                  }
+                >
+                  Henüz favori ürünün yok.
+                </EmptyFrame>
               ) : (
-                <ul className={styles.favList}>
+                <ul className={styles.favGrid}>
                   {favoriteItems.map((item) => (
-                    <li key={item.id} className={styles.favItem}>
-                      <Link
-                        href={`${productPath(item.handle)}`}
-                        className={styles.favLink}
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={item.image || PRODUCT_IMAGE}
-                          alt=""
-                          className={styles.favThumb}
-                        />
-                        <span className={styles.favMeta}>
-                          <span className={styles.favTitle}>{item.title}</span>
-                          <span className={styles.favPrice}>
-                            {formatTry(item.price)}
-                          </span>
+                    <li key={item.id} className={styles.favCard}>
+                      <Link href={productPath(item.handle)} className={styles.favLink}>
+                        <span className={styles.favMedia}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={item.image || PRODUCT_IMAGE}
+                            alt=""
+                            className={styles.favThumb}
+                          />
                         </span>
+                        <span className={styles.favTitle}>{item.title}</span>
+                        <span className={styles.favPrice}>{formatTry(item.price)}</span>
                       </Link>
                       <button
                         type="button"
-                        className={styles.textBtnDanger}
+                        className={styles.textBtn}
                         onClick={() => toggleFavorite(item)}
                       >
-                        Çıkar
+                        Favorilerden çıkar
                       </button>
                     </li>
                   ))}
                 </ul>
               )}
-              <Link href="/istek-listesi" className={styles.secondaryBtn}>
-                Favoriler sayfasını aç
-              </Link>
             </section>
           ) : null}
+
+          <div className={styles.contentHelp}>{helpBox}</div>
         </div>
       </div>
     </div>

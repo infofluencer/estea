@@ -5,6 +5,7 @@ import type { OrderDetailView } from "@/components/order/order-types"
 import { getLoggedInCustomer } from "@/lib/auth/customer"
 import { authHeaders } from "@/lib/auth/session"
 import { sdk } from "@/lib/medusa"
+import styles from "../../account.module.css"
 
 export const dynamic = "force-dynamic"
 
@@ -41,50 +42,35 @@ export default async function AccountOrderPage({
 
   if (!order) {
     return (
-      <div className="page-shell" style={{ paddingBottom: "3.5rem", maxWidth: "32rem" }}>
-        <h1
-          style={{
-            margin: 0,
-            fontFamily: "var(--font-logo)",
-            fontSize: "clamp(1.25rem, 2.4vw, 1.55rem)",
-            fontWeight: 500,
-            color: "var(--brand-deep)",
-          }}
-        >
-          Bu sipariş bulunamadı
-        </h1>
-        <p
-          style={{
-            margin: "1rem 0 1.75rem",
-            fontFamily: "var(--font-garamond)",
-            fontSize: "1.05rem",
-            lineHeight: 1.6,
-            opacity: 0.75,
-          }}
-        >
-          Bu hesaba ait böyle bir sipariş yok veya bağlantı geçersiz. Sipariş
-          listenden devam edebilirsin.
-        </p>
-        <Link href="/hesabim" className="cart-cta cart-cta--primary">
-          Siparişlerine dön
-        </Link>
+      <div className="page-shell">
+        <div className={styles.notFound}>
+          <h1 className={styles.viewTitle}>Bu sipariş bulunamadı</h1>
+          <p className={styles.viewLead}>
+            Bu hesaba ait böyle bir sipariş yok veya bağlantı geçersiz. Sipariş
+            listenden devam edebilirsin.
+          </p>
+          <Link href="/hesabim#siparisler" className={styles.inkBtn}>
+            Siparişlerime dön
+          </Link>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="page-shell" style={{ paddingBottom: "3.5rem" }}>
-      <p
-        style={{
-          marginBottom: "1.5rem",
-          fontFamily: "var(--font-sans)",
-          fontSize: "0.88rem",
-        }}
-      >
-        <Link href="/hesabim" style={{ opacity: 0.7 }}>
-          ← Hesabıma dön
-        </Link>
-      </p>
+    <div className="page-shell" style={{ paddingTop: "1.5rem", paddingBottom: "3.5rem" }}>
+      <Link href="/hesabim#siparisler" className={styles.backLink}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d="m15 6-6 6 6 6"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        Siparişlerim
+      </Link>
       <OrderDetail order={order} returnContext={{ mode: "customer" }} />
     </div>
   )

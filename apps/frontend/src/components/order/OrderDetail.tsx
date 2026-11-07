@@ -7,6 +7,7 @@ import {
   trackingFallbackMessage,
   type OrderTimelineStepKey,
 } from "@escay/shared/order-timeline"
+import { resolveReturnStatus } from "@escay/shared/return-status"
 import { OrderReturnRequest } from "./OrderReturnRequest"
 import { BankTransferBox } from "@/components/checkout/BankTransferBox"
 import type { OrderDetailView, OrderReturnContext } from "./order-types"
@@ -70,34 +71,6 @@ function collectTrackingEntries(
   }
 
   return entries
-}
-
-function formatReturnStatus(
-  status?: string | null,
-  metadata?: {
-    rejected?: boolean
-    escay_rejection?: { rejected?: boolean } | null
-    paytr_refund?: { status?: string | null; amount?: number | null } | null
-  } | null
-) {
-  if (
-    metadata?.escay_rejection?.rejected === true ||
-    metadata?.rejected === true
-  ) {
-    return "Reddedildi"
-  }
-  if (metadata?.paytr_refund?.status === "success") {
-    return "Para iade edildi"
-  }
-  if (!status) return "İade"
-  const map: Record<string, string> = {
-    open: "Açık",
-    requested: "Talep alındı",
-    received: "Teslim alındı",
-    partially_received: "Kısmen alındı",
-    canceled: "İptal",
-  }
-  return map[status] || status
 }
 
 function statusBadgeClass(key: OrderTimelineStepKey | "canceled") {
@@ -266,6 +239,12 @@ export function OrderDetail({
   const fulfillments = order.fulfillments || []
   const trackingEntries = collectTrackingEntries(fulfillments)
   const existingReturns = (order.returns || []).filter((r) => r.id)
+  const itemTitles = new Map(
+    (order.items || []).map((it) => [it.id, it.title || "Ürün"] as const)
+  )
+  const hasExchange = existingReturns.some(
+    (r) => resolveReturnStatus(r)?.kind === "exchange"
+  )
 
   return (
     <article className={styles.wrap} data-testid="order-detail">
@@ -400,29 +379,45 @@ export function OrderDetail({
                   aria-labelledby="order-returns"
                 >
                   <h2 id="order-returns" className={styles.sectionTitle}>
-                    İade talepleri
+                    {hasExchange ? "İade ve değişim" : "İade talepleri"}
                   </h2>
                   <ul className={styles.list}>
                     {existingReturns.map((r) => {
-                      const label = formatReturnStatus(r.status, r.metadata)
-                      const refundAmt =
-                        r.metadata?.paytr_refund?.status === "success" &&
-                        r.metadata?.paytr_refund?.amount != null
-                          ? Number(r.metadata.paytr_refund.amount)
-                          : null
+                      const st = resolveReturnStatus(r)
+                      const titles = Array.from(
+                        new Set(
+                          (r.items || [])
+                            .map((it) => (it.item_id ? itemTitles.get(it.item_id) : null))
+                            .filter((t): t is string => Boolean(t))
+                        )
+                      )
                       return (
-                        <li key={r.id} className={styles.item}>
-                          <span className={styles.returnBadge}>{label}</span>
-                          <span className={styles.itemMeta}>
-                            {" "}
-                            · {r.id}
-                            {refundAmt != null && Number.isFinite(refundAmt)
-                              ? ` · ${formatTry(refundAmt)}`
-                              : ""}
-                            {r.created_at
-                              ? ` · ${formatOrderDate(r.created_at)}`
-                              : ""}
-                          </span>
+                        <li
+                          key={r.id}
+                          className={styles.returnEntry}
+                          data-testid="order-return"
+                        >
+                          <div className={styles.returnHead}>
+                            <span className={styles.returnPill} data-tone={st?.tone}>
+                              {st?.label || "İade talebi"}
+                            </span>
+                            {r.created_at ? (
+                              <span className={styles.returnDate}>
+                                {formatOrderDate(r.created_at)}
+                              </span>
+                            ) : null}
+                          </div>
+                          {titles.length > 0 ? (
+                            <p className={styles.returnItems}>{titles.join(", ")}</p>
+                          ) : null}
+                          {st?.refundAmount != null ? (
+                            <p className={styles.returnAmount}>
+                              İade edilen tutar: {formatTry(st.refundAmount)}
+                            </p>
+                          ) : null}
+                          {st?.note ? (
+                            <p className={styles.returnNote}>{st.note}</p>
+                          ) : null}
                         </li>
                       )
                     })}

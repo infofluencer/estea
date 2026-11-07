@@ -30,6 +30,8 @@ type FavoritesContextValue = {
   items: FavoriteProduct[]
   isLoggedIn: boolean
   pending: boolean
+  /** Tarayıcı listesi okundu; öncesinde boş liste "favori yok" anlamına gelmez. */
+  hydrated: boolean
   isFavorite: (productId: string) => boolean
   toggleFavorite: (product: FavoriteProduct) => void
   refresh: () => void
@@ -146,6 +148,7 @@ export function FavoritesProvider({
       items,
       isLoggedIn,
       pending,
+      hydrated,
       isFavorite: (productId: string) =>
         hydrated && items.some((f) => f.id === productId),
       toggleFavorite,
@@ -186,6 +189,7 @@ export function useFavorites() {
       items: [],
       isLoggedIn: false,
       pending: false,
+      hydrated: true,
       isFavorite: () => false,
       toggleFavorite: (product: FavoriteProduct) => {
         toggleFavoriteLocal(product)

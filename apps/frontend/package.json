@@ -10,7 +10,9 @@
     "test:e2e": "node e2e/run.mjs",
     "test:staging:e2e": "node e2e/run.mjs",
     "test:e2e:install": "playwright install chromium",
-    "test:staging:e2e:install": "playwright install chromium"
+    "test:staging:e2e:install": "playwright install chromium",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "^5.3.0",
@@ -30,6 +32,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.23",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "3.2.4"
   }
 }

@@ -1,9 +1,7 @@
 import Link from "next/link"
-import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
-import { FinalizePaidCheckoutOnMount } from "@/components/checkout/FinalizePaidCheckoutOnMount"
+import { CheckoutProgress } from "@/components/cart/CheckoutProgress"
+import { PaytrResultPoller } from "@/components/checkout/PaytrResultPoller"
 import { RestorePendingCheckoutOnMount } from "@/components/checkout/RestorePendingCheckoutOnMount"
-import { LAST_ORDER_ID_COOKIE } from "@/lib/auth/constants"
 
 /**
  * PayTR merchant_ok_url / merchant_fail_url hedef sayfası.
@@ -13,10 +11,11 @@ import { LAST_ORDER_ID_COOKIE } from "@/lib/auth/constants"
  * KRİTİK UYARI:
  * Bu sayfaya ulaşmak ödeme onayı DEĞİLDİR.
  * Gerçek ödeme onayı /paytr/callback webhook'undan gelir (sunucu tarafında).
- * Bu sayfa yalnızca kullanıcıyı bilgilendirme amaçlıdır.
+ * Bu sayfa yalnızca kullanıcıyı bilgilendirme amaçlıdır. Sipariş bildirim işlenince
+ * oluşur; success'te sayfa siparişi bekler, oluşunca onay sayfasına geçer.
  *
- * Cookie mutasyonları RSC render'da yapılamaz — success temizliği confirmation
- * mount action'ında; fail restore client mount action'ında.
+ * Cookie mutasyonları RSC render'da yapılamaz — success temizliği server action'da;
+ * fail restore client mount action'ında.
  */
 export const dynamic = "force-dynamic"
 
@@ -28,59 +27,53 @@ export default async function PaymentResultPage({ searchParams }: Props) {
   const { status, oid } = await searchParams
   const isSuccess = status === "success"
 
-  if (isSuccess) {
-    const jar = await cookies()
-    const orderId = jar.get(LAST_ORDER_ID_COOKIE)?.value
-    if (orderId) {
-      redirect(`/odeme/confirmation/${orderId}`)
-    }
-  }
-
   return (
     <div className="checkout-page-wrap">
       <div className="page-shell checkout-page">
-        {isSuccess ? (
-          <FinalizePaidCheckoutOnMount />
-        ) : (
-          <RestorePendingCheckoutOnMount />
-        )}
-        <div className="checkout-empty checkout-empty--center">
+        <CheckoutProgress current="payment" />
+        {isSuccess ? null : <RestorePendingCheckoutOnMount />}
+
+        <div className="checkout-empty checkout-empty--center" data-testid="checkout-empty">
           {isSuccess ? (
-            <>
-              <h1 className="checkout-empty__title">Ödemeniz alındı</h1>
-              <p className="checkout-empty__text">
-                Ödemeniz işleme alındı. Siparişiniz onaylanınca size e-posta
-                bildirimi gönderilecektir. Durumu hesabım &gt; siparişlerim
-                bölümünden takip edebilirsiniz.
-              </p>
-              {oid ? <p className="checkout-muted">İşlem ref: {oid}</p> : null}
-              <div className="checkout-empty__actions">
-                <Link href="/" className="cart-cta cart-cta--primary">
-                  Alışverişe devam et
-                </Link>
-              </div>
-            </>
+            <PaytrResultPoller oid={oid || ""} />
           ) : (
-            <>
-              <h1 className="checkout-empty__title">Ödeme tamamlanamadı</h1>
-              <p className="checkout-empty__text">
-                Ödeme işlemi tamamlanamadı. Kart bilgilerinizi kontrol ederek
-                tekrar deneyebilirsiniz. Sorun sürerse hesap sayfanızdaki
-                siparişlerinizden veya iletişim formundan bize yazın.
+            <div className="checkout-result" data-state="failed">
+              <span className="checkout-result__disc checkout-result__disc--fail" aria-hidden>
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                  <path
+                    d="M7 7l10 10M17 7L7 17"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+              <h1 className="checkout-result__title">Ödeme tamamlanamadı</h1>
+              <p className="checkout-result__text">
+                Bankanız işlemi onaylamadı ya da işlem yarıda kaldı. Kartınızdan
+                para çekilmedi; sepetiniz duruyor. Kart bilgilerini kontrol edip
+                tekrar deneyebilir ya da başka bir kartla ödeyebilirsiniz.
               </p>
-              {oid ? <p className="checkout-muted">İşlem ref: {oid}</p> : null}
-              <div className="checkout-empty__actions">
+              {oid ? (
+                <p className="checkout-result__ref">
+                  İşlem referansı <span>{oid}</span>
+                </p>
+              ) : null}
+              <div className="checkout-result__actions">
                 <Link href="/odeme" className="cart-cta cart-cta--primary">
                   Tekrar dene
                 </Link>
                 <Link href="/sepet" className="cart-cta">
                   Sepete dön
                 </Link>
-                <Link href="/iletisim" className="cart-cta">
-                  İletişim
-                </Link>
               </div>
-            </>
+              <p className="checkout-result__help">
+                Sorun sürerse{" "}
+                <a href="tel:+904626923061">0462 692 30 61</a> numarasından ya da{" "}
+                <Link href="/iletisim">iletişim formundan</Link> bize ulaşın.
+              </p>
+            </div>
           )}
         </div>
       </div>

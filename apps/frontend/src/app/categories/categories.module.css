@@ -407,24 +407,10 @@
 
 .lowStockStamp {
   position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
+  top: 1.15rem;
+  left: 0.95rem;
   z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  padding: 0.3rem 0.5rem;
-  border-radius: 4px;
-  background: var(--color-gold-soft);
-  color: #7a5714;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1.2;
   pointer-events: none;
-}
-
-.lowStockStampCritical {
-  background: #fdecec;
-  color: var(--color-brand-dark);
 }
 
 .fav {

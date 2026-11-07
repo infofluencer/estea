@@ -3,6 +3,7 @@
 import { COMPANY } from "@/lib/company"
 import { useMemo, useState, type MouseEvent } from "react"
 import { AddToCartButton } from "@/components/AddToCartButton"
+import { TeaGlassGauge } from "@/components/LowStockMark"
 import { useFavorites } from "@/components/FavoritesProvider"
 import { ProductAccordion } from "@/components/product/ProductAccordion"
 import { ProductGallery } from "@/components/product/ProductGallery"
@@ -340,6 +341,7 @@ export function ProductPageView({
                 }`}
                 role="status"
               >
+                <TeaGlassGauge critical={lowStock.kind === "critical"} />
                 {lowStock.text}
               </p>
             ) : null}

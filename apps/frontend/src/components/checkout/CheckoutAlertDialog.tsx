@@ -76,7 +76,7 @@ export function CheckoutAlertDialog({
         <button
           ref={okRef}
           type="button"
-          className="checkout-alert__ok cart-cta cart-cta--primary"
+          className="checkout-alert__ok cart-cta cart-cta--ink"
           data-testid="checkout-alert-close"
           onClick={onClose}
         >

@@ -123,15 +123,26 @@ const GOOGLE_ADS_PURCHASE_SEND_TO =
     ? `${GOOGLE_ADS_ID}/${GOOGLE_ADS_CONVERSION_LABEL}`
     : null
 
+/**
+ * true: gönderildi (ya da zaten gönderilmişti). false: script'ler henüz yüklü değil
+ * (onay yok ya da Analytics effect'i daha çalışmadı) → çağıran sonra tekrar denemeli.
+ * "Gönderildi" işareti yalnız script varken yazılır; yoksa dönüşüm kalıcı olarak kaybolur.
+ */
 export function trackPurchase(order: {
   id: string
   total: number
   items: AnalyticsItem[]
-}) {
+}): boolean {
+  if (typeof window === "undefined") return false
   // Sayfa yenilemesinde ikinci kez gönderme
   const key = `escay-purchase-tracked:${order.id}`
   try {
-    if (sessionStorage.getItem(key)) return
+    if (sessionStorage.getItem(key)) return true
+  } catch {
+    /* ignore */
+  }
+  if (!window.gtag && !window.fbq) return false
+  try {
     sessionStorage.setItem(key, "1")
   } catch {
     /* ignore */
@@ -141,11 +152,13 @@ export function trackPurchase(order: {
     eventId: `purchase-${order.id}`,
     value: order.total,
   })
-  if (typeof window === "undefined" || !GOOGLE_ADS_PURCHASE_SEND_TO) return
-  window.gtag?.("event", "conversion", {
-    send_to: GOOGLE_ADS_PURCHASE_SEND_TO,
-    value: order.total,
-    currency: "TRY",
-    transaction_id: order.id,
-  })
+  if (GOOGLE_ADS_PURCHASE_SEND_TO) {
+    window.gtag?.("event", "conversion", {
+      send_to: GOOGLE_ADS_PURCHASE_SEND_TO,
+      value: order.total,
+      currency: "TRY",
+      transaction_id: order.id,
+    })
+  }
+  return true
 }

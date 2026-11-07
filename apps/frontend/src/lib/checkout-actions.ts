@@ -28,6 +28,7 @@ import {
 import {
   LAST_ORDER_EMAIL_COOKIE,
   LAST_ORDER_ID_COOKIE,
+  PAYTR_PAID_CART_COOKIE,
   LAST_ORDER_COOKIE_OPTIONS,
 } from "./auth/constants"
 import { getAuthToken } from "./auth/session"
@@ -173,358 +174,434 @@ export async function saveCheckoutContactAction(input: {
         metadata: buildBillingInvoiceMetadata(b, email),
       }
     } else {
-      // Aynı adres: shipping klonu + fatura kimlik metadata (VKN/TCKN burada)
-      billing = {
-        ...shipping,
-        metadata: buildBillingInvoiceMetadata(a, email),
+        // Aynı adres: shipping klonu + fatura kimlik metadata (VKN/TCKN burada)
+        billing = {
+          ...shipping,
+          metadata: buildBillingInvoiceMetadata(a, email),
+        }
       }
-    }
 
-    const current = await getCheckoutCart()
-    const existingMeta =
-      current && typeof current === "object" && "metadata" in current
-        ? ((current as { metadata?: Record<string, unknown> | null })
-            .metadata ?? {})
-        : {}
+      const current = await getCheckoutCart()
+      const existingMeta =
+        current && typeof current === "object" && "metadata" in current
+          ? ((current as { metadata?: Record<string, unknown> | null })
+              .metadata ?? {})
+          : {}
 
-    await sdk.store.cart.update(
-      cartId,
-      {
-        email,
-        shipping_address: shipping,
-        billing_address: billing,
-        metadata: {
-          ...existingMeta,
-          marketing_consent: input.marketingConsent === true,
-          tracking_consent: input.trackingConsent === true,
-          order_note: (input.orderNote ?? "").trim().slice(0, ORDER_NOTE_MAX) || null,
+      await sdk.store.cart.update(
+        cartId,
+        {
+          email,
+          shipping_address: shipping,
+          billing_address: billing,
+          metadata: {
+            ...existingMeta,
+            marketing_consent: input.marketingConsent === true,
+            tracking_consent: input.trackingConsent === true,
+            order_note: (input.orderNote ?? "").trim().slice(0, ORDER_NOTE_MAX) || null,
+          },
         },
-      },
-      { fields: CHECKOUT_CART_FIELDS },
-      headers
-    )
-    return { ok: true }
-  } catch (e) {
-    return { ok: false, message: errMessage(e, "Adres kaydedilemedi.") }
+        { fields: CHECKOUT_CART_FIELDS },
+        headers
+      )
+      return { ok: true }
+    } catch (e) {
+      return { ok: false, message: errMessage(e, "Adres kaydedilemedi.") }
+    }
   }
-}
 
-export async function listShippingOptionsAction(): Promise<
-  | { ok: true; options: { id: string; name: string; amount: number | null }[] }
-  | { ok: false; message: string }
-> {
-  try {
-    const cartId = await requireCartId()
-    const headers = await authHeaders()
-    const { shipping_options } = await sdk.store.fulfillment.listCartOptions(
-      { cart_id: cartId },
-      headers
-    )
-    // "calculated" seçeneklerde (kargo fiyat listesi) tutar listede gelmeyebilir;
-    // o zaman sepet için ayrıca hesaplatılır. Hata olursa null → yedek ücret gösterilir.
-    const options = await Promise.all(
-      (shipping_options || []).map(async (o) => {
-        let amount: number | null = o.amount ?? null
-        if (amount == null && (o as { price_type?: string }).price_type === "calculated") {
-          try {
-            const { shipping_option } = await sdk.store.fulfillment.calculate(
-              o.id,
-              { cart_id: cartId },
-              {},
-              headers
-            )
-            amount = shipping_option?.amount ?? null
-          } catch {
-            amount = null
+  export async function listShippingOptionsAction(): Promise<
+    | { ok: true; options: { id: string; name: string; amount: number | null }[] }
+    | { ok: false; message: string }
+  > {
+    try {
+      const cartId = await requireCartId()
+      const headers = await authHeaders()
+      const { shipping_options } = await sdk.store.fulfillment.listCartOptions(
+        { cart_id: cartId },
+        headers
+      )
+      // "calculated" seçeneklerde (kargo fiyat listesi) tutar listede gelmeyebilir;
+      // o zaman sepet için ayrıca hesaplatılır. Hata olursa null → yedek ücret gösterilir.
+      const options = await Promise.all(
+        (shipping_options || []).map(async (o) => {
+          let amount: number | null = o.amount ?? null
+          if (amount == null && (o as { price_type?: string }).price_type === "calculated") {
+            try {
+              const { shipping_option } = await sdk.store.fulfillment.calculate(
+                o.id,
+                { cart_id: cartId },
+                {},
+                headers
+              )
+              amount = shipping_option?.amount ?? null
+            } catch {
+              amount = null
+            }
           }
-        }
-        return { id: o.id, name: o.name, amount }
-      })
-    )
-    return { ok: true, options }
-  } catch (e) {
-    return { ok: false, message: errMessage(e, "Kargo seçenekleri alınamadı.") }
-  }
-}
-
-export async function applyShippingOptionAction(
-  optionId: string
-): Promise<ActionResult> {
-  try {
-    if (!optionId) return { ok: false, message: "Kargo seçin." }
-    const cartId = await requireCartId()
-    const headers = await authHeaders()
-    await sdk.store.cart.addShippingMethod(
-      cartId,
-      { option_id: optionId },
-      { fields: CHECKOUT_CART_FIELDS },
-      headers
-    )
-    return { ok: true }
-  } catch (e) {
-    return { ok: false, message: errMessage(e, "Kargo uygulanamadı.") }
-  }
-}
-
-function promoErrorMessage(e: unknown): string {
-  const raw = errMessage(e, "")
-  const lower = raw.toLowerCase()
-  if (
-    /not found|invalid|expired|inactive|does not apply|ineligible|no promotion/i.test(
-      lower
-    ) ||
-    /geçersiz|bulunamad|süresi/i.test(lower)
-  ) {
-    return "İndirim kodu geçersiz veya bu sepete uygulanamıyor."
-  }
-  if (raw) return raw
-  return "İndirim kodu uygulanamadı."
-}
-
-export async function applyPromoCodeAction(
-  code: string
-): Promise<ActionResult> {
-  const promo = code.trim()
-  if (!promo) {
-    return { ok: false, message: "İndirim kodu girin." }
-  }
-  try {
-    const cartId = await requireCartId()
-    const headers = await authHeaders()
-    await sdk.store.cart.addPromotions(
-      cartId,
-      { promo_codes: [promo] },
-      { fields: CHECKOUT_CART_FIELDS },
-      headers
-    )
-    return { ok: true }
-  } catch (e) {
-    return { ok: false, message: promoErrorMessage(e) }
-  }
-}
-
-export async function removePromoCodeAction(
-  code: string
-): Promise<ActionResult> {
-  const promo = code.trim()
-  if (!promo) return { ok: false, message: "Kaldırılacak kod yok." }
-  try {
-    const cartId = await requireCartId()
-    const headers = await authHeaders()
-    await sdk.store.cart.removePromotions(
-      cartId,
-      { promo_codes: [promo] },
-      { fields: CHECKOUT_CART_FIELDS },
-      headers
-    )
-    return { ok: true }
-  } catch (e) {
-    return { ok: false, message: errMessage(e, "İndirim kodu kaldırılamadı.") }
-  }
-}
-
-export async function getCheckoutSummaryAction() {
-  const cart = await getCheckoutCart()
-  if (!cart) return null
-  const promotions = (
-    (cart as { promotions?: { id?: string; code?: string | null }[] })
-      .promotions || []
-  )
-    .filter((p) => p.code)
-    .map((p) => ({ id: p.id || String(p.code), code: String(p.code) }))
-
-  return {
-    id: cart.id,
-    email: cart.email,
-    item_subtotal: cart.item_subtotal,
-    subtotal: cart.subtotal,
-    item_total: cart.item_total,
-    discount_total: (cart as { discount_total?: number | null }).discount_total,
-    shipping_total: cart.shipping_total,
-    total: cart.total,
-    original_item_total: (
-      cart as { original_item_total?: number | null }
-    ).original_item_total,
-    promotions,
-    items: (cart.items || []).map((i) => {
-      const color = variantLabel(i) || i.variant?.title || null
-      return {
-        id: i.id,
-        title: i.title,
-        quantity: i.quantity,
-        unit_price: i.unit_price,
-        subtotal: i.subtotal,
-        thumbnail: cartLineImage(i),
-        variant: color ? { title: color } : null,
-      }
-    }),
-    shipping_address: cart.shipping_address,
-    shipping_methods: cart.shipping_methods,
-  }
-}
-
-/**
- * PayTR iFrame oturumu başlat — payment adımına geçilirken çağrılır.
- * Dönen iframeToken ile storefront iFrame URL oluşturulur.
- */
-export async function initiatePaytrAction(): Promise<
-  | { ok: true; iframeToken: string | null; sessionId?: string }
-  | { ok: false; message: string }
-> {
-  try {
-    const cart = await getCheckoutCart()
-    if (!cart) return { ok: false, message: "Sepet bulunamadı." }
-    const headers = await authHeaders()
-    const userIp = await clientIpForPaytr()
-    const result = await initiatePaytrPayment(
-      {
-        id: cart.id,
-        payment_collection: cart.payment_collection,
-        email: cart.email,
-        items: cart.items,
-        shipping_total: cart.shipping_total,
-        shipping_address: cart.shipping_address,
-        total: cart.total,
-      },
-      headers,
-      userIp
-    )
-    return { ok: true, iframeToken: result.iframeToken ?? null, sessionId: result.sessionId }
-  } catch (e) {
-    return { ok: false, message: errMessage(e, "PayTR oturumu başlatılamadı.") }
-  }
-}
-
-/**
- * Havale / EFT ödeme oturumu — payment adımında PayTR yerine çağrılır.
- * Seçenek kapalıysa (backend BANK_TRANSFER_*) reddedilir.
- */
-export async function initiateBankTransferAction(): Promise<
-  { ok: true } | { ok: false; message: string }
-> {
-  try {
-    if (!(await fetchBankTransferInfo())) {
-      return { ok: false, message: "Havale / EFT ile ödeme şu an kullanılamıyor." }
+          return { id: o.id, name: o.name, amount }
+        })
+      )
+      return { ok: true, options }
+    } catch (e) {
+      return { ok: false, message: errMessage(e, "Kargo seçenekleri alınamadı.") }
     }
-    const cart = await getCheckoutCart()
-    if (!cart) return { ok: false, message: "Sepet bulunamadı." }
-    const headers = await authHeaders()
-    await initiateBankTransferPayment(
-      { id: cart.id, payment_collection: cart.payment_collection },
-      headers
-    )
-    return { ok: true }
-  } catch (e) {
-    return { ok: false, message: errMessage(e, "Havale ödemesi başlatılamadı.") }
   }
-}
 
-/**
- * Medusa cart.complete — siparişi oluşturur (PayTR async: pending_authorization).
- * Ödeme oturumu başlatıldıktan sonra, iframe gösterilmeden önce çağrılmalı.
- *
- * Sepet cookie'si burada silinir (Medusa cart complete sonrası kullanılamaz).
- * Fail sonrası yeniden deneme için line item snapshot cookie'si yazılır;
- * snapshot ödeme başarısında temizlenir.
- *
- * iframeToken varsa redirect() — /checkout remount olmasın diye client push yok.
- */
-export async function completeCheckoutAction(input?: {
-  legalAcceptedAt?: string
-  iframeToken?: string | null
-  /** order.metadata.payment_method — havale siparişi admin/mail/fatura için */
-  paymentMethod?: CheckoutPaymentMethod
-}): Promise<
-  | { ok: true; orderId: string }
-  | { ok: false; message: string }
-> {
-  let orderId: string
-  try {
-    const cartId = await requireCartId()
+  export async function applyShippingOptionAction(
+    optionId: string
+  ): Promise<ActionResult> {
+    try {
+      if (!optionId) return { ok: false, message: "Kargo seçin." }
+      const cartId = await requireCartId()
+      const headers = await authHeaders()
+      await sdk.store.cart.addShippingMethod(
+        cartId,
+        { option_id: optionId },
+        { fields: CHECKOUT_CART_FIELDS },
+        headers
+      )
+      return { ok: true }
+    } catch (e) {
+      return { ok: false, message: errMessage(e, "Kargo uygulanamadı.") }
+    }
+  }
+
+  function promoErrorMessage(e: unknown): string {
+    const raw = errMessage(e, "")
+    const lower = raw.toLowerCase()
+    if (
+      /not found|invalid|expired|inactive|does not apply|ineligible|no promotion/i.test(
+        lower
+      ) ||
+      /geçersiz|bulunamad|süresi/i.test(lower)
+    ) {
+      return "İndirim kodu geçersiz veya bu sepete uygulanamıyor."
+    }
+    if (raw) return raw
+    return "İndirim kodu uygulanamadı."
+  }
+
+  export async function applyPromoCodeAction(
+    code: string
+  ): Promise<ActionResult> {
+    const promo = code.trim()
+    if (!promo) {
+      return { ok: false, message: "İndirim kodu girin." }
+    }
+    try {
+      const cartId = await requireCartId()
+      const headers = await authHeaders()
+      await sdk.store.cart.addPromotions(
+        cartId,
+        { promo_codes: [promo] },
+        { fields: CHECKOUT_CART_FIELDS },
+        headers
+      )
+      return { ok: true }
+    } catch (e) {
+      return { ok: false, message: promoErrorMessage(e) }
+    }
+  }
+
+  export async function removePromoCodeAction(
+    code: string
+  ): Promise<ActionResult> {
+    const promo = code.trim()
+    if (!promo) return { ok: false, message: "Kaldırılacak kod yok." }
+    try {
+      const cartId = await requireCartId()
+      const headers = await authHeaders()
+      await sdk.store.cart.removePromotions(
+        cartId,
+        { promo_codes: [promo] },
+        { fields: CHECKOUT_CART_FIELDS },
+        headers
+      )
+      return { ok: true }
+    } catch (e) {
+      return { ok: false, message: errMessage(e, "İndirim kodu kaldırılamadı.") }
+    }
+  }
+
+  export async function getCheckoutSummaryAction() {
     const cart = await getCheckoutCart()
-    const headers = await authHeaders()
-
-    const legalAcceptedAt =
-      input?.legalAcceptedAt?.trim() || new Date().toISOString()
-
-    const existingMeta =
-      cart && typeof cart === "object" && "metadata" in cart
-        ? ((cart as { metadata?: Record<string, unknown> | null }).metadata ??
-          {})
-        : {}
-
-    await sdk.store.cart.update(
-      cartId,
-      {
-        metadata: {
-          ...existingMeta,
-          legal_accepted_at: legalAcceptedAt,
-          payment_method: input?.paymentMethod ?? "card",
-        },
-      },
-      { fields: CHECKOUT_CART_FIELDS },
-      headers
+    if (!cart) return null
+    const promotions = (
+      (cart as { promotions?: { id?: string; code?: string | null }[] })
+        .promotions || []
     )
+      .filter((p) => p.code)
+      .map((p) => ({ id: p.id || String(p.code), code: String(p.code) }))
 
-    const pendingItems = (cart?.items || [])
-      .map((i) => {
-        const variantId =
-          i && typeof i === "object" && "variant_id" in i
-            ? (i as { variant_id?: string | null }).variant_id
-            : (i as { variant?: { id?: string | null } | null }).variant?.id
+    return {
+      id: cart.id,
+      email: cart.email,
+      item_subtotal: cart.item_subtotal,
+      subtotal: cart.subtotal,
+      item_total: cart.item_total,
+      discount_total: (cart as { discount_total?: number | null }).discount_total,
+      shipping_total: cart.shipping_total,
+      total: cart.total,
+      original_item_total: (
+        cart as { original_item_total?: number | null }
+      ).original_item_total,
+      promotions,
+      items: (cart.items || []).map((i) => {
+        const color = variantLabel(i) || i.variant?.title || null
         return {
-          variant_id: variantId || "",
-          quantity: Number(i.quantity) || 0,
+          id: i.id,
+          title: i.title,
+          quantity: i.quantity,
+          unit_price: i.unit_price,
+          subtotal: i.subtotal,
+          thumbnail: cartLineImage(i),
+          variant: color ? { title: color } : null,
         }
-      })
-      .filter((i) => i.variant_id && i.quantity > 0)
-
-    const result = await sdk.store.cart.complete(
-      cartId,
-      { fields: "+order.id,+order.email" },
-      headers
-    )
-
-    const order = (result as { order?: { id?: string; email?: string | null } }).order
-    if (!order?.id) {
-      return { ok: false, message: "Sipariş oluşturulamadı." }
+      }),
+      shipping_address: cart.shipping_address,
+      shipping_methods: cart.shipping_methods,
     }
+  }
 
-    const email = order.email || cart?.email || ""
-    const jar = await cookies()
-    if (email) {
-      jar.set(LAST_ORDER_EMAIL_COOKIE, email, LAST_ORDER_COOKIE_OPTIONS)
+  /**
+   * PayTR iFrame oturumu başlat — payment adımına geçilirken çağrılır.
+   * Dönen iframeToken ile storefront iFrame URL oluşturulur.
+   */
+  export async function initiatePaytrAction(): Promise<
+    | { ok: true; iframeToken: string | null; sessionId?: string }
+    | { ok: false; message: string }
+  > {
+    try {
+      const cart = await getCheckoutCart()
+      if (!cart) return { ok: false, message: "Sepet bulunamadı." }
+      const headers = await authHeaders()
+      const userIp = await clientIpForPaytr()
+      const result = await initiatePaytrPayment(
+        {
+          id: cart.id,
+          payment_collection: cart.payment_collection,
+          email: cart.email,
+          items: cart.items,
+          shipping_total: cart.shipping_total,
+          shipping_address: cart.shipping_address,
+          total: cart.total,
+        },
+        headers,
+        userIp
+      )
+      return { ok: true, iframeToken: result.iframeToken ?? null, sessionId: result.sessionId }
+    } catch (e) {
+      return { ok: false, message: errMessage(e, "PayTR oturumu başlatılamadı.") }
     }
-    jar.set(LAST_ORDER_ID_COOKIE, order.id, LAST_ORDER_COOKIE_OPTIONS)
+  }
 
-    // Snapshot BEFORE clearing cart — fail/abandon restore path
-    if (pendingItems.length) {
-      await setPendingCheckoutItems(pendingItems)
+  /**
+   * Havale / EFT ödeme oturumu — payment adımında PayTR yerine çağrılır.
+   * Seçenek kapalıysa (backend BANK_TRANSFER_*) reddedilir.
+   */
+  export async function initiateBankTransferAction(): Promise<
+    { ok: true } | { ok: false; message: string }
+  > {
+    try {
+      if (!(await fetchBankTransferInfo())) {
+        return { ok: false, message: "Havale / EFT ile ödeme şu an kullanılamıyor." }
+      }
+      const cart = await getCheckoutCart()
+      if (!cart) return { ok: false, message: "Sepet bulunamadı." }
+      const headers = await authHeaders()
+      await initiateBankTransferPayment(
+        { id: cart.id, payment_collection: cart.payment_collection },
+        headers
+      )
+      return { ok: true }
+    } catch (e) {
+      return { ok: false, message: errMessage(e, "Havale ödemesi başlatılamadı.") }
     }
+  }
 
-    // Completed cart cannot accept new line items — drop cookie now.
-    // Snapshot is cleared only on payment success (finalizePaidCheckoutSession).
-    await clearCartIdCookie()
+  /**
+   * Ödeme adımına geçiş.
+   *
+   * Kart (iframeToken var): sipariş OLUŞTURULMAZ, sepet açık kalır. Ödeme denemesi
+   * backend'e kaydedilir ve iframe'e gidilir; sipariş PayTR başarılı bildirince backend'de
+   * oluşur (docs/ESCAY-KARARLAR.md K11). Başarısız ödemede müşteri aynı sepetle tekrar dener.
+   *
+   * Havale / stub (iframeToken yok): Medusa cart.complete hemen sipariş oluşturur; sepet
+   * cookie'si silinir, yeniden deneme için line item snapshot'ı yazılır.
+   *
+   * iframeToken varsa redirect() — /checkout remount olmasın diye client push yok.
+   */
+  export async function completeCheckoutAction(input?: {
+    legalAcceptedAt?: string
+    iframeToken?: string | null
+    /** order.metadata.payment_method — havale siparişi admin/mail/fatura için */
+    paymentMethod?: CheckoutPaymentMethod
+  }): Promise<
+    | { ok: true; orderId: string }
+    | { ok: false; message: string }
+  > {
+    const paytrToken =
+      input?.paymentMethod !== "bank_transfer" && isSafePaytrIframeToken(input?.iframeToken)
+        ? input.iframeToken
+        : null
+    let orderId = ""
+    try {
+      const cartId = await requireCartId()
+      const cart = await getCheckoutCart()
+      const headers = await authHeaders()
 
-    orderId = order.id
+      const legalAcceptedAt =
+        input?.legalAcceptedAt?.trim() || new Date().toISOString()
+
+      const existingMeta =
+        cart && typeof cart === "object" && "metadata" in cart
+          ? ((cart as { metadata?: Record<string, unknown> | null }).metadata ??
+            {})
+          : {}
+
+      await sdk.store.cart.update(
+        cartId,
+        {
+          metadata: {
+            ...existingMeta,
+            legal_accepted_at: legalAcceptedAt,
+            payment_method: input?.paymentMethod ?? "card",
+          },
+        },
+        { fields: CHECKOUT_CART_FIELDS },
+        headers
+      )
+
+      if (paytrToken) {
+        // Kayıt yazılamazsa iframe açılmaz: para çekilip sahipsiz kalmasın. Kayıt,
+        // müşteriye gösterilecek token'ın oturumuna yazılır; sepetin oturumu değişmişse
+        // (ikinci sekme) backend 409 döner, müşteri ödemeye yeniden geçer.
+        try {
+          await sdk.client.fetch("/store/paytr-checkout/register", {
+            method: "POST",
+            body: { cart_id: cartId, iframe_token: paytrToken },
+            headers,
+          })
+        } catch (e) {
+          const status = (e as { status?: number } | null)?.status
+          if (status === 409) {
+            return {
+              ok: false,
+              message:
+                "Ödeme ekranı yenilenmiş görünüyor (başka bir sekme açılmış olabilir). Lütfen ödemeye yeniden geçin.",
+            }
+          }
+          throw e
+        }
+        await clearPendingCheckoutItems()
+      } else {
+      const pendingItems = (cart?.items || [])
+        .map((i) => {
+          const variantId =
+            i && typeof i === "object" && "variant_id" in i
+              ? (i as { variant_id?: string | null }).variant_id
+              : (i as { variant?: { id?: string | null } | null }).variant?.id
+          return {
+            variant_id: variantId || "",
+            quantity: Number(i.quantity) || 0,
+          }
+        })
+        .filter((i) => i.variant_id && i.quantity > 0)
+
+      const result = await sdk.store.cart.complete(
+        cartId,
+        { fields: "+order.id,+order.email" },
+        headers
+      )
+
+      const order = (result as { order?: { id?: string; email?: string | null } }).order
+      if (!order?.id) {
+        return { ok: false, message: "Sipariş oluşturulamadı." }
+      }
+
+      const email = order.email || cart?.email || ""
+      const jar = await cookies()
+      if (email) {
+        jar.set(LAST_ORDER_EMAIL_COOKIE, email, LAST_ORDER_COOKIE_OPTIONS)
+      }
+      jar.set(LAST_ORDER_ID_COOKIE, order.id, LAST_ORDER_COOKIE_OPTIONS)
+
+      // Snapshot BEFORE clearing cart — fail/abandon restore path
+      if (pendingItems.length) {
+        await setPendingCheckoutItems(pendingItems)
+      }
+
+      // Completed cart cannot accept new line items — drop cookie now.
+      // Snapshot is cleared only on payment success (finalizePaidCheckoutSession).
+      await clearCartIdCookie()
+
+      orderId = order.id
+    }
   } catch (e) {
     return { ok: false, message: errMessage(e, "Sipariş tamamlanamadı.") }
   }
 
   // Cookie yazımı bitti — redirect try/catch DIŞINDA (NEXT_REDIRECT yutulmasın).
-  const iframeToken = input?.iframeToken
-  if (isSafePaytrIframeToken(iframeToken)) {
-    redirect(`/odeme/payment/${iframeToken}`)
+  if (paytrToken) {
+    redirect(`/odeme/payment/${paytrToken}`)
   }
 
   return { ok: true, orderId }
 }
 
+export type PaytrCheckoutPoll =
+  | { state: "completed"; orderId: string }
+  | { state: "processing" }
+  /** Para alındı ama sipariş otomatik açılmayacak (elle inceleme / panelden iade) */
+  | { state: "attention" }
+  | { state: "unknown" }
+
+/**
+ * Ödeme sonuç sayfası: PayTR bildirimi işlendi mi? Sipariş oluştuysa onay sayfasının
+ * okuduğu cookie'ler yazılır ve sepet bırakılır. Sepet çerezi bırakıldıktan sonra da
+ * (bekleme süresi doldu, müşteri sonra döndü) ödenen sepet çerezi üzerinden sorulur.
+ */
+export async function pollPaytrCheckoutAction(oid: string): Promise<PaytrCheckoutPoll> {
+  const jar = await cookies()
+  const cartId = (await getCartId()) || jar.get(PAYTR_PAID_CART_COOKIE)?.value || null
+  if (!oid || !cartId) return { state: "unknown" }
+  try {
+    const res = await sdk.client.fetch<{
+      state: "completed" | "processing" | "attention" | "unknown"
+      order_id?: string
+      email?: string | null
+    }>("/store/paytr-checkout/status", {
+      method: "GET",
+      query: { oid, cart_id: cartId },
+    })
+    if (res.state === "completed" && res.order_id) {
+      if (res.email) jar.set(LAST_ORDER_EMAIL_COOKIE, res.email, LAST_ORDER_COOKIE_OPTIONS)
+      jar.set(LAST_ORDER_ID_COOKIE, res.order_id, LAST_ORDER_COOKIE_OPTIONS)
+      jar.delete(PAYTR_PAID_CART_COOKIE)
+      await clearCartIdCookie()
+      return { state: "completed", orderId: res.order_id }
+    }
+    if (res.state === "attention") return { state: "attention" }
+    return { state: res.state === "processing" ? "processing" : "unknown" }
+  } catch {
+    // Bağlantı hatası: sonuç bilinmiyor, sayfa sormaya devam eder.
+    return { state: "processing" }
+  }
+}
+
 /**
  * PayTR success / onay sayfası — sepet + pending snapshot temizliği.
+ * Ödenen sepet kimliği ayrı çerezde kalır ki geç gelen bildirim sonrası sayfa yenilenince
+ * sipariş yine bulunabilsin (ödenmiş sepete ürün eklenmesin diye sepet çerezi gider).
  * Call only from a Server Action invocation (e.g. client mount), never RSC render.
  */
 export async function finalizePaidCheckoutSession(): Promise<void> {
+  const cartId = await getCartId()
+  if (cartId) {
+    const jar = await cookies()
+    jar.set(PAYTR_PAID_CART_COOKIE, cartId, LAST_ORDER_COOKIE_OPTIONS)
+  }
   await clearCartIdCookie()
   await clearPendingCheckoutItems()
 }
@@ -611,10 +688,12 @@ export async function restorePendingCheckoutCartAction(): Promise<
 }
 
 export async function loadCheckoutBootstrap() {
-  const [cart, customer, bankTransfer] = await Promise.all([
+  // Havale kapalı (2026-11-07): checkout'ta yalnız kart. Açmak için alttaki çağrıyı geri al.
+  const [cart, customer] = await Promise.all([
     getCheckoutCart(),
     getLoggedInCustomer(),
-    fetchBankTransferInfo(),
+    // fetchBankTransferInfo(),
   ])
+  const bankTransfer = null
   return { cart, customer, bankTransfer }
 }

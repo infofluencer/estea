@@ -40,19 +40,37 @@ async function attachSessionCart(token: string) {
   await transferCartToCustomer(token)
 }
 
-async function requestVerificationMail(email: string, actorlessToken: string) {
-  await sdk.auth.verification.request(
+type VerificationRequestResponse = {
+  already_sent?: boolean
+  reason?: "verified" | "cooldown" | "link_still_valid"
+  retry_after_seconds?: number
+}
+
+/**
+ * `auto`: giriş/kayıt kaynaklı istek. Backend geçerli bağlantı varken yenisini
+ * üretmez, son gönderilen mail geçerli kalır (lib/verification-link.ts).
+ */
+async function requestVerificationMail(
+  email: string,
+  actorlessToken: string,
+  { auto }: { auto: boolean }
+): Promise<VerificationRequestResponse> {
+  const response = await sdk.auth.verification.request(
     {
       entity_id: email,
       entity_type: "email",
       code_provider: "token",
     },
-    { Authorization: `Bearer ${actorlessToken}` }
+    {
+      Authorization: `Bearer ${actorlessToken}`,
+      ...(auto ? { "x-escay-verification-auto": "1" } : {}),
+    }
   )
+  return (response ?? {}) as unknown as VerificationRequestResponse
 }
 
 type MailRequestResult =
-  | { ok: true }
+  | { ok: true; alreadySent: boolean }
   | { ok: false; rateLimited: boolean; message: string }
 
 async function tryRequestVerificationMail(
@@ -60,8 +78,10 @@ async function tryRequestVerificationMail(
   actorlessToken: string
 ): Promise<MailRequestResult> {
   try {
-    await requestVerificationMail(email, actorlessToken)
-    return { ok: true }
+    const response = await requestVerificationMail(email, actorlessToken, {
+      auto: true,
+    })
+    return { ok: true, alreadySent: !!response.already_sent }
   } catch (e) {
     const message = errMessage(e, "")
     const rateLimited = /rate_limit|too many|çok fazla|429/i.test(message)
@@ -78,7 +98,9 @@ async function tryRequestVerificationMail(
 
 function unverifiedMessage(mail: MailRequestResult): string {
   if (mail.ok) {
-    return "Hesabınız doğrulanmamış. Yeni doğrulama bağlantısı e-postanıza gönderildi."
+    return mail.alreadySent
+      ? "Hesabınız doğrulanmamış. Doğrulama bağlantısı daha önce e-postanıza gönderildi; en son gelen maildeki bağlantıyı kullanın. Bulamazsanız spam klasörüne bakın veya “Tekrar gönder”e basın."
+      : "Hesabınız doğrulanmamış. Yeni doğrulama bağlantısı e-postanıza gönderildi."
   }
   return mail.message
 }
@@ -301,11 +323,29 @@ export async function resendVerificationAction(input?: {
       }
     }
 
-    await requestVerificationMail(email, actorlessToken)
+    const response = await requestVerificationMail(email, actorlessToken, {
+      auto: false,
+    })
+    if (response.already_sent) {
+      if (response.reason === "verified") {
+        return {
+          ok: true,
+          message: "E-postanız zaten doğrulanmış. Giriş yapabilirsiniz.",
+        }
+      }
+      const minutes = Math.max(
+        1,
+        Math.ceil((response.retry_after_seconds ?? 120) / 60)
+      )
+      return {
+        ok: true,
+        message: `Doğrulama bağlantısı az önce gönderildi. En son gelen maildeki bağlantıyı kullanın; mail gelmediyse ${minutes} dakika sonra tekrar deneyebilirsiniz.`,
+      }
+    }
     return {
       ok: true,
       message:
-        "Yeni doğrulama bağlantısı gönderildi. Gelen kutunuzu kontrol edin.",
+        "Yeni doğrulama bağlantısı gönderildi. En son gelen maildeki bağlantıyı kullanın.",
     }
   } catch (e) {
     const message = errMessage(e, "")
@@ -359,7 +399,7 @@ export async function confirmEmailVerificationAction(
         ok: false,
         code: "validation",
         message:
-          "Bağlantı geçersiz veya daha önce kullanılmış. Lütfen yeni bir doğrulama bağlantısı isteyin.",
+          "Bağlantı geçersiz veya daha önce kullanılmış. Birden fazla mail aldıysanız en son gelen maildeki bağlantıyı kullanın ya da yeni bir bağlantı isteyin.",
       }
     }
     return {

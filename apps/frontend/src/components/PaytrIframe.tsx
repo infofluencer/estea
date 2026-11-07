@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type Props = {
   iframeToken: string
@@ -13,12 +13,14 @@ type Props = {
  *   <PaytrIframe iframeToken="28cc613c..." />
  *
  * iframeResizer PayTR CDN'inden yüklenir; iframe yüksekliğini otomatik ayarlar.
+ * Form gelene kadar yerinde bir iskelet durur (boş beyaz kutu yerine).
  *
  * ÖNEMLİ: merchant_ok_url'e ulaşmak ödeme onayı DEĞİLDİR.
  * Gerçek onay /paytr/callback webhook'undan gelir.
  */
 export function PaytrIframe({ iframeToken }: Props) {
   const scriptLoaded = useRef(false)
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     if (scriptLoaded.current) return
@@ -38,14 +40,26 @@ export function PaytrIframe({ iframeToken }: Props) {
   }, [])
 
   return (
-    <iframe
-      id="paytriframe"
-      data-testid="paytr-iframe"
-      src={`https://www.paytr.com/odeme/guvenli/${iframeToken}`}
-      frameBorder={0}
-      scrolling="no"
-      style={{ width: "100%", minHeight: 600 }}
-      title="PayTR Güvenli Ödeme"
-    />
+    <div className="paytr-frame" data-loaded={loaded ? "true" : "false"}>
+      {loaded ? null : (
+        <div className="paytr-frame__skeleton" aria-hidden>
+          <span className="paytr-frame__bone paytr-frame__bone--title" />
+          <span className="paytr-frame__bone" />
+          <span className="paytr-frame__bone paytr-frame__bone--half" />
+          <span className="paytr-frame__bone paytr-frame__bone--half" />
+          <span className="paytr-frame__bone paytr-frame__bone--cta" />
+        </div>
+      )}
+      <iframe
+        id="paytriframe"
+        data-testid="paytr-iframe"
+        src={`https://www.paytr.com/odeme/guvenli/${iframeToken}`}
+        frameBorder={0}
+        scrolling="no"
+        style={{ width: "100%", minHeight: 600 }}
+        title="PayTR Güvenli Ödeme"
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
   )
 }

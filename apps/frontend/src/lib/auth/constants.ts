@@ -11,6 +11,11 @@ export const VERIFY_COOKIE = "_escay_verify_jwt"
 /** Short-lived: guest confirmation page can call order lookup. */
 export const LAST_ORDER_EMAIL_COOKIE = "_escay_last_order_email"
 export const LAST_ORDER_ID_COOKIE = "_escay_last_order_id"
+/**
+ * PayTR sonucu beklenirken sepet çerezi bırakılınca bile durum sorgusu yapılabilsin:
+ * ödenen sepetin kimliği (yalnız /store/paytr-checkout/status için).
+ */
+export const PAYTR_PAID_CART_COOKIE = "_escay_paytr_cart"
 
 export const LAST_ORDER_COOKIE_MAX_AGE = 60 * 60 * 24 // 24h
 

@@ -9,6 +9,7 @@ import { countCartItems, notifyCartAdded, notifyCartCount } from "@/lib/cart-eve
 import { formatTry } from "@/lib/medusa"
 import type { LowStockLabel } from "@/lib/stock"
 import { SoldOutStamp } from "@/components/SoldOutStamp"
+import { LowStockMark } from "@/components/LowStockMark"
 import styles from "./categories.module.css"
 import { productPath } from "@/lib/urls"
 
@@ -163,16 +164,7 @@ export function CategoryProductCard({
           {soldOut ? (
             <SoldOutStamp />
           ) : lowStock ? (
-            <span
-              className={`${styles.lowStockStamp}${
-                lowStock.kind === "critical"
-                  ? ` ${styles.lowStockStampCritical}`
-                  : ""
-              }`}
-              aria-hidden
-            >
-              {lowStock.text}
-            </span>
+            <LowStockMark label={lowStock} className={styles.lowStockStamp} />
           ) : null}
         </Link>
 

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { onConsentChange } from "@/lib/consent"
 import {
   type AnalyticsItem,
   trackBeginCheckout,
@@ -35,7 +36,17 @@ export function TrackPurchase({
   order: { id: string; total: number; items: AnalyticsItem[] } | null
 }) {
   useEffect(() => {
-    if (order) trackPurchase(order)
+    if (!order) return
+    // Analytics layout'ta sayfadan sonra render edildiği için effect'i bundan sonra
+    // çalışır (tam sayfa yüklemesinde gtag henüz yok) → bir tick bekle; onay sonradan
+    // verilirse de o an gönder.
+    const attempt = () => setTimeout(() => trackPurchase(order), 0)
+    const timer = attempt()
+    const off = onConsentChange(() => attempt())
+    return () => {
+      clearTimeout(timer)
+      off()
+    }
   }, [order?.id]) // eslint-disable-line react-hooks/exhaustive-deps
   return null
 }
