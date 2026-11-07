@@ -24,6 +24,12 @@ module.exports = {
 }
 
 if (process.env.TEST_TYPE === "integration:http") {
+  // Varsayılan: docker-compose.dev.yml Postgres'i (localhost:5433, medusa/medusa).
+  // CI ve farklı kurulumlar DB_* ile ezer. Her test dosyası kendi geçici DB'sini açar.
+  process.env.DB_HOST ??= "localhost"
+  process.env.DB_PORT ??= "5433"
+  process.env.DB_USERNAME ??= "medusa"
+  process.env.DB_PASSWORD ??= "medusa"
   module.exports.testMatch = ["**/integration-tests/http/*.spec.[jt]s"]
 } else if (process.env.TEST_TYPE === "integration:modules") {
   module.exports.testMatch = ["**/src/modules/*/__tests__/**/*.[jt]s"]

@@ -18,7 +18,12 @@
     "build:backend": "npm run build --prefix apps/backend",
     "start:landing": "npm run start -w @estea/landing",
     "typecheck": "npm run typecheck -w @estea/landing && (cd apps/frontend && npx tsc --noEmit) && (cd apps/backend && npx tsc --noEmit -p tsconfig.json)",
-    "lint": "oxlint apps/landing packages"
+    "lint": "oxlint apps/landing packages",
+    "test": "npm run test:unit",
+    "test:unit": "npm run test:unit --prefix apps/backend && npm test --prefix apps/frontend",
+    "test:integration": "npm run test:integration:http --prefix apps/backend",
+    "test:all": "npm run typecheck && npm run test:unit && npm run test:integration",
+    "test:e2e": "npm run test:e2e --prefix apps/frontend"
   },
   "devDependencies": {
     "concurrently": "^9.2.5",

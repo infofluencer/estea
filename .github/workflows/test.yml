@@ -1,0 +1,69 @@
+name: Testler
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (birim + HTTP entegrasyon)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: medusa
+          POSTGRES_PASSWORD: medusa
+          POSTGRES_DB: escay
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U medusa -d escay"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: apps/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: apps/backend/package-lock.json
+      - run: npm ci
+      # tsconfig @escay/shared → ./shared; kök shared/ buraya kopyalanır
+      - run: npm run prepare:shared
+      - run: npx tsc --noEmit -p tsconfig.json
+      - run: npm run test:unit
+      - run: npm run test:integration:http
+        env:
+          DB_HOST: localhost
+          DB_PORT: "5433"
+          DB_USERNAME: medusa
+          DB_PASSWORD: medusa
+
+  storefront:
+    name: Mağaza (birim + typecheck)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: apps/frontend/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm test
