@@ -8,16 +8,17 @@ import {
   computeStockPlan,
   describeWarehouses,
   findWarehouseId,
+  needsProductLookup,
   toTrackedVariants,
   type OrderGraphRow,
   type ParsedStock,
   type StockPlan,
   type VariantGraphRow,
 } from "../modules/bizimhesap/stock"
-import { recordOpsEvent } from "./ops-events"
+import { dailyTitle, recordOpsEvent } from "./ops-events"
 
-/** Kargoda kalma + fatura gecikmesini rahat aşan pencere. */
-const IN_FLIGHT_LOOKBACK_DAYS = 45
+/** Medusa kilit süresini `timeout`tan alır; iki BizimHesap isteği + DB işini rahat aşmalı. */
+const LOCK_TIMEOUT_SECONDS = 240
 const REPORT_LIST_LIMIT = 40
 
 export type StockSyncResult =
@@ -34,7 +35,7 @@ type LockingLike = {
   execute: <T>(
     keys: string | string[],
     job: () => Promise<T>,
-    args?: { timeout?: number; ttl?: number }
+    args?: { timeout?: number }
   ) => Promise<T>
 }
 
@@ -62,7 +63,7 @@ async function resolveWarehouseId(
   return id
 }
 
-/** Günde bir kez düşen, siparişe bağlı olmayan uyarı. */
+/** Aynı liste günde bir kez düşer; liste değişince yeni kayıt açılır. */
 async function warnDaily(
   container: MedusaContainer,
   title: string,
@@ -72,7 +73,7 @@ async function warnDaily(
   await recordOpsEvent(container, {
     kind: "stock.sync",
     level: "warning",
-    title: `${title} (${dayStamp()})`,
+    title: dailyTitle(title, values),
     detail: listText(values),
     oncePerTitle: true,
   })
@@ -89,14 +90,14 @@ async function runSync(
   const apply = applyOverride ?? options.apply
 
   const warehouseId = await resolveWarehouseId(bizimhesap, options.warehouseId)
-  const [inventoryRows, productRows] = await Promise.all([
-    bizimhesap.listInventory(warehouseId),
-    bizimhesap.listProducts(),
-  ])
+  const inventoryRows = await bizimhesap.listInventory(warehouseId)
   // Boş liste "her şey tükendi" değil, büyük olasılıkla hatalı yanıttır.
   if (!inventoryRows.length) {
     throw new Error(`Depo ${warehouseId} için boş stok listesi geldi`)
   }
+  const productRows = needsProductLookup(inventoryRows, options)
+    ? await bizimhesap.listProducts()
+    : []
   const parsed = buildStockBySku(inventoryRows, productRows, options)
 
   const { data: variantRows } = await query.graph({
@@ -122,14 +123,14 @@ async function runSync(
     fields: [
       "status",
       "metadata",
+      "items.id",
       "items.variant_sku",
       "items.detail.fulfilled_quantity",
       "items.detail.return_received_quantity",
     ],
-    filters: {
-      created_at: { $gte: new Date(Date.now() - IN_FLIGHT_LOOKBACK_DAYS * 24 * 60 * 60 * 1000) },
-      status: { $nin: ["canceled"] },
-    },
+    // Tarih penceresi yok: faturası kesilemeyen sipariş ne kadar eski olursa olsun
+    // adedi BizimHesap'tan düşmemiştir.
+    filters: { status: { $nin: ["canceled"] } },
   })
 
   const plan = computeStockPlan({
@@ -204,7 +205,7 @@ export async function syncBizimhesapStock(
   return locking.execute(
     "bizimhesap-stock-sync",
     () => runSync(container, bizimhesap, input?.apply),
-    { timeout: 30, ttl: 240 }
+    { timeout: LOCK_TIMEOUT_SECONDS }
   )
 }
 

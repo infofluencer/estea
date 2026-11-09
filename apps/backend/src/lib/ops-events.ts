@@ -1,5 +1,6 @@
 import type { MedusaContainer } from "@medusajs/framework/types"
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
+import { createHash } from "crypto"
 import { OPS_EVENT_MODULE } from "../modules/ops-event"
 import type OpsEventModuleService from "../modules/ops-event/service"
 
@@ -40,6 +41,7 @@ export type OpsEventKind =
   | "invoice.failed"
   | "invoice.refund_manual"
   | "stock.sync"
+  | "mail.failed"
 
 export type OpsEventInput = {
   kind: OpsEventKind
@@ -81,6 +83,17 @@ const KIND_LABEL: Record<OpsEventKind, string> = {
   "invoice.failed": "Fatura oluşturulamadı",
   "invoice.refund_manual": "İade faturası elle kesilecek",
   "stock.sync": "BizimHesap stok eşitlemesi",
+  "mail.failed": "Mail gönderilemedi",
+}
+
+/**
+ * `oncePerTitle` için: aynı gün aynı liste tekrar yazılmaz, liste değişince yeni
+ * kayıt açılır. Yalnız tarih yeterli değil; günün ilk listesi sonrakileri gizler.
+ */
+export function dailyTitle(title: string, values: string[]): string {
+  const day = new Date().toISOString().slice(0, 10)
+  const fingerprint = createHash("sha256").update([...values].sort().join("\n")).digest("hex").slice(0, 8)
+  return `${title} (${day}, ${fingerprint})`
 }
 
 /** Workflow/MedusaError düz obje gelebilir — "[object Object]" yerine mesaj. */

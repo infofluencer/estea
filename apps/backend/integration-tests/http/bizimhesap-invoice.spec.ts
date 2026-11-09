@@ -113,6 +113,7 @@ medusaIntegrationTestRunner({
         expect(res.meta.total).toBeCloseTo(Number(stored.total), 2)
         expect(stored.metadata?.bizimhesap_invoice).toMatchObject({
           status: "created",
+          items: [{ line_item_id: order.items[0].id, quantity: 1 }],
         })
 
         const again = await issueSalesInvoiceForOrder(getContainer(), order.id)

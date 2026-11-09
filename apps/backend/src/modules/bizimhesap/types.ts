@@ -34,6 +34,8 @@ export type BizimhesapOrderInvoiceMeta = {
   retry_count?: number
   /** Admin uyarı maili gönderildi mi */
   admin_notified_at?: string
+  /** Faturaya giren satırlar; stok eşitlemesi BizimHesap'tan düşen adedi buradan bilir. */
+  items?: { line_item_id: string; quantity: number }[]
 }
 
 /** addinvoice iade tipi desteklemez (3: satış, 5: alış); iade faturası panelden kesilir. */

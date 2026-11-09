@@ -230,6 +230,7 @@ async function issueUnderLock(
         total?: unknown
         shipping_total?: unknown
         items?: {
+          id: string
           title?: string | null
           quantity?: unknown
           detail?: { quantity?: unknown } | null
@@ -397,6 +398,10 @@ async function issueUnderLock(
       tax_number: taxNumber,
       at: new Date().toISOString(),
       retry_count: existing?.retry_count,
+      items: (order.items || []).map((item, index) => ({
+        line_item_id: item.id,
+        quantity: lines[index].quantity,
+      })),
     }
     try {
       await writeInvoiceMeta(scope, orderId, meta)

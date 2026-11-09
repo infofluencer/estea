@@ -13,7 +13,13 @@ export default async function testEmails({ container }: ExecArgs) {
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
   const notificationService = container.resolve(Modules.NOTIFICATION)
 
+  const host = process.env.SMTP_HOST || ""
+  const isLocal = host === "localhost" || host === "127.0.0.1"
+  if (!isLocal && !process.env.SMTP_TEST_TO) {
+    throw new Error(`Gerçek sunucu (${host}): alıcıyı SMTP_TEST_TO ile verin.`)
+  }
   const testTo = process.env.SMTP_TEST_TO || "test@example.com"
+  logger.info(`[test-emails] sunucu=${host}:${process.env.SMTP_PORT} alıcı=${testTo}`)
 
   const storefrontUrl = (
     process.env.STOREFRONT_URL || "http://localhost:3025"
@@ -26,16 +32,16 @@ export default async function testEmails({ container }: ExecArgs) {
     currencyCode: "TRY",
     items: [
       {
-        title: "Es Çay Oversize Tişört",
+        title: "Es Çay Siyah Çay",
         quantity: 2,
         unit_price: 599,
-        variant_title: "Siyah / M",
+        variant_title: "500 g",
       },
       {
-        title: "Es Çay Basic Hoodie",
+        title: "Es Çay Bitki Çayı Harmanı",
         quantity: 1,
         unit_price: 1299,
-        variant_title: "Bej / L",
+        variant_title: "100 g",
       },
     ],
     itemTotal: 2497,

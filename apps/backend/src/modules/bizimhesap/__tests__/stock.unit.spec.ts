@@ -3,6 +3,7 @@ import {
   computeInFlightBySku,
   computeStockPlan,
   extractRows,
+  needsProductLookup,
   parseQuantity,
   toTrackedVariants,
   type TrackedVariant,
@@ -62,11 +63,13 @@ describe("parseQuantity", () => {
     ["1.234,50", 1234.5],
     ["1,234.50", 1234.5],
     ["0", 0],
+    ["0.500", 0.5],
+    ["12.5", 12.5],
   ])("%s → %s", (input, expected) => {
     expect(parseQuantity(input)).toBe(expected)
   })
 
-  it.each([[null], [undefined], [""], ["yok"], [{}]])("%s okunamaz, 0 sayılmaz", (input) => {
+  it.each([[null], [undefined], [""], ["yok"], [{}], ["1.234"], ["1,234"]])("%s okunamaz, 0 sayılmaz", (input) => {
     expect(parseQuantity(input)).toBeNull()
   })
 })
@@ -123,12 +126,29 @@ describe("buildStockBySku", () => {
   })
 })
 
+describe("needsProductLookup", () => {
+  it("satırlarda stok kodu varsa ürün listesi gerekmez", () => {
+    expect(needsProductLookup([{ code: "A", quantity: 1 }])).toBe(false)
+  })
+
+  it("kodu olmayan satır varsa gerekir", () => {
+    expect(needsProductLookup([{ code: "A" }, { productId: "p1" }])).toBe(true)
+  })
+})
+
 describe("computeInFlightBySku", () => {
-  const item = (fulfilled: number, received = 0) => ({
+  const item = (fulfilled: number, received = 0, id = "l1") => ({
+    id,
     variant_sku: "a",
     detail: { fulfilled_quantity: fulfilled, return_received_quantity: received },
   })
-  const live = { bizimhesap_invoice: { status: "created", mode: "live" } }
+  const live = {
+    bizimhesap_invoice: {
+      status: "created",
+      mode: "live",
+      items: [{ line_item_id: "l1", quantity: 2 }],
+    },
+  }
 
   it("kargolanmış, faturası kesilmemiş adedi sayar", () => {
     expect(computeInFlightBySku([{ items: [item(2)] }]).get("A")).toBe(2)
@@ -136,6 +156,19 @@ describe("computeInFlightBySku", () => {
 
   it("canlı faturası kesilmişse saymaz (stok BizimHesap'tan düştü)", () => {
     expect(computeInFlightBySku([{ metadata: live, items: [item(2)] }]).size).toBe(0)
+  })
+
+  it("faturadan sonra eklenen değişim satırını yolda sayar", () => {
+    const order = { metadata: live, items: [item(2), item(1, 0, "degisim")] }
+    expect(computeInFlightBySku([order]).get("A")).toBe(1)
+  })
+
+  it("kısmi kargoda faturanın fazladan düştüğü adedi geri ekler", () => {
+    expect(computeInFlightBySku([{ metadata: live, items: [item(1)] }]).get("A")).toBe(-1)
+  })
+
+  it("faturalı satırda iade adedi eklenmez (iade faturası elle kesilir)", () => {
+    expect(computeInFlightBySku([{ metadata: live, items: [item(2, 1)] }]).size).toBe(0)
   })
 
   it.each(["unknown", "error", "pending", "dry_run"])("fatura %s ise yolda sayar", (status) => {
@@ -236,6 +269,12 @@ describe("computeStockPlan", () => {
 
     it("sınır aşılınca durur", () => {
       expect(plan(six, zero(4)).zeroGuardTripped).toBe(true)
+    })
+
+    it("eksik gelen yanıtta eşleşenlere göre hesaplar", () => {
+      const twelve = Array.from({ length: 12 }, (_, i) => variant(`S${i}`, 5))
+      const partial = twelve.slice(0, 6).map((v): [string, number] => [v.sku, 0])
+      expect(plan(twelve, partial).zeroGuardTripped).toBe(true)
     })
 
     it("oran 1 ile kapanır", () => {

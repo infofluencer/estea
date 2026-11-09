@@ -145,7 +145,13 @@ medusaIntegrationTestRunner({
         await container.resolve(Modules.ORDER).updateOrders([
           {
             id: order.id,
-            metadata: { bizimhesap_invoice: { status: "created", mode: "live" } },
+            metadata: {
+              bizimhesap_invoice: {
+                status: "created",
+                mode: "live",
+                items: [{ line_item_id: order.items[0].id, quantity: 2 }],
+              },
+            },
           },
         ])
         stubBizimhesap({ [synced.sku]: 8 })

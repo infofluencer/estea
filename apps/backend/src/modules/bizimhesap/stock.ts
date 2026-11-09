@@ -57,6 +57,7 @@ export type OrderGraphRow = {
   metadata?: Record<string, unknown> | null
   items?:
     | {
+        id?: string | null
         variant_sku?: string | null
         detail?: {
           fulfilled_quantity?: unknown
@@ -102,6 +103,7 @@ const QUANTITY_FIELDS = [
 const WAREHOUSE_ID_FIELDS = ["id", "guid", "warehouseId", "depoId", "code"]
 const ERROR_FIELDS = ["error", "errorText", "errorMessage"]
 const MAX_SEARCH_DEPTH = 3
+const AMBIGUOUS_GROUPED_NUMBER = /^[1-9]\d{0,2}[.,]\d{3}$/
 
 function isRow(value: unknown): value is StockRow {
   return typeof value === "object" && value !== null && !Array.isArray(value)
@@ -159,12 +161,15 @@ export function extractRows(body: unknown): StockRow[] {
   throw new Error(`BizimHesap yanıtında satır dizisi yok: ${Object.keys(body).join(", ")}`)
 }
 
-/** 12 · "12" · "12.5" · "12,5" · "1.234,50" · "1,234.50". Okunamazsa null (0 değil). */
+/**
+ * 12 · "12" · "12.5" · "12,5" · "1.234,50" · "1,234.50". Okunamazsa null (0 değil).
+ * "1.234" hem 1234 hem 1,234 olabilir; tahmin edilmez, o ürüne dokunulmaz.
+ */
 export function parseQuantity(value: unknown): number | null {
   if (typeof value === "number") return Number.isFinite(value) ? value : null
   if (typeof value !== "string") return null
   const s = value.trim().replace(/\s/g, "")
-  if (!s) return null
+  if (!s || AMBIGUOUS_GROUPED_NUMBER.test(s)) return null
   const lastComma = s.lastIndexOf(",")
   const lastDot = s.lastIndexOf(".")
   let normalized = s
@@ -184,6 +189,11 @@ export function findWarehouseId(rows: StockRow[]): string {
 
 export function describeWarehouses(rows: StockRow[]): string {
   return rows.map((r) => JSON.stringify(r).slice(0, 160)).join(" | ")
+}
+
+export function needsProductLookup(rows: StockRow[], options: StockFieldOptions = {}): boolean {
+  const skuFields = options.skuField ? [options.skuField] : SKU_FIELDS
+  return rows.some((row) => !readText(row, skuFields))
 }
 
 /**
@@ -246,23 +256,35 @@ export function buildStockBySku(
   }
 }
 
-/** Kargolanmış ama faturası BizimHesap'a düşmemiş adetler. */
+/**
+ * Medusa ile BizimHesap arasındaki adet farkı, satır bazında. Artı: Medusa'dan düştü,
+ * faturası yok (kargoda ya da fatura kesilemedi). Eksi: fatura tüm satırı düştü,
+ * Medusa yalnız kargolananı (kısmi kargo).
+ *
+ * Faturalı satırda iade eklenmez: iade faturası panelden elle kesilir, adet
+ * BizimHesap'a o zaman döner.
+ */
 export function computeInFlightBySku(orders: OrderGraphRow[]): Map<string, number> {
   const inFlight = new Map<string, number>()
   for (const order of orders) {
     if (order.status === "canceled") continue
     const invoice = order.metadata?.bizimhesap_invoice as
-      | { status?: string; mode?: string }
+      | { status?: string; mode?: string; items?: { line_item_id: string; quantity: number }[] }
       | undefined
-    if (invoice?.status === "created" && invoice.mode === "live") continue
+    const billedByLine = new Map(
+      invoice?.status === "created" && invoice.mode === "live"
+        ? (invoice.items ?? []).map((line) => [line.line_item_id, line.quantity])
+        : []
+    )
 
     for (const item of order.items ?? []) {
       const sku = normalizeSku(item.variant_sku)
       if (!sku) continue
-      const open =
-        (Number(item.detail?.fulfilled_quantity) || 0) -
-        (Number(item.detail?.return_received_quantity) || 0)
-      if (open > 0) inFlight.set(sku, (inFlight.get(sku) ?? 0) + open)
+      const fulfilled = Number(item.detail?.fulfilled_quantity) || 0
+      const received = Number(item.detail?.return_received_quantity) || 0
+      const billed = billedByLine.get(item.id ?? "") ?? 0
+      const open = billed > 0 ? fulfilled - billed : fulfilled - received
+      if (open !== 0) inFlight.set(sku, (inFlight.get(sku) ?? 0) + open)
     }
   }
   return inFlight
@@ -315,7 +337,7 @@ export function toTrackedVariants(
 }
 
 /**
- * Hedef = BizimHesap miktarı − yolda olan adet. Rezerve adetler Medusa'da
+ * Hedef = BizimHesap miktarı − adet farkı (computeInFlightBySku). Rezerve adetler Medusa'da
  * stocked içinde kaldığı için düşülmez; satılabilir = stocked − reserved.
  */
 export function computeStockPlan(input: {
@@ -357,7 +379,8 @@ export function computeStockPlan(input: {
   }
 
   const newlyZero = changes.filter((c) => c.to === 0 && c.from > 0).length
-  const zeroLimit = Math.max(2, Math.floor(input.variants.length * input.maxZeroRatio))
+  // Eşleşenlere göre: eksik gelen yanıtta az ürün döner, gelenlerin hepsi sıfır olabilir.
+  const zeroLimit = Math.max(2, Math.floor(matched * input.maxZeroRatio))
 
   return {
     changes,

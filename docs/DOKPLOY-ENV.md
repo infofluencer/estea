@@ -64,6 +64,8 @@ SMTP_USER=info@esteacay.com
 SMTP_PASS=<google app password>
 SMTP_FROM=Es Çay <info@esteacay.com>
 SMTP_SECURE=false
+# Alan adı DNS'inde SPF, DKIM ve DMARC kayıtları olmadan mailler spam'e düşer.
+# Deploy sonrası logda "[smtp] Sunucu doğrulanamadı" olmamalı; SMTP_TEST_TO=<adres> npm run test:emails
 
 # BizimHesap: Es Çay'ın kendi hesabı (K14). Firm ID verilene dek boş → mock. Test ortamı yok.
 BIZIMHESAP_FIRM_ID=
