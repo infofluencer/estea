@@ -13,6 +13,14 @@ export type BizimhesapRawOptions = {
   shippingVatRate?: string | number
   timeoutMs?: string | number
   dryRun?: boolean | string
+  apiKey?: string
+  token?: string
+  warehouseId?: string
+  stockApply?: boolean | string
+  stockSkuField?: string
+  stockQuantityField?: string
+  stockLocationId?: string
+  stockMaxZeroRatio?: string | number
 }
 
 export type BizimhesapOptions = {
@@ -22,9 +30,22 @@ export type BizimhesapOptions = {
   shippingVatRate: number
   timeoutMs: number
   dryRun: boolean
+  apiKey: string
+  /** Stok uçları için hesap token'ı; boşsa stok eşitlemesi kapalı. */
+  token: string
+  warehouseId: string
+  /** false → eşitleme yalnız rapor üretir, Medusa stoğuna yazmaz. */
+  stockApply: boolean
+  stockSkuField: string
+  stockQuantityField: string
+  stockLocationId: string
+  stockMaxZeroRatio: number
 }
 
 export const BIZIMHESAP_DEFAULT_BASE_URL = "https://bizimhesap.com/api/b2b"
+/** Dokümanda tüm B2B istemcileri için yayımlanmış sabit `Key`; hesaba özel olan Token'dır. */
+export const BIZIMHESAP_DEFAULT_API_KEY = "BZMHB2B724018943908D0B82491F203F"
+const DEFAULT_STOCK_MAX_ZERO_RATIO = 0.5
 
 const PLACEHOLDER = new Set([
   "",
@@ -78,8 +99,20 @@ export function normalizeOptions(raw: BizimhesapRawOptions = {}): BizimhesapOpti
   const timeout = Number(raw.timeoutMs)
   const vat = Number(raw.defaultVatRate || process.env.KDV_RATE)
   const shipVat = Number(raw.shippingVatRate)
+  const zeroRatio = Number(raw.stockMaxZeroRatio)
 
   return {
+    apiKey: text(raw.apiKey) || BIZIMHESAP_DEFAULT_API_KEY,
+    token: text(raw.token),
+    warehouseId: text(raw.warehouseId),
+    stockApply: parseFlag(raw.stockApply),
+    stockSkuField: text(raw.stockSkuField),
+    stockQuantityField: text(raw.stockQuantityField),
+    stockLocationId: text(raw.stockLocationId),
+    stockMaxZeroRatio:
+      text(raw.stockMaxZeroRatio) && Number.isFinite(zeroRatio) && zeroRatio > 0 && zeroRatio <= 1
+        ? zeroRatio
+        : DEFAULT_STOCK_MAX_ZERO_RATIO,
     firmId: text(raw.firmId),
     baseUrl: (text(raw.baseUrl) || BIZIMHESAP_DEFAULT_BASE_URL).replace(/\/$/, ""),
     // Yalnız tax_lines boş satırda kullanılır. Çay: K2 (mali müşavir teyidi bekliyor).

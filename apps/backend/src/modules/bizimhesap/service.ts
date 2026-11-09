@@ -7,6 +7,7 @@ import {
   type BizimhesapRawOptions,
 } from "./options"
 import type { BizimhesapPayload } from "./payload"
+import { extractRows, type StockRow } from "./stock"
 import type {
   BizimhesapConnectionStatus,
   BizimhesapInvoiceResult,
@@ -79,7 +80,7 @@ class BizimhesapModuleService {
     } else if (this.options_.dryRun) {
       this.logger_.warn("[bizimhesap] DRY-RUN — fatura gönderilmez")
     } else {
-      this.logger_.info("[bizimhesap] Canlı mod — ödemede fatura kaydı açılır")
+      this.logger_.info("[bizimhesap] Canlı mod — teslimde fatura kaydı açılır")
     }
   }
 
@@ -130,6 +131,76 @@ class BizimhesapModuleService {
     }
 
     return parseAddInvoiceResponse(response.status, rawBody)
+  }
+
+  isStockConfigured(): boolean {
+    return Boolean(this.options_.token)
+  }
+
+  getStockOptions() {
+    const o = this.options_
+    return {
+      warehouseId: o.warehouseId,
+      apply: o.stockApply,
+      skuField: o.stockSkuField,
+      quantityField: o.stockQuantityField,
+      locationId: o.stockLocationId,
+      maxZeroRatio: o.stockMaxZeroRatio,
+    }
+  }
+
+  listWarehouses(): Promise<StockRow[]> {
+    return this.getRows_("warehouses")
+  }
+
+  listProducts(): Promise<StockRow[]> {
+    return this.getRows_("products")
+  }
+
+  listInventory(warehouseId: string): Promise<StockRow[]> {
+    return this.getRows_(`inventory/${encodeURIComponent(warehouseId)}`)
+  }
+
+  /** Yalnız okuma; stok uçları hesaba kayıt yazmadığından dry-run'dan etkilenmez. */
+  private async getRows_(path: string): Promise<StockRow[]> {
+    if (!this.options_.token) {
+      throw new BizimhesapError("BIZIMHESAP_TOKEN boş", true)
+    }
+
+    let response: Response
+    let rawBody: string
+    try {
+      response = await globalThis.fetch(`${this.options_.baseUrl}/${path}`, {
+        method: "GET",
+        headers: {
+          Key: this.options_.apiKey,
+          Token: this.options_.token,
+          Accept: "application/json",
+        },
+        signal: AbortSignal.timeout(this.options_.timeoutMs),
+      })
+      rawBody = await response.text()
+    } catch (err) {
+      throw new BizimhesapError(
+        `Bağlantı hatası (${path}): ${err instanceof Error ? err.message : String(err)}`,
+        false
+      )
+    }
+
+    if (!response.ok) {
+      throw new BizimhesapError(
+        `HTTP ${response.status} (${path}): ${rawBody.slice(0, 300)}`,
+        response.status < 500
+      )
+    }
+
+    let body: unknown
+    try {
+      body = JSON.parse(rawBody)
+    } catch {
+      throw new BizimhesapError(`Okunamayan yanıt (${path}): ${rawBody.slice(0, 300)}`, false)
+    }
+    return extractRows(body)
   }
 }
 

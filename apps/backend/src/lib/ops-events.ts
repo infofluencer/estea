@@ -39,6 +39,7 @@ export type OpsEventKind =
   | "contract.failed"
   | "invoice.failed"
   | "invoice.refund_manual"
+  | "stock.sync"
 
 export type OpsEventInput = {
   kind: OpsEventKind
@@ -79,6 +80,7 @@ const KIND_LABEL: Record<OpsEventKind, string> = {
   "contract.failed": "Sözleşme PDF'i oluşturulamadı",
   "invoice.failed": "Fatura oluşturulamadı",
   "invoice.refund_manual": "İade faturası elle kesilecek",
+  "stock.sync": "BizimHesap stok eşitlemesi",
 }
 
 /** Workflow/MedusaError düz obje gelebilir — "[object Object]" yerine mesaj. */

@@ -49,6 +49,7 @@
     "test:smoke:full": "PAYTR_MOCK=1 medusa exec ./src/scripts/smoke-full-flow.ts",
     "test:smoke:link-guest": "medusa exec ./src/scripts/smoke-link-guest-orders.ts",
     "test:bizimhesap": "medusa exec ./src/scripts/test-bizimhesap-invoice.ts",
+    "test:bizimhesap:stock": "medusa exec ./src/scripts/test-bizimhesap-stock.ts",
     "test:staging:backend": "npx tsx src/scripts/staging-smoke/run.ts",
     "test:staging:omnisend": "node src/scripts/omnisend-smoke.mjs",
     "lint": "medusa lint",

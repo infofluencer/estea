@@ -140,6 +140,9 @@ const VariantStockWidget = () => {
             Stok kodu: <span className="font-mono text-ui-fg-base">{variant.sku || "—"}</span>
             {variant.title ? ` · ${variant.title}` : ""}
           </Text>
+          <Text size="small" className="pt-1 text-ui-fg-subtle">
+            BizimHesap stok eşitlemesi açıkken buradaki değişiklik en geç 5 dakikada BizimHesap'taki değerle ezilir.
+          </Text>
         </div>
       </div>
 
