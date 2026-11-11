@@ -78,7 +78,7 @@ const BankTransferWidget = () => {
   }
 
   return (
-    <Container className="p-4">
+    <Container className="px-6 py-4">
       <div className="mb-2 flex items-center justify-between gap-2">
         <Heading level="h2">Havale / EFT</Heading>
         <Badge color={badge.color}>{badge.label}</Badge>
@@ -118,7 +118,7 @@ const BankTransferWidget = () => {
 export const config = defineWidgetConfig({
   // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
   id: "escay-order-bank-transfer",
-  zone: "order.details.side.before",
+  zone: "order.details.after",
 })
 
 export default BankTransferWidget

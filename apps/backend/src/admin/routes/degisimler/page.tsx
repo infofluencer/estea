@@ -3,7 +3,7 @@ import { ArrowPath } from "@medusajs/icons"
 import { Badge, Button, Checkbox, Container, Heading, Table, Text, toast } from "@medusajs/ui"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRef, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import { EXCHANGE_STATE_BADGE, postJson } from "../../components/exchange-form"
 import { formatEventDate } from "../../lib/ops-events"
@@ -41,10 +41,11 @@ const SOURCE: Record<string, string> = { customer: "Üye", guest: "Misafir", adm
 
 /**
  * Değişimler: tüm değişim talepleri tek listede. Etiketler
- * buradan toplu basılır; teslim alma sipariş sayfasından (İade kutusu).
+ * buradan toplu basılır; teslim alma değişim sayfasından (/degisimler/:id).
  */
 const ExchangesPage = () => {
   const qc = useQueryClient()
+  const navigate = useNavigate()
   const [filter, setFilter] = usePersistedState<string>("exchanges:filter", "open")
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [busy, setBusy] = useState<string | null>(null)
@@ -158,7 +159,14 @@ const ExchangesPage = () => {
             {rows.map((r) => {
               const st = EXCHANGE_STATE_BADGE[r.state]
               return (
-                <Table.Row key={r.key}>
+                <Table.Row
+                  key={r.key}
+                  className={r.return_id ? "cursor-pointer" : undefined}
+                  onClick={(e) => {
+                    if (!r.return_id || (e.target as HTMLElement).closest("a,button,input,[role=checkbox]")) return
+                    navigate(`/degisimler/${r.return_id}`)
+                  }}
+                >
                   <Table.Cell>
                     {r.state === "label_ready" ? (
                       <Checkbox
@@ -176,7 +184,7 @@ const ExchangesPage = () => {
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">{formatEventDate(r.requested_at)}</Table.Cell>
                   <Table.Cell>
-                    <Link to={r.order_link} className="text-ui-fg-interactive">{r.order_label}</Link>
+                    <Link to={r.return_id ? `/degisimler/${r.return_id}` : r.order_link} className="text-ui-fg-interactive">{r.order_label}</Link>
                   </Table.Cell>
                   <Table.Cell>
                     <div className="txt-compact-small-plus">{r.customer || "—"}</div>

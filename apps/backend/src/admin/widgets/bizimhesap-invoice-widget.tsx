@@ -124,7 +124,7 @@ const BizimhesapInvoiceWidget = () => {
 
   if (isLoading) {
     return (
-      <Container className="p-4">
+      <Container className="px-6 py-4">
         <Text size="small" className="text-ui-fg-subtle">
           Fatura durumu yükleniyor…
         </Text>
@@ -137,29 +137,18 @@ const BizimhesapInvoiceWidget = () => {
   const canSend = !inv || inv.status === "error"
 
   return (
-    <Container className="p-4">
-      <Heading level="h2" className="mb-2">
-        Es Çay — Fatura (BizimHesap)
-      </Heading>
-      <Text size="small" className="text-ui-fg-subtle mb-3 block">
-        Kayıt sipariş teslim edilince açılır. e-Arşiv / e-Fatura gönderimini BizimHesap panelinden izleyin.
-      </Text>
-
-      <div className="rounded-md border border-ui-border-base p-3 space-y-2">
-        <div className="flex items-center gap-2 flex-wrap">
-          <Badge color={st.color}>{st.label}</Badge>
-          {inv?.mode ? (
-            <Badge color={inv.mode === "mock" ? "orange" : "green"}>
-              {inv.mode === "mock" ? "mock" : "canlı"}
-            </Badge>
-          ) : null}
+    <Container className="px-6 py-4">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <Heading level="h2">Fatura</Heading>
+        <div className="flex items-center gap-1">
+          {inv?.mode === "mock" ? <Badge size="2xsmall" color="orange">mock</Badge> : null}
+          <Badge size="2xsmall" color={st.color}>{inv ? st.label : "Teslimden sonra"}</Badge>
         </div>
+      </div>
 
-        {!inv ? (
-          <Text size="small" className="text-ui-fg-subtle">
-            Henüz fatura kaydı yok (teslimden sonra açılır).
-          </Text>
-        ) : (
+      <div className="space-y-1">
+
+        {!inv ? null : (
           <>
             {inv.invoice_no ? (
               <Text size="small">

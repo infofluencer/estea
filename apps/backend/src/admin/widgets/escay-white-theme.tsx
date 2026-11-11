@@ -6,27 +6,24 @@ import "@fontsource/figtree/600.css"
 import "@fontsource/figtree/700.css"
 
 /**
- * Panelin küresel görünümü: her sayfada beyaz zemin, ince kenarlıklı kartlar.
+ * Panelin küresel görünümü: aydınlık temada beyaz zemin, ince kenarlıklı kartlar.
  *
- * Medusa temayı işletim sisteminden alır, koyu modlu Mac'te panel koyu açılır.
- * Bileşenlerin hepsi Medusa'nın CSS değişkenlerinden boyandığı için tek tek sayfa
- * yerine değişkenler ezilir; `html:root`, `.dark` kuralından da güçlüdür.
+ * Tema seçimi (Profil menüsü → Tema: Sistem / Aydınlık / Karanlık) Medusa'nındır
+ * ve korunur. Beyaz renkler yalnız aydınlık temada (`.dark` yokken) geçerlidir;
+ * karanlıkta Medusa'nın kendi koyu değişkenleri çalışır. Hiç seçim yapılmamışsa
+ * panel aydınlık açılır (Medusa varsayılanı "Sistem" koyu Mac'te koyu açardı).
  *
  * Widget modülleri admin açılışında statik yüklenir, bu yüzden tema çizilen
  * bölgeden bağımsız olarak her sayfada geçerlidir (bkz. stale-chunk-reload).
  *
- * Ayarlardan "Koyu" seçilirse ThemeProvider `<html>`e `.dark` sınıfı ve satır içi
- * `color-scheme: dark` yazar; ezilmeyen değişkenler koyuya dönüp beyaz zeminde
- * okunmaz metin bırakırdı. Gözlemci bu değişikliği anında açığa geri çevirir.
- *
- * Yerleşim düzeltmeleri Medusa'nın iç sınıf zincirlerine dayanır; liste ve
- * güncelleme testi: lib/theme-anchors.ts.
+ * Yazı tipi ve yerleşim düzeltmeleri iki temada da geçerlidir; Medusa'nın iç
+ * sınıf zincirlerine dayanır, liste ve güncelleme testi: lib/theme-anchors.ts.
  */
 const STYLE_ID = "escay-white-theme"
 const THEME_KEY = "medusa_admin_theme"
 
 const CSS = `
-html:root {
+html:root:not(.dark) {
   color-scheme: light;
 
   --bg-base: #ffffff;
@@ -81,7 +78,7 @@ html:root {
   --buttons-inverted: 0 0 0 1px #1f2328;
 }
 
-html, body { background: #ffffff; }
+html:not(.dark), html:not(.dark) body { background: #ffffff; }
 
 html .font-sans, html body {
   font-family: Figtree, Inter, ui-sans-serif, system-ui, sans-serif;
@@ -125,7 +122,7 @@ html aside a {
 }
 html aside a.shadow-elevation-card-rest,
 html aside a.shadow-elevation-card-rest:hover {
-  background: #eeeff1;
+  background: var(--bg-base-pressed);
   box-shadow: none;
 }
 /* Eklenti sayfalarının ikonlarındaki kutu, Medusa'nın kendi ikonlarıyla aynı görünsün. */
@@ -137,29 +134,12 @@ html aside a .shadow-borders-base {
 
 if (typeof document !== "undefined") {
   try {
-    // ThemeProvider ilk çizimde okur; modül ondan önce yüklenir.
-    localStorage.setItem(THEME_KEY, "light")
+    // ThemeProvider ilk çizimde okur; modül ondan önce yüklenir. Yalnız seçim
+    // hiç yapılmamışsa yazılır — kullanıcının seçimi ezilmez.
+    if (!localStorage.getItem(THEME_KEY)) localStorage.setItem(THEME_KEY, "light")
   } catch {
-    // Depolama kapalıysa da değişkenler zemini beyaz tutar.
+    // Depolama kapalı: Medusa "Sistem"e düşer.
   }
-
-  const forceLight = () => {
-    const html = document.documentElement
-    if (html.classList.contains("dark")) html.classList.remove("dark")
-    if (!html.classList.contains("light")) html.classList.add("light")
-    if (html.style.colorScheme !== "light") html.style.colorScheme = "light"
-    try {
-      if (localStorage.getItem(THEME_KEY) !== "light") localStorage.setItem(THEME_KEY, "light")
-    } catch {
-      // Depolama kapalı; sınıf ve color-scheme yine açıkta tutulur.
-    }
-  }
-  forceLight()
-  // Yalnız gerektiğinde yazar, kendi değişikliği gözlemciyi döngüye sokmaz.
-  new MutationObserver(forceLight).observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class", "style"],
-  })
 
   const style =
     (document.getElementById(STYLE_ID) as HTMLStyleElement | null) ??

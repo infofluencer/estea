@@ -1,11 +1,9 @@
-import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Badge, Button, Container, Heading, Text, toast } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { useParams } from "react-router-dom"
 
 import { exchangeDisplayState, readExchange, type ExchangeMeta } from "../../lib/exchange-plan"
-import { ExchangeForm, EXCHANGE_STATE_BADGE, postJson, type ExchangeFormLine } from "../components/exchange-form"
+import { ExchangeForm, EXCHANGE_STATE_BADGE, postJson, type ExchangeFormLine } from "./exchange-form"
 import { printExchangeLabels, skippedLabelsMessage } from "../lib/print-labels"
 
 type ReturnRow = {
@@ -35,12 +33,24 @@ const fmt = (d?: string | null) =>
   d ? new Date(d).toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : ""
 
 /**
- * Sipariş sayfası "Değişim" kutusu: açık değişimler (durum, ürünler, yeni ürün
- * gönderisi, etiket) + "Değişim aç" (teslim edilmiş ürün için yeni gramaj/çeşit)
- * + bekleyen normal iadeyi değişime çevirme. İade kodu / teslim alma "İade" kutusunda.
+ * Değişim kutusu. İki kullanım:
+ * - returnId: iade sayfası — o iadenin değişimi (durum, yeni ürün gönderisi,
+ *   etiket) ya da "Bu iadeyi değişime çevir".
+ * - newOnly: sipariş sayfası — yalnız "Değişim aç" (teslim edilmiş ürün için
+ *   yeni gramaj/çeşit); açılan değişim iade sayfasından yürür.
  */
-const OrderExchangeWidget = () => {
-  const { id: orderId } = useParams()
+export const ExchangePanel = ({
+  orderId,
+  returnId,
+  newOnly = false,
+  onCreated,
+}: {
+  orderId: string
+  returnId?: string
+  newOnly?: boolean
+  /** Yeni değişim açılınca, açılan iadenin kimliğiyle */
+  onCreated?: (returnId: string) => void
+}) => {
   const qc = useQueryClient()
   const [mode, setMode] = useState<null | "new" | `convert:${string}`>(null)
   const [busy, setBusy] = useState<string | null>(null)
@@ -92,14 +102,14 @@ const OrderExchangeWidget = () => {
   }
   const createMut = useMutation({
     mutationFn: (input: { items: { item_id: string; quantity: number; variant_id: string }[]; note: string }) =>
-      postJson(`/admin/orders/${orderId}/exchange`, input),
+      postJson(`/admin/orders/${orderId}/exchange`, input) as Promise<{ return?: { id?: string } }>,
   })
 
   if (!orderId || isLoading) return null
   const order = data?.order
-  const returns = order?.returns || []
+  // Sipariş sayfasında (newOnly) liste yok; iade sayfasında yalnız o iade.
+  const returns = newOnly ? [] : (order?.returns || []).filter((r) => !returnId || r.id === returnId)
   const fulfillments = order?.fulfillments || []
-  const lineTitle = new Map((order?.items || []).map((i) => [i.id, [i.title, i.variant_title].filter(Boolean).join(" · ")]))
   const num = (v: unknown) => (v && typeof v === "object" && "value" in (v as object) ? Number((v as { value: unknown }).value) : Number(v || 0))
   const returnable = new Map(
     (order?.items || []).map((i) => {
@@ -119,7 +129,7 @@ const OrderExchangeWidget = () => {
       r.status !== "canceled" &&
       (r.metadata?.paytr_refund as { status?: string } | undefined)?.status !== "success"
   )
-  const canOpen = [...returnable.values()].some((n) => n > 0)
+  const canOpen = newOnly && [...returnable.values()].some((n) => n > 0)
   if (!exchanges.length && !convertible.length && !canOpen) return null
 
   const formLines = (filter?: (itemId: string) => number | null): ExchangeFormLine[] =>
@@ -132,44 +142,49 @@ const OrderExchangeWidget = () => {
       })
       .filter(Boolean) as ExchangeFormLine[]
 
-  return (
-    <Container className="p-4">
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <Heading level="h2">Değişim</Heading>
-        {mode === null && canOpen ? (
-          <Button size="small" variant="secondary" onClick={() => setMode("new")}>
-            Değişim aç
-          </Button>
-        ) : null}
+  if (newOnly) {
+    return mode === "new" ? (
+      <div className="flex flex-col gap-2 rounded-md bg-ui-bg-subtle p-3">
+        <Text size="small" className="text-ui-fg-subtle">
+          Para iadesi yok: eski ürün geri gelince yeni ürünün gönderisi otomatik açılır.
+        </Text>
+        {options.isLoading ? (
+          <Text size="small" className="text-ui-fg-subtle">Seçenekler yükleniyor…</Text>
+        ) : (
+          <ExchangeForm
+            lines={formLines()}
+            submitLabel="Değişim talebi aç"
+            withNote
+            busy={createMut.isPending}
+            onCancel={() => setMode(null)}
+            onSubmit={(sel, note) =>
+              run(
+                "new",
+                async () => {
+                  const json = await createMut.mutateAsync({
+                    items: sel.map((s) => ({ item_id: s.key, quantity: s.quantity, variant_id: s.variant_id })),
+                    note,
+                  })
+                  if (json?.return?.id) onCreated?.(json.return.id)
+                },
+                "Değişim açıldı — iade kodunu değişim sayfasından gönderin"
+              )
+            }
+          />
+        )}
       </div>
-      <Text size="small" className="text-ui-fg-subtle mb-3 block">
-        Aynı ürün, başka gramaj/çeşit ya da aynısı (defolu / hasarlı ürün). Para iadesi yok: ürün gelip &quot;İade&quot; kutusundan teslim alınınca yeni ürünün
-        gönderisi otomatik açılır; etiketi buradan ya da Değişimler sayfasından basın.
-      </Text>
+    ) : (
+      <div>
+        <Button size="small" variant="secondary" onClick={() => setMode("new")}>
+          Değişim aç
+        </Button>
+      </div>
+    )
+  }
 
-      {mode === "new" ? (
-        <div className="mb-3 rounded-md bg-ui-bg-subtle p-3">
-          {options.isLoading ? (
-            <Text size="small" className="text-ui-fg-subtle">Seçenekler yükleniyor…</Text>
-          ) : (
-            <ExchangeForm
-              lines={formLines()}
-              submitLabel="Değişim talebi aç"
-              withNote
-              busy={createMut.isPending}
-              onCancel={() => setMode(null)}
-              onSubmit={(sel, note) =>
-                run(
-                  "new",
-                  () => createMut.mutateAsync({ items: sel.map((s) => ({ item_id: s.key, quantity: s.quantity, variant_id: s.variant_id })), note }),
-                  "Değişim açıldı — iade kodunu İade kutusundan gönderin"
-                )
-              }
-            />
-          )}
-        </div>
-      ) : null}
-
+  return (
+    <Container className="px-6 py-4">
+      <Heading level="h2" className="mb-3">Değişim</Heading>
       <div className="flex flex-col gap-3">
         {exchanges.map(({ r, ex }) => {
           const f = ex.fulfillment_id ? fulfillments.find((x) => x.id === ex.fulfillment_id) : undefined
@@ -269,9 +284,9 @@ const OrderExchangeWidget = () => {
         })}
 
         {convertible.map((r) => (
-          <div key={r.id} className="rounded-md border border-dashed border-ui-border-base p-3 space-y-2">
-            <Text size="small">
-              İade talebi ({fmt(r.created_at)}) — {(r.items || []).map((it) => `${it.quantity} × ${lineTitle.get(it.item_id || "") || "Ürün"}`).join(", ")}
+          <div key={r.id} className="space-y-2">
+            <Text size="small" className="text-ui-fg-subtle">
+              Müşteri parasını değil başka gramaj/çeşit istiyorsa: para iadesi yapılmaz, ürün geri gelince yeni ürün gönderilir.
             </Text>
             {mode === `convert:${r.id}` ? (
               options.isLoading ? (
@@ -308,11 +323,3 @@ const OrderExchangeWidget = () => {
     </Container>
   )
 }
-
-export const config = defineWidgetConfig({
-  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
-  id: "escay-order-exchange",
-  zone: "order.details.side.before",
-})
-
-export default OrderExchangeWidget

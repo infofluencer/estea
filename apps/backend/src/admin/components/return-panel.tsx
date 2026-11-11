@@ -1,10 +1,8 @@
-import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Badge, Button, Checkbox, Container, Heading, Input, Label, Text, toast } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useParams } from "react-router-dom"
 import { useState } from "react"
 
-type ReturnRow = {
+export type ReturnRow = {
   id: string
   status?: string | null
   created_at?: string | null
@@ -21,6 +19,7 @@ type ReturnRow = {
     } | null
     escay_rejection?: { rejected?: boolean; reason?: string | null }
     escay_exchange?: { status?: string } | null
+    escay_cancel?: { at?: string; reason?: string | null } | null
     paytr_refund?: {
       status?: string
       amount?: number
@@ -30,13 +29,13 @@ type ReturnRow = {
   } | null
 }
 
-function isRejected(r: ReturnRow): boolean {
+export function isRejected(r: ReturnRow): boolean {
   if (r.metadata?.escay_rejection?.rejected === true) return true
   if (r.metadata?.rejected === true) return true
   return false
 }
 
-function statusLabel(r: ReturnRow): { label: string; color: "green" | "orange" | "red" | "grey" } {
+export function statusLabel(r: ReturnRow): { label: string; color: "green" | "orange" | "red" | "grey" } {
   if (isRejected(r)) return { label: "Reddedildi", color: "red" }
   const pr = r.metadata?.paytr_refund?.status
   if (pr === "success") return { label: "Para iade edildi", color: "green" }
@@ -81,11 +80,11 @@ async function acceptItems(
 }
 
 /**
- * Sipariş sayfası "İade" kutusu: durum, ürünler, müşteriye giden kod, tek
- * adımda teslim al (+ otomatik para iadesi) veya reddet.
+ * İade yönetimi (iade sayfası, /iadeler/:id): durum, ürünler, müşteriye giden
+ * kod, tek adımda teslim al (+ otomatik para iadesi) veya reddet.
+ * returnId verilirse yalnız o iade gösterilir.
  */
-const ReturnRejectWidget = () => {
-  const { id: orderId } = useParams()
+export const ReturnPanel = ({ orderId, returnId }: { orderId: string; returnId?: string }) => {
   const qc = useQueryClient()
   const [reasonById, setReasonById] = useState<Record<string, string>>({})
   const [codeById, setCodeById] = useState<Record<string, string>>({})
@@ -122,7 +121,7 @@ const ReturnRejectWidget = () => {
     },
   })
 
-  const returns = data?.order?.returns || []
+  const returns = (data?.order?.returns || []).filter((r) => !returnId || r.id === returnId)
   const shippingTotal = Number(data?.order?.shipping_total) || 0
   const lineTitle = new Map(
     (data?.order?.items || []).map((i) => [i.id, [i.title, i.variant_title].filter(Boolean).join(" · ")])
@@ -236,10 +235,29 @@ const ReturnRejectWidget = () => {
     },
   })
 
+  const cancelMut = useMutation({
+    mutationFn: async (input: { returnId: string }) => {
+      const res = await fetch(`/admin/returns/${input.returnId}/cancel-request`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      })
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(json?.message || `HTTP ${res.status}`)
+      return json
+    },
+    onSuccess: () => {
+      toast.success("İade talebi iptal edildi")
+      void qc.invalidateQueries()
+    },
+    onError: (err: Error) => toast.error(err.message || "İptal edilemedi"),
+  })
+
   if (!orderId) return null
   if (isLoading) {
     return (
-      <Container className="p-4">
+      <Container className="px-6 py-4">
         <Text size="small" className="text-ui-fg-subtle">
           İadeler yükleniyor…
         </Text>
@@ -249,14 +267,10 @@ const ReturnRejectWidget = () => {
   if (!returns.length) return null
 
   return (
-    <Container className="p-4">
-      <Heading level="h2" className="mb-2">
+    <Container className="px-6 py-4">
+      <Heading level="h2" className="mb-3">
         İade
       </Heading>
-      <Text size="small" className="text-ui-fg-subtle mb-3 block">
-        Paket gelince ürün ürün kontrol edin: kabul edilenler stoğa eklenir (hasarlıysa eklenmez) ve
-        parası müşterinin kartına otomatik iade edilir. Hiçbiri uygun değilse sebebini yazıp tümünü reddedin.
-      </Text>
       <div className="flex flex-col gap-3">
         {returns.map((r) => {
           const st = statusLabel(r)
@@ -269,7 +283,7 @@ const ReturnRejectWidget = () => {
           return (
             <div
               key={r.id}
-              className="rounded-md border border-ui-border-base p-3 space-y-2"
+              className={returnId ? "space-y-3" : "rounded-md border border-ui-border-base p-3 space-y-2"}
             >
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge color={st.color}>{st.label}</Badge>
@@ -333,7 +347,7 @@ const ReturnRejectWidget = () => {
                 </Text>
               ) : r.status === "requested" && !rejected ? (
                 <Text size="small" className="text-ui-fg-error">
-                  İade kodu henüz gönderilmedi — kargo firmasının panelinden kodlu iade açıp kodu aşağıya girin.
+                  Müşteriye iade kodu gitmedi. Kargo panelinden kodlu iade açıp kodu girin.
                 </Text>
               ) : null}
               {r.status === "requested" && !rejected && !(r.metadata?.return_code && r.metadata?.return_code_sent_at) ? (
@@ -380,8 +394,7 @@ const ReturnRejectWidget = () => {
                     return (
                       <div className="flex flex-col gap-2 rounded-md bg-ui-bg-subtle p-2">
                         <Text size="xsmall" className="text-ui-fg-subtle">
-                          Paket gelince her ürün için kabul edilen adedi girin. Hasarlı: para iade edilir, stoğa eklenmez.
-                          Kalan adet kabul edilmez (para iadesi yok).
+                          Paket gelince: sağlam olanı Stoğa, bozuk olanı Hasarlı yazın. İkisinin de parası iade edilir; kalan adet kabul edilmez.
                         </Text>
                         {entries.map((it) => {
                           const id = it.item_id as string
@@ -438,15 +451,14 @@ const ReturnRejectWidget = () => {
                               onCheckedChange={(v) => setShipById((prev) => ({ ...prev, [r.id]: v === true }))}
                             />
                             <Label htmlFor={`ship-${r.id}`} size="xsmall" className="text-ui-fg-subtle">
-                              Kargo ücretini de iade et ({shippingTotal.toFixed(2)} TL). İşaretlenmezse kargo yalnız
-                              sebep satıcıdan kaynaklıysa (ör. kusurlu ürün) eklenir; bir siparişte en fazla bir kez.
+                              Kargo ücretini de iade et ({shippingTotal.toFixed(2)} TL) — işaretlemezseniz yalnız kusur satıcıdaysa eklenir
                             </Label>
                           </div>
                         ) : null}
                         {accepted > 0 && estimate > 0 ? (
                           <Text size="xsmall" className="text-ui-fg-subtle">
-                            Tahmini para iadesi: {(estimate + (shipById[r.id] ? shippingTotal : 0)).toFixed(2)} TL
-                            {shipById[r.id] ? " (kargo dahil)" : " (kargo iadesi sebebe göre ayrıca eklenebilir)"}
+                            İade edilecek: ~{(estimate + (shipById[r.id] ? shippingTotal : 0)).toFixed(2)} TL
+                            {shipById[r.id] ? " (kargo dahil)" : ""}
                           </Text>
                         ) : null}
                         <Button
@@ -478,6 +490,12 @@ const ReturnRejectWidget = () => {
                     )
                   })()
                 : null}
+              {r.status === "canceled" && r.metadata?.escay_cancel ? (
+                <Text size="small" className="text-ui-fg-subtle">
+                  Talep panelden iptal edildi
+                  {r.metadata.escay_cancel.reason ? `: ${r.metadata.escay_cancel.reason}` : ""}
+                </Text>
+              ) : null}
               {rejected && r.metadata?.escay_rejection?.reason ? (
                 <Text size="small" className="text-ui-fg-subtle">
                   Sebep: {r.metadata.escay_rejection.reason}
@@ -541,6 +559,27 @@ const ReturnRejectWidget = () => {
                   </Button>
                 </>
               ) : null}
+              {r.status === "requested" && !rejected ? (
+                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-ui-border-base pt-3">
+                  <Text size="small" className="text-ui-fg-subtle">
+                    Müşteri vazgeçti ya da talep yanlışlıkla açıldıysa
+                  </Text>
+                  <Button
+                    size="small"
+                    variant="secondary"
+                    isLoading={cancelMut.isPending && cancelMut.variables?.returnId === r.id}
+                    disabled={cancelMut.isPending}
+                    onClick={() => {
+                      const ok = window.confirm(
+                        "İade talebi iptal edilecek. Para iadesi yapılmaz, müşteriye mail gitmez; gönderilen iade kodu kullanılmamalı. Devam?"
+                      )
+                      if (ok) cancelMut.mutate({ returnId: r.id })
+                    }}
+                  >
+                    Talebi iptal et
+                  </Button>
+                </div>
+              ) : null}
             </div>
           )
         })}
@@ -548,11 +587,3 @@ const ReturnRejectWidget = () => {
     </Container>
   )
 }
-
-export const config = defineWidgetConfig({
-  // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
-  id: "escay-order-returns",
-  zone: "order.details.side.before",
-})
-
-export default ReturnRejectWidget

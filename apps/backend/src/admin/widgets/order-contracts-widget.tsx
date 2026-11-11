@@ -76,12 +76,12 @@ const OrderContractsWidget = () => {
   const accepted = meta?.legal_accepted_at ?? data?.legal_accepted_at ?? null
 
   return (
-    <Container className="flex flex-col gap-y-3 p-4">
+    <Container className="flex flex-col gap-y-3 px-6 py-4">
       <div className="flex items-center justify-between gap-x-2">
         <Heading level="h2">Sözleşmeler</Heading>
-        {meta ? (
-          <Badge size="2xsmall" color={meta.backfilled ? "orange" : "green"}>
-            {meta.backfilled ? "Yeni sistem · sonradan" : "Yeni sistem"}
+        {meta?.backfilled ? (
+          <Badge size="2xsmall" color="orange">
+            Sonradan oluşturuldu
           </Badge>
         ) : null}
       </div>
@@ -93,10 +93,7 @@ const OrderContractsWidget = () => {
       ) : meta ? (
         <>
           <Text size="xsmall" className="text-ui-fg-subtle">
-            {meta.backfilled
-              ? "Bu siparişin sözleşmeleri sipariş kaydındaki bilgilerden sonradan oluşturuldu."
-              : "Yeni sistemde, sipariş anında siparişin kendi bilgileriyle oluşturuldu."}{" "}
-            Oluşturma: {fmt(meta.generated_at)} · Müşteri onayı: {fmt(accepted)}
+            Müşteri onayı: {fmt(accepted)}
           </Text>
           {CONTRACTS.map((c) => (
             <a
@@ -106,14 +103,14 @@ const OrderContractsWidget = () => {
               rel="noreferrer"
               className="txt-small text-ui-fg-interactive"
             >
-              {c.label} — PDF'i aç
+              {c.label} (PDF)
             </a>
           ))}
         </>
       ) : (
         <>
           <Text size="small" className="text-ui-fg-subtle">
-            Bu siparişte kayıtlı sözleşme PDF'i yok. Müşteri onayı: {fmt(accepted)}
+            PDF yok · Müşteri onayı: {fmt(accepted)}
           </Text>
           <Button
             size="small"

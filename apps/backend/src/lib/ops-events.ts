@@ -20,6 +20,7 @@ export type OpsEventKind =
   | "payment.alert"
   | "payment.pending"
   | "order.canceled_unpaid"
+  | "order.canceled"
   | "shipment.created"
   | "shipment.failed"
   | "shipment.attached"
@@ -34,6 +35,7 @@ export type OpsEventKind =
   | "return.code_sent"
   | "return.refund_failed"
   | "return.refunded"
+  | "return.canceled"
   | "exchange.requested"
   | "exchange.shipped"
   | "exchange.failed"
@@ -62,6 +64,7 @@ const KIND_LABEL: Record<OpsEventKind, string> = {
   "payment.alert": "Ödeme alarmı",
   "payment.pending": "Havale bekleniyor",
   "order.canceled_unpaid": "Ödenmeyen sipariş iptal",
+  "order.canceled": "Sipariş iptal edildi",
   "shipment.created": "Kargo gönderisi açıldı",
   "shipment.failed": "Kargo gönderisi açılamadı",
   "shipment.attached": "Mevcut gönderi bağlandı",
@@ -76,6 +79,7 @@ const KIND_LABEL: Record<OpsEventKind, string> = {
   "return.code_sent": "İade kodu gönderildi",
   "return.refund_failed": "İade parası gönderilemedi",
   "return.refunded": "İade yapıldı",
+  "return.canceled": "İade iptal edildi",
   "exchange.requested": "Değişim talebi",
   "exchange.shipped": "Değişim gönderisi açıldı",
   "exchange.failed": "Değişim gönderisi açılamadı",

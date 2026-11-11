@@ -3,7 +3,7 @@ import { ArrowUturnLeft } from "@medusajs/icons"
 import { Badge, Button, Container, Heading, Table, Text } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
 import { useRef } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { formatEventDate } from "../../lib/ops-events"
 import { useNavBadges } from "../../components/nav-badges"
 import { usePersistedState, useScrollRestore } from "../../lib/persisted-state"
@@ -62,11 +62,12 @@ const SOURCE_LABEL: Record<string, string> = {
 }
 
 /**
- * Tüm iadeler tek listede. Teslim alma / reddetme sipariş sayfasından yapılır
- * (satıra tıklayınca açılır).
+ * Tüm iadeler tek listede. Satıra tıklayınca iade sayfası açılır (/iadeler/:id);
+ * teslim alma / reddetme orada.
  */
 const ReturnsPage = () => {
   useNavBadges()
+  const navigate = useNavigate()
   const [filter, setFilter] = usePersistedState<ReturnState | "all">("returns:filter", "open")
 
   const { data, isLoading, refetch, isFetching } = useQuery({
@@ -90,8 +91,7 @@ const ReturnsPage = () => {
         <div>
           <Heading level="h1">İadeler</Heading>
           <Text size="small" className="text-ui-fg-subtle">
-            Paket gelince siparişi açıp &quot;Ürünleri teslim al&quot; deyin; para iadesi otomatik başlar.
-            Kabul edilmeyen iadeyi sipariş sayfasındaki &quot;İadeler&quot; kutusundan reddedin.
+            İadeyi açın; paket gelince teslim alın, para iadesi otomatik başlar. Kabul edilmeyeni oradan reddedin.
           </Text>
         </div>
         <Button size="small" variant="secondary" isLoading={isFetching} onClick={() => refetch()}>
@@ -134,11 +134,18 @@ const ReturnsPage = () => {
             {rows.map((r) => {
               const st = STATE[r.state]
               return (
-                <Table.Row key={r.id}>
+                <Table.Row
+                  key={r.id}
+                  className="cursor-pointer"
+                  onClick={(e) => {
+                    if ((e.target as HTMLElement).closest("a,button,input")) return
+                    navigate(`/iadeler/${r.id}`)
+                  }}
+                >
                   <Table.Cell className="whitespace-nowrap">{formatEventDate(r.created_at)}</Table.Cell>
                   <Table.Cell>
                     {r.order_id ? (
-                      <Link to={`/orders/${r.order_id}`} className="text-ui-fg-interactive">
+                      <Link to={`/iadeler/${r.id}`} className="text-ui-fg-interactive">
                         #{r.order_display_id ?? r.order_id.slice(-6)}
                       </Link>
                     ) : "—"}

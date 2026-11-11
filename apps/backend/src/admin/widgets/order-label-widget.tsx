@@ -79,81 +79,51 @@ const OrderLabelWidget = () => {
     }
   }
 
+  const date = (d: string) =>
+    new Date(d).toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
+  const hint = hasBarcode
+    ? ""
+    : waitingLabel
+      ? "Kargo etiketi bekleniyor, birkaç dakika içinde gelir."
+      : "Firma etiketi yok: sipariş fişi basılır, kargo etiketini firmanın panelinden alın."
+
   return (
     <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">Etiket</Heading>
-        {printedAt ? (
-          <Badge size="2xsmall" color="green">
-            Etiket yazdırıldı ·{" "}
-            {new Date(printedAt).toLocaleString("tr-TR", {
-              day: "2-digit",
-              month: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+      <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
+        <div className="flex items-center gap-2">
+          <Heading level="h2">Etiket</Heading>
+          <Badge size="2xsmall" color={printedAt ? "green" : "grey"}>
+            {printedAt ? `Yazdırıldı ${date(printedAt)}` : "Yazdırılmadı"}
           </Badge>
-        ) : (
-          <Badge size="2xsmall" color="grey">
-            Etiket yazdırılmadı
-          </Badge>
-        )}
-      </div>
-      {note ? (
-        <div className="flex flex-col gap-1 px-6 py-4">
-          <Text size="small" weight="plus">
-            Sipariş notu
-          </Text>
-          <Text size="small" className="whitespace-pre-wrap">
-            {note}
-          </Text>
         </div>
-      ) : null}
-      <div className="flex flex-col gap-2 px-6 py-4">
-        <Text size="small" className="text-ui-fg-subtle">
-          {hasBarcode
-            ? typeof active?.data?.label_zpl === "string" && active.data.label_zpl
-              ? "DHL etiketi .zpl dosyası olarak iner — etiket yazıcısına doğrudan basın (tam boy). Fiş ayrıca PDF açılır."
-              : "Kargo firmasının etiketi geldiği gibi (kurye bunu okutur)."
-            : waitingLabel
-              ? "Kargo etiketi bekleniyor… (gönderi açıldı, etiket birkaç dakika içinde gelir; sayfa kendini yeniler)"
-              : "Firma etiketi yok — hazırlık/sipariş fişi basılır; kargo etiketini firmanın panelinden alın."}
-        </Text>
         <div className="flex flex-wrap gap-2">
           {hasBarcode ? (
             <>
-              <Button
-                size="small"
-                variant="primary"
-                isLoading={busy === "slip"}
-                disabled={busy !== null}
-                onClick={() => print(true)}
-              >
-                Etiket + fiş
-              </Button>
-              <Button
-                size="small"
-                variant="secondary"
-                isLoading={busy === "label"}
-                disabled={busy !== null}
-                onClick={() => print(false)}
-              >
+              <Button size="small" variant="secondary" isLoading={busy === "label"} disabled={busy !== null} onClick={() => print(false)}>
                 Fişsiz
+              </Button>
+              <Button size="small" variant="primary" isLoading={busy === "slip"} disabled={busy !== null} onClick={() => print(true)}>
+                Etiket + fiş
               </Button>
             </>
           ) : (
-            <Button
-              size="small"
-              variant="primary"
-              isLoading={busy === "label"}
-              disabled={busy !== null}
-              onClick={() => print(false)}
-            >
-              Etiketi yazdır
+            <Button size="small" variant="primary" isLoading={busy === "label"} disabled={busy !== null} onClick={() => print(false)}>
+              Fişi yazdır
             </Button>
           )}
         </div>
       </div>
+      {note || hint ? (
+        <div className="flex flex-col gap-2 px-6 py-4">
+          {note ? (
+            <Text size="small" className="whitespace-pre-wrap">
+              <span className="font-medium">Sipariş notu: </span>
+              {note}
+            </Text>
+          ) : null}
+          {hint ? <Text size="small" className="text-ui-fg-subtle">{hint}</Text> : null}
+        </div>
+      ) : null}
     </Container>
   )
 }
@@ -161,7 +131,7 @@ const OrderLabelWidget = () => {
 export const config = defineWidgetConfig({
   // Düzen kimliği: scripts/setup-admin-layouts.ts sıralamayı bununla yapar.
   id: "escay-order-label",
-  zone: "order.details.side.before",
+  zone: "order.details.after",
 })
 
 export default OrderLabelWidget
