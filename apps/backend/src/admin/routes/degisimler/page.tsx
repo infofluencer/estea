@@ -23,6 +23,7 @@ type Row = {
   shipment: { carrier: string | null; tracking_number: string | null } | null
   label_printed_at: string | null
   return_code: string | null
+  return_code_sent?: boolean
   error: string | null
   return_id: string | null
 }
@@ -192,8 +193,10 @@ const ExchangesPage = () => {
                   <Table.Cell>
                     <Badge size="2xsmall" color={st.color}>{st.label}</Badge>
                     {r.state === "awaiting_return" ? (
-                      <div className={`txt-compact-small ${r.return_code ? "text-ui-fg-subtle" : "text-ui-fg-error"}`}>
-                        {r.return_code ? `İade kodu: ${r.return_code}` : "İade kodu gönderilmedi"}
+                      <div className={`txt-compact-small ${r.return_code && r.return_code_sent !== false ? "text-ui-fg-subtle" : "text-ui-fg-error"}`}>
+                        {r.return_code
+                          ? `İade kodu: ${r.return_code}${r.return_code_sent === false ? " · müşteriye gönderilemedi" : ""}`
+                          : "İade kodu gönderilmedi"}
                       </div>
                     ) : null}
                     {r.shipment?.tracking_number ? (

@@ -7,6 +7,36 @@ import { createNotificationIdempotent } from "./notify"
 
 export type ReturnCodeSource = "manual" | "carrier"
 
+/**
+ * Kargo firmasının ürettiği iade kodunu, mail gitmeden ÖNCE iadeye yazar (gönderildi işareti yok).
+ * Mail düşerse (SMTP kapalı) kod kaybolmaz: panel kodu "müşteriye gönderilmedi" diye gösterir,
+ * admin aynı kodu tek tıkla yeniden gönderir; firmada ikinci iade kaydı açılmaz.
+ */
+export async function recordCarrierReturnCode(
+  container: MedusaContainer,
+  returnId: string,
+  code: string,
+  extra: { labelUrl?: string | null } = {}
+): Promise<void> {
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const { data } = await query.graph({ entity: "return", fields: ["id", "metadata"], filters: { id: returnId } })
+  const meta = ((data?.[0] as { metadata?: Record<string, unknown> | null } | undefined)?.metadata || {}) as Record<string, unknown>
+  await container.resolve(Modules.ORDER).updateReturns([
+    {
+      selector: { id: returnId },
+      data: {
+        metadata: {
+          ...meta,
+          return_code: code,
+          return_code_source: "carrier",
+          return_code_created_at: new Date().toISOString(),
+          ...(extra.labelUrl ? { return_label_url: extra.labelUrl } : {}),
+        },
+      },
+    },
+  ])
+}
+
 /** İadeye "müşteriye giden iade kodu" yazar (panel: "İade kodu gönderilmedi" kalkar). */
 export async function markReturnCodeSent(
   container: MedusaContainer,

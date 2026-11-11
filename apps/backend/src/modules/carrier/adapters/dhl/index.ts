@@ -42,8 +42,18 @@ type DhlEnv = keyof typeof DHL_BASE_URLS
 /** ⚠ Doğrulanmadı: herkese açık takip sayfası. DHL durum yanıtındaki `trackingUrl` gelince onunla değişir. */
 export const DEFAULT_TRACKING_URL_TEMPLATE = "https://www.dhlecommerce.com.tr/gonderitakip?takipNo={code}"
 
-/** 10×15 cm (4×6 inç) etiket, 203 dpi. */
-const LABELARY_URL = "https://api.labelary.com/v1/printers/8dpmm/labels/4x6/"
+/**
+ * Labelary adresi, etiketin kendi boyutuyla (203 dpi = 8 nokta/mm). DHL etiketi ^PW831 ^LL959
+ * (≈10,4 × 12 cm) gelir; sabit 4×6 inç sayfa sağ kenarı (~2,4 mm) keser ve altına boşluk ekler.
+ */
+export function labelaryUrlFor(zpl: string): string {
+  const dots = (re: RegExp) => Number(zpl.match(re)?.[1] ?? NaN)
+  const w = dots(/\^PW(\d+)/)
+  const h = dots(/\^LL(\d+)/)
+  const inch = (n: number) => Math.ceil((n / 203.2) * 100) / 100
+  const size = Number.isFinite(w) && w > 0 && Number.isFinite(h) && h > 0 ? `${inch(w)}x${inch(h)}` : "4x6"
+  return `https://api.labelary.com/v1/printers/8dpmm/labels/${size}/`
+}
 
 function positiveInt(value: unknown, fallback: number): number {
   const n = Number(value)
@@ -449,7 +459,7 @@ export function createDhlAdapter(deps: DhlAdapterDeps = {}): CarrierAdapter {
         )
       }
       const fetchImpl = deps.fetchImpl ?? fetch
-      const response = await fetchImpl(LABELARY_URL, {
+      const response = await fetchImpl(labelaryUrlFor(zpl), {
         method: "POST",
         headers: { Accept: "application/pdf", "Content-Type": "application/x-www-form-urlencoded" },
         body: zpl,

@@ -1,4 +1,4 @@
-import { createDhlAdapter, readDhlOptions, type DhlOptions } from "../adapters/dhl"
+import { createDhlAdapter, labelaryUrlFor, readDhlOptions, type DhlOptions } from "../adapters/dhl"
 import { DhlClient, parseDhlDateTime, type DhlTransport } from "../adapters/dhl/client"
 import { classifyDhlError, readDhlErrorBody } from "../adapters/dhl/errors"
 import {
@@ -497,6 +497,11 @@ describe("DHL durum yoklaması", () => {
   it("destek gerekiyor (8) → failed + uyarı", async () => {
     const { adapter } = adapterWith({ token, "standardqueryapi/getshipmentstatus": () => ok([{ shipmentStatusCode: 8 }]) })
     expect(await adapter.getStatus!({ carrier: "dhl", dhl_reference_id: "ESC65" })).toMatchObject({ action: "failed", alert: { level: "error" } })
+  })
+
+  it("Labelary boyutu etiketin kendi ölçüsünden (DHL 831×959 nokta → 4.09×4.72 inç)", () => {
+    expect(labelaryUrlFor("^XA^PW831^LL0959^FDx^FS^XZ")).toBe("https://api.labelary.com/v1/printers/8dpmm/labels/4.09x4.72/")
+    expect(labelaryUrlFor("^XA^FDx^FS^XZ")).toBe("https://api.labelary.com/v1/printers/8dpmm/labels/4x6/")
   })
 
   it("sandbox simülasyonu: dhl_sim varsa DHL sorulmaz; canlıda alan yok sayılır", async () => {

@@ -327,27 +327,30 @@ const ReturnRejectWidget = () => {
                       })}`
                     : ""}
                   {r.metadata.return_code_source === "carrier" ? " · kargo firmasından" : ""}
+                  {!r.metadata.return_code_sent_at ? (
+                    <span className="text-ui-fg-error"> · müşteriye gönderilemedi (e-posta hatası) — aşağıdan yeniden gönderin</span>
+                  ) : null}
                 </Text>
               ) : r.status === "requested" && !rejected ? (
                 <Text size="small" className="text-ui-fg-error">
                   İade kodu henüz gönderilmedi — kargo firmasının panelinden kodlu iade açıp kodu aşağıya girin.
                 </Text>
               ) : null}
-              {r.status === "requested" && !rejected ? (
+              {r.status === "requested" && !rejected && !(r.metadata?.return_code && r.metadata?.return_code_sent_at) ? (
                 <div className="flex gap-2">
                   <Input
                     size="small"
                     placeholder="İade kodu"
-                    value={codeById[r.id] ?? ""}
+                    value={codeById[r.id] ?? r.metadata?.return_code ?? ""}
                     onChange={(e) => setCodeById((prev) => ({ ...prev, [r.id]: e.target.value }))}
                   />
                   <Button
                     size="small"
                     variant="secondary"
-                    disabled={!(codeById[r.id] || "").trim() || codeMut.isPending}
+                    disabled={!(codeById[r.id] ?? r.metadata?.return_code ?? "").trim() || codeMut.isPending}
                     isLoading={codeMut.isPending && codeMut.variables?.returnId === r.id}
                     onClick={() => {
-                      const code = (codeById[r.id] || "").trim()
+                      const code = (codeById[r.id] ?? r.metadata?.return_code ?? "").trim()
                       const ok = window.confirm(
                         `"${code}" kodu müşteriye e-postayla gönderilecek (iade kodu ile kargo şubesine teslim). Devam?`
                       )

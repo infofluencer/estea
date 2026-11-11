@@ -7,7 +7,7 @@ import {
   buildReturnRequestedCustomerEmail,
   buildReturnRequestedSellerEmail,
 } from "../emails/return-notifications"
-import { markReturnCodeSent } from "../lib/return-code"
+import { markReturnCodeSent, recordCarrierReturnCode } from "../lib/return-code"
 import { loadReturnEmailContext } from "../lib/return-email-context"
 import { createNotificationIdempotent } from "../lib/notify"
 import { getConfiguredCarrier } from "../modules/carrier/registry"
@@ -63,6 +63,12 @@ export default async function returnRequestedEmailHandler({
         if (original && !isReturnRejected(ret?.metadata)) {
           const res = await adapter.createReturn(original.data || {}, data.return_id)
           returnCode = res.returnCode || res.trackingNumber || null
+          // Mail gitmese de kod iadede kalsın (aksi halde panel "gönderilmedi" der, firmada kayıt açık kalır).
+          if (returnCode) {
+            await recordCarrierReturnCode(container, data.return_id, returnCode, { labelUrl: res.labelUrl ?? null }).catch((err) =>
+              logger.error(`[return-requested-email] iade kodu kaydedilemedi return=${data.return_id} code=${returnCode}: ${String(err)}`)
+            )
+          }
           tracking = {
             trackingNumber: returnCode,
             trackingUrl: res.trackingUrl ?? null,

@@ -23,6 +23,7 @@ type AdminReturn = {
   customer_note: string | null
   tracking_number: string | null
   return_code: string | null
+  return_code_sent?: boolean
   exchange?: boolean
   refund_amount: number | null
   refund_error: string | null
@@ -174,7 +175,10 @@ const ReturnsPage = () => {
                     ) : null}
                     {r.state === "open" ? (
                       r.return_code ? (
-                        <div className="txt-compact-small text-ui-fg-subtle">İade kodu: {r.return_code}</div>
+                        <div className={`txt-compact-small ${r.return_code_sent === false ? "text-ui-fg-error" : "text-ui-fg-subtle"}`}>
+                          İade kodu: {r.return_code}
+                          {r.return_code_sent === false ? " · müşteriye gönderilemedi" : ""}
+                        </div>
                       ) : (
                         <div className="txt-compact-small text-ui-fg-error">İade kodu gönderilmedi</div>
                       )

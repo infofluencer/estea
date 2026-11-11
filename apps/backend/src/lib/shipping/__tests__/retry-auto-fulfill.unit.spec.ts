@@ -5,7 +5,7 @@ jest.mock("../../ops-events", () => ({
 }))
 
 import { recordOpsEvent } from "../../ops-events"
-import { pickRetryTargets, retryPaidUnfulfilled, RETRY_METADATA_KEY, type RetryOrder } from "../retry-auto-fulfill"
+import { isPermanentFulfillError, pickRetryTargets, retryPaidUnfulfilled, RETRY_METADATA_KEY, type RetryOrder } from "../retry-auto-fulfill"
 
 const NOW = new Date("2026-11-11T12:00:00.000Z")
 const minutesAgo = (n: number) => new Date(NOW.getTime() - n * 60_000).toISOString()
@@ -75,6 +75,20 @@ describe("ödendi ama kargo kaydı yok → yeniden deneme", () => {
     expect(metadataById.o1[RETRY_METADATA_KEY]).toMatchObject({ attempts: 12, gave_up: true })
     expect(recordOpsEvent).toHaveBeenCalledTimes(1)
     expect(recordOpsEvent).toHaveBeenCalledWith(container, expect.objectContaining({ kind: "shipment.failed", level: "error", orderId: "o1" }))
+  })
+
+  it("kalıcı hata (adres/telefon eksik): ilk denemede bırakır, Logs'a 'düzeltilmeli' yazar", async () => {
+    const { container, metadataById } = fakeContainer()
+    const fulfill = jest.fn(async () => {
+      throw new Error("Kargo gönderisi için eksik adres alanları: phone. Sipariş adresini admin panelden tamamlayıp tekrar deneyin.")
+    })
+    const summary = await retryPaidUnfulfilled(container, { now: () => NOW, load: async () => [order({ id: "o1" })], fulfill })
+    expect(summary).toEqual({ candidates: 1, created: 0, failed: 1, gaveUp: 1 })
+    expect(metadataById.o1[RETRY_METADATA_KEY]).toMatchObject({ attempts: 1, gave_up: true, permanent: true })
+    expect(recordOpsEvent).toHaveBeenCalledWith(container, expect.objectContaining({ title: expect.stringContaining("düzeltilmeli"), level: "error" }))
+    // DHL'in alıcı reddi de kalıcı; zaman aşımı değil
+    expect(isPermanentFulfillError("DHL eCommerce gönderisi oluşturulamadı: [DHL_INVALID_RECIPIENT] telefon 10 hane olmalı")).toBe(true)
+    expect(isPermanentFulfillError("[DHL_TIMEOUT] 30000 ms içinde yanıt yok")).toBe(false)
   })
 
   it("bu arada kayıt açılmışsa (skipped) hiçbir şey yazmaz", async () => {

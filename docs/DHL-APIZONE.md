@@ -49,6 +49,22 @@ Postman koleksiyonu, örnek gövdeler). Swagger'dan yazılan adaptörle karşıl
   kayda `dhl_sim` yazılarak verilir, adaptör bunu **yalnız sandbox'ta** okur ve gerçek yoklama kodu
   işler (mailler dahil). `-- set <sipariş no> <1-8>` tek siparişi ilerletir, `-- list`, `-- clean`.
   Kurulum: `docs/DOKPLOY-ENV.md` → "DHL sandbox simülasyonu".
+- **Production simülasyonu (2026-11-11, DHL sandbox):** 15/15 senaryo kuruldu. Bulunanlar:
+  1. *İade kodu kayboluyordu:* DHL iade siparişini açıp kod üretiyor, ama kod iadeye ancak müşteri
+     maili gittikten sonra yazılıyordu; SMTP kapalıyken kod hiç kaydedilmedi, panel "gönderilmedi"
+     dedi. Düzeltildi: kod DHL'den gelir gelmez yazılır (`return_code_source: carrier`), "gönderildi"
+     işareti mailden sonra; panel "müşteriye gönderilemedi" der ve aynı kodu yeniden gönderir.
+  2. *Kalıcı hatada 6 saat deneme:* telefon/adres eksikken yeniden deneme işi 12 kez deniyordu.
+     Artık ilk denemede bırakır ve Logs'a "sipariş bilgisi düzeltilmeli" yazar.
+  3. *Etiket bekleyen gönderide durum okunmaz:* yoklama önce barkodu dener (doğru davranış); #9
+     barkod alınınca sonraki turda durumuna geçer.
+- **Etiket baskısı (açık karar):** admin "Etiket yazdır" DHL ZPL'ini PDF'e ancak
+  `DHL_LABEL_PDF=labelary` ile çevirir; kapalıyken DHL etiketi basılmaz, yalnız uyarılı fiş çıkar.
+  Açıkken alıcı adı/adres/telefon Labelary'ye (ABD) gider. PDF sayfası 10×15 rulo içinde 74,6 mm'ye
+  sığdırılıyor: 10,4 × 12 cm DHL etiketi ~%62 küçülür. DHL konveyör okuması için barkod kalitesini
+  ve 10×10 rulo/lamine etiketi şart koşuyor; küçültülmüş barkod risklidir. Seçenek: ZPL'i Zebra
+  uyumlu yazıcıya doğrudan basmak (DHL'in beklediği) ya da 10×10 ruloda tam boy PDF. Labelary
+  boyutu artık etiketin kendi ölçüsünden (`^PW`/`^LL`) hesaplanıyor (eskiden sabit 4×6, sağ kenar kesiliyordu).
 - **Akış uyarısı:** DHL, createRecipient + createOrder'ın sipariş oluşunca, createbarcode'un
   paketleme anında çağrılmasını istiyor; art arda çağrıda "varışsız" (20001) hatası olabiliyor.
   Bizde üçü ödeme sonrası art arda gider, 20001'de 60 sn denenir, sonra "etiket bekliyor" olur ve

@@ -22,7 +22,7 @@ import { envInt } from "./shipment-audit"
 
 export const RETRY_METADATA_KEY = "escay_auto_fulfill_retry"
 
-export type RetryState = { attempts: number; last_at?: string; last_error?: string; gave_up?: boolean }
+export type RetryState = { attempts: number; last_at?: string; last_error?: string; gave_up?: boolean; permanent?: boolean }
 
 export type RetryOrder = {
   id: string
@@ -37,6 +37,16 @@ export type RetryOrder = {
 export type RetryOptions = { now?: Date; graceMinutes?: number; maxAttempts?: number }
 
 const PAID = new Set(["captured", "completed"])
+
+/**
+ * Kendiliğinden düzelmeyen hatalar: adres/telefon eksik, DHL alıcıyı reddetti, servis dışı bölge.
+ * Bunlar yeniden denenmez; Logs'a hemen "adresi düzeltin" yazılır (simülasyon #13, 2026-11-11).
+ */
+const PERMANENT_ERROR = /eksik adres alanları|teslimat adresi yok|DHL_INVALID_RECIPIENT|DHL_OUT_OF_SERVICE|DHL_CONFIG|için adaptör yok/i
+
+export function isPermanentFulfillError(message: string): boolean {
+  return PERMANENT_ERROR.test(message)
+}
 
 export function readRetryState(metadata: Record<string, unknown> | null | undefined): RetryState {
   const raw = metadata?.[RETRY_METADATA_KEY] as Partial<RetryState> | undefined
@@ -149,14 +159,21 @@ export async function retryPaidUnfulfilled(container: MedusaContainer, deps: Dep
     }
 
     summary.failed++
-    const gaveUp = attempt >= maxAttempts
+    const permanent = isPermanentFulfillError(message)
+    const gaveUp = permanent || attempt >= maxAttempts
     logger.warn(`[retry-auto-fulfill] order=${order.id} deneme ${attempt}/${maxAttempts} başarısız: ${message}`)
     try {
       // autoFulfillPaidOrder bu arada metadata.email yazmış olabilir → taze oku, üstüne ekle.
       const query = container.resolve(ContainerRegistrationKeys.QUERY)
       const { data } = await query.graph({ entity: "order", fields: ["id", "metadata"], filters: { id: order.id } })
       const fresh = ((data as { metadata?: Record<string, unknown> | null }[])?.[0]?.metadata || order.metadata || {}) as Record<string, unknown>
-      const state: RetryState = { attempts: attempt, last_at: now().toISOString(), last_error: message.slice(0, 500), ...(gaveUp ? { gave_up: true } : {}) }
+      const state: RetryState = {
+        attempts: attempt,
+        last_at: now().toISOString(),
+        last_error: message.slice(0, 500),
+        ...(gaveUp ? { gave_up: true } : {}),
+        ...(permanent ? { permanent: true } : {}),
+      }
       await orderModule.updateOrders(order.id, { metadata: { ...fresh, [RETRY_METADATA_KEY]: state } })
     } catch (error) {
       logger.warn(`[retry-auto-fulfill] deneme sayacı yazılamadı order=${order.id}: ${errorText(error)}`)
@@ -166,8 +183,10 @@ export async function retryPaidUnfulfilled(container: MedusaContainer, deps: Dep
       await recordOpsEvent(container, {
         kind: "shipment.failed",
         level: "error",
-        title: "Kargo gönderisi otomatik denemelerde açılamadı",
-        detail: `${maxAttempts} deneme başarısız, otomatik deneme bırakıldı. Sipariş ödenmiş olarak bekliyor (iptal edilmedi).\nSon hata: ${message}\n\nAdmin → sipariş → "Kargo" kutusundan yeniden deneyin ya da şubede açıp "Dış gönderi" ile bağlayın.`,
+        title: permanent ? "Kargo gönderisi açılamıyor: sipariş bilgisi düzeltilmeli" : "Kargo gönderisi otomatik denemelerde açılamadı",
+        detail: permanent
+          ? `Bu hata kendiliğinden düzelmez, otomatik deneme yapılmadı. Sipariş ödenmiş olarak bekliyor (iptal edilmedi).\nHata: ${message}\n\nSipariş adresini (telefon, il/ilçe, açık adres) düzeltip Admin → sipariş → "Kargo" kutusundan yeniden deneyin.`
+          : `${maxAttempts} deneme başarısız, otomatik deneme bırakıldı. Sipariş ödenmiş olarak bekliyor (iptal edilmedi).\nSon hata: ${message}\n\nAdmin → sipariş → "Kargo" kutusundan yeniden deneyin ya da şubede açıp "Dış gönderi" ile bağlayın.`,
         orderId: order.id,
         data: { attempts: attempt },
       })

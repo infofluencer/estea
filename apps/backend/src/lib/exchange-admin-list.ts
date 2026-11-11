@@ -30,6 +30,8 @@ export type AdminExchangeRow = {
   shipment: { carrier: string | null; tracking_number: string | null; label_url: string | null } | null
   label_printed_at: string | null
   return_code: string | null
+  /** Kod müşteriye mailde gitti mi (kargo firmasının kodu mail düşse de kaydedilir). */
+  return_code_sent: boolean
   error: string | null
   return_id: string | null
 }
@@ -113,6 +115,7 @@ export async function listMedusaExchanges(container: MedusaContainer): Promise<A
         : null,
       label_printed_at: ex.label_printed_at || null,
       return_code: typeof meta.return_code === "string" ? meta.return_code : null,
+      return_code_sent: typeof meta.return_code_sent_at === "string",
       error: ex.status === "failed" ? ex.error || "Gönderi açılamadı" : null,
       return_id: r.id,
     }

@@ -119,6 +119,7 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse) 
       source: typeof meta.source === "string" ? meta.source : null,
       customer_note: typeof meta.customer_note === "string" ? meta.customer_note : null,
       return_code: typeof meta.return_code === "string" ? meta.return_code : null,
+      return_code_sent: typeof meta.return_code_sent_at === "string",
       tracking_number: typeof meta.return_tracking_number === "string" ? meta.return_tracking_number : null,
       exchange: Boolean(
         meta.escay_exchange && (meta.escay_exchange as { status?: string }).status !== "canceled"
