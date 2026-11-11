@@ -553,6 +553,57 @@ export type ReconcileSummary = {
   expired: number
 }
 
+/** Sonuç sayfası sorgusunda PayTR'ye en erken ve en sık sorma aralığı. */
+const ON_DEMAND_MIN_AGE_MS = 5_000
+const ON_DEMAND_INTERVAL_MS = 8_000
+
+/**
+ * Sonuç sayfası "sipariş oluştu mu" diye sorarken çağrılır: ödeme hâlâ bekliyorsa
+ * PayTR'ye o anda sorar, ödenmişse siparişi hemen açar. Bildirim (callback) gecikse
+ * ya da hiç gelmese de müşteri saniyeler içinde onaya geçer. Aynı ödeme için en çok
+ * 8 sn'de bir sorulur; hata yutulur (5 dk'lık reconcile yine dener).
+ */
+export async function pollPaytrCheckoutNow(
+  container: MedusaContainer,
+  checkout: PaytrCheckoutRecord,
+  deps: { query?: (oid: string) => Promise<PaytrStatusResult>; now?: Date } = {}
+): Promise<void> {
+  if (checkout.status !== "pending") return
+  if (!deps.query && !canQueryPaytr()) return
+  const now = deps.now ?? new Date()
+  const age = now.getTime() - new Date(checkout.created_at).getTime()
+  if (age < ON_DEMAND_MIN_AGE_MS || age > POLL_MAX_AGE_MS) return
+  const last = checkout.last_polled_at ? new Date(checkout.last_polled_at).getTime() : 0
+  if (now.getTime() - last < ON_DEMAND_INTERVAL_MS) return
+
+  const logger = container.resolve("logger") as { warn: (m: string) => void }
+  try {
+    await update(container, checkout.id, { last_polled_at: now })
+    const status = await (deps.query ?? queryPaytrStatus)(checkout.merchant_oid)
+    if (!status.ok) {
+      logger.warn(`[paytr-checkout] anlık sorgu başarısız oid=${checkout.merchant_oid}: ${status.message}`)
+      return
+    }
+    // Ödenmemiş ya da panelden iade edilmiş: karar reconcile'da.
+    if (!(status.payment_amount > 0) || status.returned_total > 0) return
+    await resolveLocking(container).execute(
+      paytrCallbackLockKey(checkout.merchant_oid),
+      async () => {
+        const fresh = await findPaytrCheckout(container, checkout.merchant_oid)
+        if (fresh?.status !== "pending") return
+        await settlePaytrCheckout(container, fresh, {
+          paidKurus: Math.round(status.payment_amount * 100),
+          paidCurrency: status.currency,
+          source: "status_query",
+        })
+      },
+      { timeout: 30, ttl: 180 }
+    )
+  } catch (err) {
+    logger.warn(`[paytr-checkout] anlık sorgu oid=${checkout.merchant_oid}: ${describeError(err)}`)
+  }
+}
+
 /**
  * Bildirimi kaçan ve sonuçlanmamış ödemeleri toplar:
  *  - paid: sipariş / tahsilat tekrar denenir; PayTR'de iade edildiyse deneme durur
@@ -651,7 +702,11 @@ export async function reconcilePaytrCheckouts(
     try {
       const status = await query(row.merchant_oid)
       await update(container, row.id, { last_polled_at: now })
-      if (!status.ok || !(status.payment_amount > 0)) continue
+      if (!status.ok) {
+        logger.error(`[paytr-checkout] durum sorgusu başarısız oid=${row.merchant_oid}: ${status.message}`)
+        continue
+      }
+      if (!(status.payment_amount > 0)) continue
       // Panelden iade edilmiş ödeme "ödendi" görünür; sipariş açılmaz.
       if (status.returned_total > 0) {
         await withOidLock(row.merchant_oid, async () => {

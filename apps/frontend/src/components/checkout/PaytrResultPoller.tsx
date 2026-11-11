@@ -8,7 +8,8 @@ import {
 } from "@/lib/checkout-actions"
 
 const POLL_INTERVAL_MS = 2000
-const POLL_LIMIT_MS = 90_000
+// Sunucu her sorguda PayTR'ye de sorar (bildirim gelmese de); 3 dk bekleme yeterli.
+const POLL_LIMIT_MS = 180_000
 
 type ResultState = "waiting" | "pending" | "attention"
 
