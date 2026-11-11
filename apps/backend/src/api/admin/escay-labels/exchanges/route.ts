@@ -5,7 +5,7 @@ import { markExchangeLabelPrinted } from "../../../../lib/exchange"
 import { readExchange } from "../../../../lib/exchange-plan"
 import { toLabelOrder, type LabelOrder } from "../../../../lib/order-packing-label"
 import { EXCHANGE_ORDER_NO_SUFFIX } from "../../../../modules/carrier/types"
-import { LABEL_ORDER_FIELDS, MAX_LABEL_ORDERS, parseOrderIds, sendLabelsPdf, wantsSlip } from "../_orders"
+import { LABEL_ORDER_FIELDS, MAX_LABEL_ORDERS, parseOrderIds, sendLabelsPdf, sendLabelsZpl, wantsSlip, wantsZpl } from "../_orders"
 
 type Dict = Record<string, unknown>
 
@@ -53,8 +53,10 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   }
   if (!labels.length) return res.status(404).json({ message: "Değişim bulunamadı." })
 
-  return sendLabelsPdf(req, res, labels, wantsSlip(req.query.slip), async (printedIds) => {
+  const onPrinted = async (printedIds: string[]) => {
     const ok = new Set(printedIds)
     await markExchangeLabelPrinted(req.scope, printedReturns.filter((id) => ok.has(returnsById.get(id)!.order_id)))
-  })
+  }
+  if (wantsZpl(req.query.format)) return sendLabelsZpl(req, res, labels, onPrinted)
+  return sendLabelsPdf(req, res, labels, wantsSlip(req.query.slip), onPrinted)
 }

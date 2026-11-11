@@ -58,13 +58,30 @@ Postman koleksiyonu, örnek gövdeler). Swagger'dan yazılan adaptörle karşıl
      Artık ilk denemede bırakır ve Logs'a "sipariş bilgisi düzeltilmeli" yazar.
   3. *Etiket bekleyen gönderide durum okunmaz:* yoklama önce barkodu dener (doğru davranış); #9
      barkod alınınca sonraki turda durumuna geçer.
-- **Etiket baskısı (açık karar):** admin "Etiket yazdır" DHL ZPL'ini PDF'e ancak
-  `DHL_LABEL_PDF=labelary` ile çevirir; kapalıyken DHL etiketi basılmaz, yalnız uyarılı fiş çıkar.
-  Açıkken alıcı adı/adres/telefon Labelary'ye (ABD) gider. PDF sayfası 10×15 rulo içinde 74,6 mm'ye
-  sığdırılıyor: 10,4 × 12 cm DHL etiketi ~%62 küçülür. DHL konveyör okuması için barkod kalitesini
-  ve 10×10 rulo/lamine etiketi şart koşuyor; küçültülmüş barkod risklidir. Seçenek: ZPL'i Zebra
-  uyumlu yazıcıya doğrudan basmak (DHL'in beklediği) ya da 10×10 ruloda tam boy PDF. Labelary
-  boyutu artık etiketin kendi ölçüsünden (`^PW`/`^LL`) hesaplanıyor (eskiden sabit 4×6, sağ kenar kesiliyordu).
+- **Etiket baskısı: ZPL (karar 2026-11-11).** Admin "Etiket yazdır" DHL etiketini `.zpl` dosyası
+  olarak indirir (toplu baskıda tek dosya, her etiket kendi `^XA…^XZ` bloğu); yazıcıya doğrudan,
+  tam boy basılır. Fiş istenirse ayrıca PDF açılır (yalnız fiş). Alıcı bilgisi üçüncü tarafa gitmez.
+  Eski yol (Labelary ile PDF) yalnız `DHL_LABEL_PDF=labelary` açıkça yazılırsa. Kod: `lib/label-zpl.ts`,
+  `api/admin/escay-labels/*?format=zpl`, `admin/lib/print-labels.ts`.
+
+### Etiket baskısı (ZPL) kurulumu
+- **Yazıcı ZPL konuşmalı:** Zebra, ya da ZPL emülasyonu olan bir model (birçok TSC modelinde
+  "TSPL-EZD / ZPL emülasyonu" vardır; menüden ya da TSC Console'dan açılır). 203 dpi.
+- **Rulo:** DHL 10×10 rulo ya da lamine etiket istiyor (konveyör okuması). Etiket içeriği ~10 × 10 cm,
+  ama ZPL'de etiket boyu `^LL959` (12 cm). İlk baskıda yazıcının etiket aralığını kalibre edin;
+  sonraki etikete taşarsa DHL'e sorun (rulo/ayar) ya da yazıcıda "etiket boyunu ZPL'den alma"yı kapatın.
+- **Mac, USB yazıcı (bir kez):**
+  ```
+  lpinfo -v                                   # yazıcının usb://… adresi
+  sudo lpadmin -p DHL_ZPL -E -v "usb://…" -m raw   # "raw queue deprecated" uyarısı normal
+  ```
+  Basmak: `lp -d DHL_ZPL ~/Downloads/dhl-etiket-*.zpl` (dosya bayt bayt yazıcıya gider).
+- **Ağ yazıcısı:** `nc <yazıcı-ip> 9100 < dhl-etiket-….zpl`
+- **Windows:** Zebra Setup Utilities → "Send File", ya da yazıcıyı "Generic / Text Only" sürücüyle
+  ekleyip `copy /b dosya.zpl \\localhost\<paylaşım-adı>`.
+- Sürücüyle (PDF gibi) yazdırmayın: sürücü ZPL'i metin olarak basar.
+- Deneme dosyası: sandbox etiketi `npm run smoke:carrier` çıktısındaki `.zpl`.
+
 - **Akış uyarısı:** DHL, createRecipient + createOrder'ın sipariş oluşunca, createbarcode'un
   paketleme anında çağrılmasını istiyor; art arda çağrıda "varışsız" (20001) hatası olabiliyor.
   Bizde üçü ödeme sonrası art arda gider, 20001'de 60 sn denenir, sonra "etiket bekliyor" olur ve

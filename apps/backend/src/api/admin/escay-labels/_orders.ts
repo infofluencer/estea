@@ -4,6 +4,7 @@ import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
 import { buildLabelsPdf, type LabelPage } from "../../../lib/label-pdf"
 import { getConfiguredCarrier } from "../../../modules/carrier/registry"
 import type { LabelOrder } from "../../../lib/order-packing-label"
+import { buildZplBundle, printsAsZpl, zplFileName } from "../../../lib/label-zpl"
 
 /** Tek istekte en fazla bu kadar sipariş (toplu baskı). */
 export const MAX_LABEL_ORDERS = 200
@@ -42,6 +43,11 @@ export function parseOrderIds(raw: unknown): string[] {
     .map((v) => v.trim())
     .filter(Boolean)
   return [...new Set(ids)]
+}
+
+/** `?format=zpl` → kargo etiketleri ZPL dosyası (yazıcıya doğrudan). */
+export function wantsZpl(raw: unknown): boolean {
+  return String(raw ?? "").toLowerCase() === "zpl"
 }
 
 /** `?slip=1` → kargo etiketinin arkasına sipariş fişi sayfası eklenir. */
@@ -119,6 +125,30 @@ async function carrierPdf(order: LabelOrder): Promise<Buffer | null> {
 }
 
 /**
+ * Kargo etiketlerini tek ZPL dosyası olarak gönderir (lib/label-zpl.ts). ZPL'li sipariş yoksa
+ * 204. Başlıklar: `X-Escay-Zpl-Count`, `X-Escay-Pdf-Count` (PDF ile basılacak kalan sipariş),
+ * `X-Escay-Skipped` (etiketi henüz olmayan gönderiler). Dosyaya girenler "yazdırıldı" işaretlenir.
+ */
+export async function sendLabelsZpl(
+  req: MedusaRequest,
+  res: MedusaResponse,
+  labels: LabelOrder[],
+  onPrinted?: (orderIds: string[]) => Promise<void>
+) {
+  const bundle = buildZplBundle(labels)
+  if (onPrinted && bundle.includedIds.length) await onPrinted(bundle.includedIds)
+  res.setHeader("Cache-Control", "no-store")
+  res.setHeader("Access-Control-Expose-Headers", "X-Escay-Skipped, X-Escay-Zpl-Count, X-Escay-Pdf-Count, Content-Disposition")
+  res.setHeader("X-Escay-Zpl-Count", String(bundle.includedIds.length))
+  res.setHeader("X-Escay-Pdf-Count", String(bundle.pdfIds.length))
+  if (bundle.skipped.length) res.setHeader("X-Escay-Skipped", encodeURIComponent(bundle.skipped.join(", ")))
+  if (!bundle.zpl) return res.status(204).end()
+  res.setHeader("Content-Type", "application/octet-stream")
+  res.setHeader("Content-Disposition", `attachment; filename="${zplFileName()}"`)
+  return res.send(Buffer.from(bundle.zpl, "utf8"))
+}
+
+/**
  * Etiket PDF'ini gönderir: her sipariş için kargo etiketi olduğu gibi; `withSlip`
  * ise arkasında sipariş fişi sayfası.
  * Kargo etiketi alınamayan siparişler uyarılı fişle basılır ve
@@ -133,6 +163,13 @@ export async function sendLabelsPdf(
   onPrinted?: (orderIds: string[]) => Promise<void>
 ) {
   const logger = req.scope.resolve("logger")
+  // ZPL ile basılan kargo etiketi PDF'e girmez: fiş istenmişse yalnız fiş sayfası, istenmemişse hiç.
+  const zplOnly = new Set(labels.filter((l) => printsAsZpl(l)).map((l) => l.id))
+  labels = labels.filter((l) => withSlip || !zplOnly.has(l.id))
+  if (!labels.length) {
+    res.setHeader("Cache-Control", "no-store")
+    return res.status(204).end()
+  }
   const pages: LabelPage[] = new Array(labels.length)
   const skipped: string[] = []
 
@@ -141,6 +178,11 @@ export async function sendLabelsPdf(
     while (next < labels.length) {
       const i = next++
       const order = labels[i]
+      if (zplOnly.has(order.id)) {
+        // Etiket ZPL dosyasında; bu sayfa yalnız fiş ("SİPARİŞ FİŞİ · ESC-65").
+        pages[i] = { order, carrierPdf: null }
+        continue
+      }
       try {
         pages[i] = { order, carrierPdf: await carrierPdf(order) }
       } catch (error) {

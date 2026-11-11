@@ -7,12 +7,16 @@ import {
   MAX_LABEL_ORDERS,
   parseOrderIds,
   sendLabelsPdf,
+  sendLabelsZpl,
   wantsSlip,
+  wantsZpl,
 } from "../_orders"
 
 /**
- * GET /admin/escay-labels/orders?ids=order_1,order_2[&slip=1]
+ * GET /admin/escay-labels/orders?ids=order_1,order_2[&slip=1][&format=zpl]
  *
+ * `format=zpl`: ZPL etiketli (DHL) siparişlerin etiketleri tek .zpl dosyası (lib/label-zpl.ts);
+ * PDF'te bu siparişler yalnız fiş olarak (slip=1) yer alır.
  * Etiket PDF'i (10×15 cm): kargo firmasının etiketi olduğu gibi (ekleme yok);
  * `slip=1` ise altında sipariş fişi. Gönderi yoksa hazırlık fişi. Etiketi
  * basılan siparişlere `metadata.label_printed_at` yazılır. Toplu baskı
@@ -34,7 +38,9 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     return res.status(404).json({ message: "Sipariş bulunamadı." })
   }
 
-  return sendLabelsPdf(req, res, orders.map((o) => toLabelOrder(o)), wantsSlip(req.query.slip), (ids) =>
-    markLabelsPrinted(req, orders, ids)
-  )
+  const labels = orders.map((o) => toLabelOrder(o))
+  if (wantsZpl(req.query.format)) {
+    return sendLabelsZpl(req, res, labels, (ids) => markLabelsPrinted(req, orders, ids))
+  }
+  return sendLabelsPdf(req, res, labels, wantsSlip(req.query.slip), (ids) => markLabelsPrinted(req, orders, ids))
 }

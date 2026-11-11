@@ -112,7 +112,9 @@ const OrderLabelWidget = () => {
       <div className="flex flex-col gap-2 px-6 py-4">
         <Text size="small" className="text-ui-fg-subtle">
           {hasBarcode
-            ? "Kargo firmasının etiketi geldiği gibi (kurye bunu okutur)."
+            ? typeof active?.data?.label_zpl === "string" && active.data.label_zpl
+              ? "DHL etiketi .zpl dosyası olarak iner — etiket yazıcısına doğrudan basın (tam boy). Fiş ayrıca PDF açılır."
+              : "Kargo firmasının etiketi geldiği gibi (kurye bunu okutur)."
             : waitingLabel
               ? "Kargo etiketi bekleniyor… (gönderi açıldı, etiket birkaç dakika içinde gelir; sayfa kendini yeniler)"
               : "Firma etiketi yok — hazırlık/sipariş fişi basılır; kargo etiketini firmanın panelinden alın."}
