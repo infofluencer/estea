@@ -320,15 +320,14 @@ class CarrierFulfillmentProviderService extends AbstractFulfillmentProviderServi
     order: Partial<FulfillmentOrderDTO> | undefined
   ): PackageItemInput[] {
     const orderItems = order?.items ?? []
-    const metadataByLineId = new Map<string, Record<string, unknown> | null>()
-    for (const oi of orderItems) if (oi?.id) metadataByLineId.set(oi.id, oi.metadata ?? null)
+    const byLineId = new Map(orderItems.filter((oi) => oi?.id).map((oi) => [oi.id, oi]))
     if (!items.length) {
-      return orderItems.map((oi) => ({ quantity: Number(oi?.quantity ?? 1), metadata: oi?.metadata ?? null }))
+      return orderItems.map((oi) => ({ quantity: Number(oi?.quantity ?? 1), metadata: oi?.metadata ?? null, variantTitle: oi?.variant_title ?? null }))
     }
-    return items.map((item) => ({
-      quantity: Number(item?.quantity ?? 1),
-      metadata: item?.line_item_id ? metadataByLineId.get(item.line_item_id) ?? null : null,
-    }))
+    return items.map((item) => {
+      const oi = item?.line_item_id ? byLineId.get(item.line_item_id) : undefined
+      return { quantity: Number(item?.quantity ?? 1), metadata: oi?.metadata ?? null, variantTitle: oi?.variant_title ?? null }
+    })
   }
 
   private buildLineItems(

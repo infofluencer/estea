@@ -64,6 +64,13 @@ Postman koleksiyonu, örnek gövdeler). Swagger'dan yazılan adaptörle karşıl
   Eski yol (Labelary ile PDF) yalnız `DHL_LABEL_PDF=labelary` açıkça yazılırsa. Kod: `lib/label-zpl.ts`,
   `api/admin/escay-labels/*?format=zpl`, `admin/lib/print-labels.ts`.
 
+- **Koli ağırlığı (2026-11-11):** katalogdaki 24 varyantın hiçbirinde ağırlık yok; her paket 0,5 kg
+  sayılıyordu (5000 gr çay DHL'e 1 kg gidiyordu). Artık ağırlık varyant adındaki gramajdan okunur
+  ("5000 gr" → 5 kg × adet); `metadata.weight_kg` girilirse o önceliklidir. **Koli ölçüsü hâlâ
+  varsayılan 30×20×15 cm (3 desi):** gerçek paketler ölçülüp `SHIPPING_PACKAGE_DEFAULT` ile ya da
+  varyant metadata'sına `length/width/height` girilmeli; desi ücreti belirler.
+- **Takip linki:** varsayılan şablon DHL'in döndürdüğü `kargotakip.mngkargo.com.tr/?takipNo=` oldu.
+
 ### Etiket baskısı (ZPL) kurulumu
 - **Yazıcı ZPL konuşmalı:** Zebra, ya da ZPL emülasyonu olan bir model (birçok TSC modelinde
   "TSPL-EZD / ZPL emülasyonu" vardır; menüden ya da TSC Console'dan açılır). 203 dpi.

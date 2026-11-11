@@ -1,9 +1,4 @@
-import {
-  DEFAULT_PACKAGE_PROFILE,
-  parsePackageProfile,
-  readItemWeightKg,
-  resolvePackage,
-} from "../package-profile"
+import { DEFAULT_PACKAGE_PROFILE, parsePackageProfile, readItemWeightKg, resolvePackage, weightKgFromTitle } from "../package-profile"
 
 describe("parsePackageProfile", () => {
   it("boş/eksik değerde çay varsayılanına düşer", () => {
@@ -172,5 +167,19 @@ describe("resolvePackage — ürün ağırlığı olmayan katalog için", () => 
   it("bozuk adet değerlerini en az 1'e normalize eder", () => {
     expect(resolvePackage([{ quantity: 0 }]).totalUnits).toBe(1)
     expect(resolvePackage([{ quantity: null }]).totalUnits).toBe(1)
+  })
+})
+
+describe("gramaj varyant adından", () => {
+  it("gr / kg / g okunur, adet ile çarpılır; metadata ağırlığı önceliklidir", () => {
+    expect(weightKgFromTitle("5000 gr")).toBe(5)
+    expect(weightKgFromTitle("1 kg")).toBe(1)
+    expect(weightKgFromTitle("500g")).toBe(0.5)
+    expect(weightKgFromTitle("1,5 kg")).toBe(1.5)
+    expect(weightKgFromTitle("Kutu")).toBeNull()
+    expect(resolvePackage([{ quantity: 2, variantTitle: "5000 gr" }]).weight).toBe(10)
+    expect(resolvePackage([{ quantity: 1, variantTitle: "5000 gr", metadata: { weight_kg: 5.3 } }]).weight).toBe(5.3)
+    expect(resolvePackage([{ quantity: 1, variantTitle: "500 gr" }])).toMatchObject({ weight: 0.5, weightSource: "items" })
+    expect(resolvePackage([{ quantity: 1, variantTitle: "Kutu" }])).toMatchObject({ weight: 0.5, weightSource: "default" })
   })
 })

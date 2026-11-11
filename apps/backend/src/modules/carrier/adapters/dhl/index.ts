@@ -39,8 +39,8 @@ export const DHL_BASE_URLS = {
 } as const
 type DhlEnv = keyof typeof DHL_BASE_URLS
 
-/** ⚠ Doğrulanmadı: herkese açık takip sayfası. DHL durum yanıtındaki `trackingUrl` gelince onunla değişir. */
-export const DEFAULT_TRACKING_URL_TEMPLATE = "https://www.dhlecommerce.com.tr/gonderitakip?takipNo={code}"
+/** DHL durum yanıtındaki `trackingUrl` biçimi (sandbox 2026-11-11); yoklama gelen linkle değiştirir. */
+export const DEFAULT_TRACKING_URL_TEMPLATE = "https://kargotakip.mngkargo.com.tr/?takipNo={code}"
 
 /**
  * Labelary adresi, etiketin kendi boyutuyla (203 dpi = 8 nokta/mm). DHL etiketi ^PW831 ^LL959

@@ -28,7 +28,7 @@ export type PackageProfile = {
 
 /**
  * Çay varsayılan kolisi — TODO(K1/K4): gerçek paketle ölç ve SHIPPING_PACKAGE_DEFAULT ile ez.
- * 30×20×15 cm → 3 desi; ağırlık 0,5 kg × adet (varyant metadata.weight_kg varsa o kullanılır).
+ * 30×20×15 cm → 3 desi; ağırlık: kalem metadata.weight_kg, yoksa varyant adındaki gramaj, yoksa 0,5 kg × adet.
  * maxHeight 45: koli adetle yükselir ama 3 koli boyunu aşmaz.
  */
 export const DEFAULT_PACKAGE_PROFILE: PackageProfile = {
@@ -86,6 +86,8 @@ export function parsePackageProfile(raw?: string | null): PackageProfile {
 export type PackageItemInput = {
   quantity?: number | null
   metadata?: Record<string, unknown> | null
+  /** Metadata'da ağırlık yoksa gramaj buradan okunur ("5000 gr"). */
+  variantTitle?: string | null
 }
 
 /**
@@ -113,6 +115,20 @@ export function readItemWeightKg(
 
   const grams = positiveNumber(metadata.weight_g) ?? positiveNumber(metadata.weight)
   return grams !== null ? grams / 1000 : null
+}
+
+/**
+ * Varyant adındaki gramajdan birim ağırlık (kg): "5000 gr" → 5, "1 kg" → 1, "500g" → 0,5.
+ * Katalogda varyant ağırlığı girilmediği için (2026-11-11: 24 varyantın hiçbirinde yok) çay
+ * gramajı adından okunur; yoksa her paket 0,5 kg sayılıyordu (5 kg çay DHL'e 1 kg gidiyordu).
+ * Net çay ağırlığıdır; ambalaj payı yok (DHL kg'ı yukarı yuvarlar).
+ */
+export function weightKgFromTitle(title?: string | null): number | null {
+  const m = String(title ?? "").match(/(\d+(?:[.,]\d+)?)\s*(kg|kilo|gr|gram|g)\b/i)
+  if (!m) return null
+  const n = Number(m[1].replace(",", "."))
+  if (!Number.isFinite(n) || n <= 0) return null
+  return /^k/i.test(m[2]) ? n : n / 1000
 }
 
 /** Kalem metadata'sından cm cinsinden boyut okur. */
@@ -169,6 +185,7 @@ export function resolvePackage(
   const normalized = items.map((item) => ({
     quantity: Math.max(1, Math.floor(Number(item.quantity ?? 1)) || 1),
     metadata: item.metadata ?? null,
+    variantTitle: item.variantTitle ?? null,
   }))
 
   const totalUnits = normalized.reduce((sum, item) => sum + item.quantity, 0) || 1
@@ -182,7 +199,7 @@ export function resolvePackage(
   let anyItemDimensions = false
 
   for (const item of normalized) {
-    const unitWeight = readItemWeightKg(item.metadata)
+    const unitWeight = readItemWeightKg(item.metadata) ?? weightKgFromTitle(item.variantTitle)
     if (unitWeight !== null) {
       anyItemWeight = true
       weightFromItems += unitWeight * item.quantity
