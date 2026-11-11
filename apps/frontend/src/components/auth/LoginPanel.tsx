@@ -10,6 +10,7 @@ import {
 } from "@/lib/auth/actions"
 import {
   AUTH_PASSWORD_MIN_LENGTH,
+  MEMBERSHIP_TERMS_REQUIRED_MESSAGE,
   authPasswordTooShortMessage,
 } from "@/lib/auth/constants"
 import { syncWishlistAction } from "@/lib/auth/wishlist-actions"
@@ -30,6 +31,7 @@ const emptyRegisterForm = () => ({
   email: "",
   password: "",
   password_confirm: "",
+  accept_terms: false,
 })
 
 export function LoginPanel({
@@ -146,6 +148,10 @@ export function LoginPanel({
     }
     if (registerForm.password !== registerForm.password_confirm) {
       setError("Şifreler eşleşmiyor.")
+      return
+    }
+    if (!registerForm.accept_terms) {
+      setError(MEMBERSHIP_TERMS_REQUIRED_MESSAGE)
       return
     }
 
@@ -451,6 +457,37 @@ export function LoginPanel({
                   ) : null}
                 </div>
               ) : null}
+
+              <label className={styles.consent}>
+                <input
+                  type="checkbox"
+                  data-testid="register-accept-terms"
+                  className={styles.consentInput}
+                  checked={registerForm.accept_terms}
+                  onChange={(e) =>
+                    setRegisterForm((f) => ({
+                      ...f,
+                      accept_terms: e.target.checked,
+                    }))
+                  }
+                  required
+                />
+                <span className={styles.legalNote}>
+                  18 yaşını doldurdum.{" "}
+                  <Link href="/legal/uyelik-sozlesmesi" target="_blank">
+                    Üyelik Sözleşmesi
+                  </Link>
+                  ’ni okudum ve kabul ediyorum.
+                </span>
+              </label>
+
+              <p className={styles.legalNote}>
+                Verilerinin nasıl işlendiği{" "}
+                <Link href="/gizlilik-politikasi" target="_blank">
+                  Gizlilik ve KVKK
+                </Link>{" "}
+                metninde anlatılır.
+              </p>
 
               <button
                 type="submit"

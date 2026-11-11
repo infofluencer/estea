@@ -58,3 +58,18 @@ export const AUTH_PASSWORD_MIN_LENGTH = 8
 export function authPasswordTooShortMessage(min = AUTH_PASSWORD_MIN_LENGTH) {
   return `Şifre en az ${min} karakter olmalıdır.`
 }
+
+export const MEMBERSHIP_TERMS_REQUIRED_MESSAGE =
+  "Devam etmek için 18 yaşını doldurduğunu onaylayıp Üyelik Sözleşmesi'ni kabul etmelisin."
+
+/**
+ * Kayıtta müşteri metadata'sına yazılan onay kaydı: hangi sözleşme sürümü,
+ * ne zaman, 18 yaş beyanıyla kabul edildi. Uyuşmazlıkta tek kanıt budur.
+ */
+export function membershipConsentMetadata(version: string, now = new Date()) {
+  return {
+    membership_terms_version: version,
+    membership_terms_accepted_at: now.toISOString(),
+    age_18_confirmed: true,
+  }
+}

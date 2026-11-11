@@ -15,6 +15,7 @@ export class AccountPage {
   readonly regEmail: Locator
   readonly regPassword: Locator
   readonly regPasswordConfirm: Locator
+  readonly regAcceptTerms: Locator
   readonly registerSubmit: Locator
   readonly favoriteToggle: Locator
 
@@ -28,6 +29,7 @@ export class AccountPage {
     this.regEmail = page.locator("#reg-email")
     this.regPassword = page.locator("#reg-password")
     this.regPasswordConfirm = page.locator("#reg-password-confirm")
+    this.regAcceptTerms = page.getByTestId("register-accept-terms")
     this.registerSubmit = page.getByTestId("register-submit")
     this.favoriteToggle = page.getByTestId("favorite-toggle").first()
   }
@@ -58,6 +60,7 @@ export class AccountPage {
     await this.regEmail.fill(input.email)
     await this.regPassword.fill(input.password)
     await this.regPasswordConfirm.fill(input.password)
+    await this.regAcceptTerms.check()
     await waitForPageLoaderGone(this.page)
     await dismissOverlays(this.page)
     await this.registerSubmit.click()

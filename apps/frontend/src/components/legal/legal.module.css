@@ -35,6 +35,8 @@
 
 .prose h2 {
   margin: 2rem 0 0.75rem;
+  /* #bölüm bağlantısı başlığı üst şeridin altında bırakmasın */
+  scroll-margin-top: calc(var(--site-top-offset, 0px) + 1.5rem);
   font-family: var(--font-logo);
   font-size: 0.95rem;
   font-weight: 500;

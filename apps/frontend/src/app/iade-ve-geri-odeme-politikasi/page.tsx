@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { LegalLayout } from "@/components/legal/LegalLayout"
 import { COMPANY } from "@/lib/company"
+import { POLICY_UPDATED_AT } from "@/lib/legal"
 
 export const metadata = {
   title: "İade ve Cayma | Es Çay",
@@ -10,6 +11,7 @@ export default function IadeVeCaymaPage() {
   return (
     <LegalLayout
       title="İade ve Geri Ödeme Politikası"
+      updatedAt={POLICY_UPDATED_AT}
     >
       {/* TODO(K5 — hukukçu): gıda ürünlerinde cayma hakkı istisnaları (Mesafeli Sözleşmeler
           Yönetmeliği md. 15: çabuk bozulabilen / son kullanma tarihi geçebilecek mallar,
@@ -91,7 +93,8 @@ export default function IadeVeCaymaPage() {
           adrese kargolayın; kargo takip numaranızı not olarak eklemeniz işlemi hızlandırır.
         </li>
         <li>
-          Ürün SATICI’ya ulaştıktan ve iade incelemesi tamamlandıktan sonra
+          Ürün SATICI’ya ulaştıktan sonra iade incelemesi 3 iş günü içinde
+          değerlendirilir ve size bilgi verilir. İnceleme tamamlandıktan sonra
           ödemenizin iadesi başlatılır.
         </li>
       </ol>
@@ -126,7 +129,17 @@ export default function IadeVeCaymaPage() {
           içinde ALICI’ya iade edilir. İade ALICI’nın SATICI’ya Ürün bedeli
           tediyesinde kullandığı ödeme aracına uygun bir şekilde yapılır. Kredi
           kartlı ödemelerde iade de ALICI kredi kartına yapılır; bankaya yansıma
-          süresi banka işlem sürecine bağlıdır.
+          süresi banka işlem sürecine bağlıdır. Kartla yapılan ödemelerde iade
+          nakit olarak yapılamaz.
+        </li>
+        <li>
+          Taksitli ödemelerde iade tutarı, banka tarafından kartınıza yine
+          taksitler halinde yansıtılabilir. İade öncesinde ödediğiniz taksitler,
+          bankanızın uygulamasına göre mevcut borcunuzdan düşülür.
+        </li>
+        <li>
+          İade edilen ürünle birlikte hediye, promosyon veya kampanya kapsamında
+          gönderilen ürünler varsa bunların da aynı anda iade edilmesi gerekir.
         </li>
         <li>
           İade edilecek ürün/ürünler ayıplı ise iade kargo ücreti SATICI
@@ -143,7 +156,22 @@ export default function IadeVeCaymaPage() {
         </li>
       </ol>
 
-      <h2>5. Sipariş İptali</h2>
+      <h2 id="hasarli-teslimat">5. Hasarlı veya Eksik Teslimat</h2>
+      <p>
+        Koli hasarlı görünüyorsa kargo görevlisinin yanında açın. Eksik, kırık,
+        ezik veya ambalajı patlamış ürünleri teslim almayın ve görevliye tutanak
+        tutturun. Görevli paketi hasarsız buluyorsa paketin orada açılmasını ve
+        durumun tutanakla tespit edilmesini isteyebilirsiniz. Tutanağın sizde
+        kalan kopyasıyla en kısa sürede {COMPANY.emailOps} adresine bildirimde
+        bulunun.
+      </p>
+      <p>
+        Hasarı veya eksikliği paketi açtıktan sonra fark ederseniz fotoğrafla
+        birlikte bize hemen bildirin. Bu bölüm, 6502 sayılı Kanun’dan doğan
+        ayıplı mal haklarınızı sınırlamaz.
+      </p>
+
+      <h2>6. Sipariş İptali</h2>
       <p>
         Yanlış verdiğiniz veya vazgeçtiğiniz siparişlerinizi iptal
         ettirebilirsiniz. İptal işlemlerinde ürün kargoya verilmemişse ücretin
@@ -153,7 +181,7 @@ export default function IadeVeCaymaPage() {
         iade talebi süreci (bölüm 3) uygulanır.
       </p>
 
-      <h2>6. Ürün İade Adresi</h2>
+      <h2>7. Ürün İade Adresi</h2>
       <p>
         <strong>{COMPANY.legalName}</strong>
         <br />

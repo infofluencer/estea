@@ -6,8 +6,11 @@ import { sdk } from "../medusa"
 import {
   AUTH_PASSWORD_MIN_LENGTH,
   FORGOT_PASSWORD_SUCCESS_MESSAGE,
+  MEMBERSHIP_TERMS_REQUIRED_MESSAGE,
   authPasswordTooShortMessage,
+  membershipConsentMetadata,
 } from "./constants"
+import { MEMBERSHIP_TERMS } from "../legal"
 import { errMessage } from "./errors"
 import {
   clearAuthToken,
@@ -185,6 +188,8 @@ export async function registerAction(input: {
   email: string
   password: string
   password_confirm: string
+  /** 18 yaş beyanı + Üyelik Sözleşmesi onayı (formdaki zorunlu kutu) */
+  accept_terms: boolean
 }): Promise<RegisterResult> {
   const first_name = input.first_name.trim()
   const last_name = input.last_name.trim()
@@ -200,6 +205,10 @@ export async function registerAction(input: {
   }
   if (password !== password_confirm) {
     return { ok: false, message: "Şifreler eşleşmiyor." }
+  }
+  // İstemci kutuyu atlasa da onaysız hesap açılmaz
+  if (input.accept_terms !== true) {
+    return { ok: false, message: MEMBERSHIP_TERMS_REQUIRED_MESSAGE }
   }
 
   try {
@@ -218,6 +227,7 @@ export async function registerAction(input: {
         email,
         ...(first_name ? { first_name } : {}),
         ...(last_name ? { last_name } : {}),
+        metadata: membershipConsentMetadata(MEMBERSHIP_TERMS.version),
       },
       {},
       { Authorization: `Bearer ${registerToken}` }

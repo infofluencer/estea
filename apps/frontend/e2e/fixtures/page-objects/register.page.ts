@@ -12,6 +12,7 @@ export class RegisterPage {
   readonly email: Locator
   readonly password: Locator
   readonly passwordConfirm: Locator
+  readonly acceptTerms: Locator
   readonly submit: Locator
   readonly error: Locator
   readonly pending: Locator
@@ -23,6 +24,7 @@ export class RegisterPage {
     this.email = page.locator("#reg-email")
     this.password = page.locator("#reg-password")
     this.passwordConfirm = page.locator("#reg-password-confirm")
+    this.acceptTerms = page.getByTestId("register-accept-terms")
     this.submit = page.getByTestId("register-submit")
     this.error = page.getByTestId("register-error")
     // Prefer testid only — "E-posta Doğrulama" heading is inside register-pending
@@ -48,6 +50,7 @@ export class RegisterPage {
     await this.email.fill(input.email)
     await this.password.fill(input.password)
     await this.passwordConfirm.fill(input.password)
+    await this.acceptTerms.check()
     await waitForPageLoaderGone(this.page)
     await dismissOverlays(this.page)
     await this.submit.click()

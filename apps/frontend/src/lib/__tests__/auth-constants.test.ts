@@ -35,6 +35,17 @@ describe("auth/constants", () => {
     expect(c.authPasswordTooShortMessage()).toBe("Şifre en az 8 karakter olmalıdır.")
     expect(c.authPasswordTooShortMessage(12)).toBe("Şifre en az 12 karakter olmalıdır.")
   })
+
+  it("üyelik onayı kaydı sürüm, zaman ve 18 yaş beyanını taşır", async () => {
+    const c = await import("../auth/constants")
+    const at = new Date("2026-11-11T09:30:00.000Z")
+    expect(c.membershipConsentMetadata("2026-11-11-draft", at)).toEqual({
+      membership_terms_version: "2026-11-11-draft",
+      membership_terms_accepted_at: "2026-11-11T09:30:00.000Z",
+      age_18_confirmed: true,
+    })
+    expect(c.MEMBERSHIP_TERMS_REQUIRED_MESSAGE).toMatch(/18 yaş/)
+  })
 })
 
 describe("pending-checkout seçenekleri", () => {

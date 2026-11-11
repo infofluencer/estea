@@ -64,7 +64,7 @@ test.describe("3c. Checkout adım akışı (Yol C)", () => {
 
     await expect(page).toHaveURL(/\/odeme\/?$/)
     await expect(checkout.email).toBeVisible({ timeout: 20_000 })
-    await expect(page.locator(".checkout-summary__item").first()).toBeVisible({
+    await expect(page.locator(".checkout-summary__item:visible").first()).toBeVisible({
       timeout: 15_000,
     })
     await expect(checkout.email).toHaveValue(email)

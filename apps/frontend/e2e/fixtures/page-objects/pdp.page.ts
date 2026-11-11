@@ -27,6 +27,12 @@ export class PdpPage {
     const links = this.page.locator(
       'a[href*="/urun/"]:not([class*="quickAdd"]):not([class*="mediaLink"])'
     )
+    // Kartlar soğuk açılışta boş iskeletle gelir; saymadan önce ilk ürün linkini bekle
+    await this.page
+      .locator('main a[href*="/urun/"]')
+      .first()
+      .waitFor({ state: "attached", timeout: 20_000 })
+      .catch(() => {})
     let count = await links.count()
     if (count === 0) {
       const any = this.page.locator('a[href*="/urun/"]')

@@ -235,6 +235,39 @@
   text-underline-offset: 0.2em;
 }
 
+.legalNote {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+}
+
+.legalNote a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.legalNote a:hover {
+  color: var(--color-brand);
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+
+.consentInput {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0.1rem 0 0;
+  accent-color: var(--color-brand);
+  cursor: pointer;
+}
+
 .switchRow {
   margin: 0.4rem 0 0;
   padding-top: 1.1rem;

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { sdk } from "@/lib/medusa"
+import { isDraftLegalVersion, MEMBERSHIP_TERMS } from "@/lib/legal"
 import { siteUrl } from "@/lib/site"
 import { categoryPath, collectionPath, productPath } from "@/lib/urls"
 
@@ -17,6 +18,8 @@ const STATIC_PATHS = [
   "/iade-ve-geri-odeme-politikasi",
   "/legal/mesafeli-satis-sozlesmesi",
   "/legal/on-bilgilendirme-formu",
+  // Taslak sözleşme onaylanana dek dizine girmez (bkz. MEMBERSHIP_TERMS)
+  ...(isDraftLegalVersion(MEMBERSHIP_TERMS.version) ? [] : ["/legal/uyelik-sozlesmesi"]),
   "/legal/teslimat-ve-kargo",
 ]
 
