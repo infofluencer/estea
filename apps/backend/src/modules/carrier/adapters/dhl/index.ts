@@ -59,15 +59,18 @@ function flag(value: unknown, fallback: boolean): boolean {
 export function readDhlOptions(env: Record<string, string | undefined> = process.env) {
   const dhlEnv: DhlEnv = String(env.DHL_ENV ?? "").trim().toLowerCase() === "prod" ? "prod" : "sandbox"
   const outOfService = String(env.DHL_OUT_OF_SERVICE ?? "").trim().toLowerCase()
+  // Sandbox ve canlı kimlikleri aynı dosyada durabilsin: sandbox'ta DHL_SANDBOX_* önce gelir,
+  // yoksa DHL_*. Canlıda DHL_SANDBOX_* hiç okunmaz.
+  const cred = (name: string) => String((dhlEnv === "sandbox" && env[`DHL_SANDBOX_${name}`]?.trim() ? env[`DHL_SANDBOX_${name}`] : env[`DHL_${name}`]) ?? "")
   return {
     env: dhlEnv,
     // DHL_BASE_URL yalnız sandbox'ta ezilebilir: prod'a URL ile yanlışlıkla geçilmesin.
     baseUrl:
       dhlEnv === "sandbox" && env.DHL_BASE_URL?.trim() ? env.DHL_BASE_URL.trim().replace(/\/$/, "") : DHL_BASE_URLS[dhlEnv],
-    clientId: String(env.DHL_CLIENT_ID ?? "").trim(),
-    clientSecret: String(env.DHL_CLIENT_SECRET ?? "").trim(),
-    customerNumber: String(env.DHL_CUSTOMER_NUMBER ?? "").trim(),
-    password: String(env.DHL_PASSWORD ?? ""),
+    clientId: cred("CLIENT_ID").trim(),
+    clientSecret: cred("CLIENT_SECRET").trim(),
+    customerNumber: cred("CUSTOMER_NUMBER").trim(),
+    password: cred("PASSWORD"),
     timeoutMs: positiveInt(env.DHL_TIMEOUT_MS, 30000),
     barcodeRetryIntervalMs: positiveInt(env.DHL_BARCODE_RETRY_INTERVAL_MS, 10000),
     /** Gönderi açılırken barkod için en fazla bu kadar beklenir; sonra yoklama tamamlar. */
@@ -114,6 +117,37 @@ export type DhlAdapterDeps = {
 type StoredParty = DhlParty & { neighbourhood?: string }
 
 const str = (v: unknown) => (typeof v === "string" ? v : typeof v === "number" ? String(v) : "")
+
+export const DHL_SIM_KEY = "dhl_sim"
+/** Simülasyon kaydı: DHL durum kodu (1–8) ve isteğe bağlı teslim/iade ayrıntısı. */
+export type DhlSimulatedStatus = { code: string; deliveredTo?: string; returnShipmentId?: string; at?: string }
+
+const SIM_TEXT: Record<string, string> = {
+  "1": "Gönderi Hazırlandı",
+  "2": "Transfer Aşamasında",
+  "3": "Gönderi Teslimat Biriminde",
+  "4": "Teslimat Adresine Yönlendirildi",
+  "5": "Teslim Edildi",
+  "6": "Teslim Edilemedi",
+  "7": "Göndericiye Geri Geliyor",
+  "8": "Destek Gerekiyor",
+}
+
+/** `data.dhl_sim` varsa DHL durum yanıtı biçiminde gövde üretir (yalnız sandbox'ta çağrılır). */
+export function simulatedStatusResponse(data: Record<string, unknown>, shipmentId: string): Record<string, unknown> | null {
+  const sim = data[DHL_SIM_KEY] as DhlSimulatedStatus | undefined
+  const code = str(sim?.code)
+  if (!SIM_TEXT[code]) return null
+  return {
+    shipmentId: shipmentId || str(data.dhl_shipment_id),
+    shipmentStatusCode: Number(code),
+    shipmentStatus: SIM_TEXT[code],
+    isDelivered: code === "5" ? 1 : 0,
+    deliveryTo: code === "5" ? sim?.deliveredTo || "ALICI KENDİSİ" : "",
+    deliveryDateTime: code === "5" ? sim?.at || "" : "",
+    retrieveShipmentId: code === "7" ? sim?.returnShipmentId || "" : "",
+  }
+}
 
 export function createDhlAdapter(deps: DhlAdapterDeps = {}): CarrierAdapter {
   const options = deps.options ?? (() => readDhlOptions())
@@ -278,7 +312,11 @@ export function createDhlAdapter(deps: DhlAdapterDeps = {}): CarrierAdapter {
     if (!ref && !shipmentId) throw new CarrierError("DHL durum sorgusu için referans/gönderi no yok.", { code: "DHL_NO_REFERENCE" })
     let json: unknown
     try {
-      json = ref ? await client.getShipmentStatus(ref) : await client.getShipmentStatusByShipmentId(shipmentId)
+      // Sandbox'ta gönderi fiziksel olarak ilerlemez; simülasyon (scripts/dhl-simulate.ts) durumu
+      // kayda yazar ve gerçek yanıt yerine o kullanılır. Canlıda bu alan hiç okunmaz.
+      json =
+        (o.env === "sandbox" ? simulatedStatusResponse(data, shipmentId) : null) ??
+        (ref ? await client.getShipmentStatus(ref) : await client.getShipmentStatusByShipmentId(shipmentId))
     } catch (error) {
       if (!isNotFoundDhlError(error)) throw error
       return {

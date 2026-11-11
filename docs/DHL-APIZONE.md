@@ -1,8 +1,66 @@
 # DHL eCommerce Türkiye (Apizone) entegrasyonu
 
-> Durum (2026-11-06): kod + birim testleri tamam (`apps/backend/src/modules/carrier/adapters/dhl/`).
-> **Gerçek API henüz çağrılmadı.** Es Çay'ın kendi DHL hesabı ve Apizone uygulaması bekleniyor.
+> Durum (2026-11-11): kod + birim testleri tamam (`apps/backend/src/modules/carrier/adapters/dhl/`).
+> **Sandbox'ta uçtan uca doğrulandı** (aç → barkod → durum → etiket → iptal). Canlı kimlikler bekleniyor.
 > Sırlar bu dosyaya yazılmaz.
+
+## DHL entegrasyon ekibinin yanıtı (2026-11-11)
+
+Ekler: `ynthamzalayesayapizonedorudanapientegrasyon/` (Rest Api Detay Döküman, portal kılavuzu,
+Postman koleksiyonu, örnek gövdeler). Swagger'dan yazılan adaptörle karşılaştırıldı:
+
+- Uçlar, başlıklar, token gövdesi/yanıtı (`jwt`, `jwtExpireDate`), createOrder ve createbarcode
+  alanları, yanıt biçimleri (`[ { shipmentId, invoiceId, barcodes[].value, barcodes[].barcode } ]`)
+  adaptörle **aynı**. Kod değişikliği gerekmedi.
+- **Sandbox çalışıyor (2026-11-11):** `npm run smoke:carrier` temiz geçti: token → createRecipient →
+  createOrder → createbarcode (ilk denemede, 20001 çıkmadı) → durum (1, Gönderi Hazırlandı) → ZPL
+  etiket → iptal. Test kullanıcısı DHL'in ikinci mailindeki müşteri no; kimlikler `apps/backend/.env`
+  içinde (`SHIPPING_CARRIER` boş, smoke `SHIPPING_CARRIER=dhl` ile çalıştırılır).
+  İlk denemedeki 401 bizim hatamızdı (kabukta `.env` okunamadı, başlıklar boş gitti), DHL kaynaklı değil.
+- **Sandbox yavaş / eksik:** CBS uçları ~15 sn, Utility (`getapistatuses`, `getapierrorcodes`) DHL
+  tarafında 30 sn sonra 500 "Connection request timed out". healthCheck ~77 sn, gönderi açma ~55 sn
+  sürdü. Hata kodu kataloğu sandbox'tan alınamadı; canlıda tekrar denenecek. İptalden sonra
+  `getorder` ve `getshipmentstatus` 404 döner.
+- **Canlı kimlikler çalışıyor (2026-11-11, yalnız okuma):** Apizone uygulaması `escaydirect`, abonelikler
+  onaylandı. `api.mngkargo.com.tr`: token 200, CBS 200 (~0,2 sn), Standard Query 404 (beklenen), Utility
+  200. Sandbox'taki yavaşlık canlıda yok. Canlıda yazma (gönderi açma) henüz denenmedi; Standard
+  Command / Barcode Command / Plus Command abonelikleri ancak ilk gerçek gönderide doğrulanır.
+  Kimlik adları: canlı `DHL_*`, sandbox `DHL_SANDBOX_*` (yalnız `DHL_ENV=prod` değilken okunur).
+- **Hata kodu kataloğu alındı** (`docs/dhl-apizone/error-codes.json`, 197 kod, canlıdan). Dikkat: katalogdaki
+  numaralar gerçek yanıtlarla birebir örtüşmüyor. Katalog "sipariş zaten var"ı 20001 gösteriyor, ama
+  sandbox'ta aynı referansla ikinci createOrder `HTTP 500 {"error":{"Code":"3002", "Description":"BU
+  SİPARİS NUMARASINA AİT KAYIT ZATEN VAR!"}}` döndü (kodumuzun beklediği). Sınıflandırma koda ek olarak
+  metne de bakıyor; `errors.ts` değişmedi. İptal edilmiş siparişe ikinci `cancelorder` 404 / 20305 döner.
+- **Sandbox senaryo takımı (2026-11-11):** `npm run dhl:sandbox-suite` 24 adımı gerçek sandbox'ta dener
+  (gönderi, tekrar, durum, etiket, iade, iptal, reship, değişim, adres çeşitleri, hata biçimleri) ve
+  açtığı her kaydı iptal eder. İlk çalıştırmada 23/24; kalan adım bir hata buldu ve düzeltildi:
+  **20001 createbarcode'un genel hata kodu.** "VARIŞ ŞUBESİ BULUNAMADI" da, zaten barkodlanmış siparişte
+  dönen "... NO İLE DAHA ÖNCE KESİLMİŞ" de 20001 ile geliyor; ikincisi artık `already_invoiced`
+  sayılıyor (gönderi no `getshipment`'tan alınır), eskiden boşuna "etiket bekliyor"a düşüyordu.
+  Görülen gerçek yanıtlar: takip linki `https://kargotakip.mngkargo.com.tr/?takipNo=<gönderi no>`;
+  iade etiketi linki `http://mn.tc?rtnid=…`; iptal sonrası `cancelorder` 404/20305 (yok sayılır);
+  olmayan gönderi iptali 404/20306; yanlış şifre 401/20013; servis dışı satırı
+  `{city, cityId, disctrictId, distirict, neighborhood}`; DHL'de olmayan ilçe ve servis dışı mahallede
+  barkod 20001 "varış şubesi" ile bekliyor (60 sn içinde atanmadı).
+- **Admin simülasyonu:** `npm run dhl:simulate` (sunucuda `dhl:simulate:prod`) 15 sahte siparişle her
+  durumu kurar: etiket, transfer, şubede, dağıtımda, teslim, teslim edilemedi, geri geliyor, destek,
+  gönderi iptali, yeniden gönderim, sipariş iptali, kargo açılamadı, iade talebi / reddi / teslim alma.
+  DHL sandbox'ta gerçek sipariş + barkod açılır; sandbox gönderiyi ilerletmediği için sonraki durumlar
+  kayda `dhl_sim` yazılarak verilir, adaptör bunu **yalnız sandbox'ta** okur ve gerçek yoklama kodu
+  işler (mailler dahil). `-- set <sipariş no> <1-8>` tek siparişi ilerletir, `-- list`, `-- clean`.
+  Kurulum: `docs/DOKPLOY-ENV.md` → "DHL sandbox simülasyonu".
+- **Akış uyarısı:** DHL, createRecipient + createOrder'ın sipariş oluşunca, createbarcode'un
+  paketleme anında çağrılmasını istiyor; art arda çağrıda "varışsız" (20001) hatası olabiliyor.
+  Bizde üçü ödeme sonrası art arda gider, 20001'de 60 sn denenir, sonra "etiket bekliyor" olur ve
+  30 dk'lık yoklama barkodu alır (senaryo 3). Sandbox'ta 20001'in ne sıklıkta çıktığı ölçülecek.
+- **Etiket 10×10 cm:** DHL kendi 10×10 rulosunu ya da lamine barkod istiyor (konveyör okuması).
+  Örnek ZPL `^PW831 ^LL0959` (203 dpi → ~10,4 × 12 cm). Bizim baskı 10×15 TSC rulosuna; ZPL
+  sığar ama rulo/yazıcı kararı DHL ile teyit edilmeli.
+- `printReferenceBarcodeOnError`: DHL 1 öneriyor (hata olursa şubede okutulan sipariş barkodu).
+  Bizde 0 (Mareen'de referans barkodlu etiket şubede kabul edilmedi). Şube testinde tekrar bakılır.
+- `packagingType`: dökümanda yalnız 1/2/3 var (swagger'daki 4 "koli" yok). Biz 3 (paket) gönderiyoruz.
+- Canlı için: `apizone.mngkargo.com.tr`'de üyelik → yeni uygulama → abonelikler → uygulama adı,
+  müşteri no ve **statik IP** `entegrasyon@mngkargo.com.tr`'ye. Token = Online Şube müşteri no + şifre.
 
 ## Kaynaklar
 
@@ -106,12 +164,12 @@ parça barkodu `ESC65_PARCA1`, desi/kg tam sayı ≥1, telefon 10 hane (5xx → 
 - Kapıda ödeme, pazaryeri, akşam/gün içi teslim: kullanılmıyor.
 
 ## Teyit listesi (ilk sandbox çalıştırması: `npm run smoke:carrier`)
-- [ ] Token yanıtı `jwt` / `jwtExpireDate`
-- [ ] createbarcode: `barcodes[].value` gerçekten ZPL mi, okunur `barcode` alanı geliyor mu
-- [ ] 20001 ve 3002'nin HTTP kodu + gövde biçimi (sınıflandırma `errors.ts`)
-- [ ] `cancelshipment` sonrası `cancelorder` gerekli mi / hata veriyor mu
-- [ ] Durum yanıtı `trackingUrl` biçimi, müşteri takip sayfası
-- [ ] CBS il kodları plaka koduyla aynı mı
-- [ ] `createReturnOrder` `returnOrderLabelURL` ve şubede iade kabulü
-- [ ] `npm run dhl:error-codes` → kataloğa göre `errors.ts` gözden geçir
+- [x] Token yanıtı `jwt` / `jwtExpireDate` (sandbox 2026-11-11)
+- [x] createbarcode: `barcodes[].value` gerçekten ZPL mi, okunur `barcode` alanı geliyor mu (sandbox 2026-11-11)
+- [x] 20001 ve 3002'nin HTTP kodu + gövde biçimi (sınıflandırma `errors.ts`) (ikisi de HTTP 500 `{error:{Code,Message,Description}}`)
+- [x] `cancelshipment` sonrası `cancelorder` gerekli mi / hata veriyor mu (gerekmiyor: 404/20305 döner, yok sayılır)
+- [x] Durum yanıtı `trackingUrl` biçimi, müşteri takip sayfası (kargotakip.mngkargo.com.tr/?takipNo=)
+- [x] CBS il kodları plaka koduyla aynı mı (sandbox 2026-11-11)
+- [ ] `createReturnOrder` `returnOrderLabelURL` (sandbox'ta geliyor: `http://mn.tc?rtnid=…`) ve şubede iade kabulü
+- [x] `npm run dhl:error-codes` → kataloğa göre `errors.ts` gözden geçir (2026-11-11; 3002 sandbox'ta doğrulandı, 20001 varış şubesi hâlâ görülmedi)
 - [ ] Tek paket şube kabul testi (`SMOKE_CARRIER_KEEP=1`), etiket yazıcısı (Zebra/PDF)

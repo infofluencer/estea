@@ -1,0 +1,991 @@
+{
+ "env": "prod",
+ "fetched_at": "2026-11-11T12:57:43.962Z",
+ "codes": [
+  {
+   "code": "26146",
+   "description": "'Recipient. CustomerId' dolu olduğunda, 'Recipient. Email' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26147",
+   "description": "'Recipient. CustomerId' dolu olduğunda, 'Recipient. TaxOffice' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26148",
+   "description": "'Recipient. CustomerId' dolu olduğunda, 'Recipient. TaxNumber' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26149",
+   "description": "'Shipper. CustomerId' dolu olduğunda, 'Shipper. Email' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26150",
+   "description": "'Shipper. CustomerId' dolu olduğunda, 'Shipper. TaxOffice' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26151",
+   "description": "'Shipper. CustomerId' dolu olduğunda, 'Shipper. TaxNumber' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "20013",
+   "description": "Kullanıcı adı ya da şifresi gerçerli değil.",
+   "errorType": 1
+  },
+  {
+   "code": "20312",
+   "description": "Refresh token bulunamadı.",
+   "errorType": 2
+  },
+  {
+   "code": "20012",
+   "description": "GONDERİ İPTAL YETKISI YOK !",
+   "errorType": 1
+  },
+  {
+   "code": "26153",
+   "description": "Başlangıç tarihi Bitiş tarihinden büyük olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26154",
+   "description": "Başlagıç tarihi ile Bitiş tarihi arasındaki farkı {0} günden büyük olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "20604",
+   "description": "Dış servis çağrısı validasyon hatası: {0}",
+   "errorType": 3
+  },
+  {
+   "code": "20011",
+   "description": "{0} IP adresi için tek barkod yetkiniz yoktur.",
+   "errorType": 1
+  },
+  {
+   "code": "26152",
+   "description": "Geçersiz Order. MarketPlaceShortCode, bu kod daha önce kullanılmıştır.",
+   "errorType": 4
+  },
+  {
+   "code": "20605",
+   "description": "MAX SIPARIS SORUGLAMA SINIRI 50'DİR.",
+   "errorType": 3
+  },
+  {
+   "code": "20014",
+   "description": "Bu kullanıcı zaten bir token'a sahip, lütfen JWT'ı yenilemek için Refresh token'ı kullanınız.",
+   "errorType": 1
+  },
+  {
+   "code": "26155",
+   "description": "MI paket tipi için desi miktarı '1' e eşit ya da küçük olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "20015",
+   "description": "BU SERVISE ISTEK YETKINIZ BULUNMAMAKTADIR!",
+   "errorType": 1
+  },
+  {
+   "code": "20313",
+   "description": "SIPARIS BILGISI BULUNAMAMISTIR",
+   "errorType": 2
+  },
+  {
+   "code": "20105",
+   "description": "SIPARIS BILGINIZ DAHA ONCE GUNCELLENMISTIR",
+   "errorType": 1
+  },
+  {
+   "code": "26167",
+   "description": "En fazla 20 gönderi sorgulayabilirsiniz.",
+   "errorType": 4
+  },
+  {
+   "code": "26166",
+   "description": "isCOD Sadece 0 veya 1 değerlerini alabilir.",
+   "errorType": 4
+  },
+  {
+   "code": "26165",
+   "description": "ShipmentId alanı boş olamaz. Sadece virgüller ile ayrılmış ve 0'dan büyük sayıları içerebilir.",
+   "errorType": 4
+  },
+  {
+   "code": "20107",
+   "description": "Sipariş platformda doğrulanamadığı için barkod oluşturulamamaktadır.",
+   "errorType": 1
+  },
+  {
+   "code": "26060",
+   "description": "Recipient. CustomerId' dolu olduğunda, 'Recipient. Full Name' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26061",
+   "description": "Recipient. CustomerId' dolu olduğunda, 'Recipient. District Code' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26062",
+   "description": "Recipient. CustomerId' dolu olduğunda, 'Recipient. Bussiness Phone Number' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26063",
+   "description": "Recipient. CustomerId' dolu olduğunda, 'Recipient. Home Phone Number' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26064",
+   "description": "Recipient. CustomerId' dolu olduğunda, 'Recipient. Mobile Phone Number' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26065",
+   "description": "Shipper. Ref Customer Id', 30 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26066",
+   "description": "Shipper. Email'  geçerli bir e-posta adresi değil.  ",
+   "errorType": 4
+  },
+  {
+   "code": "26067",
+   "description": "Shipper. Email', 150 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26058",
+   "description": "Recipient. CustomerId' dolu olduğunda, 'Recipient. Address' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26059",
+   "description": "Recipient. CustomerId' dolu olduğunda, 'Recipient. City Code' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26068",
+   "description": "Shipper. City Code' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26069",
+   "description": "Shipper. City Code', '99' değerinden küçük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26070",
+   "description": "Shipper. District Code' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26071",
+   "description": "Shipper. District Code' 0 dan büyük olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26072",
+   "description": "Shipper. Full Name' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26073",
+   "description": "Shipper. Full Name', 250 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26074",
+   "description": "Shipper. Address' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26075",
+   "description": "Shipper. Address', 200 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26076",
+   "description": "Shipper. Address', 10 karakterden büyük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26077",
+   "description": "Shipper. Mobile Phone Number' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26078",
+   "description": "Shipper. Mobile Phone Number', 20 karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26079",
+   "description": "Shipper. Bussiness Phone Number' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26080",
+   "description": "Shipper. Bussiness Phone Number' , 20 karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26081",
+   "description": "Shipper. Home Phone Number' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26082",
+   "description": "Shipper. Home Phone Number', 20 karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26083",
+   "description": "Shipper. Tax Number', 11 karakterli TC Kimilk numarası ya da 10 karakterli Vergi numarası olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26084",
+   "description": "Shipper. CustomerId' dolu olduğunda, 'Shipper. Address' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26085",
+   "description": "Shipper. CustomerId' dolu olduğunda, 'Shipper. City Code' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26086",
+   "description": "Shipper. CustomerId' dolu olduğunda, 'Shipper. Full Name' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26087",
+   "description": "Shipper. CustomerId' dolu olduğunda, 'Shipper. District Code' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26088",
+   "description": "Shipper. CustomerId' dolu olduğunda, 'Shipper. Bussiness Phone Number' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26089",
+   "description": "Shipper. CustomerId' dolu olduğunda, 'Shipper. Home Phone Number' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26090",
+   "description": "Shipper. CustomerId' dolu olduğunda, 'Shipper. Mobile Phone Number' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "20601",
+   "description": "YETERSİZ ADRES BİLGİSİ !",
+   "errorType": 3
+  },
+  {
+   "code": "20301",
+   "description": "GONDEREN MUSTERI BILGISI BULUNAMADI !",
+   "errorType": 2
+  },
+  {
+   "code": "20302",
+   "description": "ALICI MUSTERI BILGISI BULUNAMADI !",
+   "errorType": 2
+  },
+  {
+   "code": "20303",
+   "description": "GONDERICI MUSTERI BILGISI BULUNAMADI !",
+   "errorType": 2
+  },
+  {
+   "code": "20304",
+   "description": "BU SİPARİS NUMARASINA AİT KAYIT BULUNAMADI !",
+   "errorType": 2
+  },
+  {
+   "code": "20006",
+   "description": "SIPARIS ICIN GONDERI ISLEMI YAPILDIGINDAN GUNCELLEME YAPAMAZSINIZ !",
+   "errorType": 1
+  },
+  {
+   "code": "20007",
+   "description": "AYNI NUMARADA BIRDEN FAZLA SIPARIS KAYDI BULUNDU...",
+   "errorType": 1
+  },
+  {
+   "code": "20305",
+   "description": "SİPARİŞ DETAY BİLGİSİNE ULAŞILAMADI !",
+   "errorType": 2
+  },
+  {
+   "code": "20008",
+   "description": "SİPARİŞ FATURALANDIRILDIĞI İÇİN İPTAL EDİLEMEZ !",
+   "errorType": 1
+  },
+  {
+   "code": "20009",
+   "description": "SİPARİŞ KAYDINIZ MANUEL FATURALANDIRILDIĞI İÇİN İPTAL EDİLEMEZ !",
+   "errorType": 1
+  },
+  {
+   "code": "20001",
+   "description": "BU SİPARİS NUMARASINA AİT KAYIT ZATEN VAR!",
+   "errorType": 1
+  },
+  {
+   "code": "20306",
+   "description": "GÖNDERİ BULUNAMADI !",
+   "errorType": 2
+  },
+  {
+   "code": "20010",
+   "description": "GÖNDERİ İPTAL EDİLEMEDİ  ! ",
+   "errorType": 1
+  },
+  {
+   "code": "20003",
+   "description": "HATALI MÜŞTERİ NUMARASI YADA ŞİFRE !",
+   "errorType": 1
+  },
+  {
+   "code": "20004",
+   "description": "GONDERI KGDESI UPDATE YETKISI YOK !",
+   "errorType": 1
+  },
+  {
+   "code": "20307",
+   "description": "BELIRTILEN NUMARADA GONDERI BULUNAMADI ! ",
+   "errorType": 2
+  },
+  {
+   "code": "20308",
+   "description": "ARANILAN SIPARIS KAYDI BULUNAMADI",
+   "errorType": 2
+  },
+  {
+   "code": "20602",
+   "description": "TARİH  VE FATURA BİLGİSİNDEN EN AZINDAN 1 TANESİ ZORUNLUDUR ",
+   "errorType": 3
+  },
+  {
+   "code": "20603",
+   "description": "KOMİSYON FATURASI TARİH ARALIĞI BİR AYDAN FAZLA OLAMAZ ",
+   "errorType": 3
+  },
+  {
+   "code": "20309",
+   "description": "BELİRTİLEN NUMARADA İADE TALEBİ BULUNAMADI",
+   "errorType": 2
+  },
+  {
+   "code": "20310",
+   "description": "BELİRTİLEN NUMARADA İADE TALEBİ BULUNAMADI  ! ONAYLANMIŞ YADA RED EDİLMİŞ OLABİLİR.",
+   "errorType": 2
+  },
+  {
+   "code": "26048",
+   "description": "Recipient. Address', 200 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26049",
+   "description": "Recipient. Address', 10 karakterden büyük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26010",
+   "description": "Order. Barcode' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26011",
+   "description": "Order. Barcode', 100 karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26012",
+   "description": "Order. Barcode', 'Order. Reference Id' değerine eşit olmalı. ",
+   "errorType": 4
+  },
+  {
+   "code": "26013",
+   "description": "Order. Bill Of Landing Id', 15 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26014",
+   "description": "isCOD '0' olduğunda, 'Order. COD Amount', '0' değerine eşit olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26015",
+   "description": "isCOD '1' olduğunda, 'Order. COD Amount', '15000' değerinden küçük veya eşit olmalı.  ",
+   "errorType": 4
+  },
+  {
+   "code": "26016",
+   "description": "isCOD '1' olduğunda, 'Order. COD Amount' değeri '0' değerinden büyük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26017",
+   "description": "Belirtilen durum 'Order. Shipment Type' için geçerli değil.",
+   "errorType": 4
+  },
+  {
+   "code": "26018",
+   "description": "Belirtilen durum 'Order. Shipment Service Type' için geçerli değil.",
+   "errorType": 4
+  },
+  {
+   "code": "26019",
+   "description": "Order. Content' boş olamaz. ",
+   "errorType": 4
+  },
+  {
+   "code": "26020",
+   "description": "Order. Content', 250  karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26021",
+   "description": "Order. SMS Preference1', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26022",
+   "description": "Order. SMS Preference2', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26023",
+   "description": "Order. SMS Preference3', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26024",
+   "description": "Belirtilen durum 'Order. Payment Type' için geçerli değil. ",
+   "errorType": 4
+  },
+  {
+   "code": "26008",
+   "description": "Order. Reference Id' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26009",
+   "description": "Order. Reference Id', 30 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26025",
+   "description": "Belirtilen durum 'Order. Delivery Type' için geçerli değil.",
+   "errorType": 4
+  },
+  {
+   "code": "26026",
+   "description": "Order. Description' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26027",
+   "description": "Order. Description' , 250 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26028",
+   "description": "Order. MarketPlace ShortCode' dolu olduğunda, Order. Market Place Sale Code' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26029",
+   "description": "Order. MarketPlaceShortCode'  şunlardan biri olmalıdır: TRND,GG,N11, ''",
+   "errorType": 4
+  },
+  {
+   "code": "26030",
+   "description": "Order Piece List' en az bir parça bilgisi içermelidir.",
+   "errorType": 4
+  },
+  {
+   "code": "26031",
+   "description": "Order Piece List. Kg' değeri '0' değerinden büyük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26144",
+   "description": "Belirtilen durum 'Response Status' için geçerli değil.",
+   "errorType": 4
+  },
+  {
+   "code": "26050",
+   "description": "Recipient. Mobile Phone Number' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26145",
+   "description": "is Response Approved or Rejected', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26157",
+   "description": "'Order. MarketPlace ShortCode' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26158",
+   "description": "Dosya gönderilerinde KG ve DESI '0' 'a eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26160",
+   "description": "'TtiNo' alanı 25 karakterden uzun olamaz.",
+   "errorType": 3
+  },
+  {
+   "code": "26159",
+   "description": "SİPARİŞ GÖNDERİ İŞLEMİ YAPILDIĞINDAN ALICI UPDATE İŞLEMİ YAPILAMAZ.",
+   "errorType": 2
+  },
+  {
+   "code": "26161",
+   "description": "'TtiNo' alanı 0 ile başlayamaz ve sadece rakamlardan oluşabilir.",
+   "errorType": 3
+  },
+  {
+   "code": "26162",
+   "description": "'TtiNo' parametresi boş olarak gönderilemez.",
+   "errorType": 3
+  },
+  {
+   "code": "20103",
+   "description": "Bu gönderi için iade istek talebi daha önce oluşturulmuştur.",
+   "errorType": 1
+  },
+  {
+   "code": "20104",
+   "description": "Gönderi iade edilemeyecek statüdedir.",
+   "errorType": 1
+  },
+  {
+   "code": "26156",
+   "description": "Paket tipindeki gönderilerin kg ve desi bilgileri 1 den büyük olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26163",
+   "description": "Platform kısa kodu boş veya null olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26164",
+   "description": "Platform satış kodu boş veya null olamaz",
+   "errorType": 4
+  },
+  {
+   "code": "26051",
+   "description": "Recipient. Mobile Phone Number', 20 karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26052",
+   "description": "Recipient. Bussiness Phone Number' boş olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26053",
+   "description": "Recipient. Bussiness Phone Number' , 20 karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26054",
+   "description": "Recipient. Home Phone Number' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26055",
+   "description": "Recipient. Home Phone Number', 20 karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26056",
+   "description": "Recipient. Tax Number', 11 karakterli TC Kimilk numarası ya da 10 karakterli Vergi numarası olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "20311",
+   "description": "Belirtilen City Code ve District Code bulunamadı, lütfen tekrar kontrol ediniz.",
+   "errorType": 2
+  },
+  {
+   "code": "26112",
+   "description": "Belirtilen durum 'Pick Up Type' için geçerli değil.",
+   "errorType": 4
+  },
+  {
+   "code": "26135",
+   "description": "Shiptment Release Date', boş  olmamalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26032",
+   "description": "Order Piece List. Desi' değeri '0' değerinden büyük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26057",
+   "description": "Recipient. Tax Office', 20 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26033",
+   "description": "Order Piece List. Kg Desi' değeri '0' değerinden büyük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26034",
+   "description": "Order Piece List. Barcode' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26035",
+   "description": "Order Piece List. Barcode' 40 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26036",
+   "description": "Order Piece List. Content' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26037",
+   "description": "Order Piece List. Content', 200 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26038",
+   "description": "Recipient. Ref Customer Id', 30 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26039",
+   "description": "Recipient. Email'  geçerli bir e-posta adresi değil.  ",
+   "errorType": 4
+  },
+  {
+   "code": "26040",
+   "description": "Recipient. Email', 150 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26041",
+   "description": "Recipient. City Code' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26042",
+   "description": "Recipient. City Code', '99' değerinden küçük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26043",
+   "description": "Recipient. District Code' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26044",
+   "description": "Recipient. District Code' 0 dan büyük olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26045",
+   "description": "Recipient. Full Name' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26046",
+   "description": "Recipient. Full Name', 250 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26047",
+   "description": "Recipient. Address' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26091",
+   "description": "Sipper. Tax Office', 20 karakterden küçük veya eşit olmalıdır",
+   "errorType": 4
+  },
+  {
+   "code": "20005",
+   "description": "BU İADE TALEBİ SİZE AİT DEĞİLDİR",
+   "errorType": 1
+  },
+  {
+   "code": "26092",
+   "description": "Reference Id' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26093",
+   "description": "Reference Id', 30 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26094",
+   "description": "Barcode' boş olmamalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26095",
+   "description": "Barcode', 100 karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26096",
+   "description": "Barcode', 'Reference Id' değerine eşit olmalı. ",
+   "errorType": 4
+  },
+  {
+   "code": "26097",
+   "description": "Bill Of Landing Id', 15 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26098",
+   "description": "isCOD '0' olduğunda, 'COD Amount', '0' değerine eşit olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26099",
+   "description": "isCOD '1' olduğunda, 'COD Amount', '10000' değerinden küçük veya eşit olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26100",
+   "description": "isCOD '1' olduğunda, 'COD Amount' değeri '0' değerinden büyük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26101",
+   "description": "Belirtilen durum 'Shipment Type' için geçerli değil.",
+   "errorType": 4
+  },
+  {
+   "code": "26102",
+   "description": "Belirtilen durum 'Shipment Service Type' için geçerli değil.",
+   "errorType": 4
+  },
+  {
+   "code": "26103",
+   "description": "Content' boş olamaz. ",
+   "errorType": 4
+  },
+  {
+   "code": "26104",
+   "description": "Content', 250  karakterden küçük veya eşit olmalıdır.",
+   "errorType": 4
+  },
+  {
+   "code": "26105",
+   "description": "SMS Preference1', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26106",
+   "description": "SMS Preference2', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26107",
+   "description": "SMS Preference3', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26108",
+   "description": "Belirtilen durum 'Payment Type' için geçerli değil. ",
+   "errorType": 4
+  },
+  {
+   "code": "26109",
+   "description": "Belirtilen durum 'Delivery Type' için geçerli değil.",
+   "errorType": 4
+  },
+  {
+   "code": "26110",
+   "description": "Description' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26111",
+   "description": "Description' , 250 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26113",
+   "description": "ShipmentId Id' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26114",
+   "description": "ShipmentId Id', 12 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26115",
+   "description": "Shipment Delivery Problem Id' '0' dan büyük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26116",
+   "description": "ApproveOrCancel', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26117",
+   "description": "Anwser' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26118",
+   "description": "Anwser' , 500 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26119",
+   "description": "Print Reference Barcode On Error', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26120",
+   "description": "Message' , 500 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26121",
+   "description": "AdditionalContent1' , 250 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26122",
+   "description": "AdditionalContent2' , 250 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26123",
+   "description": "AdditionalContent3' , 250 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26124",
+   "description": "AdditionalContent4' , 250 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26125",
+   "description": "Invoice Number' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26126",
+   "description": "Invoice Number', 10 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26127",
+   "description": "Invoice Serial Number' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26128",
+   "description": "Invoice Serial Number', 4 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26129",
+   "description": "Shiptment Release Date', 50 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26130",
+   "description": "Start Date' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26131",
+   "description": "Start Date', 50 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26132",
+   "description": "End Date' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26133",
+   "description": "End Date', 50 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26134",
+   "description": "isSubCompanyIncluded', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26136",
+   "description": "Invoice Payment Date' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26137",
+   "description": "Invoice Payment Date', 50 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26138",
+   "description": "EInvoice Id' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26139",
+   "description": "EInvoice Id', 60 karakterden küçük veya eşit olmalıdır. ",
+   "errorType": 4
+  },
+  {
+   "code": "26140",
+   "description": "Invoice Type', '1' ya da '0' olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "26141",
+   "description": "'CustomerNumber' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26142",
+   "description": "Password' boş olamaz.",
+   "errorType": 4
+  },
+  {
+   "code": "26143",
+   "description": "Identity Type', '0' dan büyük olmalı.",
+   "errorType": 4
+  },
+  {
+   "code": "20106",
+   "description": "AKTIF GONDERI IPTAL EDILEMEZ",
+   "errorType": 1
+  }
+ ]
+}

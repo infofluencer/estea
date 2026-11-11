@@ -196,6 +196,10 @@ describe("DHL hata gövdeleri ve sınıflandırma", () => {
     expect(k(null, 404, "Sipariş mevcut değil")).toBe("not_found")
     expect(k(null, 400, "Sipariş zaten faturalaşmış")).toBe("already_invoiced")
     expect(k(null, 400, "Sipariş faturalaşmamış")).toBe("validation")
+    // Sandbox'tan alınan gerçek metinler (2026-11-11): ikisi de 20001 ile gelir.
+    expect(k("20001", 500, "<WERR> ESC65 NO'LU SİPARİŞ KAYDI İÇİN VARIŞ ŞUBESİ BULUNAMADI ! DAHA SONRA TEKRAR DENEYİN ! </WERR>", "barcodecmdapi/createbarcode")).toBe("branch_not_ready")
+    expect(k("20001", 500, "<WERR>SİPARİŞ 11.11.26 16:17:14 Tarihinde FM-386849 NO İLE DAHA ÖNCE KESİLMİŞ ! </WERR>", "barcodecmdapi/createbarcode")).toBe("already_invoiced")
+    expect(k("3002", 500, "BU SİPARİS NUMARASINA AİT KAYIT ZATEN VAR!")).toBe("order_exists")
     expect(k(null, 429)).toBe("rate_limited")
     expect(k(null, 503)).toBe("transient")
     expect(k("99999", 500)).toBe("unknown")
@@ -327,6 +331,18 @@ describe("DHL gönderi açma", () => {
     expect(fake.calls.some((c) => c.path.startsWith("standardcmdapi/cancelorder"))).toBe(false)
   })
 
+  it("aynı sipariş ikinci kez (3002 + barkod 'daha önce kesilmiş') → mevcut gönderi no, ikinci kayıt yok", async () => {
+    const { adapter, fake } = adapterWith({
+      ...happy(),
+      "standardcmdapi/createOrder": () => mngError("3002", "BU SİPARİS NUMARASINA AİT KAYIT ZATEN VAR!"),
+      "barcodecmdapi/createbarcode": () => mngError("20001", "<WERR>SİPARİŞ 11.11.26 16:17:14 Tarihinde FM-386849 NO İLE DAHA ÖNCE KESİLMİŞ ! </WERR>"),
+      "standardqueryapi/getshipment": () => ok([{ shipment: { referenceId: "ESC65", shipmentId: "590412995459", shipmentStatusCode: 1 } }]),
+    })
+    const r = await adapter.createShipment(input())
+    expect(r.data).toMatchObject({ tracking_number: "590412995459", dhl_shipment_id: "590412995459", dhl_barcode_pending: false, dhl_label_missing: true })
+    expect(fake.calls.filter((c) => c.path === "barcodecmdapi/createbarcode")).toHaveLength(1)
+  })
+
   it("3002 sipariş zaten var → barkoda geçer", async () => {
     const { adapter } = adapterWith({ ...happy(), "standardcmdapi/createOrder": () => mngError("3002", "Sipariş zaten var", 400) })
     expect((await adapter.createShipment(input())).data.dhl_order_already_existed).toBe(true)
@@ -422,6 +438,11 @@ describe("DHL gönderi açma", () => {
 
   it("prod host yalnız DHL_ENV=prod ile; DHL_BASE_URL prod'u ezemez", () => {
     expect(readDhlOptions({}).env).toBe("sandbox")
+    // Sandbox kimlikleri ayrı adla durur; canlıda asla okunmaz, sandbox'ta canlınınkinin önüne geçer.
+    const both = { DHL_CLIENT_ID: "live", DHL_PASSWORD: "livepw", DHL_SANDBOX_CLIENT_ID: "test", DHL_SANDBOX_PASSWORD: "testpw" }
+    expect(readDhlOptions(both)).toMatchObject({ clientId: "test", password: "testpw" })
+    expect(readDhlOptions({ ...both, DHL_ENV: "prod" })).toMatchObject({ clientId: "live", password: "livepw" })
+    expect(readDhlOptions({ DHL_CLIENT_ID: "only" }).clientId).toBe("only")
     expect(readDhlOptions({ DHL_ENV: "production" }).env).toBe("sandbox")
     expect(readDhlOptions({ DHL_ENV: "prod", DHL_BASE_URL: "https://evil" }).baseUrl).toBe("https://api.mngkargo.com.tr")
   })
@@ -476,6 +497,18 @@ describe("DHL durum yoklaması", () => {
   it("destek gerekiyor (8) → failed + uyarı", async () => {
     const { adapter } = adapterWith({ token, "standardqueryapi/getshipmentstatus": () => ok([{ shipmentStatusCode: 8 }]) })
     expect(await adapter.getStatus!({ carrier: "dhl", dhl_reference_id: "ESC65" })).toMatchObject({ action: "failed", alert: { level: "error" } })
+  })
+
+  it("sandbox simülasyonu: dhl_sim varsa DHL sorulmaz; canlıda alan yok sayılır", async () => {
+    const live = () => ok({ shipmentStatusCode: 1, shipmentStatus: "Gönderi Hazırlandı" })
+    const data = (code: string) => ({ carrier: "dhl", dhl_reference_id: "ESC65", dhl_shipment_id: "1", dhl_sim: { code } })
+    const sandbox = adapterWith({ token, "standardqueryapi/getshipmentstatus": live })
+    expect(await sandbox.adapter.getStatus!(data("4"))).toMatchObject({ code: "4", action: "shipped" })
+    expect(await sandbox.adapter.getStatus!(data("5"))).toMatchObject({ code: "5", action: "delivered", patch: { dhl_delivered_to: "ALICI KENDİSİ" } })
+    expect(await sandbox.adapter.getStatus!(data("7"))).toMatchObject({ code: "7", action: "returned" })
+    expect(await sandbox.adapter.getStatus!(data("99"))).toMatchObject({ code: "1" }) // geçersiz kod → gerçek sorgu
+    const prod = adapterWith({ token, "standardqueryapi/getshipmentstatus": live }, { env: "prod" })
+    expect(await prod.adapter.getStatus!(data("5"))).toMatchObject({ code: "1", action: "none" })
   })
 
   it("dışarıdan bağlanan gönderi: gönderi no ile sorgu", async () => {

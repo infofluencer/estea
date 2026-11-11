@@ -30,6 +30,9 @@ import {
   updateShippingOptionsWorkflow,
   updateStoresWorkflow,
 } from "@medusajs/medusa/core-flows"
+// Adaptör kaydı: aşağıdaki sabitler import anında okunur; kargo modülü o anda henüz yüklenmemiş
+// olabilir ve SHIPPING_CARRIER dolu olsa da seçenek manual_manual'a bağlanır.
+import "../modules/carrier/adapters"
 import { configuredCarrierCode, isCarrierConfigured } from "../modules/carrier/registry"
 import {
   CARRIER_FULFILLMENT_OPTION_ID,

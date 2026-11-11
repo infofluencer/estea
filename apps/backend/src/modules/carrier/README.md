@@ -13,6 +13,8 @@ payment.captured
 Durum güncellemesi (webhook: api/carrier/webhook · polling: jobs/track-shipments.ts, 30 dk)
   └─ lib/carrier-actions.ts applyCarrierAction("shipped" | "delivered" | …)   ← idempotent
         → createOrderShipmentWorkflow / markOrderFulfillmentAsDelivered → kargo mailleri (bir kez)
+Kargo kaydı açılamadıysa (firma yavaş/erişilemez): sipariş İPTAL EDİLMEZ; jobs/retry-auto-fulfill.ts
+  30 dk'da bir yeniden dener (12 deneme, sonra Logs'a hata) — lib/shipping/retry-auto-fulfill.ts
 Günlük denetim (jobs/shipment-audit.ts, 07:00, salt okunur) → ops_event (admin Logs)
 Elle: POST /admin/orders/:id/escay-status { prepare | ship(tracking) | deliver }
 Kurtarma: /admin/orders/:id/fulfillment/{retry,reship,attach} · /admin/escay-shipments/reconcile

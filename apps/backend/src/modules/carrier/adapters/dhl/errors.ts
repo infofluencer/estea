@@ -10,7 +10,8 @@
  *    Kod kataloğu: utilityapi/getapierrorcodes (`npm run dhl:error-codes`).
  *
  * Bilinen kodlar (resmi örnek + saha):
- *  20001 varış şubesi bulunamadı (sipariş açıldıktan ~30-50 sn / dakikalar sonra atanır)
+ *  20001 createbarcode genel hata kodu: varış şubesi bulunamadı (sipariş açıldıktan sonra atanır)
+ *        ya da "daha önce kesilmiş" (zaten barkodlanmış) — metinle ayrılır
  *  3002  aynı referenceId ile sipariş zaten var
  *  20013 Identity: sandbox anahtarı prod'da (ya da tersi)
  *  26056 alıcı vergi/TC no boş ya da hatalı
@@ -114,13 +115,22 @@ export function classifyDhlError(input: {
   if (code === "DHL_TIMEOUT" || code === "DHL_NETWORK") {
     return { kind: "transient", hint: "DHL'ye ulaşılamadı; ağ/zaman aşımı. Okumalar bir kez tekrarlanır." }
   }
+  const negated = /(DEĞİL|BULUNAMADI|YOK|NOT FOUND|NOT EXIST)/.test(text)
+  // 20001 createbarcode'un GENEL hata kodu (sandbox 2026-11-11): "varış şubesi bulunamadı" da,
+  // "sipariş ... daha önce kesilmiş" (zaten barkodlanmış) da 20001 ile gelir → önce metne bakılır.
+  if (
+    !negated &&
+    /(FATURALAŞ|FATURALAS|ZATEN BARKOD|ALREADY INVOICED|GÖNDERİLEŞ|ÖNCE KESİLMİŞ|ONCE KESILMIS)/.test(text) &&
+    !/(MAMIŞ|MEMİŞ|MAMIS|MEMIS)/.test(text)
+  ) {
+    return { kind: "already_invoiced", hint: "Sipariş zaten barkodlanmış (faturalaşmış); gönderi bilgisi sorgudan alınır." }
+  }
   if (code === "20001" || text.includes("VARIŞ ŞUBESİ") || text.includes("VARIS SUBESI")) {
     return {
       kind: "branch_not_ready",
       hint: "Varış şubesi henüz atanmadı; aynı siparişle tekrar denenir. Saatlerce sürerse adres/ilçe DHL'de eşleşmiyor — entegrasyon.tr@dhl.com",
     }
   }
-  const negated = /(DEĞİL|BULUNAMADI|YOK|NOT FOUND|NOT EXIST)/.test(text)
   if (
     code === "3002" ||
     (!negated &&
@@ -129,13 +139,6 @@ export function classifyDhlError(input: {
       !/(FATURA|BARKOD|INVOICE)/.test(text))
   ) {
     return { kind: "order_exists", hint: "Bu referansla DHL'de sipariş zaten var; barkod adımına geçilir." }
-  }
-  if (
-    !negated &&
-    /(FATURALAŞ|FATURALAS|ZATEN BARKOD|ALREADY INVOICED|GÖNDERİLEŞ)/.test(text) &&
-    !/(MAMIŞ|MEMİŞ|MAMIS|MEMIS)/.test(text)
-  ) {
-    return { kind: "already_invoiced", hint: "Sipariş zaten barkodlanmış (faturalaşmış); gönderi bilgisi sorgudan alınır." }
   }
   if (code === "20013") {
     return { kind: "env_mismatch", hint: "Sandbox anahtarı canlıda (ya da tersi) kullanılıyor: DHL_ENV ile DHL_CLIENT_ID/SECRET aynı ortamdan olmalı." }

@@ -80,6 +80,11 @@ BIZIMHESAP_STOCK_APPLY=false
 SHIPPING_CARRIER=
 SHIPPING_CARRIER_TEST_MODE=true
 # DHL (SHIPPING_CARRIER=dhl olunca): DHL_ENV=prod yalnız canlıda
+# Sandbox kimlikleri ayrı adla (DHL_ENV=prod değilken bunlar okunur, canlıda hiç okunmaz):
+# DHL_SANDBOX_CLIENT_ID=
+# DHL_SANDBOX_CLIENT_SECRET=
+# DHL_SANDBOX_CUSTOMER_NUMBER=
+# DHL_SANDBOX_PASSWORD=
 # DHL_CLIENT_ID=
 # DHL_CLIENT_SECRET=
 # DHL_CUSTOMER_NUMBER=
@@ -170,3 +175,32 @@ ulaşamadığı her dakika "para çekildi, sipariş iptal" riskidir (Mareen #9).
    görürse backend başlamaz — Dokploy log'unda `[paytr/env]` satırına bak. Sonra 1 TL gerçek ödeme + panelden iade.
 8. Postgres Backups → S3, `0 3 * * *`, restore testi; cron'a başarı sinyali (heartbeat ping) ekle —
    sessiz kalan cron Mareen'de haftalarca fark edilmedi (K10).
+
+## DHL sandbox simülasyonu (staging)
+
+Admin panelde her kargo/iade durumunu sahte siparişlerle görmek için. **Yalnız staging'de**
+(`PAYTR_OID_PREFIX=STG` olan ortam): sahte siparişler veritabanına yazılır, stok ayırır, mail gönderir.
+
+1. Backend ortam değişkenleri, sonra yeniden deploy:
+   ```
+   SHIPPING_CARRIER=dhl
+   SHIPPING_CARRIER_TEST_MODE=true
+   DHL_ENV=sandbox
+   DHL_SANDBOX_CLIENT_ID=…  DHL_SANDBOX_CLIENT_SECRET=…
+   DHL_SANDBOX_CUSTOMER_NUMBER=…  DHL_SANDBOX_PASSWORD=…
+   ```
+2. Backend container terminali:
+   ```
+   npm run setup:turkey:prod            # kargo seçeneği → carrier_carrier
+   npm run smoke:carrier:prod           # tek paket: aç → durum → etiket → iptal
+   SIM_EMAIL=<maillerin gideceği adres> npm run dhl:simulate:prod
+   ```
+   Sandbox yavaştır; 15 senaryo 10–20 dk sürebilir. Özet tablosu log sonunda.
+3. Admin → Siparişler / İadeler / Logs. Tek siparişi ilerletmek:
+   `npm run dhl:simulate:prod -- set <sipariş no> <kod>` (1 hazırlandı, 2 transfer, 3 şubede,
+   4 dağıtımda, 5 teslim, 6 teslim edilemedi, 7 geri geliyor, 8 destek). Liste: `-- list`.
+4. Bitince: `npm run dhl:simulate:prod -- clean` (DHL sandbox kayıtlarını ve iptal edilebilen
+   siparişleri iptal eder; kargoya verilmiş/teslim edilmiş siparişler kayıtta kalır).
+
+Simülasyon `DHL_ENV=prod` iken ve `SHIPPING_CARRIER_TEST_MODE=false` iken çalışmayı reddeder.
+Tüm senaryoların API düzeyinde testi: `npm run dhl:sandbox-suite:prod` (veritabanına dokunmaz).
