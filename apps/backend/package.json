@@ -65,6 +65,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "3.1106.0",
     "@aws-sdk/s3-request-presigner": "3.1106.0",
+    "@fontsource/figtree": "^5.3.0",
     "@medusajs/admin-sdk": "2.18.0",
     "@medusajs/admin-shared": "2.18.0",
     "@medusajs/auth-emailpass": "^2.18.0",

@@ -420,7 +420,11 @@ async function settleLocked(
     await alertOnce(container, checkout, {
       kind: phase === "order" ? "order_create_failed" : "process_failed",
       orderId,
-      detail: `${message} — Para alındı. Sistem otomatik tekrar deniyor; stok eksikse tamamlayın ya da PayTR panelinden iade edin (iade görülünce deneme durur). Müşteri: ${checkout.email || "?"}.`,
+      detail:
+        `${message} — Para alındı. Sistem otomatik tekrar deniyor; stok eksikse tamamlayın ya da PayTR panelinden iade edin (iade görülünce deneme durur). ` +
+        // Mesafeli Sözleşmeler Yönetmeliği; taahhüt: storefront Teslimat ve Kargo sayfası
+        "Stok yoksa müşteriye 3 gün içinde haber verin; onay vermezse ödemeyi bildirimden itibaren 14 gün içinde iade edin. " +
+        `Müşteri: ${checkout.email || "?"}.`,
     })
     return { outcome: "retry", error: message }
   }
