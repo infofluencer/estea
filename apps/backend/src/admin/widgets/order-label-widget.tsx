@@ -1,6 +1,6 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Badge, Button, Container, Heading, Text, toast } from "@medusajs/ui"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import { useState } from "react"
 import { printOrderLabels, skippedLabelsMessage } from "../lib/print-labels"
@@ -34,6 +34,7 @@ const OrderLabelWidget = () => {
   // etiket butonları açılsın diye etiket gelene kadar yoklanır (en çok 10 dk).
   const [mountedAt] = useState(() => Date.now())
 
+  const qc = useQueryClient()
   const { data, refetch } = useQuery({
     queryKey: ["order-label", orderId],
     enabled: Boolean(orderId),
@@ -72,6 +73,8 @@ const OrderLabelWidget = () => {
       const skipped = await printOrderLabels([orderId], withSlip)
       if (skipped.length) toast.warning(skippedLabelsMessage(skipped))
       refetch()
+      // Etiket basılınca sipariş "Hazırlandı" olur; durum kutusu da yenilensin.
+      void qc.invalidateQueries({ queryKey: ["order-status", orderId] })
     } catch (err) {
       toast.error((err as Error).message || "Etiket alınamadı")
     } finally {
