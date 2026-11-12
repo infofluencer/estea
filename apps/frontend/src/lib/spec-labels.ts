@@ -231,14 +231,12 @@ export function normalizeSpecifications(
  */
 const CATEGORY_SPEC_DEFAULTS: Record<string, Record<string, string>> = {
   "siyah-cay": {
-    origin: "Karadeniz",
     brew_dose: "1 litre su için 3 yemek kaşığı (yaklaşık 15 g) kuru çay",
     brew_time: "15–20 dakika",
     brew_temp: "Kaynar su, demlik kısık ateşte",
     storage: "Serin, kuru ve kokusuz bir yerde, ağzı kapalı kapta saklayın.",
   },
   "yesil-cay": {
-    origin: "Karadeniz",
     brew_dose: "1 fincan (200 ml) için 1 tatlı kaşığı",
     brew_time: "2–3 dakika",
     brew_temp: "75–80 °C (kaynattıktan sonra birkaç dakika dinlendirin)",
@@ -251,12 +249,14 @@ const CATEGORY_SPEC_DEFAULTS: Record<string, Record<string, string>> = {
     storage: "Serin, kuru ve kokusuz bir yerde, ağzı kapalı kapta saklayın.",
   },
   harmanlar: {
-    origin: "Karadeniz",
     brew_time: "10–15 dakika",
     brew_temp: "Kaynar su, demlik kısık ateşte",
     storage: "Serin, kuru ve kokusuz bir yerde, ağzı kapalı kapta saklayın.",
   },
 }
+
+/** Bütün ürünlerin menşei; ürün metadata'sında `origin` girilmişse o gösterilir. */
+const DEFAULT_ORIGIN = "Türkiye"
 
 const CATEGORY_SPEC_PRIORITY = ["yesil-cay", "bitki-cayi", "harmanlar", "siyah-cay"] as const
 
@@ -284,12 +284,10 @@ export function resolveSpecEntries(
     if (flat != null && String(flat).trim()) merged[key] = flat
   }
 
-  const defaults = categorySpecDefaults(categoryHandles)
-  if (defaults) {
-    for (const [key, value] of Object.entries(defaults)) {
-      if (merged[key] != null && String(merged[key]).trim()) continue
-      merged[key] = value
-    }
+  const defaults = { origin: DEFAULT_ORIGIN, ...categorySpecDefaults(categoryHandles) }
+  for (const [key, value] of Object.entries(defaults)) {
+    if (merged[key] != null && String(merged[key]).trim()) continue
+    merged[key] = value
   }
 
   return getSpecEntries(merged)

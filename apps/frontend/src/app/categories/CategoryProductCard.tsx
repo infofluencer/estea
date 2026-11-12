@@ -7,6 +7,7 @@ import { useFavorites } from "@/components/FavoritesProvider"
 import { addToCartAction } from "@/lib/actions"
 import { countCartItems, notifyCartAdded, notifyCartCount } from "@/lib/cart-events"
 import { formatTry } from "@/lib/medusa"
+import { CARD_SIZES, optimizedImg } from "@/lib/image"
 import type { LowStockLabel } from "@/lib/stock"
 import { SoldOutStamp } from "@/components/SoldOutStamp"
 import { LowStockMark } from "@/components/LowStockMark"
@@ -70,7 +71,8 @@ export function CategoryProductCard({
 
   useEffect(() => {
     setHoverSrc(null)
-    if (!hoverImage || !priority) return
+    // Dokunmatik ekranda hover yok; ikinci kareyi boşuna indirme.
+    if (!hoverImage || !priority || !window.matchMedia("(hover: hover)").matches) return
     return scheduleIdle(() => setHoverSrc(hoverImage))
   }, [hoverImage, priority, product.cardKey])
 
@@ -141,17 +143,17 @@ export function CategoryProductCard({
           aria-label={soldOut ? `${product.title} — Tükendi` : product.title}
         >
           <DeferredImage
-            src={product.image}
+            {...optimizedImg(product.image, CARD_SIZES)}
             alt=""
             className={styles.photo}
-            loading="eager"
+            loading={priority ? "eager" : "lazy"}
             decoding="async"
             fetchPriority={priority ? "high" : "auto"}
             fadeIn={false}
           />
           {hoverSrc ? (
             <DeferredImage
-              src={hoverSrc}
+              {...optimizedImg(hoverSrc, CARD_SIZES)}
               alt=""
               className={`${styles.photo} ${styles.photoHover}`}
               loading="lazy"

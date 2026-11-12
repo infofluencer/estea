@@ -5,6 +5,7 @@ import cardStyles from "@/app/categories/categories.module.css"
 import { HeroSlider, type HeroSlide } from "@/components/home/HeroSlider"
 import { sdk, storePricingParams } from "@/lib/medusa"
 import { LANDING_LINKS } from "@/lib/site"
+import { optimizedImg } from "@/lib/image"
 import { getStoreCategories, type StoreCategory } from "@/lib/store-categories"
 import { CATEGORY_BASE, categoryPath, productPath } from "@/lib/urls"
 import "@/components/home/home.css"
@@ -154,7 +155,7 @@ export default async function HomePage() {
                 <Link href={categoryPath(c.handle)} className="home-cat">
                   <span className="home-cat__media">
                     {/* eslint-disable-next-line @next/next/no-img-element -- ürün görselleri backend/S3 adresinden gelir */}
-                    <img src={c.image} alt="" width={320} height={320} loading={i < 3 ? "eager" : "lazy"} decoding="async" />
+                    <img {...optimizedImg(c.image, "(max-width: 767px) 50vw, 320px")} alt="" width={320} height={320} loading={i < 3 ? "eager" : "lazy"} decoding="async" />
                   </span>
                   <span className="home-cat__name">{c.name}</span>
                   <span className="home-cat__count">{c.count} ürün</span>

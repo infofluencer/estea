@@ -10,6 +10,7 @@ import { COMPANY } from "@/lib/company"
 import { useHomeT } from "@/lib/copy"
 import { formatTry } from "@/lib/medusa"
 import { LANDING_LINKS } from "@/lib/site"
+import { optimizedImg } from "@/lib/image"
 import { CATEGORY_BASE, categoryPath, productPath } from "@/lib/urls"
 
 export type NavCategory = { handle: string; name: string }
@@ -322,7 +323,7 @@ function SiteHeaderBarContent({
 
             <Link href="/" className="site-logo site-header__brand" aria-label="Es Çay ana sayfa">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Es Çay" className="site-logo__img" width={341} height={182} />
+              <img {...optimizedImg("/logo.png", "120px")} alt="Es Çay" className="site-logo__img" width={341} height={182} fetchPriority="high" />
             </Link>
 
             <form
@@ -384,7 +385,7 @@ function SiteHeaderBarContent({
                       onClick={clearSearch}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={hit.thumbnail} alt="" width={48} height={48} loading="lazy" />
+                      <img {...optimizedImg(hit.thumbnail, "48px")} alt="" width={48} height={48} loading="lazy" />
                       <span className="site-header__search-hit-copy">
                         <span className="site-header__search-hit-title">{hit.title}</span>
                         {hit.price != null ? (
@@ -490,7 +491,7 @@ function SiteHeaderBarContent({
           <div className="site-nav-drawer__panel">
             <div className="site-nav-drawer__top">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Es Çay" width={341} height={182} />
+              <img {...optimizedImg("/logo.png", "160px")} alt="Es Çay" width={341} height={182} loading="lazy" />
               <button
                 type="button"
                 className="site-nav-drawer__close"

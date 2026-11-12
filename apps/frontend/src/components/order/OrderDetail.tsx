@@ -13,6 +13,7 @@ import { BankTransferBox } from "@/components/checkout/BankTransferBox"
 import type { OrderDetailView, OrderReturnContext } from "./order-types"
 import styles from "./order-detail.module.css"
 import { productPath } from "@/lib/urls"
+import { optimizedImg } from "@/lib/image"
 
 function formatOrderDate(value?: string | Date | null) {
   if (!value) return "—"
@@ -110,7 +111,7 @@ function ItemsList({ order }: { order: OrderDetailView }) {
         return (
           <li key={item.id || `${idx}`} className={styles.itemCard}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={thumb} alt="" className={styles.itemThumb} />
+            <img {...optimizedImg(thumb, "120px")} alt="" className={styles.itemThumb} loading="lazy" />
             <div className={styles.itemBody}>
               <div className={styles.itemTitleRow}>
                 {titleNode}

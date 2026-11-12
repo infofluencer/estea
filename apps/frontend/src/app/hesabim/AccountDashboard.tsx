@@ -34,6 +34,7 @@ import {
 import { isReturnRejected, resolveReturnStatus } from "@escay/shared/return-status"
 import styles from "./account.module.css"
 import { productPath } from "@/lib/urls"
+import { optimizedImg } from "@/lib/image"
 
 type CustomerView = {
   id: string
@@ -348,7 +349,7 @@ function OrderRow({ order, detail }: { order: OrderView; detail?: string | null 
       >
         <span className={styles.rowMedia}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={thumb} alt="" className={styles.rowThumb} />
+          <img {...optimizedImg(thumb, "120px")} alt="" className={styles.rowThumb} loading="lazy" />
           {extra > 0 ? <span className={styles.rowMore}>+{extra}</span> : null}
         </span>
         <span className={styles.rowMain}>
@@ -801,7 +802,7 @@ export function AccountDashboard({
                               <li key={item.id || i} className={styles.featuredItem}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
-                                  src={item.thumbnail || PRODUCT_IMAGE}
+                                  {...optimizedImg(item.thumbnail || PRODUCT_IMAGE, "120px")}
                                   alt=""
                                   className={styles.featuredThumb}
                                 />
@@ -1019,7 +1020,7 @@ export function AccountDashboard({
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
-                                src={item.image || PRODUCT_IMAGE}
+                                {...optimizedImg(item.image || PRODUCT_IMAGE, "120px")}
                                 alt=""
                                 className={styles.favMiniThumb}
                               />
@@ -1587,7 +1588,7 @@ export function AccountDashboard({
                         <span className={styles.favMedia}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={item.image || PRODUCT_IMAGE}
+                            {...optimizedImg(item.image || PRODUCT_IMAGE, "120px")}
                             alt=""
                             className={styles.favThumb}
                           />

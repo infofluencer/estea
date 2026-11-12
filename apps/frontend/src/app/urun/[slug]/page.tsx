@@ -14,6 +14,7 @@ import {
   variantPriceAmount,
 } from "@/lib/medusa"
 import { resolveSpecEntries } from "@/lib/spec-labels"
+import { cleanProductText } from "@/lib/product-text"
 import { siteUrl } from "@/lib/site"
 import { categoryPath, productHandleFromSlug, productPath } from "@/lib/urls"
 
@@ -42,7 +43,7 @@ export async function generateMetadata({
       (typeof meta.seo_description === "string" && meta.seo_description) ||
       product.description ||
       ""
-    const description = rawDescription.replace(/\s+/g, " ").trim().slice(0, 160)
+    const description = cleanProductText(rawDescription).replace(/\s+/g, " ").trim().slice(0, 160)
     const url = `${siteUrl()}${productPath(handle)}`
     return {
       title,
@@ -82,8 +83,8 @@ export default async function ProductPage({
 
   const metadata = (product.metadata || {}) as Record<string, unknown>
   const story =
-    (typeof metadata.story === "string" && metadata.story.trim()) ||
-    (typeof product.description === "string" && product.description.trim()) ||
+    cleanProductText(typeof metadata.story === "string" ? metadata.story : null) ||
+    cleanProductText(product.description) ||
     null
   const categoryHandles = (product.categories || [])
     .map((c) => c.handle)

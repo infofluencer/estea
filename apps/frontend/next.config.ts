@@ -25,8 +25,24 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  // Telefondan yerel ağ IP'siyle dev sunucusuna bağlanmak için (Next 16'da engellenir).
+  allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "172.*.*.*", "*.local"],
   output: "standalone",
   poweredByHeader: false,
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 7,
+    // src/lib/image.ts yalnız bu host'ları optimizer'a yollar; ikisi birlikte değişmeli.
+    remotePatterns: [
+      { protocol: "https", hostname: "**.esteacay.com" },
+      ...(process.env.NODE_ENV === "development"
+        ? [
+            { protocol: "http" as const, hostname: "localhost" },
+            { protocol: "http" as const, hostname: "127.0.0.1" },
+          ]
+        : []),
+    ],
+  },
   experimental: {
     externalDir: true,
   },

@@ -7,6 +7,9 @@ export const COMPANY = {
   legalName: "Hamzalı Çay Gıda Tur. ve İnş. A.Ş.",
   brand: "Es Çay",
   address: "Balaban Mah. Uğurlu Cad. No: 9, Merkez, Hayrat / Trabzon",
+  /** İstanbul adresi; harita linki paylaşılan koordinattan. Kapı numarası henüz yok. */
+  istanbulAddress: "Yıldırım Mah. Şehit Kamil Balkan Cad., Bayrampaşa / İstanbul",
+  istanbulMapHref: "https://www.google.com/maps?q=41.065407,28.886883",
   phone: "0462 692 30 61",
   phoneHref: "tel:+904626923061",
   hours: "Hafta içi 09.00–18.00",

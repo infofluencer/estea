@@ -122,9 +122,15 @@ describe("resolveSpecEntries", () => {
     expect(rows.find((r) => r.key === "brew_temp")?.value).toMatch(/^75–80 °C/)
   })
 
-  it("bilinmeyen kategori ve metadata yoksa boş", () => {
-    expect(resolveSpecEntries(null, ["hediye"])).toEqual([])
-    expect(resolveSpecEntries(undefined)).toEqual([])
+  it("bilinmeyen kategori ve metadata yoksa yalnız menşei: Türkiye", () => {
+    expect(resolveSpecEntries(null, ["hediye"]).map((r) => [r.key, r.value])).toEqual([["origin", "Türkiye"]])
+    expect(resolveSpecEntries(undefined).map((r) => [r.key, r.value])).toEqual([["origin", "Türkiye"]])
+  })
+
+  it("her kategoride menşei Türkiye", () => {
+    for (const cat of ["siyah-cay", "yesil-cay", "bitki-cayi", "harmanlar", "seker"]) {
+      expect(resolveSpecEntries({}, [cat]).find((r) => r.key === "origin")?.value).toBe("Türkiye")
+    }
   })
 
   it("boş düz değer varsayılanı ezmez", () => {

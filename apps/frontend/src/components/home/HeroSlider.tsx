@@ -26,8 +26,36 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [reduced, setReduced] = useState(false)
   const touchX = useRef<number | null>(null)
   const count = slides.length
+  // Slaytlar üst üste durduğu için hepsinin görseli "ekranda" sayılıp baştan inerdi
+  // (~800 KB). İlk slayt hemen; komşular sayfa yüklenince boşta; gerisi sırası gelince.
+  const [warm, setWarm] = useState(false)
+  const [seen, setSeen] = useState<ReadonlySet<number>>(() => new Set([0]))
 
   const go = useCallback((next: number) => setIndex(((next % count) + count) % count), [count])
+
+  useEffect(() => {
+    const want = warm ? [index, (index + 1) % count, (index - 1 + count) % count] : [index]
+    setSeen((prev) => (want.every((i) => prev.has(i)) ? prev : new Set([...prev, ...want])))
+  }, [index, warm, count])
+
+  useEffect(() => {
+    let cancel = () => {}
+    const ready = () => {
+      if (window.requestIdleCallback) {
+        const id = window.requestIdleCallback(() => setWarm(true), { timeout: 2000 })
+        cancel = () => window.cancelIdleCallback(id)
+      } else {
+        const id = window.setTimeout(() => setWarm(true), 300)
+        cancel = () => window.clearTimeout(id)
+      }
+    }
+    if (document.readyState === "complete") ready()
+    else window.addEventListener("load", ready, { once: true })
+    return () => {
+      window.removeEventListener("load", ready)
+      cancel()
+    }
+  }, [])
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -76,6 +104,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       <div className="hero-slider__track">
         {slides.map((s, i) => {
           const active = i === index
+          const showImage = active || seen.has(i)
           return (
             <div
               key={s.image}
@@ -86,15 +115,17 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
               aria-label={`${i + 1} / ${count}: ${s.tab}`}
               aria-hidden={!active}
             >
-              <Image
-                src={s.image}
-                alt={s.alt}
-                fill
-                priority={i === 0}
-                sizes="100vw"
-                className="hero-slider__img"
-                style={{ objectPosition: s.focus || "50% 50%" }}
-              />
+              {showImage ? (
+                <Image
+                  src={s.image}
+                  alt={s.alt}
+                  fill
+                  priority={i === 0}
+                  sizes="100vw"
+                  className="hero-slider__img"
+                  style={{ objectPosition: s.focus || "50% 50%" }}
+                />
+              ) : null}
               <div className="hero-slider__scrim" aria-hidden />
               <div className="hero-slider__copy">
                 {i === 0 ? <h1 className="hero-slider__title">{s.title}</h1> : <h2 className="hero-slider__title">{s.title}</h2>}

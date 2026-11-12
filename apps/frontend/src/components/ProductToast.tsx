@@ -3,6 +3,7 @@
 import Link from "next/link"
 import type { CartAddedPayload } from "@/lib/cart-events"
 import { formatTry, PRODUCT_IMAGE } from "@/lib/medusa"
+import { optimizedImg } from "@/lib/image"
 
 export function ProductToast({
   visible,
@@ -34,7 +35,7 @@ export function ProductToast({
       <p className="site-header__toast-label">{label}</p>
       <div className="site-header__toast-product">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={item?.image || PRODUCT_IMAGE} alt={item?.title || ""} />
+        <img {...optimizedImg(item?.image || PRODUCT_IMAGE, "120px")} alt={item?.title || ""} />
         <div className="site-header__toast-info">
           {item?.title ? (
             <p className="site-header__toast-title">{item.title}</p>

@@ -12,6 +12,7 @@ import {
 import { formatTry, PRODUCT_IMAGE } from "@/lib/medusa"
 import type { FavoriteProduct } from "@/lib/favorites"
 import { productPath } from "@/lib/urls"
+import { CARD_SIZES, optimizedImg } from "@/lib/image"
 
 function preferredVariantId(item: FavoriteProduct) {
   if (item.variantId) return item.variantId
@@ -69,7 +70,7 @@ function FavoriteCard({ item }: { item: FavoriteProduct }) {
             aria-label={item.title}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={image} alt="" className="featured__photo" />
+            <img {...optimizedImg(image, CARD_SIZES)} alt="" className="featured__photo" />
           </Link>
 
           <button

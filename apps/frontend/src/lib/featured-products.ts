@@ -7,6 +7,7 @@ import {
 } from "@/lib/medusa"
 import { isProductSoldOut, isVariantInStock } from "@/lib/stock"
 import { resolveCardImages } from "@/lib/product-images"
+import { productRank } from "@/lib/product-order"
 
 export type StoreProduct = Awaited<
   ReturnType<typeof sdk.store.product.list>
@@ -110,7 +111,7 @@ export async function listRelatedProducts(
   pool.sort((a, b) => {
     const diff = relatedScore(current, b) - relatedScore(current, a)
     if (diff !== 0) return diff
-    return a.title.localeCompare(b.title, "tr")
+    return productRank(a.handle) - productRank(b.handle) || a.title.localeCompare(b.title, "tr")
   })
 
   return pool.slice(0, limit)

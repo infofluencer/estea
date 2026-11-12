@@ -27,7 +27,7 @@ type Props = {
 }
 
 const SORT_OPTIONS: FilterOption[] = [
-  { value: "newest", label: "Yeniler" },
+  { value: "newest", label: "Önerilen" },
   { value: "price-asc", label: "Fiyat artan" },
   { value: "price-desc", label: "Fiyat azalan" },
 ]

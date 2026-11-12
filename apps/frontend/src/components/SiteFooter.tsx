@@ -94,6 +94,15 @@ export async function SiteFooter() {
                 </a>
               </dd>
             </div>
+            <div>
+              <dt>İstanbul</dt>
+              <dd>
+                <address>{COMPANY.istanbulAddress}</address>
+                <a href={COMPANY.istanbulMapHref} {...ext} className="site-footer__map">
+                  Haritada aç
+                </a>
+              </dd>
+            </div>
           </dl>
         </div>
       </div>

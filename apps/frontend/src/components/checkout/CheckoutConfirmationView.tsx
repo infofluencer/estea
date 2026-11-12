@@ -12,6 +12,7 @@ import type { OrderDetailView } from "@/components/order/order-types"
 import { BankTransferBox } from "./BankTransferBox"
 import styles from "./checkout-confirmation.module.css"
 import { productPath } from "@/lib/urls"
+import { optimizedImg } from "@/lib/image"
 
 function formatOrderDate(value?: string | Date | null) {
   if (!value) return null
@@ -152,7 +153,7 @@ export function CheckoutConfirmationView({
                     <span className={styles.thumb}>
                       {item.thumbnail ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={item.thumbnail} alt="" loading="lazy" />
+                        <img {...optimizedImg(item.thumbnail, "120px")} alt="" loading="lazy" />
                       ) : null}
                     </span>
                     <div className={styles.itemMain}>

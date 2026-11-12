@@ -1,4 +1,5 @@
 import { sdk, storePricingParams } from "@/lib/medusa"
+import { productRank } from "@/lib/product-order"
 
 type StoreProduct = Awaited<
   ReturnType<typeof sdk.store.product.list>
@@ -126,6 +127,7 @@ export async function searchCatalog(q: string, limit: number): Promise<StoreProd
     .sort(
       (a, b) =>
         b.score - a.score ||
+        productRank(a.product.handle) - productRank(b.product.handle) ||
         (a.product.title || "").localeCompare(b.product.title || "", "tr")
     )
     .slice(0, limit)

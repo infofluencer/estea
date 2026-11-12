@@ -9,6 +9,7 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react"
 import styles from "./product.module.css"
+import { optimizedImg } from "@/lib/image"
 
 const LOOP_SETS = 3
 /** Give up waiting on slow probes; anything still pending is shown optimistically. */
@@ -59,7 +60,14 @@ function useVerifiedImages(
         settle(url, true)
       }
       img.onerror = () => settle(url, false)
-      img.src = url
+      // Orijinali tam boy indirmek yerine önizleme karesiyle aynı küçük boy:
+      // oran aynı, dosya önbellekten önizlemeye de gider.
+      const probe = optimizedImg(url, "64px")
+      if (probe.srcSet && probe.sizes) {
+        img.sizes = probe.sizes
+        img.srcset = probe.srcSet
+      }
+      img.src = probe.src || url
       return img
     })
     if (!urls.length) finish()
@@ -297,7 +305,7 @@ export function ProductGallery({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={src}
+                {...optimizedImg(src, "(min-width: 900px) 50vw, 100vw")}
                 alt={`${productTitle} ${(index % tiles.length) + 1}`}
                 className={styles.galleryImg}
                 loading={index % tiles.length < 3 ? "eager" : "lazy"}
@@ -337,7 +345,7 @@ export function ProductGallery({
               <span className={styles.thumbMedia}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={src}
+                  {...optimizedImg(src, "64px")}
                   alt=""
                   className={styles.thumbImg}
                   loading={index < 5 ? "eager" : "lazy"}

@@ -7,7 +7,8 @@ import {
 import type { GridView } from "./CategoryFilterBar"
 import styles from "./categories.module.css"
 
-const PRIORITY_IMAGE_COUNT = 16
+/** İlk ekran: telefonda 2 sıra, masaüstünde ilk sıra. Fazlası yüksek önceliği anlamsızlaştırır. */
+const PRIORITY_IMAGE_COUNT = 4
 
 /**
  * Kategori ürün ızgarası. (Eski S3 editoryal vitrin kutuları kaldırıldı;

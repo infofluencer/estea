@@ -14,6 +14,7 @@ import { COMPANY } from "@/lib/company"
 import { siteUrl } from "@/lib/site"
 import { isVariantInStock } from "@/lib/stock"
 import { productPath } from "@/lib/urls"
+import { cleanProductText } from "@/lib/product-text"
 
 export type FeedChannel = "google" | "meta"
 
@@ -74,7 +75,7 @@ function money(n: number): string {
 }
 
 function plainText(s?: string | null): string {
-  return (s || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+  return cleanProductText(s).replace(/\s+/g, " ").trim()
 }
 
 async function loadProducts(): Promise<FeedProduct[]> {

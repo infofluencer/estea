@@ -12,6 +12,7 @@ import { CategoriesBrowse } from "./CategoriesBrowse"
 import { type CategoryListProduct } from "./CategoryProductCard"
 import styles from "./categories.module.css"
 import { listingPath } from "@/lib/urls"
+import { sortByProductOrder } from "@/lib/product-order"
 
 type StoreProduct = Awaited<
   ReturnType<typeof sdk.store.product.list>
@@ -204,7 +205,8 @@ export async function CategoriesProductSection({
         order: sort === "newest" ? "-created_at" : undefined,
       })
 
-  const ordered = products
+  // Varsayılan sıralama: sabit ürün sırası (product-order.ts), kalanlar en yeniden eskiye.
+  const ordered = sort === "newest" ? sortByProductOrder(products, (p) => p.handle) : products
 
   let cards: CategoryListProduct[] = expandVariants
     ? ordered.flatMap(expandVariantCards)
