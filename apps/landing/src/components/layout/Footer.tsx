@@ -65,7 +65,7 @@ export default function Footer() {
             </div>
 
             <div>
-              <dt className={labelClass}>Adres</dt>
+              <dt className={labelClass}>Fabrika</dt>
               <dd className="mt-2 text-[1.05rem] leading-[1.55] text-cream/90">
                 <address className="not-italic">
                   {contact.address.map((line) => (
@@ -75,6 +75,22 @@ export default function Footer() {
                   ))}
                 </address>
                 <a href={contact.mapHref} {...ext} className={`mt-2 inline-block text-[0.95rem] font-semibold text-cream ${linkClass}`}>
+                  Haritada aç
+                </a>
+              </dd>
+            </div>
+
+            <div>
+              <dt className={labelClass}>İstanbul</dt>
+              <dd className="mt-2 text-[1.05rem] leading-[1.55] text-cream/90">
+                <address className="not-italic">
+                  {contact.istanbul.address.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </address>
+                <a href={contact.istanbul.mapHref} {...ext} className={`mt-2 inline-block text-[0.95rem] font-semibold text-cream ${linkClass}`}>
                   Haritada aç
                 </a>
               </dd>

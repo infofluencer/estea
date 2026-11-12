@@ -45,7 +45,7 @@ export default function Factory() {
             {rest.map((p) => (
               <figure key={p.src}>
                 <div className="relative aspect-[40/39] overflow-hidden rounded-2xl bg-linen sm:aspect-[4/3]">
-                  <ArtPhoto photo={p} />
+                  <ArtPhoto photo={p} sizes="(max-width: 1023px) 50vw, 25vw" />
                 </div>
                 <figcaption className="mt-2 text-[1rem] text-ink/60">{p.caption}</figcaption>
               </figure>

@@ -73,7 +73,7 @@ export default function Shelf() {
       {/* Esçay çizgi deseni, Yolculuk'taki gibi soluk; üstte ve altta silinerek komşu bölümlere karışır. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url(/pattern/escay-vector.png)] bg-[length:520px_auto] opacity-[0.12] [mask-image:linear-gradient(to_bottom,transparent,#000_160px,#000_calc(100%-200px),transparent)]"
+        className="absolute inset-0 bg-[url(/pattern/escay-vector.webp)] bg-[length:520px_auto] opacity-[0.12] [mask-image:linear-gradient(to_bottom,transparent,#000_160px,#000_calc(100%-200px),transparent)]"
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <header className="grid gap-x-8 gap-y-5 border-t border-ink/15 pt-8 lg:grid-cols-12 lg:items-end">

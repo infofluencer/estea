@@ -81,6 +81,9 @@ export default function BlobBg({ className = '' }: { className?: string }) {
     let raf = 0
 
     const draw = () => {
+      // Gizli host (ör. kapalı mobil menü) 0×0 ölçülür; r=0 NaN yol üretir.
+      // ResizeObserver görünür olunca yeniden çizer.
+      if (w <= 0 || h <= 0) return
       const r = h / 2
       const total = 2 * Math.max(0, w - 2 * r) + 2 * Math.PI * r
       const sigma = h * 0.85

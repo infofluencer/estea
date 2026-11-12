@@ -166,7 +166,6 @@ export default function Collection() {
                   alt={isActive ? '' : `${p.name} seç`}
                   fill
                   sizes="(min-width: 1024px) 420px, 70vw"
-                  priority={i === 0}
                   draggable={false}
                   className="object-contain"
                 />

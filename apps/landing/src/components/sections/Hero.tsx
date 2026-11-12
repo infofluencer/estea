@@ -127,11 +127,19 @@ export default function Hero() {
         .catch(setupScrub)
     }
 
-    if (video.readyState >= 1) onReady()
-    else video.addEventListener('loadedmetadata', onReady)
+    const begin = () => {
+      if (cancelled) return
+      video.addEventListener('loadedmetadata', onReady)
+      video.preload = 'auto'
+      if (video.readyState >= 1) onReady()
+      else video.load()
+    }
+    if (document.readyState === 'complete') begin()
+    else window.addEventListener('load', begin, { once: true })
 
     return () => {
       cancelled = true
+      window.removeEventListener('load', begin)
       video.removeEventListener('loadedmetadata', onReady)
       video.pause()
       trigger?.kill()
@@ -178,14 +186,16 @@ export default function Hero() {
       <video
         ref={videoRef}
         className="absolute inset-0 h-full w-full object-cover"
-        poster="/hero_poster.jpg"
         muted
         playsInline
-        preload={reducedMotion ? 'metadata' : 'auto'}
+        // Açılış fotoğrafıyla bant genişliği paylaşmasın; indirme sayfa yüklenince başlar.
+        preload="none"
         disablePictureInPicture
         aria-hidden="true"
         tabIndex={-1}
       >
+        {/* Dikey ekranda karenin yalnız ortası görünür: 540×720 orta kırpım, 1,4 MB (tam kare 2,9 MB). */}
+        <source src="/hero_scrub_m.mp4" type="video/mp4" media="(max-aspect-ratio: 3/4)" />
         <source src="/hero_scrub.mp4" type="video/mp4" />
       </video>
       {/* The opening photograph sits over the video and is faded out by the scroll. */}
@@ -195,10 +205,11 @@ export default function Hero() {
         alt=""
         aria-hidden="true"
         fill
-        priority
+        preload
         sizes="100vw"
-        // PNG olduğu gibi gitsin; Next'in optimizer'ı yeniden sıkıştırmasın.
-        unoptimized
+        // 2,1 MB PNG yerine ekran genişliğinde AVIF/WebP; videonun ilk karesiyle
+        // devir yine görünmez (fotoğraf kaydırırken saydamlaşıyor).
+        quality={85}
         className="object-cover will-change-[opacity]"
       />
     </>

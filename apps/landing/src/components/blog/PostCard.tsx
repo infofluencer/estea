@@ -18,6 +18,7 @@ export default function PostCard({ post, wide = false, ratio = 'sm:aspect-[4/3]'
           <ArtPhoto
             photo={{ src: post.image, mobile: post.imageMobile }}
             priority={priority}
+            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
             className="transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none"
           />
         </div>

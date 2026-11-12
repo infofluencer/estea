@@ -34,7 +34,10 @@ export default function Manifesto() {
   const reduced = usePrefersReducedMotion()
   const [slide, setSlide] = useState(0)
 
-  /* The four frames cross-fade while the section is on screen; with reduced motion the first frame stays. */
+  const step = (dir: 1 | -1) => setSlide((s) => (s + dir + about.photos.length) % about.photos.length)
+
+  /* The four frames cross-fade while the section is on screen; with reduced motion the first frame stays.
+     Depends on `slide` so a manual step restarts the countdown instead of jumping right after a click. */
   useEffect(() => {
     if (reduced) return
     const section = ref.current
@@ -53,7 +56,7 @@ export default function Manifesto() {
       io.disconnect()
       if (timer) clearInterval(timer)
     }
-  }, [reduced])
+  }, [reduced, slide])
 
   useEffect(() => {
     if (reduced) return
@@ -141,7 +144,6 @@ export default function Manifesto() {
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  priority={i === 0}
                   sizes="(min-width: 1024px) 60vw, 100vw"
                   style={{ objectPosition: 'focus' in photo ? photo.focus : '60% 50%' }}
                   className={`object-cover transition-opacity duration-[1200ms] ease-in-out motion-reduce:transition-none ${i === slide ? 'opacity-100' : 'opacity-0'}`}
@@ -152,13 +154,23 @@ export default function Manifesto() {
                 className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.35),transparent_35%)]"
                 aria-hidden="true"
               />
-              <p
-                key={slide}
-                className="caption-in absolute bottom-[17%] left-5 text-[0.85rem] text-cream/90 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)] motion-reduce:animate-none sm:left-8 lg:right-8 lg:bottom-14 lg:left-auto"
-                aria-live="polite"
-              >
-                {about.photos[slide].caption}
-              </p>
+              <div className="absolute bottom-[17%] left-5 flex flex-col items-start gap-3 sm:left-8 lg:right-8 lg:bottom-14 lg:left-auto lg:items-end">
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => step(-1)} aria-label="Önceki fotoğraf" className="gallery-btn">
+                    ←
+                  </button>
+                  <button type="button" onClick={() => step(1)} aria-label="Sonraki fotoğraf" className="gallery-btn">
+                    →
+                  </button>
+                </div>
+                <p
+                  key={slide}
+                  className="caption-in text-[0.85rem] text-cream/90 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)] motion-reduce:animate-none"
+                  aria-live="polite"
+                >
+                  {about.photos[slide].caption}
+                </p>
+              </div>
             </div>
 
             {/* Logo set on the tear like a seal pressed onto the page. */}

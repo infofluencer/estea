@@ -21,7 +21,7 @@ export default function Journey() {
       {/* Esçay line pattern (teapots, glasses, sprigs) tiled faintly across the section, fading in at the top and out toward the seal at the bottom. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url(/pattern/escay-vector.png)] bg-[length:520px_auto] opacity-[0.12] [mask-image:linear-gradient(to_bottom,transparent,#000_160px,#000_calc(100%-260px),transparent)]"
+        className="absolute inset-0 bg-[url(/pattern/escay-vector.webp)] bg-[length:520px_auto] opacity-[0.12] [mask-image:linear-gradient(to_bottom,transparent,#000_160px,#000_calc(100%-260px),transparent)]"
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <header className="text-center">

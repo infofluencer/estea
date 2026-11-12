@@ -21,8 +21,8 @@ export type Tea = {
 
 /** Blog süzgecinin sırası. */
 export const teas: readonly Tea[] = [
-  { slug: 'gold', short: 'Gold', name: 'Gold Karadeniz', soft: 'bg-gold-soft', image: '/urunler/estea-gold-cay-1000-gr.webp', href: shopProduct('gold-karadeniz-cayi') },
   { slug: 'ilk-hasat', short: 'İlk Hasat', name: 'İlk Hasat', soft: 'bg-leaf-soft', image: '/urunler/estea-hasat-cay-1000-gr.webp', href: shopProduct('ilk-hasat-cay') },
+  { slug: 'gold', short: 'Gold', name: 'Gold Karadeniz', soft: 'bg-gold-soft', image: '/urunler/estea-gold-cay-1000-gr.webp', href: shopProduct('gold-karadeniz-cayi') },
   { slug: 'karadeniz', short: 'Karadeniz', name: 'Karadeniz', soft: 'bg-amber-soft', image: '/urunler/estea-karadeniz-cayi-1000-gr.webp', href: shopProduct('karadeniz-cayi') },
   { slug: 'tiryaki', short: 'Tiryaki', name: 'Tiryaki', soft: 'bg-brand-soft', image: '/urunler/estea-tiryaki-1000-gr-cay.webp', href: shopProduct('tiryaki-cayi') },
   { slug: 'demlik-poset', short: 'Süzen Poşet', name: 'Demlik Süzen Poşet', soft: 'bg-leaf-soft', image: '/urunler/estea-demlik-poset-cay.webp', href: shopProduct('demlik-suzen-poset-cay') },
